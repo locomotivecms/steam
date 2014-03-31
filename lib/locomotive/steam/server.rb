@@ -72,7 +72,7 @@ module Locomotive::Steam
         use Page
         use TemplatizedPage
 
-        run Steamer.new
+        run Renderer.new
       end
     end
 

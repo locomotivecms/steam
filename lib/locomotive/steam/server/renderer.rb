@@ -1,7 +1,7 @@
 module Locomotive::Steam
   class Server
 
-    class Steamer < Middleware
+    class Renderer < Middleware
 
       def call(env)
         self.set_accessors(env)
@@ -13,7 +13,7 @@ module Locomotive::Steam
             type = self.page.response_type || 'text/html'
             html = self.render_page
 
-            self.log "  Steamed liquid page template"
+            self.log 'Rendered liquid page template'
 
             [200, { 'Content-Type' => type }, [html]]
           end
@@ -29,7 +29,7 @@ module Locomotive::Steam
         begin
           self.page.render(context)
         rescue Exception => e
-          raise SteamerException.new(e, self.page.title, self.page.template, context)
+          raise RendererException.new(e, self.page.title, self.page.template, context)
         end
       end
 
