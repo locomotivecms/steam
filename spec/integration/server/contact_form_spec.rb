@@ -39,7 +39,7 @@ describe 'ContactForm' do
           response.status.should == 422
         end
 
-        describe 'errors', pending: true do
+        describe 'errors' do
 
           subject { entry['errors'] }
 
