@@ -1,0 +1,6 @@
+require 'locomotive/steam/liquid/tags/editable/base'
+require 'locomotive/steam/liquid/tags/editable/text'
+require 'locomotive/steam/liquid/tags/editable/short_text'
+require 'locomotive/steam/liquid/tags/editable/long_text'
+require 'locomotive/steam/liquid/tags/editable/file'
+require 'locomotive/steam/liquid/tags/editable/control'
