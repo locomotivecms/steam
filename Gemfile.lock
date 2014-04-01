@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    Steam (1.4.0)
+    locomotivecms_steam (0.1.0)
       activesupport (~> 3.2)
       better_errors (~> 1.0)
       dragonfly (~> 0.9)
@@ -175,11 +175,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  Steam!
   bundler (~> 1.5)
   coveralls
   i18n-spec
   launchy
+  locomotivecms_steam!
   pry
   rack-test
   rake (~> 10.1)

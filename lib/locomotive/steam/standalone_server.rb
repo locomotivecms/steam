@@ -11,13 +11,16 @@ module Locomotive
   module Steam
     class StandaloneServer < Server
 
-      def initialize(path)
-        Locomotive::Steam::Logger.setup(path, false)
+      def initialize(path, options={})
+        options.fetch(:logger) do
+          Locomotive::Steam::Logger.setup(path, false)
+        end
 
-        # get the reader
-        reader = Locomotive::Mounter::Reader::FileSystem.instance
-        reader.run!(path: path)
-        reader
+        reader = options.fetch(:reader) do
+          _reader = Locomotive::Mounter::Reader::FileSystem.instance
+          Proc.new { |_path| _reader.run!(path: _path) }
+        end
+        reader.call path
 
         Bundler.require 'monkey_patches'
         Bundler.require 'initializers'
