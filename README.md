@@ -3,7 +3,7 @@ Steam
 
 The rendering stack used by both Steam and Station (new name of the engine). It includes the rack stack and the liquid drops/filters/tags.
 
-[![Gem Version](https://badge.fury.io/rb/steam.png)](http://badge.fury.io/rb/steam)
+[![Gem Version](https://badge.fury.io/rb/steam.png)](http://badge.fury.io/rb/locomotivecms_steam)
 
 [![Code Climate](https://codeclimate.com/github/locomotivecms/steam.png)](https://codeclimate.com/github/locomotivecms/steam)
 
