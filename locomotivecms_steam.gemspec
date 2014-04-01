@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{The LocomotiveCMS steam is a front end server LocomotiveCMS libraries}
   spec.summary       = %q{The LocomotiveCMS steam is a technical piece for compiled and steam front end stuff for LocomotiveCMS libraries}
   spec.homepage      = 'http://www.locomotivecms.com'
-  spec.homepage      = 'https://github.com/joel/scoped_rolify'
+  spec.homepage      = 'https://github.com/locomotivecms/steam'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
