@@ -1,7 +1,7 @@
 require_relative 'lib/steam'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'Steam'
+  spec.name          = 'locomotivecms_steam'
   spec.version       = Locomotive::Steam::VERSION
   spec.authors       = ['Didier Lafforgue', 'Rodrigo Alvarez', 'Arnaud Sellenet', 'Joel Azemar']
   spec.email         = ['did@locomotivecms.com', 'papipo@gmail.com', 'arnaud@sellenet.fr', 'joel.azemar@gmail.com']
@@ -15,7 +15,6 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
-  spec.executables   = ['bin']
 
   spec.add_development_dependency 'bundler', '~> 1.5'
   spec.add_development_dependency 'rake', '~> 10.1'
