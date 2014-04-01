@@ -15,7 +15,8 @@ require_relative 'server/templatized_page'
 require_relative 'server/renderer'
 
 require_relative 'liquid'
-require_relative 'misc'
+require_relative 'initializers'
+require_relative 'monkey_patches'
 
 module Locomotive::Steam
   class Server

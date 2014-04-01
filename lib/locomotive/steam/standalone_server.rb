@@ -19,7 +19,8 @@ module Locomotive
         reader.run!(path: path)
         reader
 
-        Bundler.require 'misc'
+        Bundler.require 'monkey_patches'
+        Bundler.require 'initializers'
 
         # run the rack app
         super(reader, disable_listen: true)
