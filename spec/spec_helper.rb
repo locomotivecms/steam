@@ -1,19 +1,21 @@
-require_relative '../lib/steam'
-
 require 'rubygems'
 require 'bundler/setup'
 
 require 'i18n-spec'
 require 'coveralls'
-Coveralls.wear!
 
+require_relative '../lib/steam'
 require_relative 'support'
 
-RSpec.configure do |c|
-  c.filter_run focused: true
-  c.run_all_when_everything_filtered = true
-  c.include Spec::Helpers
-  c.before(:all) { remove_logs }
-  c.before { reset! }
-  c.after  { reset! }
+Coveralls.wear!
+
+RSpec.configure do |config|
+  config.include Spec::Helpers
+
+  config.filter_run focused: true
+  config.run_all_when_everything_filtered = true
+
+  config.before(:all) { remove_logs }
+  config.before { reset! }
+  config.after  { reset! }
 end
