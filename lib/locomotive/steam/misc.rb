@@ -1,4 +1,5 @@
-require_relative 'misc/core_ext.rb'
+require_relative 'core_ext.rb'
+
 require_relative 'misc/will_paginate.rb'
 require_relative 'misc/httparty.rb'
 require_relative 'misc/dragonfly.rb'
