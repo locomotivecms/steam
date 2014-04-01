@@ -20,7 +20,7 @@ module Locomotive
 
     end
 
-    class SteamerException < DefaultException
+    class RendererException < DefaultException
 
       attr_accessor :name, :template, :liquid_context
 

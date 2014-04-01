@@ -1,9 +1,0 @@
-# Logfile created on 2014-03-31 18:17:27 +0200 by logger.rb/1.2.8
-[0;97;49mStarted GET "/filtered" at 2014-03-31 18:17:27 +0200[0m
-Detecting locale EN
-Found page "Various uses of the with_scope tag" [filtered]
-[with_scope] conditions: date gte 2012-06-01 00:00:00, date lte 2012-06-10 23:59:59, city matches (?-mix:Kansas), state ne Illinois, tags == awesome, tags nin bad, price in [5.0, 5.5]
-  Steamed liquid page template
-[0;32;49mCompleted 200 OK in 35.6ms
-
-[0m
