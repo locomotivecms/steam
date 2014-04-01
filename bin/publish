@@ -13,7 +13,7 @@ class Publish
     system "gem build locomotivecms_steam.gemspec"
     system "git tag -a v#{Locomotive::Steam::VERSION} -m 'version #{Locomotive::Steam::VERSION}'"
     system "git push --tags"
-    system "gem push steam-#{Locomotive::Steam::VERSION}.gem"
+    system "gem push locomotivecms_steam-#{Locomotive::Steam::VERSION}.gem"
     system "git push origin master"
   end
 
