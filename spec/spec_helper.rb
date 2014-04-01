@@ -4,6 +4,8 @@ require 'rubygems'
 require 'bundler/setup'
 
 require 'i18n-spec'
+require 'coveralls'
+Coveralls.wear!
 
 require_relative 'support'
 
