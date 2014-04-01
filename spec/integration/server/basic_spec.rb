@@ -15,7 +15,7 @@ describe Locomotive::Steam::Server do
   it 'shows the index page' do
 
     get '/index'
-        
+
     last_response.body.should =~ /Upcoming events/
   end
 
@@ -56,7 +56,7 @@ describe Locomotive::Steam::Server do
     last_response.body.should_not =~ /Powered by/
   end
 
-  it 'provides translation in scopes', pending: true do
+  it 'provides translation in scopes' do
     get '/'
     last_response.body.should =~ /scoped_translation=.French./
   end
