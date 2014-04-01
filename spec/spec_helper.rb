@@ -1,8 +1,7 @@
 require_relative '../lib/steam'
 
-require 'pry'
-require 'i18n-spec'
-require 'rspec'
+require 'rubygems'
+require 'bundler/setup'
 
 require_relative 'support'
 
