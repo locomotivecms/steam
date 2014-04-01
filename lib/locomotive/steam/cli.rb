@@ -34,7 +34,7 @@ module Locomotive
 
         def force_color_if_asked(options)
           if options[:force_color]
-            require 'locomotive/steam/misc/thor'
+            require 'locomotive/steam/initializers/thor'
             self.shell = Thor::Shell::ForceColor.new
           end
         end

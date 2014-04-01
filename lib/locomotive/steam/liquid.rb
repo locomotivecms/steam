@@ -1,9 +1,10 @@
 require 'solid'
 require 'locomotive/mounter'
-require 'locomotive/steam/liquid/scopeable'
-require 'locomotive/steam/liquid/drops/base'
-require 'locomotive/steam/liquid/tags/hybrid'
-require 'locomotive/steam/liquid/tags/path_helper'
+
+require_relative 'liquid/scopeable'
+require_relative 'liquid/drops/base'
+require_relative 'liquid/tags/hybrid'
+require_relative 'liquid/tags/path_helper'
 
 %w{. drops tags filters}.each do |dir|
   Dir[File.join(File.dirname(__FILE__), 'liquid', dir, '*.rb')].each { |lib| require lib }

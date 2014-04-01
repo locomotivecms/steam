@@ -14,7 +14,7 @@ module Spec
       Locomotive::Steam::Logger.setup(path, false)
       reader = Locomotive::Mounter::Reader::FileSystem.instance
       reader.run!(path: path)
-      
+
       Locomotive::Steam::Server.new(reader, disable_listen: true)
     end
 

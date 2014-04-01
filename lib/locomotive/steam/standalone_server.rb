@@ -1,9 +1,10 @@
 $:.unshift(File.expand_path(File.dirname(__FILE__) + '/../..'))
 
-require 'locomotive/steam/logger'
-require 'locomotive/steam/version'
-require 'locomotive/steam/exceptions'
-require 'locomotive/steam/server'
+require_relative 'logger'
+require_relative 'version'
+require_relative 'exceptions'
+require_relative 'server'
+
 require 'locomotive/mounter'
 
 module Locomotive
@@ -18,7 +19,8 @@ module Locomotive
         reader.run!(path: path)
         reader
 
-        Bundler.require 'misc'
+        Bundler.require 'monkey_patches'
+        Bundler.require 'initializers'
 
         # run the rack app
         super(reader, disable_listen: true)

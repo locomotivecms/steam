@@ -1,18 +1,21 @@
+require 'rubygems'
+require 'bundler/setup'
+
+require 'i18n-spec'
+require 'coveralls'
+
 require_relative '../lib/steam'
+require_relative 'support'
 
-require 'rspec'
-require 'launchy'
-require 'pry'
+Coveralls.wear!
 
-Dir["#{File.expand_path('../support', __FILE__)}/*.rb"].each do |file|
-  require file
-end
+RSpec.configure do |config|
+  config.include Spec::Helpers
 
-RSpec.configure do |c|
-  c.filter_run focused: true
-  c.run_all_when_everything_filtered = true
-  c.include Spec::Helpers
-  c.before(:all) { remove_logs }
-  c.before { reset! }
-  c.after  { reset! }
+  config.filter_run focused: true
+  config.run_all_when_everything_filtered = true
+
+  config.before(:all) { remove_logs }
+  config.before { reset! }
+  config.after  { reset! }
 end
