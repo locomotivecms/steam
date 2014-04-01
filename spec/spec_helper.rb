@@ -3,6 +3,8 @@ require_relative '../lib/steam'
 require 'rubygems'
 require 'bundler/setup'
 
+require 'i18n-spec'
+
 require_relative 'support'
 
 RSpec.configure do |c|
