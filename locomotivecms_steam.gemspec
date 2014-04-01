@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'vcr'
   spec.add_development_dependency 'webmock'
   spec.add_development_dependency 'rack-test'
+  spec.add_development_dependency 'i18n-spec'
 
   spec.add_dependency 'rack-cache',            '~> 1.1'
   spec.add_dependency 'sprockets',             '~> 2.0'

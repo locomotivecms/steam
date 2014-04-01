@@ -1,12 +1,10 @@
 require_relative '../lib/steam'
 
-require 'rspec'
-require 'launchy'
 require 'pry'
+require 'i18n-spec'
+require 'rspec'
 
-Dir["#{File.expand_path('../support', __FILE__)}/*.rb"].each do |file|
-  require file
-end
+require_relative 'support'
 
 RSpec.configure do |c|
   c.filter_run focused: true
