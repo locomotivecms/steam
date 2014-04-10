@@ -1,4 +1,8 @@
-require_relative 'lib/steam'
+# encoding: utf-8
+lib = File.expand_path('../lib/', __FILE__)
+$:.unshift lib unless $:.include?(lib)
+
+require 'locomotive/steam/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'locomotivecms_steam'
