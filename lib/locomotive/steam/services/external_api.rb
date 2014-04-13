@@ -2,12 +2,12 @@ require 'uri'
 
 module Locomotive
   module Steam
-    module Httparty
-      class Webservice
+    module Services
+      class ExternalAPI
 
         include ::HTTParty
 
-        def self.consume(url, options = {})
+        def consume(url, options = {})
           url = ::HTTParty.normalize_base_uri(url)
 
           uri = URI.parse(url)
@@ -24,7 +24,7 @@ module Locomotive
 
           # Locomotive::Steam::Logger.debug "[WebService] consuming #{path}, #{options.inspect}"
 
-          response = self.get(path, options)
+          response = self.class.get(path, options)
 
           if response.code == 200
             _response = response.parsed_response

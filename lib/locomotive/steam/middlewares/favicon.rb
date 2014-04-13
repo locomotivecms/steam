@@ -1,10 +1,9 @@
 module Locomotive::Steam
-  class Server
+  module Middlewares
 
-    class Favicon < Middleware
+    class Favicon < Base
 
       def call(env)
-        
         if env['PATH_INFO'] == '/favicon.ico'
           [200, { 'Content-Type' => 'image/vnd.microsoft.icon' }, ['']]
         else

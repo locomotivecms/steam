@@ -23,7 +23,7 @@ module Locomotive
         Bundler.require 'initializers'
 
         # run the rack app
-        super(reader, disable_listen: true)
+        super(reader, serve_assets: true)
       end
     end
   end

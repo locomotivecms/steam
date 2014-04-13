@@ -6,7 +6,7 @@ module Spec
     end
 
     def remove_logs
-      FileUtils.rm_rf(File.expand_path('../../fixtures/default/log', __FILE__))
+      # FileUtils.rm_rf(File.expand_path('../../fixtures/default/log', __FILE__))
     end
 
     def run_server
@@ -15,7 +15,9 @@ module Spec
       reader = Locomotive::Mounter::Reader::FileSystem.instance
       reader.run!(path: path)
 
-      Locomotive::Steam::Server.new(reader, disable_listen: true)
+      require 'locomotive/steam/initializers'
+
+      Locomotive::Steam::Server.new(reader)
     end
 
   end

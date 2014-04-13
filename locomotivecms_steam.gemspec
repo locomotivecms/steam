@@ -29,15 +29,15 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rack-test'
   spec.add_development_dependency 'i18n-spec'
 
-  spec.add_dependency 'rack-cache',            '~> 1.1'
-  spec.add_dependency 'sprockets',             '~> 2.0'
-  spec.add_dependency 'sprockets-sass',        '~> 1.0'
-  spec.add_dependency 'better_errors',         '~> 1.0'
-  spec.add_dependency 'dragonfly',             '~> 0.9'
-  spec.add_dependency 'activesupport',         '~> 3.2'
-  spec.add_dependency 'listen',                '~> 2.7'
-  spec.add_dependency 'will_paginate',         '~> 3.0'
-  spec.add_dependency 'redcarpet',             '~> 3.1'
+  spec.add_dependency 'rack-cache',             '~> 1.1'
+  spec.add_dependency 'moneta',                 '~> 0.7.20'
+  spec.add_dependency 'sprockets',              '~> 2.0'
+  spec.add_dependency 'sprockets-sass',         '~> 1.0'
+  # spec.add_dependency 'better_errors',         '~> 1.0'
+  spec.add_dependency 'dragonfly',              '~> 1.0.3'
+  spec.add_dependency 'activesupport',          '~> 3.2' # TODO: upgrade to 4.x
+  spec.add_dependency 'will_paginate',          '~> 3.0' # TODO: move to kaminari
+  spec.add_dependency 'redcarpet',              '~> 3.1'
 
   spec.add_dependency 'locomotivecms_mounter'
   spec.add_dependency 'locomotivecms-solid'

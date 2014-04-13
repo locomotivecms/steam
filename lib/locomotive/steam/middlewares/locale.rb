@@ -1,5 +1,5 @@
 module Locomotive::Steam
-  class Server
+  module Middlewares
 
     # Set the locale from the path if possible or use the default one
     # Examples:
@@ -7,10 +7,10 @@ module Locomotive::Steam
     #   /fr/        => locale = :fr
     #   /index      => locale = :en (default one)
     #
-    class Locale < Middleware
+    class Locale < Base
 
-      def call(env)
-        self.set_accessors(env)
+      def _call(env)
+        super
 
         self.set_locale!(env)
 

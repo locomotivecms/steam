@@ -1,3 +1,5 @@
+require 'haml'
+
 module Haml::Filters
 
   remove_filter("Markdown") #remove the existing Markdown filter
@@ -7,7 +9,7 @@ module Haml::Filters
     include Haml::Filters::Base
 
     def render text
-      Locomotive::Steam::Markdown.steam text
+      Locomotive::Steam::Markdown.new.render text
     end
 
   end

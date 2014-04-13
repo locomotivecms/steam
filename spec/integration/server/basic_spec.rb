@@ -13,9 +13,7 @@ describe Locomotive::Steam::Server do
   end
 
   it 'shows the index page' do
-
     get '/index'
-
     last_response.body.should =~ /Upcoming events/
   end
 

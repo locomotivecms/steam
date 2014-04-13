@@ -1,12 +1,12 @@
 module Locomotive::Steam
-  class Server
+  module Middlewares
 
     # Mimic the submission of a content entry
     #
-    class EntrySubmission < Middleware
+    class EntrySubmission < Base
 
-      def call(env)
-        self.set_accessors(env)
+      def _call(env)
+        super
 
         if self.request.post? && env['PATH_INFO'] =~ /^\/entry_submissions\/(.*)/
           self.process_form($1)

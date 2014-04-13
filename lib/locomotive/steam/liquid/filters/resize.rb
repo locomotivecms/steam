@@ -5,7 +5,8 @@ module Locomotive
         module Resize
 
           def resize(input, resize_string)
-            Locomotive::Steam::Dragonfly.instance.resize_url(input, resize_string)
+            dragonfly = @context.registers[:services][:dragonfly]
+            dragonfly.resize_url(input, resize_string)
           end
 
         end

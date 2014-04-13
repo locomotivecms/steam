@@ -1,12 +1,12 @@
 module Locomotive::Steam
-  class Server
+  module Middlewares
 
     # Set the timezone according to the settings of the site
     #
-    class Timezone < Middleware
+    class Timezone < Base
 
-      def call(env)
-        self.set_accessors(env)
+      def _call(env)
+        super
 
         Time.use_zone(site.try(:timezone) || 'UTC') do
           app.call(env)

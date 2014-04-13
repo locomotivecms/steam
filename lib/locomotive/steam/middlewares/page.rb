@@ -1,13 +1,13 @@
 module Locomotive::Steam
-  class Server
+  module Middlewares
 
     # Sanitize the path from the previous middleware in order
     # to make it work for the renderer.
     #
-    class Page < Middleware
+    class Page < Base
 
-      def call(env)
-        self.set_accessors(env)
+      def _call(env)
+        super
 
         self.set_page!(env)
 
@@ -27,8 +27,6 @@ module Locomotive::Steam
       end
 
       def fetch_page
-        
-
         matchers = self.path_combinations(self.path)
 
         pages = self.mounting_point.pages.values.find_all do |_page|

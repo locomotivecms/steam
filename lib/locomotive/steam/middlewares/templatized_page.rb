@@ -1,10 +1,10 @@
 module Locomotive::Steam
-  class Server
+  module Middlewares
 
-    class TemplatizedPage < Middleware
+    class TemplatizedPage < Base
 
-      def call(env)
-        self.set_accessors(env)
+      def _call(env)
+        super
 
         if self.page && self.page.templatized?
           self.set_content_entry!(env)

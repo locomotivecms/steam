@@ -1,10 +1,10 @@
 module Locomotive::Steam
-  class Server
+  module Middlewares
 
-    class Middleware
+    class Base
 
-      attr_accessor :app, :request, :path, :liquid_assigns
-
+      attr_accessor :app, :request, :path
+      attr_accessor :liquid_assigns, :services
       attr_accessor :mounting_point, :page, :content_entry
 
       def initialize(app = nil)
@@ -12,17 +12,19 @@ module Locomotive::Steam
       end
 
       def call(env)
-        app.call(env)
+        dup._call(env) # thread-safe purpose
+      end
+
+      def _call(env)
+        self.set_accessors(env)
       end
 
       protected
 
       def set_accessors(env)
-        self.path           = env['steam.path']
-        self.request        = Rack::Request.new(env)
-        self.mounting_point = env['steam.mounting_point']
-        self.page           = env['steam.page']
-        self.content_entry  = env['steam.content_entry']
+        %w(path request mounting_point page content_entry services).each do |name|
+          self.send(:"#{name}=", env["steam.#{name}"])
+        end
 
         env['steam.liquid_assigns'] ||= {}
         self.liquid_assigns = env['steam.liquid_assigns']

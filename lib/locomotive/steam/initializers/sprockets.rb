@@ -1,0 +1,1 @@
+Sprockets::Sass.add_sass_functions = false

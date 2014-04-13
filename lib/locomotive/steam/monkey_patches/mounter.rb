@@ -1,3 +1,5 @@
+require 'locomotive/mounter'
+
 module Locomotive
   module Mounter
     module Models
@@ -27,6 +29,26 @@ module Locomotive
         end
 
       end
+    end
+
+    module Reader
+      module FileSystem
+        class Runner
+
+          def new_mounting_point(host)
+            self.mounting_point
+          end
+
+        end
+      end
+    end
+
+    class MountingPoint
+
+      def assets_path
+        File.join(self.path, 'public')
+      end
+
     end
   end
 end

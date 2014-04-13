@@ -1,9 +1,9 @@
 module Locomotive::Steam
-  class Server
+  module Middlewares
 
     # Track the request into the current logger
     #
-    class Logging < Middleware
+    class Logging < Base
 
       def call(env)
         now = Time.now

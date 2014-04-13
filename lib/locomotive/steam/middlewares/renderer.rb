@@ -1,10 +1,10 @@
 module Locomotive::Steam
-  class Server
+  module Middlewares
 
-    class Renderer < Middleware
+    class Renderer < Base
 
-      def call(env)
-        self.set_accessors(env)
+      def _call(env)
+        super
 
         if self.page
           if self.page.redirect?
@@ -107,6 +107,7 @@ module Locomotive::Steam
           site:           self.site,
           page:           self.page,
           mounting_point: self.mounting_point,
+          services:       self.services,
           inline_editor:  false,
           logger:         Locomotive::Steam::Logger
         }

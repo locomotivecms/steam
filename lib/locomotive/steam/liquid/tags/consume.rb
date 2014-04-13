@@ -72,7 +72,8 @@ module Locomotive
           def render_all_without_cache(context)
             context.stack do
               begin
-                context.scopes.last[@target.to_s] = Locomotive::Steam::Httparty::Webservice.consume(@url, @options.symbolize_keys)
+                context.scopes.last[@target.to_s] = external_api_service(context).consume(@url, @options.symbolize_keys)
+
                 self.cached_response = context.scopes.last[@target.to_s]
               rescue Timeout::Error
                 context.scopes.last[@target.to_s] = self.cached_response
@@ -86,6 +87,10 @@ module Locomotive
 
               render_all(@nodelist, context)
             end
+          end
+
+          def external_api_service(context)
+            context.registers[:services][:external_api]
           end
 
         end

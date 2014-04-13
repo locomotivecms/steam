@@ -1,13 +1,13 @@
 module Locomotive::Steam
-  class Server
+  module Middlewares
 
     # Sanitize the path from the previous middleware in order
     # to make it work for the renderer.
     #
-    class Path < Middleware
+    class Path < Base
 
-      def call(env)
-        self.set_accessors(env)
+      def _call(env)
+        super
 
         self.set_path!(env)
 

@@ -1,80 +1,55 @@
-require 'better_errors'
-require 'coffee_script'
-
-require_relative 'listen'
-require_relative 'server/middleware'
-require_relative 'server/favicon'
-require_relative 'server/dynamic_assets'
-require_relative 'server/logging'
-require_relative 'server/entry_submission'
-require_relative 'server/path'
-require_relative 'server/locale'
-require_relative 'server/page'
-require_relative 'server/timezone'
-require_relative 'server/templatized_page'
-require_relative 'server/renderer'
-
-require_relative 'liquid'
-require_relative 'initializers'
+require_relative 'core_ext'
 require_relative 'monkey_patches'
+require_relative 'liquid'
+require_relative 'services'
+require_relative 'middlewares'
 
 module Locomotive::Steam
   class Server
 
+    attr_reader :reader, :app, :options
+
     def initialize(reader, options = {})
-      Locomotive::Steam::Dragonfly.setup!(reader.mounting_point.path)
+      @reader   = reader
+      @options  = options
 
-      Sprockets::Sass.add_sass_functions = false
-
-      @reader = reader
-      @app    = self.create_rack_app(@reader)
-
-      BetterErrors.application_root = reader.mounting_point.path
+      stack     = Middlewares::Stack.new(options)
+      @app      = stack.create
     end
 
     def call(env)
-      env['steam.mounting_point'] = @reader.mounting_point
+      dup._call(env) # thread-safe purpose
+    end
+
+    def _call(env)
+      set_request(env)
+
+      set_mounting_point(env)
+
+      set_services(env)
+
       @app.call(env)
     end
 
     protected
 
-    def create_rack_app(reader)
-      Rack::Builder.new do
-        use Rack::Lint
+    def set_request(env)
+      @request = Rack::Request.new(env)
+      env['steam.request'] = @request
+    end
 
-        use BetterErrors::MiddlewareWrapper
+    def set_mounting_point(env)
+      # one single mounting point per site
+      @mounting_point = @reader.new_mounting_point(@request.host)
+      env['steam.mounting_point'] = @reader.mounting_point
+    end
 
-        use Rack::Session::Cookie, {
-          key:          'steam.session',
-          path:         '/',
-          expire_after: 2592000,
-          secret:       'uselessinlocal'
-        }
-
-        use ::Dragonfly::Middleware, :images
-
-        use Rack::Static, {
-          urls: ['/images', '/fonts', '/samples', '/media'],
-          root: File.join(reader.mounting_point.path, 'public')
-        }
-
-        use Favicon
-        use DynamicAssets, reader.mounting_point.path
-
-        use Logging
-
-        use EntrySubmission
-
-        use Path
-        use Locale
-        use Timezone
-
-        use Page
-        use TemplatizedPage
-
-        run Renderer.new
-      end
+    def set_services(env)
+      env['steam.services'] = {
+        dragonfly:      Locomotive::Steam::Services::Dragonfly.new(@mounting_point.path),
+        markdown:       Locomotive::Steam::Services::Markdown.new,
+        external_api:   Locomotive::Steam::Services::ExternalAPI.new
+      }
     end
 
   end
