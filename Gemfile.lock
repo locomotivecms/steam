@@ -2,7 +2,6 @@ PATH
   remote: .
   specs:
     locomotivecms_steam (0.1.0)
-      activesupport (~> 3.2)
       dragonfly (~> 1.0.3)
       locomotivecms-solid
       locomotivecms_common (~> 0.0.1)

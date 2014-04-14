@@ -1,8 +1,4 @@
-# encoding: utf-8
-
 require File.dirname(__FILE__) + '/../integration_helper'
-require 'locomotive/steam/server'
-require 'rack/test'
 
 describe 'Complex with_scope conditions' do
 

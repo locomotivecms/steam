@@ -1,4 +1,5 @@
 require 'common'
+require_relative '../../lib/locomotive/steam/initializers'
 
 module Spec
   module Helpers
@@ -12,18 +13,16 @@ module Spec
     end
 
     def run_server
+      Locomotive::Common.reset
       Locomotive::Common.configure do |config|
         path = File.join(File.expand_path('../../spec/fixtures/default/log/locomotivecms.log'))
         config.notifier = Locomotive::Common::Logger.setup(path)
       end
 
+      Locomotive::Common::Logger.info 'Server started...'
+
       reader = Locomotive::Mounter::Reader::FileSystem.instance
       reader.run!(path: 'spec/fixtures/default')
-
-      # require 'locomotive/steam/initializers'
-      require_relative '../../lib/locomotive/steam/initializers/sprockets.rb'
-      require_relative '../../lib/locomotive/steam/initializers/i18n.rb'
-      require_relative '../../lib/locomotive/steam/initializers/dragonfly.rb'
 
       Locomotive::Steam::Server.new(reader)
     end
