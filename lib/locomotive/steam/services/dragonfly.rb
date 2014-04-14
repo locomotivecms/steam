@@ -16,7 +16,7 @@ module Locomotive
         def resize_url(source, resize_string)
           image = (case url_or_path = get_url_or_path(source)
           when '', nil
-            Locomotive::Steam::Logger.error "Unable to resize on the fly: #{source.inspect}"
+            Locomotive::Common::Logger.error "Unable to resize on the fly: #{source.inspect}"
             nil
           when /^http:\/\//
             app.fetch_url(url_or_path)

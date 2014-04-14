@@ -15,4 +15,4 @@ Dragonfly.app(:steam).configure do
   fetch_url_whitelist /.+/
 end
 
-Dragonfly.logger = Locomotive::Steam::Logger.instance
+Dragonfly.logger = Locomotive::Common::Logger.instance

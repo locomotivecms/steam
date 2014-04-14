@@ -15,7 +15,7 @@ module Locomotive
         full_error_message = "#{parent_exception.message}\n\t"
         full_error_message += parent_exception.backtrace.join("\n\t")
         full_error_message += "\n\n"
-        Locomotive::Steam::Logger.fatal full_error_message
+        Locomotive::Common::Logger.fatal full_error_message
       end
 
     end
@@ -40,7 +40,7 @@ module Locomotive
 
         message = "#{self.template.filepath}:#{line}:in `#{self.name}'"
 
-        Locomotive::Steam::Logger.fatal "[ERROR] #{exception.message} - #{message}\n".red
+        Locomotive::Common::Logger.fatal "[ERROR] #{exception.message} - #{message}\n".red
 
         exception.backtrace.unshift message
       end
