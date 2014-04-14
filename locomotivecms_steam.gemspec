@@ -1,8 +1,4 @@
-# encoding: utf-8
-lib = File.expand_path('../lib/', __FILE__)
-$:.unshift lib unless $:.include?(lib)
-
-require 'locomotive/steam/version'
+require_relative 'lib/steam'
 
 Gem::Specification.new do |spec|
   spec.name          = 'locomotivecms_steam'
@@ -33,7 +29,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'moneta',                 '~> 0.7.20'
   spec.add_dependency 'sprockets',              '~> 2.0'
   spec.add_dependency 'sprockets-sass',         '~> 1.0'
-  # spec.add_dependency 'better_errors',         '~> 1.0'
   spec.add_dependency 'dragonfly',              '~> 1.0.3'
   spec.add_dependency 'activesupport',          '~> 3.2' # TODO: upgrade to 4.x
   spec.add_dependency 'will_paginate',          '~> 3.0' # TODO: move to kaminari
@@ -41,6 +36,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'locomotivecms_mounter'
   spec.add_dependency 'locomotivecms-solid'
+  spec.add_dependency 'locomotivecms_common',   '~> 0.0.1'
 
   spec.required_ruby_version = '~> 2.0'
 end

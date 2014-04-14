@@ -109,7 +109,7 @@ module Locomotive::Steam
           mounting_point: self.mounting_point,
           services:       self.services,
           inline_editor:  false,
-          logger:         Locomotive::Steam::Logger
+          logger:         Locomotive::Common::Logger
         }
       end
 
