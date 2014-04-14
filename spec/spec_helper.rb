@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 
+require 'common'
 require 'i18n-spec'
 require 'coveralls'
 
