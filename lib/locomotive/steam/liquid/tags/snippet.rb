@@ -30,7 +30,7 @@ module Locomotive
                 partial.render(context)
               end)
 
-              Locomotive::Steam::Logger.info "  Steamed snippet #{name}"
+              Locomotive::Common::Logger.info "  Steamed snippet #{name}"
 
               output
             end

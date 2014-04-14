@@ -6,7 +6,7 @@ module Locomotive
           class ShortText < Base
 
             def render(context)
-              Locomotive::Steam::Logger.warn "  [#{self.current_block_name(context)}/#{@slug}] The editable_{short|long}_text tags are deprecated. Use editable_text instead.".colorize(:orange)
+              Locomotive::Common::Logger.warn "  [#{self.current_block_name(context)}/#{@slug}] The editable_{short|long}_text tags are deprecated. Use editable_text instead.".colorize(:orange)
               super(context)
             end
 

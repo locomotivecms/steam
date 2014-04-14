@@ -13,7 +13,7 @@ module Locomotive
             # build the chains of conditions
             conditions = _conditions.map { |name, value| Condition.new(name, value) }
 
-            Locomotive::Steam::Logger.info "[with_scope] conditions: #{conditions.map(&:to_s).join(', ')}"
+            Locomotive::Common::Logger.info "[with_scope] conditions: #{conditions.map(&:to_s).join(', ')}"
 
             # get only the entries matching ALL the conditions
             _entries = entries.find_all do |content|
@@ -38,7 +38,7 @@ module Locomotive
 
           name, direction = order_by.split.map(&:to_sym)
 
-          Locomotive::Steam::Logger.info "[with_scope] order_by #{name} #{direction || 'asc'}"
+          Locomotive::Common::Logger.info "[with_scope] order_by #{name} #{direction || 'asc'}"
 
           if direction == :asc || direction.nil?
             entries.sort { |a, b| a.send(name) <=> b.send(name) }

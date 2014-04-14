@@ -1,6 +1,6 @@
-$:.unshift(File.expand_path(File.dirname(__FILE__) + '/../..'))
+require 'rubygems'
+require 'bundler/setup'
 
-require_relative 'logger'
 require_relative 'version'
 require_relative 'exceptions'
 require_relative 'server'
@@ -12,7 +12,7 @@ module Locomotive
     class StandaloneServer < Server
 
       def initialize(path)
-        Locomotive::Steam::Logger.setup(path, false)
+        Locomotive::Common::Logger.setup(path, false)
 
         # get the reader
         reader = Locomotive::Mounter::Reader::FileSystem.instance
