@@ -54,7 +54,7 @@ module Locomotive::Steam
       end
 
       def log(msg)
-        Locomotive::Steam::Logger.info msg
+        Locomotive::Common::Logger.info msg
       end
 
     end
