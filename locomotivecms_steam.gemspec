@@ -33,7 +33,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'moneta',                 '~> 0.7.20'
   spec.add_dependency 'sprockets',              '~> 2.0'
   spec.add_dependency 'sprockets-sass',         '~> 1.0'
-  # spec.add_dependency 'better_errors',         '~> 1.0'
   spec.add_dependency 'dragonfly',              '~> 1.0.3'
   spec.add_dependency 'activesupport',          '~> 3.2' # TODO: upgrade to 4.x
   spec.add_dependency 'will_paginate',          '~> 3.0' # TODO: move to kaminari

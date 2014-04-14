@@ -1,4 +1,7 @@
 require 'rack/session/moneta'
+require 'rack/builder'
+require 'rack/lint'
+require 'dragonfly/middleware'
 
 module Locomotive
   module Steam
