@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'locomotivecms_common', path: '../common'
+  gem 'locomotivecms_common', '~> 0.0.1', require: 'common' # path: '../common'
   gem 'thin'
 end
 

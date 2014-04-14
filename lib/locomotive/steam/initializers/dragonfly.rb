@@ -1,4 +1,5 @@
 require 'dragonfly'
+require 'common'
 
 # Configure
 Dragonfly.app(:steam).configure do

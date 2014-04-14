@@ -5,6 +5,7 @@ PATH
       activesupport (~> 3.2)
       dragonfly (~> 1.0.3)
       locomotivecms-solid
+      locomotivecms_common (~> 0.0.1)
       locomotivecms_mounter
       moneta (~> 0.7.20)
       rack-cache (~> 1.1)
@@ -12,11 +13,6 @@ PATH
       sprockets (~> 2.0)
       sprockets-sass (~> 1.0)
       will_paginate (~> 3.0)
-
-PATH
-  remote: ../common
-  specs:
-    locomotivecms_common (0.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -78,6 +74,7 @@ GEM
     locomotivecms-liquid (2.6.0)
     locomotivecms-solid (0.2.2.1)
       locomotivecms-liquid (~> 2.6.0)
+    locomotivecms_common (0.0.1)
     locomotivecms_mounter (1.4.0)
       RedCloth (~> 4.2.3)
       activesupport (~> 3.2.15)
@@ -170,7 +167,7 @@ DEPENDENCIES
   coveralls
   i18n-spec
   launchy
-  locomotivecms_common!
+  locomotivecms_common (~> 0.0.1)
   locomotivecms_steam!
   pry
   rack-test
