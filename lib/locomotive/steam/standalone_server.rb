@@ -1,6 +1,6 @@
-$:.unshift(File.expand_path(File.dirname(__FILE__) + '/../..'))
+require 'rubygems'
+require 'bundler/setup'
 
-require_relative 'logger'
 require_relative 'version'
 require_relative 'exceptions'
 require_relative 'server'
