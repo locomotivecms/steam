@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'sprockets-sass',         '~> 1.0'
   spec.add_dependency 'dragonfly',              '~> 1.0.3'
   spec.add_dependency 'will_paginate',          '~> 3.0' # TODO: move to kaminari
-  spec.add_dependency 'redcarpet',              '~> 3.1'
+  spec.add_dependency 'kramdown',               '~> 1.3.3'
 
   spec.add_dependency 'locomotivecms_mounter'
   spec.add_dependency 'locomotivecms-solid'

@@ -1,4 +1,4 @@
-require 'redcarpet'
+require 'kramdown'
 
 module Locomotive
   module Steam
@@ -9,18 +9,9 @@ module Locomotive
           self.class.parser.render(text)
         end
 
+        # http://kramdown.gettalong.org/options.html
         def self.parser
-          @@markdown ||= Redcarpet::Markdown.new Redcarpet::Steam::HTML, {
-            autolink:         true,
-            fenced_code:      true,
-            generate_toc:     true,
-            gh_blockcode:     true,
-            hard_wrap:        true,
-            no_intraemphasis: true,
-            strikethrough:    true,
-            tables:           true,
-            xhtml:            true
-          }
+          @@markdown ||= Kramdown::Document.new(text).to_html
         end
 
       end
