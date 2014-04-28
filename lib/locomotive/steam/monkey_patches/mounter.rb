@@ -35,7 +35,7 @@ module Locomotive
       module FileSystem
         class Runner
 
-          def new_mounting_point(host)
+          def build_mounting_point(host)
             self.mounting_point
           end
 

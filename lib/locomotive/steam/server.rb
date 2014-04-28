@@ -7,14 +7,14 @@ require_relative 'middlewares'
 module Locomotive::Steam
   class Server
 
-    attr_reader :reader, :app, :options
+    attr_reader :datastore, :app, :options
 
-    def initialize(reader, options = {})
-      @reader   = reader
-      @options  = options
+    def initialize(datastore, options = {})
+      @datastore  = datastore
+      @options    = options
 
-      stack     = Middlewares::Stack.new(options)
-      @app      = stack.create
+      stack       = Middlewares::Stack.new(options)
+      @app        = stack.create
     end
 
     def call(env)
@@ -40,8 +40,8 @@ module Locomotive::Steam
 
     def set_mounting_point(env)
       # one single mounting point per site
-      @mounting_point = @reader.new_mounting_point(@request.host)
-      env['steam.mounting_point'] = @reader.mounting_point
+      @mounting_point = @datastore.build_mounting_point(@request.host)
+      env['steam.mounting_point'] = @mounting_point
     end
 
     def set_services(env)
