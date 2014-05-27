@@ -1,4 +1,4 @@
-require_relative 'lib/steam'
+require_relative 'lib/locomotive/steam'
 
 Gem::Specification.new do |spec|
   spec.name          = 'locomotivecms_steam'

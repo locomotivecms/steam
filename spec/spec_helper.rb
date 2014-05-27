@@ -5,7 +5,7 @@ require 'common'
 require 'i18n-spec'
 require 'coveralls'
 
-require_relative '../lib/steam'
+require_relative '../lib/locomotive/steam'
 require_relative 'support'
 
 Coveralls.wear!

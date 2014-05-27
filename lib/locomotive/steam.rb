@@ -1,5 +1,5 @@
-require_relative 'locomotive/steam/version'
-require_relative 'locomotive/steam/exceptions'
+require_relative 'steam/version'
+require_relative 'steam/exceptions'
 
 require 'sprockets'
 require 'sprockets-sass'
