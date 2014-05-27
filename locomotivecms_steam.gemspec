@@ -34,6 +34,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'will_paginate',          '~> 3.0' # TODO: move to kaminari
   spec.add_dependency 'kramdown',               '~> 1.3.3'
   spec.add_dependency 'haml'
+  spec.add_dependency 'coffee-script',          '~> 2.2.0'
+  spec.add_dependency 'haml',                   '~> 4.0.3'
 
 
   spec.add_dependency 'locomotivecms_models',   '~> 0.0.1'
