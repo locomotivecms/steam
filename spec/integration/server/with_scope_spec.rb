@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../integration_helper'
 
-describe 'Complex with_scope conditions' do
+describe 'Complex with_scope conditions', pending: true do
 
   include Rack::Test::Methods
 
