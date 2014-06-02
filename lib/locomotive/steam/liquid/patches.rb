@@ -15,14 +15,14 @@ module Liquid
   class Template
 
     # creates a new <tt>Template</tt> object from liquid source code
-    def parse_with_utf8(source, context = {})
+    parse_method = instance_method(:parse)
+
+    define_method :parse do |source, context={}|
       if RUBY_VERSION =~ /1\.9/
         source = source.force_encoding('UTF-8') if source.present?
       end
-      self.parse_without_utf8(source, context)
+      parse_method.bind(self).call(source, context)
     end
-
-    alias_method_chain :parse, :utf8
 
   end
 
