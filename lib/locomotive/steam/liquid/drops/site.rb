@@ -4,8 +4,9 @@ module Locomotive
       module Drops
         class Site < Base
           include Scopeable
+          extend Forwardable
 
-          delegate :name, :seo_title, :meta_description, :meta_keywords, to: :@_source
+          def_delegators :@_source, :name, :seo_title, :meta_description, :meta_keywords
 
           def index
             @index ||= self.mounting_point.pages['index']
