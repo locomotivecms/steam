@@ -5,7 +5,7 @@ module Locomotive
         include Repository
 
         def [](path)
-          matching_paths([paths])
+          matching_paths([paths]).first
         end
 
         def matching_paths(paths)

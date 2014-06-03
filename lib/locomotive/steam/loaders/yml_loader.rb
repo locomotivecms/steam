@@ -1,6 +1,7 @@
 require_relative 'yml/site_loader'
 require_relative 'yml/pages_loader'
 require_relative 'yml/utils/yaml_front_matters_template'
+require_relative 'yml/utils/localized_tree'
 
 module Locomotive
   module Steam

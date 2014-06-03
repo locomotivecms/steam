@@ -20,22 +20,10 @@ module Locomotive
             all.each do |record|
               page = entity_class.new(record)
               repository.create page, :en
-
             end
           end
 
           protected
-
-          # Create a ordered list of pages from the Hash
-          #
-          # @return [ Array ] An ordered list of pages
-          #
-          def pages_to_list
-            # sort by fullpath first
-            list = self.pages.values.sort { |a, b| a.fullpath <=> b.fullpath }
-            # sort finally by depth
-            list.sort { |a, b| a.depth <=> b.depth }
-          end
 
           def build_relationships(parent, list)
             # do not use an empty template for other locales than the default one
@@ -62,10 +50,9 @@ module Locomotive
           def all
             [].tap do |page_records|
               position, last_dirname = nil, nil
-
-              Dir.glob(File.join(root_dir, '**/*')).sort.each do |filepath|
-                next unless File.directory?(filepath) || filepath =~ /\.(#{Locomotive::Steam::TEMPLATE_EXTENSIONS.join('|')})$/
-
+              tree.each do |pagename, localizations|
+                filepath = localizations.fetch(:default)
+                #next unless File.directory?(filepath) || filepath =~ /\.(#{Locomotive::Steam::TEMPLATE_EXTENSIONS.join('|')})$/
                 if last_dirname != File.dirname(filepath)
                   position, last_dirname = 100, File.dirname(filepath)
                 end
@@ -77,6 +64,16 @@ module Locomotive
                 position += 1
               end
             end
+          end
+
+          def tree
+           Locomotive::Steam::Utils::LocalizedTree
+              .new(all_files, Locomotive::Steam::TEMPLATE_EXTENSIONS)
+              .to_hash
+          end
+
+          def all_files
+            Dir.glob(File.join(root_dir, '**/*')).sort
           end
 
           def page_attributes(filepath)
