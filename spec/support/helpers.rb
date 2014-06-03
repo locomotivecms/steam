@@ -1,8 +1,17 @@
-require 'common'
+require 'locomotive/common'
+require 'locomotive/models'
 require_relative '../../lib/locomotive/steam/initializers'
+require_relative '../../lib/locomotive/steam/loaders/yml_loader'
 
 module Spec
   module Helpers
+
+    def bootstrap_site
+      adapter = Locomotive::Adapters::MemoryAdapter
+      mapper = Locomotive::Mapper.load_from_file! adapter, File.join(File.expand_path('lib/locomotive/steam/mapper.rb'))
+      mapper.load!
+      Locomotive::Steam::Loader::YmlLoader.new(site_path, mapper).load!
+    end
 
     def reset!
       FileUtils.rm_rf(File.expand_path('../../../site', __FILE__))
@@ -15,17 +24,16 @@ module Spec
     def run_server
       Locomotive::Common.reset
       Locomotive::Common.configure do |config|
-        path = File.join(File.expand_path('../../spec/fixtures/default/log/locomotivecms.log'))
+        path = File.join(site_path, 'log/locomotivecms.log')
         config.notifier = Locomotive::Common::Logger.setup(path)
       end
 
       Locomotive::Common::Logger.info 'Server started...'
-
-      reader = Locomotive::Mounter::Reader::FileSystem.instance
-      reader.run!(path: 'spec/fixtures/default')
-
-      Locomotive::Steam::Server.new(reader)
+      Locomotive::Steam::Server.new(path: site_path)
     end
 
+    def site_path
+      File.expand_path('../../fixtures/default/', __FILE__)
+    end
   end
 end

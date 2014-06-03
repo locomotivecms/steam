@@ -1,9 +1,15 @@
 require 'rubygems'
 require 'bundler/setup'
 
-require 'common'
+require 'locomotive/common'
 require 'i18n-spec'
 require 'coveralls'
+
+begin
+  require 'pry'
+rescue LoadError
+end
+
 
 require_relative '../lib/locomotive/steam'
 require_relative 'support'
@@ -17,6 +23,9 @@ RSpec.configure do |config|
   config.run_all_when_everything_filtered = true
 
   config.before(:all) { remove_logs }
-  config.before { reset! }
+  config.before do
+    reset!
+    bootstrap_site
+  end
   config.after  { reset! }
 end
