@@ -2,10 +2,6 @@ module Liquid
 
   class Drop
 
-    def mounting_point
-      @context.registers[:mounting_point]
-    end
-
     def site
       @context.registers[:site]
     end

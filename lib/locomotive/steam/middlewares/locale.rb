@@ -20,15 +20,14 @@ module Locomotive::Steam
       protected
 
       def set_locale!(env)
-        locale  = self.mounting_point.default_locale
+        locale  = site.default_locale
 
-        if self.path =~ /^(#{self.mounting_point.locales.join('|')})+(\/|$)/
+        if self.path =~ /^(#{self.site.locales.join('|')})+(\/|$)/
           locale    = $1
           self.path = self.path.gsub($1 + $2, '')
           self.path = 'index' if self.path.blank?
         end
 
-        Locomotive::Mounter.locale = locale
         ::I18n.locale = locale
 
         self.log "Detecting locale #{locale.upcase}"

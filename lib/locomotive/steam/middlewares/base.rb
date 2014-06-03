@@ -5,7 +5,7 @@ module Locomotive::Steam
 
       attr_accessor :app, :request, :path
       attr_accessor :liquid_assigns, :services
-      attr_accessor :mounting_point, :page, :content_entry
+      attr_accessor :site, :page, :content_entry, :locale
 
       def initialize(app = nil)
         @app = app
@@ -22,16 +22,12 @@ module Locomotive::Steam
       protected
 
       def set_accessors(env)
-        %w(path request mounting_point page content_entry services).each do |name|
-          self.send(:"#{name}=", env["steam.#{name}"])
+        %w(path site request page content_entry services locale).each do |name|
+          self.send(:"#{name}=", env.fetch("steam.#{name}", nil))
         end
 
         env['steam.liquid_assigns'] ||= {}
-        self.liquid_assigns = env['steam.liquid_assigns']
-      end
-
-      def site
-        self.mounting_point.site
+        self.liquid_assigns = env.fetch('steam.liquid_assigns')
       end
 
       def params

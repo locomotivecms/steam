@@ -8,3 +8,9 @@ require 'compass'
 
 require 'httmultiparty'
 require 'mime/types'
+
+module Locomotive
+  module Steam
+    TEMPLATE_EXTENSIONS = %w(liquid haml)
+  end
+end

@@ -29,10 +29,7 @@ module Locomotive::Steam
       def fetch_page
         matchers = self.path_combinations(self.path)
 
-        pages = self.mounting_point.pages.values.find_all do |_page|
-          matchers.include?(_page.safe_fullpath) ||
-          matchers.include?(_page.safe_fullpath.try(:underscore))
-        end.sort_by { |p| p.position || Float::INFINITY }
+        pages = Locomotive::Models[:pages].matching_paths(matchers)
 
         if pages.size > 1
           self.log "Found multiple pages: #{pages.collect(&:title).join(', ')}"
@@ -53,7 +50,7 @@ module Locomotive::Steam
         (can_include_template ? [segment, '*'] : [segment]).map do |_segment|
           if (_combinations = _path_combinations(segments.clone, can_include_template && _segment != '*'))
             [*_combinations].map do |_combination|
-              File.join(_segment, _combination)
+              URI.join(_segment, _combination)
             end
           else
             [_segment]
