@@ -63,7 +63,7 @@ module Locomotive
             [].tap do |page_records|
               position, last_dirname = nil, nil
 
-              Dir.glob(File.join(@root_path, '**/*')).sort.each do |filepath|
+              Dir.glob(File.join(root_dir, '**/*')).sort.each do |filepath|
                 next unless File.directory?(filepath) || filepath =~ /\.(#{Locomotive::Steam::TEMPLATE_EXTENSIONS.join('|')})$/
 
                 if last_dirname != File.dirname(filepath)
