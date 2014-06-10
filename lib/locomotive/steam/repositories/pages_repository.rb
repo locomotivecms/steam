@@ -3,14 +3,16 @@ module Locomotive
     module Repositories
       class PagesRepository
         include Repository
+        attr_accessor :current_locale
 
         def [](path)
-          matching_paths([paths]).first
+          query(current_locale) do
+            where('fullpath.eq' => path)
+          end.first
         end
 
         def matching_paths(paths)
-          # TODO multilocales
-          query(:en) do
+          query(current_locale) do
             where('fullpath.in' => paths)
             order_by('position ASC')
           end
