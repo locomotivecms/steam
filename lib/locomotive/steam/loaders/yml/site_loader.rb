@@ -14,7 +14,7 @@ module Locomotive
             repository = @mapper.collection(:sites).repository
             all.each do |site_hash|
               site = entity_class.new(site_hash)
-              repository.create site, site_hash['locales'].first
+              repository.create site
             end
           end
 
@@ -23,7 +23,15 @@ module Locomotive
           def all
             attributes = load_attributes
             (attributes['domains'] ||= []) << '0.0.0.0'
+            %w{seo_title meta_keywords meta_description}.each do |field|
+              attributes[field] = to_locale(attributes[field], attributes['locales'].first)
+            end
             [attributes]
+          end
+
+          def to_locale(field, default)
+            return field if field.respond_to?(:[]) && field[default]
+            { "#{default}" => field }
           end
 
           def load_attributes
