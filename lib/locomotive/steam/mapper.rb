@@ -21,10 +21,32 @@ end
 collection :pages do
   entity     Locomotive::Steam::Entities::Page
   repository Locomotive::Steam::Repositories::PagesRepository
-  attribute :fullpath
-  attribute :position
+
   attribute :site, association: :sites
   attribute :content_type, association: :content_types
+  attribute :parent,            association: :pages
+  attribute :title,             localized: true
+  attribute :slug,              localized: true
+  attribute :fullpath,          localized: true
+  attribute :redirect_url,      localized: true
+  attribute :redirect_type,     default: 301
+  attribute :template,          localized: true
+  attribute :handle
+  attribute :listed,            default: false
+  attribute :searchable
+  attribute :templatized,       default: false
+  attribute :content_type
+  attribute :published,         default: true
+  attribute :cache_strategy
+  attribute :response_type
+  attribute :position
+
+  attribute :seo_title,         localized: true
+  attribute :meta_keywords,     localized: true
+  attribute :meta_description,  localized: true
+
+  attribute :editable_elements, type: :array, class_name: 'Locomotive::Mounter::Models::EditableElement'
+
 end
 
 collection :content_types do

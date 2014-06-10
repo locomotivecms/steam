@@ -50,7 +50,8 @@ module Locomotive
         # @return [ Boolean ] True if the redirect_url property is set
         #
         def redirect?
-          !self.redirect_url.blank?
+          false
+          #!self.redirect_url.blank?
         end
 
         # Depth of the page in the site tree.
@@ -71,31 +72,31 @@ module Locomotive
         #
         # @param [ String ] fullpath The fullpath
         #
-        def fullpath_with_setting_slug=(fullpath)
-          if fullpath && self.slug.nil?
-            self.slug = File.basename(fullpath)
-          end
+        # def fullpath_with_setting_slug=(fullpath)
+        #   if fullpath && self.slug.nil?
+        #     self.slug = File.basename(fullpath)
+        #   end
 
-          self.fullpath_without_setting_slug = fullpath
-        end
+        #   self.fullpath_without_setting_slug = fullpath
+        # end
 
-        alias_method_chain :fullpath=, :setting_slug
+        # alias_method_chain :fullpath=, :setting_slug
 
         # Modified setter in order to set inheritance fields from parent
         #
         # @param [ String ] fullpath The fullpath
         #
-        def parent_with_inheritance=(parent)
-          self.templatized_from_parent = parent.templatized?
+        # def parent_with_inheritance=(parent)
+        #   self.templatized_from_parent = parent.templatized?
 
-          # copy properties from the parent
-          %w(templatized content_type).each do |name|
-            self.send(:"#{name}=", parent.send(name.to_sym))
-          end
+        #   # copy properties from the parent
+        #   %w(templatized content_type).each do |name|
+        #     self.send(:"#{name}=", parent.send(name.to_sym))
+        #   end
 
-          self.parent_without_inheritance = parent
-        end
-        alias_method_chain :parent=, :inheritance
+        #   self.parent_without_inheritance = parent
+        # end
+        # alias_method_chain :parent=, :inheritance
 
         # Return the fullpath dasherized and with the "*" character
         # for the slug of templatized page.

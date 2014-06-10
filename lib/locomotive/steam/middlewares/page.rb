@@ -17,18 +17,17 @@ module Locomotive::Steam
       protected
 
       def set_page!(env)
-        page = self.fetch_page
-
+        page = self.fetch_page env['steam.locale']
         if page
-          self.log "Found page \"#{page.title}\" [#{page.safe_fullpath}]"
+          self.log "Found page \"#{page.title}\" [#{page.fullpath}]"
         end
 
         env['steam.page'] = page
       end
 
-      def fetch_page
+      def fetch_page locale
         matchers = self.path_combinations(self.path)
-
+        Locomotive::Models[:pages].current_locale = locale
         pages = Locomotive::Models[:pages].matching_paths(matchers)
 
         if pages.size > 1

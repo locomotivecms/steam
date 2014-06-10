@@ -1,5 +1,6 @@
 require 'locomotive/common'
 require 'locomotive/models'
+require 'locomotive/adapters/memory_adapter'
 require_relative '../../lib/locomotive/steam/initializers'
 require_relative '../../lib/locomotive/steam/loaders/yml_loader'
 
@@ -14,8 +15,7 @@ module Spec
     def mapper
       @mapper ||= begin
         adapter = Locomotive::Adapters::MemoryAdapter
-        mapper = Locomotive::Mapper.load_from_file! adapter, File.join(File.expand_path('lib/locomotive/steam/mapper.rb'))
-        mapper.load!
+        Locomotive::Mapper.load_from_file! adapter, File.join(File.expand_path('lib/locomotive/steam/mapper.rb'))
       end
     end
 

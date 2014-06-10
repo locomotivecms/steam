@@ -27,6 +27,7 @@ module Locomotive::Steam
       def render_page
         context = self.locomotive_context
         begin
+
           render(page, context)
         rescue Exception => e
 
