@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Locomotive::Steam::Loader::Yml::SiteLoader, focused: true do
+describe Locomotive::Steam::Loader::Yml::SiteLoader do
 
   let(:path) { default_fixture_site_path }
   let(:loader) { Locomotive::Steam::Loader::Yml::SiteLoader.new path, mapper }
