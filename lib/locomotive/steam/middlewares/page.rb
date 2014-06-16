@@ -9,7 +9,7 @@ module Locomotive::Steam
       def _call(env)
         super
 
-        self.set_page!(env)
+        set_page!(env)
 
         app.call(env)
       end
@@ -17,24 +17,28 @@ module Locomotive::Steam
       protected
 
       def set_page!(env)
-        page = self.fetch_page env['steam.locale']
+        page = fetch_page env['steam.locale']
         if page
-          self.log "Found page \"#{page.title}\" [#{page.fullpath}]"
+          log "Found page \"#{page.title}\" [#{page.fullpath}]"
         end
 
         env['steam.page'] = page
       end
 
       def fetch_page locale
-        matchers = self.path_combinations(self.path)
-        Locomotive::Models[:pages].current_locale = locale
-        pages = Locomotive::Models[:pages].matching_paths(matchers)
-
-        if pages.size > 1
-          self.log "Found multiple pages: #{pages.collect(&:title).join(', ')}"
+        decorated(locale) do
+          Locomotive::Models[:pages].current_locale = locale
+          Locomotive::Models[:pages].matching_paths(path_combinations(path)).tap do |pages|
+            if pages.size > 1
+              self.log "Found multiple pages: #{pages.all.collect(&:title).join(', ')}"
+            end
+          end.first
         end
+      end
 
-        pages.first
+      def decorated(locale)
+        entity = yield
+        Locomotive::Decorators::I18nDecorator.new(entity, locale) unless entity.nil?
       end
 
       def path_combinations(path)

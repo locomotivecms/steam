@@ -6,19 +6,19 @@ module Locomotive::Steam
       def _call(env)
         super
 
-        if self.page
-          if self.page.redirect?
-            self.redirect_to(self.page.redirect_url, self.page.redirect_type)
+        if page
+          if page.redirect?
+            redirect_to(page.redirect_url, page.redirect_type)
           else
-            type = self.page.response_type || 'text/html'
-            html = self.render_page
+            type = page.response_type || 'text/html'
+            html = render_page
 
-            self.log 'Rendered liquid page template'
+            log 'Rendered liquid page template'
 
             [200, { 'Content-Type' => type }, [html]]
           end
         else
-          [404, { 'Content-Type' => 'text/html' }, [self.render_404]]
+          [404, { 'Content-Type' => 'text/html' }, [render_404]]
         end
       end
 
@@ -26,13 +26,13 @@ module Locomotive::Steam
 
       def render_page
         context = self.locomotive_context
-        begin
-
+        # begin
+        #   binding.pry
           render(page, context)
-        rescue Exception => e
+        # rescue Exception => e
 
-          raise RendererException.new(e, self.page.title, self.page.template, context)
-        end
+        #   raise RendererException.new(e, self.page.title, self.page.template, context)
+        # end
       end
 
       def render(page, context)
@@ -50,7 +50,8 @@ module Locomotive::Steam
         }
 
         begin
-          ::Liquid::Template.parse(page.source, options)
+          binding.pry
+          ::Liquid::Template.parse(page.source(I18n.locale), options)
         rescue ::Liquid::SyntaxError
           # do it again on the raw source instead so that the error line matches
           # the source file.
