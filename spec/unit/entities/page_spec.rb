@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Locomotive::Steam::Entities::Page' do
+describe 'Locomotive::Steam::Entities::Page', focused: true do
 
   it 'builds an empty page' do
     build_page.should_not be_nil
@@ -29,50 +29,17 @@ describe 'Locomotive::Steam::Entities::Page' do
     it { build_page(fullpath: {en: 'about/the/team'}).depth.should eq 3 }
   end
 
-  describe '#fullpath=', pending: true do
+  describe '#fullpath=' do
     context 'when the page has no slug yet' do
       it 'also sets the slug' do
-        build_page(fullpath: 'this/is/the/page_full_path').slug.should eq 'page_full_path'
+        build_page(fullpath: {en: 'this/is/the/page_full_path'}).slug[:en].should eq 'page_full_path'
       end
     end
 
     context 'when the slug is already set' do
-      it 'keeps the original slug', pending: true do
-        build_page(fullpath: 'this/is/the/page_full_path', slug: 'the_slug').slug.should eq 'the_slug'
+      it 'keeps the original slug' do
+        build_page(fullpath: {en: 'this/is/the/page_full_path'}, slug: {en: 'the_slug'}).slug[:en].should eq 'the_slug'
       end
-    end
-  end
-
-  describe '#safe_fullpath', pending: true do
-    let(:index_page) { build_page(fullpath: 'index') }
-    let(:not_found_page) { build_page(fullpath: '404') }
-    let(:about_page) { build_page(fullpath: 'about_me', parent: index_page) }
-    let(:products_page) { build_page(fullpath: 'products', parent: index_page, templatized: true) }
-
-    context 'not templatized' do
-      context 'index or 404' do
-        it { index_page.safe_fullpath.should eq 'index' }
-        it { not_found_page.safe_fullpath.should eq '404' }
-      end
-
-      context 'other' do
-        it { about_page.safe_fullpath.should eq 'about-me' }
-      end
-    end
-
-    context 'templatized' do
-      subject { build_page(fullpath: 'products', parent: index_page, templatized: true) }
-      its(:safe_fullpath) { should eq '*' }
-    end
-
-    context 'templatized with not templatized parent' do
-      subject { build_page(fullpath: 'about_me/contact', parent: about_page, templatized: true) }
-      its(:safe_fullpath) { should eq 'about-me/*' }
-    end
-
-    context 'templatized parent' do
-      subject { build_page(fullpath: 'products/detail', parent: products_page) }
-      its(:safe_fullpath) { should eq '*/detail' }
     end
   end
 

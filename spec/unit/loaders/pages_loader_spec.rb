@@ -27,6 +27,7 @@ describe Locomotive::Steam::Loader::Yml::PagesLoader do
     context 'records content' do
       subject { Locomotive::Models[:pages]['index'] }
       it { subject.title[:en].should eql 'Home page' }
+      it { subject.title[:fr].should eql 'Page d\'accueil' }
     end
   end
 end

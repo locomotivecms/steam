@@ -8,8 +8,8 @@ module Locomotive
         attributes :parent, :title, :slug, :fullpath, :redirect_url, :redirect_type,
                    :template, :handle, :listed, :searchable, :templatized, :content_type,
                    :published, :cache_strategy, :response_type, :position, :seo_title,
-                   :meta_keywords, :meta_description, :editable_elements, :site, :site_id,
-                   :parent_id
+                   :meta_keywords, :meta_description, :editable_elements, :site,
+                   :site_id, :parent_id
 
         ## aliases ##
         alias :listed?      :listed
@@ -17,6 +17,7 @@ module Locomotive
         alias :templatized? :templatized
         alias :searchable?  :searchable
 
+        attr_accessor :templatized_from_parent
 
         # Tell if the page is either the index page.
         #
@@ -79,15 +80,16 @@ module Locomotive
         #
         # @param [ String ] fullpath The fullpath
         #
-        # def fullpath_with_setting_slug=(fullpath)
-        #   if fullpath && self.slug.nil?
-        #     self.slug = File.basename(fullpath)
-        #   end
+        def fullpath_with_setting_slug=(fullpath)
+          fullpath.each do |key, value|
+            if value && (self.slug ||= {})[key].nil?
+              self.slug[key] = File.basename(value)
+            end
+          end
+          self.fullpath_without_setting_slug = fullpath
+        end
 
-        #   self.fullpath_without_setting_slug = fullpath
-        # end
-
-        # alias_method_chain :fullpath=, :setting_slug
+        alias_method_chain :fullpath=, :setting_slug
 
         # Modified setter in order to set inheritance fields from parent
         #
@@ -105,24 +107,6 @@ module Locomotive
         # end
         # alias_method_chain :parent=, :inheritance
 
-        # Return the fullpath dasherized and with the "*" character
-        # for the slug of templatized page.
-        #
-        # @return [ String ] The safe full path or nil if the page is not translated in the current locale
-        #
-        def safe_fullpath
-          if index_or_404?
-            slug
-          else
-            base  = parent.safe_fullpath
-            _slug = if templatized? && !templatized_from_parent
-              '*'
-            else
-              slug
-            end
-            (base == 'index' ? _slug : File.join(base, _slug)).dasherize
-          end
-        end
         # Set the source of the page without any pre-rendering. Used by the API reader.
         #
         # @param [ String ] content The HTML raw template
