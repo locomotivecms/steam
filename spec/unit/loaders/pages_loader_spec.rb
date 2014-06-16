@@ -20,7 +20,8 @@ describe Locomotive::Steam::Loader::Yml::PagesLoader do
 
     it 'creates only one Entity for all locales' do
       # TODO do not rely on repository
-      Locomotive::Models[:pages].matching_paths(['index']).size.should eq 1
+
+      Locomotive::Models[:pages].matching_paths(['index']).all.size.should eq 1
     end
 
     context 'records content' do

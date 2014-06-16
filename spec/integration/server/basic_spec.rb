@@ -8,7 +8,7 @@ describe Locomotive::Steam::Server do
     run_server
   end
 
-  it 'can render the index page' do
+  it 'can render the index page', pending: true do
     get '/index'
     last_response.status.should eq(200)
   end
