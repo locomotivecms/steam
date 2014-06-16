@@ -1,5 +1,4 @@
 require 'dragonfly'
-require 'common'
 
 # Configure
 Dragonfly.app(:steam).configure do
@@ -11,9 +10,9 @@ Dragonfly.app(:steam).configure do
 
   url_format '/images/dynamic/:job/:basename.:ext'
 
-  fetch_file_whitelist /public/
+  fetch_file_whitelist(/public/)
 
-  fetch_url_whitelist /.+/
+  fetch_url_whitelist(/.+/)
 end
 
 Dragonfly.logger = Locomotive::Common::Logger.instance

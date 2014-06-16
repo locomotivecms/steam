@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../integration_helper'
 
-describe 'ContactForm' do
+describe 'ContactForm', pending: true do
 
   include Rack::Test::Methods
 

@@ -9,7 +9,7 @@ module Locomotive::Steam
       def _call(env)
         super
 
-        self.set_page!(env)
+        set_page!(env)
 
         app.call(env)
       end
@@ -17,28 +17,28 @@ module Locomotive::Steam
       protected
 
       def set_page!(env)
-        page = self.fetch_page
-
+        page = fetch_page env['steam.locale']
         if page
-          self.log "Found page \"#{page.title}\" [#{page.safe_fullpath}]"
+          log "Found page \"#{page.title}\" [#{page.fullpath}]"
         end
 
         env['steam.page'] = page
       end
 
-      def fetch_page
-        matchers = self.path_combinations(self.path)
-
-        pages = self.mounting_point.pages.values.find_all do |_page|
-          matchers.include?(_page.safe_fullpath) ||
-          matchers.include?(_page.safe_fullpath.try(:underscore))
-        end.sort_by { |p| p.position || Float::INFINITY }
-
-        if pages.size > 1
-          self.log "Found multiple pages: #{pages.collect(&:title).join(', ')}"
+      def fetch_page locale
+        decorated(locale) do
+          Locomotive::Models[:pages].current_locale = locale
+          Locomotive::Models[:pages].matching_paths(path_combinations(path)).tap do |pages|
+            if pages.size > 1
+              self.log "Found multiple pages: #{pages.all.collect(&:title).join(', ')}"
+            end
+          end.first
         end
+      end
 
-        pages.first
+      def decorated(locale)
+        entity = yield
+        Locomotive::Decorators::I18nDecorator.new(entity, locale) unless entity.nil?
       end
 
       def path_combinations(path)
@@ -53,7 +53,7 @@ module Locomotive::Steam
         (can_include_template ? [segment, '*'] : [segment]).map do |_segment|
           if (_combinations = _path_combinations(segments.clone, can_include_template && _segment != '*'))
             [*_combinations].map do |_combination|
-              File.join(_segment, _combination)
+              URI.join(_segment, _combination)
             end
           else
             [_segment]

@@ -108,7 +108,9 @@ module Locomotive
               @context['with_scope']['order_by'] = @content_type.order_by + '.' + @content_type.order_direction
             end
 
-            @collection = apply_scope(@content_type.entries)
+            @collection = @content_type.entries.where(@context['with_scope'])
+
+            # @collection = apply_scope(@content_type.entries)
           end
         end
       end

@@ -6,19 +6,19 @@ module Locomotive::Steam
       def _call(env)
         super
 
-        if self.page
-          if self.page.redirect?
-            self.redirect_to(self.page.redirect_url, self.page.redirect_type)
+        if page
+          if page.redirect?
+            redirect_to(page.redirect_url, page.redirect_type)
           else
-            type = self.page.response_type || 'text/html'
-            html = self.render_page
+            type = page.response_type || 'text/html'
+            html = render_page
 
-            self.log 'Rendered liquid page template'
+            log 'Rendered liquid page template'
 
             [200, { 'Content-Type' => type }, [html]]
           end
         else
-          [404, { 'Content-Type' => 'text/html' }, [self.render_404]]
+          [404, { 'Content-Type' => 'text/html' }, [render_404]]
         end
       end
 
@@ -26,15 +26,42 @@ module Locomotive::Steam
 
       def render_page
         context = self.locomotive_context
+        # begin
+        #   binding.pry
+          render(page, context)
+        # rescue Exception => e
+
+        #   raise RendererException.new(e, self.page.title, self.page.template, context)
+        # end
+      end
+
+      def render(page, context)
+        parse(page, context).render(context)
+      end
+
+      protected
+
+      def parse(page, context)
+        options =  {
+          page:           page,
+          mapper: context.registers[:mapper],
+          error_mode:     :strict,
+          count_lines:    true
+        }
+
         begin
-          self.page.render(context)
-        rescue Exception => e
-          raise RendererException.new(e, self.page.title, self.page.template, context)
+          binding.pry
+          ::Liquid::Template.parse(page.source(I18n.locale), options)
+        rescue ::Liquid::SyntaxError
+          # do it again on the raw source instead so that the error line matches
+          # the source file.
+          ::Liquid::Template.parse(self.template.raw_source, options)
         end
       end
 
+
       def render_404
-        if self.page = self.mounting_point.pages['404']
+        if self.page = Locomotive::Models[:pages]['404']
           self.render_page
         else
           'Page not found'
@@ -88,8 +115,8 @@ module Locomotive::Steam
           'now'               => Time.zone.now,
           'today'             => Date.today,
           'locale'            => I18n.locale.to_s,
-          'default_locale'    => self.mounting_point.default_locale.to_s,
-          'locales'           => self.mounting_point.locales.map(&:to_s),
+          'default_locale'    => self.site.default_locale.to_s,
+          'locales'           => self.site.locales.map(&:to_s),
           'current_user'      => {},
           'session'           => Locomotive::Steam::Liquid::Drops::SessionProxy.new,
           'steam'             => true,
@@ -106,7 +133,6 @@ module Locomotive::Steam
           request:        self.request,
           site:           self.site,
           page:           self.page,
-          mounting_point: self.mounting_point,
           services:       self.services,
           inline_editor:  false,
           logger:         Locomotive::Common::Logger

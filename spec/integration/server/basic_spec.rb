@@ -8,40 +8,45 @@ describe Locomotive::Steam::Server do
     run_server
   end
 
-  it 'shows the index page' do
+  it 'can render the index page', pending: true do
+    get '/index'
+    last_response.status.should eq(200)
+  end
+
+  it 'shows the index page', pending: true do
     get '/index'
     last_response.body.should =~ /Upcoming events/
   end
 
-  it 'shows the 404 page' do
+  it 'shows the 404 page', pending: true do
     get '/void'
     last_response.status.should eq(404)
     last_response.body.should =~ /page not found/
   end
 
-  it 'shows the 404 page with 200 status code when its called explicitly' do
+  it 'shows the 404 page with 200 status code when its called explicitly', pending: true do
     get '/404'
     last_response.status.should eq(200)
     last_response.body.should =~ /page not found/
   end
 
-  it 'shows content' do
+  it 'shows content', pending: true do
     get '/about-us/jane-doe'
     last_response.body.should =~ /Lorem ipsum dolor sit amet/
   end
 
-  it 'shows a content type template ' do
+  it 'shows a content type template', pending: true do
     get '/songs/song-number-1'
     last_response.body.should =~ /Song #1/
   end
 
-  it 'renders a page under a templatized one' do
+  it 'renders a page under a templatized one', pending: true do
     get '/songs/song-number-1/band'
     last_response.body.should =~ /Song #1/
     last_response.body.should =~ /Leader: Eddie/
   end
 
-  it 'translates strings' do
+  it 'translates strings', pending: true do
     get '/en'
     last_response.body.should =~ /Powered by/
     get '/fr'
@@ -50,18 +55,18 @@ describe Locomotive::Steam::Server do
     last_response.body.should_not =~ /Powered by/
   end
 
-  it 'provides translation in scopes' do
+  it 'provides translation in scopes', pending: true do
     get '/'
     last_response.body.should =~ /scoped_translation=.French./
   end
 
-  it 'translates a page with link_to tags inside' do
+  it 'translates a page with link_to tags inside', pending: true do
     get '/fr/notre-musique'
     last_response.body.should =~ /<h3><a href="\/fr\/songs\/song-number-8">Song #8<\/a><\/h3>/
     last_response.body.should =~ /Propulsé par/
   end
 
-  it 'returns all the pages' do
+  it 'returns all the pages', pending: true do
     get '/all'
     last_response.body.should =~ /Home page/
     last_response.body.should =~ /<li>Home page<\/li>/
@@ -70,7 +75,7 @@ describe Locomotive::Steam::Server do
     last_response.body.should =~ /<li>A song template<\/li>/
   end
 
-  describe 'snippets' do
+  describe 'snippets', pending: true do
 
     it 'includes a basic snippet' do
       get '/'
@@ -84,7 +89,7 @@ describe Locomotive::Steam::Server do
 
   end
 
-  describe 'nav' do
+  describe 'nav', pending: true do
 
     subject { get '/all'; last_response.body }
 
@@ -118,20 +123,20 @@ describe Locomotive::Steam::Server do
 
   end
 
-  describe 'contents with_scope' do
+  describe 'contents with_scope', pending: true do
     subject { get '/grunge_bands'; last_response.body }
 
     it { should match(/Layne/)}
     it { should_not match(/Peter/) }
   end
 
-  describe "pages with_scope" do
+  describe 'pages with_scope', pending: true do
     subject { get '/unlisted_pages'; last_response.body }
     it { subject.should match(/Page to test the nav tag/)}
     it { should_not match(/About Us/)}
   end
 
-  describe 'theme assets' do
+  describe 'theme assets', pending: true do
 
     subject { get '/all'; last_response.body }
 
@@ -143,7 +148,7 @@ describe Locomotive::Steam::Server do
 
   end
 
-  describe 'session' do
+  describe 'session', pending: true do
 
     subject { get '/contest'; last_response.body }
 

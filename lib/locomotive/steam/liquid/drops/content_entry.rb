@@ -3,8 +3,9 @@ module Locomotive
     module Liquid
       module Drops
         class ContentEntry < Base
+          extend Forwardable
 
-          delegate :seo_title, :meta_keywords, :meta_description, to: :@_source
+          def_delegators :@_source, :seo_title, :meta_keywords, :meta_description
 
           def _label
             @_label ||= @_source._label

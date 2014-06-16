@@ -4,17 +4,20 @@ require_relative 'liquid'
 require_relative 'services'
 require_relative 'middlewares'
 
+require 'locomotive/models'
+require 'locomotive/decorators'
+require_relative 'decorators'
+
 module Locomotive::Steam
   class Server
 
-    attr_reader :reader, :app, :options
+    attr_reader :app, :options
 
-    def initialize(reader, options = {})
-      @reader   = reader
-      @options  = options
+    def initialize(options = {})
+      @options    = options
 
-      stack     = Middlewares::Stack.new(options)
-      @app      = stack.create
+      stack       = Middlewares::Stack.new(options)
+      @app        = stack.create
     end
 
     def call(env)
@@ -24,7 +27,9 @@ module Locomotive::Steam
     def _call(env)
       set_request(env)
 
-      set_mounting_point(env)
+      set_path(env)
+
+      fetch_site(env)
 
       set_services(env)
 
@@ -33,20 +38,22 @@ module Locomotive::Steam
 
     protected
 
+    def set_path(env)
+      env['steam.path'] = options.fetch(:path)
+    end
     def set_request(env)
       @request = Rack::Request.new(env)
       env['steam.request'] = @request
     end
 
-    def set_mounting_point(env)
+    def fetch_site(env)
       # one single mounting point per site
-      @mounting_point = @reader.new_mounting_point(@request.host)
-      env['steam.mounting_point'] = @reader.mounting_point
+      env['steam.site'] = Locomotive::Models[:sites].find_by_host(@request.host)
     end
 
     def set_services(env)
       env['steam.services'] = {
-        dragonfly:      Locomotive::Steam::Services::Dragonfly.new(@mounting_point.path),
+        dragonfly:      Locomotive::Steam::Services::Dragonfly.new(options.fetch(:path)),
         markdown:       Locomotive::Steam::Services::Markdown.new,
         external_api:   Locomotive::Steam::Services::ExternalAPI.new
       }
