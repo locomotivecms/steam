@@ -22,7 +22,7 @@ module Locomotive
         end
 
         def to_liquid
-          NullObject.new
+          ::Locomotive::Steam::Liquid::Drops::Site.new(self)
         end
       end
     end

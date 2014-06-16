@@ -16,9 +16,6 @@ module Locomotive
         alias :templatized? :templatized
         alias :searchable?  :searchable
 
-        attr_accessor :templatized_from_parent
-
-
         # Tell if the page is either the index page.
         #
         # @return [ Boolean ] True if index page.
@@ -120,9 +117,9 @@ module Locomotive
         #
         # @param [ String ] content The HTML raw template
         #
-        def raw_template=(content)
+        def raw_template=(content, locale)
           @source ||= {}
-          @source[:en] = content
+          @source[locale] = content
         end
 
         # Return the Liquid template based on the raw_template property
@@ -130,16 +127,12 @@ module Locomotive
         #
         # @return [ String ] The liquid template or nil if not template has been provided
         #
-        def source
-          @source ||= {}
+        def source(locale)
+          @source ||= self.template[locale].source
+        end
 
-          if @source[:en]
-            @source[:en] # memoization
-          elsif self.template
-            @source[:en] = self.template.source
-          else
-            nil
-          end
+        def to_liquid
+          ::Locomotive::Steam::Liquid::Drops::Page.new(self)
         end
 
       end
