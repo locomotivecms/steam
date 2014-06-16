@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Locomotive::Steam::Entities::Page', focused: true do
+describe 'Locomotive::Steam::Entities::Page' do
 
   it 'builds an empty page' do
     build_page.should_not be_nil

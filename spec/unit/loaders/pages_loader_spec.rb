@@ -12,7 +12,7 @@ describe Locomotive::Steam::Loader::Yml::PagesLoader do
     it { should be_kind_of Object }
   end
 
-  describe '#load!' do
+  describe '#load!', pending: true  do
     before { loader.load! }
     it 'loads pages in the pages Repository' do
       Locomotive::Models[:pages].all.size.should > 0

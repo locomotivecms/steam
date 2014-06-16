@@ -10,7 +10,6 @@ module Locomotive
         #
 
         def safe_fullpath
-          binding.pry
           if index_or_404?
             slug[current_locale]
           else
