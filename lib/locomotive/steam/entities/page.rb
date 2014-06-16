@@ -8,7 +8,8 @@ module Locomotive
         attributes :parent, :title, :slug, :fullpath, :redirect_url, :redirect_type,
                    :template, :handle, :listed, :searchable, :templatized, :content_type,
                    :published, :cache_strategy, :response_type, :position, :seo_title,
-                   :meta_keywords, :meta_description, :editable_elements, :site
+                   :meta_keywords, :meta_description, :editable_elements, :site, :site_id,
+                   :parent_id
 
         ## aliases ##
         alias :listed?      :listed

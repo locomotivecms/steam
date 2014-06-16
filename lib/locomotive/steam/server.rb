@@ -5,6 +5,7 @@ require_relative 'services'
 require_relative 'middlewares'
 
 require 'locomotive/models'
+require 'locomotive/decorators'
 
 module Locomotive::Steam
   class Server

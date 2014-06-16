@@ -22,9 +22,9 @@ collection :pages do
   entity     Locomotive::Steam::Entities::Page
   repository Locomotive::Steam::Repositories::PagesRepository
 
-  attribute :site, association: :sites
-  attribute :content_type, association: :content_types
-  attribute :parent,            association: :pages
+  attribute :site, association: {type: :belongs_to, key: :site_id, name: :sites}
+  attribute :content_type, association: {type: :belongs_to, key: :content_type_id, name: :content_types}
+  attribute :parent, association: {type: :belongs_to, key: :parent_id, name: :pages}
   attribute :title,             localized: true
   attribute :slug,              localized: true
   attribute :fullpath,          localized: true
@@ -53,7 +53,7 @@ collection :content_types do
   entity     Locomotive::Steam::Entities::ContentType
   repository Locomotive::Steam::Repositories::ContentTypesRepository
   attribute :slug
-  attribute :site, association: :sites
+  attribute :site, association: {type: :belongs_to, key: :site_id, name: :sites}
 end
 
 collection :content_entries do
