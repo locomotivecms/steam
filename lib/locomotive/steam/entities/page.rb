@@ -17,12 +17,13 @@ module Locomotive
         alias :templatized? :templatized
         alias :searchable?  :searchable
 
+
         # Tell if the page is either the index page.
         #
         # @return [ Boolean ] True if index page.
         #
         def index?
-          'index' == fullpath
+          'index' == default_fullpath
         end
 
         # Tell if the page is either the index or the 404 page.
@@ -30,7 +31,15 @@ module Locomotive
         # @return [ Boolean ] True if index or 404 page.
         #
         def index_or_404?
-          %w(index 404).include?(fullpath)
+          %w(index 404).include?(default_fullpath)
+        end
+
+
+        # Returns unique fullpath for depth, 404, index calculation.
+        #
+        # @return [String] Fullpath based on first locale found
+        def default_fullpath
+          fullpath.values.first
         end
 
         alias :index_or_not_found? :index_or_404?
@@ -58,8 +67,8 @@ module Locomotive
         # @return [ Integer ] The depth
         #
         def depth
-          return 0 if %w(index 404).include?(self.fullpath)
-          fullpath.split('/').size
+          return 0 if %w(index 404).include?(default_fullpath)
+          default_fullpath.split('/').size
         end
 
         def unpublished?
