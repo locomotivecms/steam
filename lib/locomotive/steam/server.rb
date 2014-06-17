@@ -4,10 +4,6 @@ require_relative 'liquid'
 require_relative 'services'
 require_relative 'middlewares'
 
-require 'locomotive/models'
-require 'locomotive/decorators'
-require_relative 'decorators'
-
 module Locomotive::Steam
   class Server
 
