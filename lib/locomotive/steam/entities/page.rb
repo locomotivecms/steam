@@ -8,7 +8,7 @@ module Locomotive
         attributes :parent, :title, :slug, :fullpath, :redirect_url, :redirect_type,
                    :template, :handle, :listed, :searchable, :templatized, :content_type,
                    :published, :cache_strategy, :response_type, :position, :seo_title,
-                   :meta_keywords, :meta_description, :editable_elements, :site,
+                   :meta_keywords, :meta_description, :editable_elements, :site, :children,
                    :site_id, :parent_id
 
         ## aliases ##
@@ -115,20 +115,6 @@ module Locomotive
           @source ||= {}
           @source[locale] = content
         end
-
-        # Return the Liquid template based on the raw_template property
-        # of the page. If the template is HAML or SLIM, then a pre-rendering to Liquid is done.
-        #
-        # @return [ String ] The liquid template or nil if not template has been provided
-        #
-        def source(locale)
-          @source ||= self.template[locale].source
-        end
-
-        def to_liquid
-          ::Locomotive::Steam::Liquid::Drops::Page.new(self)
-        end
-
       end
     end
   end
