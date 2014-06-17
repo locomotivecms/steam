@@ -8,14 +8,15 @@ describe Locomotive::Steam::Server do
     run_server
   end
 
-  it 'can render the index page', pending: true do
+  it 'can render the index page' do
     get '/index'
     last_response.status.should eq(200)
   end
 
-  it 'shows the index page', pending: true do
-    get '/index'
-    last_response.body.should =~ /Upcoming events/
+  it 'shows a basic page' do
+    get '/basic'
+    last_response.body.should =~ /This is a basic page/
+    last_response.body.should =~ /<title>Basic page<\/title>/
   end
 
   it 'shows the 404 page', pending: true do
