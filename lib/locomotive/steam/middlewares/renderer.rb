@@ -42,6 +42,7 @@ module Locomotive::Steam
       protected
 
       def parse(page, context)
+
         options =  {
           page:           page,
           mapper: context.registers[:mapper],
@@ -50,7 +51,6 @@ module Locomotive::Steam
         }
 
         begin
-          binding.pry
           ::Liquid::Template.parse(page.source(I18n.locale), options)
         rescue ::Liquid::SyntaxError
           # do it again on the raw source instead so that the error line matches
