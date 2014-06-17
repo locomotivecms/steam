@@ -5,22 +5,22 @@ describe Locomotive::Steam::Liquid::Tags::Nav do
   subject { Locomotive::Steam::Liquid::Tags::Nav }
   let(:entity_class)  { Locomotive::Steam::Entities::Page }
   let(:site_class)    { Locomotive::Steam::Entities::Site }
-  let(:home)          { entity_class.new fullpath: { en: 'index' }}
+  let(:home)          { new_page fullpath: { en: 'index' }}
   let(:site)          { site_class.new locales: %w(en fr) }
 
   before do
     home_children = [
-      entity_class.new(title: { en: 'Child #1' }, fullpath: { en: 'child_1' }, slug: { en: 'child_1' }, published: true, listed: true),
-      entity_class.new(title: { en: 'Child #2' }, fullpath: { en: 'child_2' }, slug: { en: 'child_2' }, published: true, listed: true)
+      new_page(title: { en: 'Child #1' }, fullpath: { en: 'child_1' }, slug: { en: 'child_1' }, published: true, listed: true),
+      new_page(title: { en: 'Child #2' }, fullpath: { en: 'child_2' }, slug: { en: 'child_2' }, published: true, listed: true)
     ]
     home.stub(children: home_children)
 
     other_children = [
-      entity_class.new(title: { en: 'Child #2.1' }, fullpath: { en: 'child_2/sub_child_1' }, slug: { en: 'sub_child_1' }, published: true, listed: true),
-      entity_class.new(title: { en: 'Child #2.2' }, fullpath: { en: 'child_2/sub_child_2' }, slug: { en: 'sub_child_2' }, published: true, listed: true),
-      entity_class.new(title: { en: 'Unpublished #2.2' }, fullpath: { en: 'child_2/sub_child_unpublishd_2' }, slug: { en: 'sub_child_unpublished_2' }, published: false, listed: true),
-      entity_class.new(title: { en: 'Templatized #2.3' }, fullpath: { en: 'child_2/sub_child_template_3' },   slug: { en: 'sub_child_template_3' },    published: true,   templatized: true, listed: true),
-      entity_class.new(title: { en: 'Unlisted    #2.4' }, fullpath: { en: 'child_2/sub_child_unlisted_4' },   slug: { en: 'sub_child_unlisted_4' },    published: true,   listed: false)
+      new_page(title: { en: 'Child #2.1' }, fullpath: { en: 'child_2/sub_child_1' }, slug: { en: 'sub_child_1' }, published: true, listed: true),
+      new_page(title: { en: 'Child #2.2' }, fullpath: { en: 'child_2/sub_child_2' }, slug: { en: 'sub_child_2' }, published: true, listed: true),
+      new_page(title: { en: 'Unpublished #2.2' }, fullpath: { en: 'child_2/sub_child_unpublishd_2' }, slug: { en: 'sub_child_unpublished_2' }, published: false, listed: true),
+      new_page(title: { en: 'Templatized #2.3' }, fullpath: { en: 'child_2/sub_child_template_3' },   slug: { en: 'sub_child_template_3' },    published: true,   templatized: true, listed: true),
+      new_page(title: { en: 'Unlisted    #2.4' }, fullpath: { en: 'child_2/sub_child_unlisted_4' },   slug: { en: 'sub_child_unlisted_4' },    published: true,   listed: false)
     ]
     home.children.last.stub(children: other_children)
 
@@ -104,7 +104,7 @@ describe Locomotive::Steam::Liquid::Tags::Nav do
 
     it 'renders a snippet for the title' do
       render_nav('site', {}, 'snippet: "-{{page.title}} {{ foo.png | theme_image_tag }}-"')
-        .should match( /<li id="child-1-link" class="link first"><a href="\/child_1">-Child #1 <img src=\"\" >-<\/a><\/li>/)
+        .should match( /<li id="child-1-link" class="link first"><a href="\/child_1">-Child #1 <img src=\"\" \/>-<\/a><\/li>/)
     end
 
     it 'assigns a different dom id' do
@@ -138,6 +138,14 @@ describe Locomotive::Steam::Liquid::Tags::Nav do
       end
     end
 
+  end
+
+  def new_page attributes
+    Locomotive::Steam::Decorators::PageDecorator.new(
+      Locomotive::Decorators::I18nDecorator.new(
+        entity_class.new(attributes), :en
+      )
+    )
   end
 
   def render_nav(source = 'site', registers = {}, template_option = '')

@@ -94,7 +94,7 @@ module Locomotive
             if !page.listed? || page.templatized? || !page.published?
               false
             elsif @_options[:exclude]
-              (page.fullpath[:en] =~ @_options[:exclude]).nil?
+              (page.fullpath =~ @_options[:exclude]).nil?
             else
               true
             end
@@ -107,7 +107,7 @@ module Locomotive
           # @return [ Boolean ]
           #
           def page_selected?(page)
-            self.current_page.fullpath[:en] =~ /^#{page.fullpath[:en]}(\/.*)?$/
+            self.current_page.fullpath =~ /^#{page.fullpath}(\/.*)?$/
           end
 
           # Determine if the children of a page have to be rendered or not.
@@ -132,7 +132,7 @@ module Locomotive
           #
           def entry_label(page)
             icon  = @_options[:icon] ? '<span></span>' : ''
-            title = @_options[:liquid_render] ? @_options[:liquid_render].render('page' => page) : page.title[::I18n.locale]
+            title = @_options[:liquid_render] ? @_options[:liquid_render].render('page' => page) : page.title
 
             if icon.blank?
               title
@@ -151,9 +151,9 @@ module Locomotive
           #
           def entry_url(page)
             if ::I18n.locale.to_s == self.site.default_locale.to_s
-              "/#{page.fullpath[::I18n.locale]}"
+              "/#{page.fullpath}"
             else
-              "/#{::I18n.locale}/#{page.fullpath[::I18n.locale]}"
+              "/#{::I18n.locale}/#{page.fullpath}"
             end
           end
 
@@ -193,7 +193,7 @@ module Locomotive
               options   = %{ class="dropdown-toggle" data-toggle="dropdown"}
             end
 
-            self.render_tag(:li, id: "#{page.slug[::I18n.locale].to_s.dasherize}-link", css: css) do
+            self.render_tag(:li, id: "#{page.slug.dasherize}-link", css: css) do
               children_output = depth.succ <= @_options[:depth].to_i ? self.render_entry_children(page, depth.succ) : ''
               %{<a href="#{url}"#{options}>#{label}</a>} + children_output
             end
@@ -211,7 +211,7 @@ module Locomotive
             css     = self.bootstrap? ? 'dropdown-menu' : ''
 
             unless entries.empty?
-              self.render_tag(:ul, id: "#{@_options[:id]}-#{page.slug[::I18n.locale].dasherize}", css: css) do
+              self.render_tag(:ul, id: "#{@_options[:id]}-#{page.slug.dasherize}", css: css) do
                 self.build_entries_output(entries, depth)
               end
             else
