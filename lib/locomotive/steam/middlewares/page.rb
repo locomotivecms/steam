@@ -38,7 +38,10 @@ module Locomotive::Steam
 
       def decorated(locale)
         entity = yield
-        Locomotive::Decorators::I18nDecorator.new(entity, locale) unless entity.nil?
+        unless entity.nil?
+          Locomotive::Steam::Decorators::PageDecorator.new(
+            Locomotive::Decorators::I18nDecorator.new(entity, locale))
+        end
       end
 
       def path_combinations(path)
