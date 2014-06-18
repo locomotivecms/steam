@@ -12,11 +12,17 @@ module Locomotive::Steam
       end
 
       def call(env)
-        dup._call(env) # thread-safe purpose
+        if Locomotive::Steam.mode == :test
+          _call(env)
+        else
+          dup._call(env) # thread-safe purpose
+        end
       end
 
       def _call(env)
+        code, headers, response = @app.call(env)
         self.set_accessors(env)
+        [code, headers, [response]]
       end
 
       protected

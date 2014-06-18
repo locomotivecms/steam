@@ -14,6 +14,10 @@ require_relative 'support'
 
 Coveralls.wear!
 
+Locomotive::Steam.configure do |config|
+  config.mode = :test
+end
+
 RSpec.configure do |config|
   config.include Spec::Helpers
 
