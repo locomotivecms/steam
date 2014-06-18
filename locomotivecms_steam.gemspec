@@ -1,4 +1,4 @@
-require_relative 'lib/locomotive/steam'
+require_relative 'lib/locomotive/steam/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'locomotivecms_steam'
@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'i18n-spec'
 
   spec.add_dependency 'httparty',               '~> 0.13'
+  spec.add_dependency 'httmultiparty',          '~> 0.3.10'
   spec.add_dependency 'rack-cache',             '~> 1.1'
   spec.add_dependency 'moneta',                 '~> 0.7.20'
   spec.add_dependency 'sprockets',              '~> 2.0'
@@ -35,6 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'kramdown',               '~> 1.3.3'
   spec.add_dependency 'coffee-script',          '~> 2.2.0'
   spec.add_dependency 'haml',                   '~> 4.0.3'
+  spec.add_dependency 'compass',                '~> 0.12.2'
 
 
   spec.add_dependency 'locomotivecms_models',   '~> 0.0.1'

@@ -12,15 +12,13 @@ describe Locomotive::Steam::Loader::Yml::PagesLoader do
     it { should be_kind_of Object }
   end
 
-  describe '#load!', pending: true  do
+  describe '#load!' do
     before { loader.load! }
     it 'loads pages in the pages Repository' do
       Locomotive::Models[:pages].all.size.should > 0
     end
 
     it 'creates only one Entity for all locales' do
-      # TODO do not rely on repository
-
       Locomotive::Models[:pages].matching_paths(['index']).all.size.should eq 1
     end
 
@@ -28,6 +26,17 @@ describe Locomotive::Steam::Loader::Yml::PagesLoader do
       subject { Locomotive::Models[:pages]['index'] }
       it { subject.title[:en].should eql 'Home page' }
       it { subject.title[:fr].should eql 'Page d\'accueil' }
+    end
+
+    context 'records template' do
+      subject { Locomotive::Models[:pages]['basic'] }
+      it { subject.template[:en].source.should =~ /<title>{{ page.title }}<\/title>/ }
+      it { subject.template[:en].raw_source.should =~ /%title {{ page.title }}/ }
+    end
+
+    context 'fills in non localized data with default locale values', pending: 'not sure if the right behaviour' do
+      subject { Locomotive::Models[:pages]['basic'] }
+      it { subject.title[:fr].should eql 'Basic page' }
     end
   end
 end

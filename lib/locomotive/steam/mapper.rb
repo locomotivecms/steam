@@ -25,6 +25,7 @@ collection :pages do
   attribute :site, association: {type: :belongs_to, key: :site_id, name: :sites}
   attribute :content_type, association: {type: :belongs_to, key: :content_type_id, name: :content_types}
   attribute :parent, association: {type: :belongs_to, key: :parent_id, name: :pages}
+  attribute :children, association: {type: :has_many, key: :parent_id, name: :pages}
   attribute :title,             localized: true
   attribute :slug,              localized: true
   attribute :fullpath,          localized: true

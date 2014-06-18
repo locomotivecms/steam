@@ -5,7 +5,7 @@ module Locomotive
         class ContentTypes < ::Liquid::Drop
 
           def before_method(meth)
-            type = self.mounting_point.content_types[meth.to_s]
+            type = Locomotive::Models['content_types'][meth.to_s]
             ProxyCollection.new(type)
           end
 

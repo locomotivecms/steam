@@ -5,16 +5,31 @@ module Locomotive
       # YAML Front-matters for HAML/Liquid templates
       class YAMLFrontMattersTemplate
 
-        attr_accessor :filepath, :attributes, :raw_source, :line_offset
+        attr_reader :filepath
 
         def initialize(filepath)
-          self.filepath     = filepath
-          self.line_offset  = 0
+          @filepath     = filepath
+          @line_offset  = 0
+          @parsed = false
+        end
 
-          self.fetch_attributes_and_raw_source(File.read(self.filepath))
+        def attributes
+          self.fetch_attributes_and_raw_source
+          @attributes
+        end
+
+        def raw_source
+          self.fetch_attributes_and_raw_source
+          @raw_source
+        end
+
+        def line_offset
+          self.fetch_attributes_and_raw_source
+          @line_offset
         end
 
         def source
+          self.fetch_attributes_and_raw_source
           return @source if @source
 
           @source = if self.filepath.ends_with?('.haml')
@@ -24,21 +39,27 @@ module Locomotive
           end
         end
 
-        protected
-
-        def fetch_attributes_and_raw_source(data)
-          if data =~ /^(---\s*\n.*?\n?)^(---\s*$\n?)(.*)/m
-            self.line_offset  = $1.count("\n") + 1
-            self.attributes   = YAML.load($1)
-            self.raw_source   = $3
-          else
-            self.attributes = nil
-            self.raw_source = data
-          end
-
-          self.raw_source = self.raw_source.force_encoding('utf-8')
+        def data
+          @data ||= File.read(filepath)
         end
 
+        protected
+        def parsed?
+          @parsed
+        end
+        def fetch_attributes_and_raw_source
+          return if @parsed
+          if data =~ /^(---\s*\n.*?\n?)^(---\s*$\n?)(.*)/m
+            @line_offset  = $1.count("\n") + 1
+            @attributes   = YAML.load($1)
+            @raw_source   = $3
+          else
+            @attributes = {}
+            @raw_source = data
+          end
+          @raw_source.force_encoding('utf-8')
+          @parsed = true
+        end
       end
     end
   end

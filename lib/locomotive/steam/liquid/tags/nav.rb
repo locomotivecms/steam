@@ -16,7 +16,7 @@ module Locomotive
 
           Syntax = /(#{::Liquid::Expression}+)?/
 
-          attr_accessor :current_page, :mounting_point
+          attr_accessor :current_page, :site
 
           def initialize(tag_name, markup, tokens, options)
             if markup =~ Syntax
@@ -32,7 +32,6 @@ module Locomotive
 
           def render(context)
             self.set_accessors_from_context(context)
-
             entries = self.fetch_entries
             output  = self.build_entries_output(entries)
 
@@ -72,17 +71,19 @@ module Locomotive
           # @return [ Array ] List of pages
           #
           def fetch_entries
-            children = (case @source
-            when 'site'     then self.mounting_point.pages['index']
-            when 'parent'   then self.current_page.parent || self.current_page
-            when 'page'     then self.current_page
-            else
-              self.mounting_point.pages[@source]
-            end).children.try(:clone) || []
-
+            children = root.children.try(:clone) || []
             children.delete_if { |p| !include_page?(p) }
           end
 
+          def root
+            case @source
+            when 'site'     then Locomotive::Models['pages']['index']
+            when 'parent'   then self.current_page.parent || self.current_page
+            when 'page'     then self.current_page
+            else
+              Locomotive::Models['pages'][@source]
+            end
+          end
           # Determine whether or not a page should be a part of the menu.
           #
           # @param [ Object ] page The page
@@ -149,7 +150,7 @@ module Locomotive
           # @return [ String ] The localized url
           #
           def entry_url(page)
-            if ::I18n.locale.to_s == self.mounting_point.default_locale.to_s
+            if ::I18n.locale.to_s == self.site.default_locale.to_s
               "/#{page.fullpath}"
             else
               "/#{::I18n.locale}/#{page.fullpath}"
@@ -165,7 +166,8 @@ module Locomotive
           #
           def entry_css(page, css = '')
             _css = 'link'
-            _css += " #{page} #{@_options[:active_class]}" if self.page_selected?(page)
+            #_css += " #{page} #{@_options[:active_class]}" if self.page_selected?(page)
+            _css += " #{@_options[:active_class]}" if self.page_selected?(page)
 
             (_css + " #{css}").strip
           end
@@ -191,7 +193,7 @@ module Locomotive
               options   = %{ class="dropdown-toggle" data-toggle="dropdown"}
             end
 
-            self.render_tag(:li, id: "#{page.slug.to_s.dasherize}-link", css: css) do
+            self.render_tag(:li, id: "#{page.slug.dasherize}-link", css: css) do
               children_output = depth.succ <= @_options[:depth].to_i ? self.render_entry_children(page, depth.succ) : ''
               %{<a href="#{url}"#{options}>#{label}</a>} + children_output
             end
@@ -209,7 +211,7 @@ module Locomotive
             css     = self.bootstrap? ? 'dropdown-menu' : ''
 
             unless entries.empty?
-              self.render_tag(:ul, id: "#{@_options[:id]}-#{page.slug.to_s.dasherize}", css: css) do
+              self.render_tag(:ul, id: "#{@_options[:id]}-#{page.slug.dasherize}", css: css) do
                 self.build_entries_output(entries, depth)
               end
             else
@@ -234,11 +236,11 @@ module Locomotive
           end
 
           # Avoid to call context.registers to get the current page
-          # and the mounting point.
+          # and the site.
           #
           def set_accessors_from_context(context)
             self.current_page   = context.registers[:page]
-            self.mounting_point = context.registers[:mounting_point]
+            self.site = context.registers[:site]
           end
 
           # Parse the template of the snippet give in option of the tag.
@@ -249,7 +251,7 @@ module Locomotive
             source = if template_name.include?('{')
               template_name
             else
-              context[:mounting_point].snippets[template_name].try(:source)
+              context[:site].snippets[template_name].try(:source)
             end
 
             source ? ::Liquid::Template.parse(source) : nil

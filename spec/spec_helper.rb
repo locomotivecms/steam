@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'bundler/setup'
 
-require 'locomotive/common'
 require 'i18n-spec'
 require 'coveralls'
 
@@ -9,7 +8,6 @@ begin
   require 'pry'
 rescue LoadError
 end
-
 
 require_relative '../lib/locomotive/steam'
 require_relative 'support'
