@@ -107,6 +107,21 @@ module Locomotive
         # end
         # alias_method_chain :parent=, :inheritance
 
+
+        # Find an editable element from its block and slug (the couple is unique)
+        #
+        # @param [ String ] block The name of the block
+        # @param [ String ] slug The slug of the element
+        #
+        # @return [ Object ] The editable element or nil if not found
+        #
+        def find_editable_element(block, slug)
+          (self.editable_elements || []).detect do |el|
+            el.block.to_s == block.to_s && el.slug.to_s == slug.to_s
+          end
+        end
+
+
         # Set the source of the page without any pre-rendering. Used by the API reader.
         #
         # @param [ String ] content The HTML raw template
