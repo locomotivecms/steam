@@ -1,17 +1,17 @@
 require 'spec_helper'
 
 describe 'Locomotive::Steam::Decorators::PageDecorator' do
-
   let(:locale) { :en }
+
   it 'builds an empty decorator' do
     build_page.should_not be_nil
   end
 
   describe '#safe_fullpath' do
-    let(:index_page) {     build_page(fullpath: {en: 'index'}) }
-    let(:not_found_page) { build_page(fullpath: {en: '404'}) }
-    let(:about_page) {     build_page(fullpath: {en: 'about_me'}, parent: index_page) }
-    let(:products_page) {  build_page(fullpath: {en: 'products'}, parent: index_page, templatized: true) }
+    let(:index_page)     { build_page(fullpath: { en: 'index'   }) }
+    let(:not_found_page) { build_page(fullpath: { en: '404'     }) }
+    let(:about_page)     { build_page(fullpath: { en: 'about_me'}, parent: index_page) }
+    let(:products_page)  { build_page(fullpath: { en: 'products'}, parent: index_page, templatized: true) }
 
     context 'not templatized' do
       context 'index or 404' do
@@ -25,17 +25,17 @@ describe 'Locomotive::Steam::Decorators::PageDecorator' do
     end
 
     context 'templatized' do
-      subject { decorated build_page(fullpath: {en: 'products'}, parent: index_page, templatized: true) }
+      subject { decorated build_page(fullpath: { en: 'products' }, parent: index_page, templatized: true) }
       its(:safe_fullpath) { should eq '*' }
     end
 
     context 'templatized with not templatized parent' do
-      subject { decorated build_page(fullpath: {en: 'about_me/contact'}, parent: about_page, templatized: true) }
+      subject { decorated build_page(fullpath: { en: 'about_me/contact' }, parent: about_page, templatized: true) }
       its(:safe_fullpath) { should eq 'about-me/*' }
     end
 
     context 'templatized parent' do
-      subject { decorated build_page(fullpath: {en: 'products/detail'}, parent: products_page) }
+      subject { decorated build_page(fullpath: { en: 'products/detail' }, parent: products_page) }
       its(:safe_fullpath) { should eq '*/detail' }
     end
   end
