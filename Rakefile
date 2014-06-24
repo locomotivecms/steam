@@ -1,17 +1,12 @@
 require 'rubygems'
 require 'bundler/setup'
+require 'bundler/gem_tasks'
 
 require 'rake'
 require 'rspec'
 
+require_relative 'lib/locomotive/steam'
+
 require 'rspec/core/rake_task'
-
-require_relative 'lib/steam'
-
-RSpec::Core::RakeTask.new('spec:integration') do |spec|
-  spec.pattern = 'spec/**/*_spec.rb'
-end
-
-task spec: ['spec:integration']
-
+RSpec::Core::RakeTask.new('spec')
 task default: :spec

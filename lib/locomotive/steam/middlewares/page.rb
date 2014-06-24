@@ -8,9 +8,7 @@ module Locomotive::Steam
 
       def _call(env)
         super
-
         set_page!(env)
-
         app.call(env)
       end
 
@@ -50,13 +48,12 @@ module Locomotive::Steam
 
       def _path_combinations(segments, can_include_template = true)
         return nil if segments.empty?
-
         segment = segments.shift
 
         (can_include_template ? [segment, '*'] : [segment]).map do |_segment|
           if (_combinations = _path_combinations(segments.clone, can_include_template && _segment != '*'))
             [*_combinations].map do |_combination|
-              URI.join(_segment, _combination)
+              File.join(_segment, _combination)
             end
           else
             [_segment]

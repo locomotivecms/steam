@@ -4,7 +4,8 @@ gemspec
 
 group :development do
   #gem 'locomotivecms_common', '~> 0.0.2', path: '../common'
-  gem 'locomotivecms_models', '~> 0.0.1', path: '../models'
+  # gem 'locomotivecms_models', '~> 0.0.1', path: '../models'
+  gem 'locomotivecms_models', '0.0.1.pre.alpha'
   gem 'thin'
 end
 
@@ -18,5 +19,5 @@ platform :jruby do
 end
 
 platform :ruby do
-  ruby '2.1.1'
+  ruby '2.1.2'
 end

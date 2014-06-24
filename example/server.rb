@@ -6,9 +6,10 @@ require 'bundler/setup'
 Bundler.require
 
 require 'thin'
-require 'common'
+# require 'common'
+require 'locomotive/common'
 
-require_relative '../lib/steam'
+require_relative '../lib/locomotive/steam'
 require_relative '../lib/locomotive/steam/server'
 require_relative '../lib/locomotive/steam/initializers'
 
