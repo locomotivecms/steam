@@ -30,34 +30,10 @@ module Locomotive
             end
           end
 
-          def localized_date(input, *args)
-            return '' if input.blank?
-
-            format, locale = args
-
-            locale ||= I18n.locale
-            format ||= I18n.t('date.formats.default', locale: locale)
-
-            if input.is_a?(String)
-              begin
-                fragments = ::Date._strptime(input, format)
-                input = ::Date.new(fragments[:year], fragments[:mon], fragments[:mday])
-              rescue
-                input = Time.zone.parse(input)
-              end
-            end
-
-            return input.to_s unless input.respond_to?(:strftime)
-
-            I18n.l input, format: format, locale: locale
-          end
-
-          alias :format_date :localized_date
-
           def distance_of_time_in_words(input, from_time = Time.zone.now, include_seconds = false)
             return '' if input.blank?
 
-            # make sure we deals with instances of Time
+            # make sure we deal with instances of Time
             to_time   = to_time(input)
             from_time = to_time(from_time)
 
@@ -115,6 +91,32 @@ module Locomotive
               end
             end
           end
+
+          def localized_date(input, *args)
+            return '' if input.blank?
+
+            format, locale = args
+
+            locale ||= I18n.locale
+            format ||= I18n.t('date.formats.default', locale: locale)
+
+            if input.is_a?(String)
+              begin
+                fragments = ::Date._strptime(input, format)
+                input = ::Date.new(fragments[:year], fragments[:mon], fragments[:mday])
+              rescue
+                input = Time.parse(input)
+              end
+            end
+
+            return input.to_s unless input.respond_to?(:strftime)
+
+            input = input.in_time_zone(@context.registers[:site].timezone) if input.respond_to?(:in_time_zone)
+
+            I18n.l input, format: format, locale: locale
+          end
+
+          alias :format_date :localized_date
 
           private
 

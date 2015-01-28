@@ -1,56 +1,43 @@
 module Locomotive
-  module Steam
-    module Liquid
-      module Tags
-        class LinkTo < Hybrid
+  module Liquid
+    module Tags
+      class LinkTo < Hybrid
 
-          Syntax = /(#{::Liquid::Expression}+)(#{::Liquid::TagAttributes}?)/
+        include PathHelper
+        include ActionView::Helpers::UrlHelper
 
-          include PathHelper
+        def render(context)
+          render_path(context) do |page, path|
+            label = label_from_page(page)
 
-          def initialize(tag_name, markup, tokens, options)
-            if markup =~ Syntax
-              @handle = $1
-              @_options = {}
-              markup.scan(::Liquid::TagAttributes) do |key, value|
-                @_options[key] = value
-              end
-            else
-              raise ::Liquid::SyntaxError.new(options[:locale].t("errors.syntax.link_to"), options[:line])
+            if @render_as_block
+              context.scopes.last['target'] = page
+              label = super.html_safe
             end
 
-            super
+            link_to label, path
           end
-
-          def render(context)
-            render_path(context) do |page, path|
-              label = label_from_page(page)
-
-              if @render_as_block
-                context.scopes.last['target'] = page
-                label = super.html_safe
-              end
-
-              %{<a href="#{path}">#{label}</a>}
-            end
-          end
-
-          protected
-
-          def label_from_page(page)
-            ::Locomotive::Mounter.with_locale(@_options['locale']) do
-              if page.templatized?
-                page.content_entry._label
-              else
-                page.title
-              end
-            end
-          end
-
         end
 
-        ::Liquid::Template.register_tag('link_to', LinkTo)
+        def wrong_syntax!
+          raise SyntaxError.new("Syntax Error in 'link_to' - Valid syntax: link_to page_handle, locale es (locale is optional)")
+        end
+
+        protected
+
+        def label_from_page(page)
+          ::Mongoid::Fields::I18n.with_locale(@options['locale']) do
+            if page.templatized?
+              page.content_entry._label
+            else
+              page.title
+            end
+          end
+        end
+
       end
+
+      ::Liquid::Template.register_tag('link_to', LinkTo)
     end
   end
 end

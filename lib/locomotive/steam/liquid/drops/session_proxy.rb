@@ -1,18 +1,16 @@
 module Locomotive
-  module Steam
-    module Liquid
-      module Drops
+  module Liquid
+    module Drops
 
-        class SessionProxy < ::Liquid::Drop
+      class SessionProxy < ::Liquid::Drop
 
-          def before_method(meth)
-            request = @context.registers[:request]
-            request.session[meth.to_sym]
-          end
-
+        def before_method(meth)
+          controller = @context.registers[:controller]
+          controller.session[meth.to_sym]
         end
 
       end
+
     end
   end
 end

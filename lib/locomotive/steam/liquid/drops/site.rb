@@ -1,26 +1,28 @@
 module Locomotive
-  module Steam
-    module Liquid
-      module Drops
-        class Site < Base
-          include Scopeable
-          extend Forwardable
+  module Liquid
+    module Drops
+      class Site < Base
 
-          def_delegators :@_source, :name, :seo_title, :meta_description, :meta_keywords
+        delegate :name, :seo_title, :meta_keywords, :meta_description, to: :@_source
 
-          def index
-            @index ||= self.mounting_point.pages['index']
-          end
-
-          def pages
-            liquify(*apply_scope(self.mounting_point.pages.values))
-          end
-
-          def domains
-            @_source.domains
-          end
-
+        def index
+          @index ||= @_source.pages.root.first
         end
+
+        def pages
+          liquify(*self.scoped_pages)
+        end
+
+        def domains
+          @_source.domains
+        end
+
+        protected
+
+        def scoped_pages
+          @_source.ordered_pages(@context['with_scope'])
+        end
+
       end
     end
   end

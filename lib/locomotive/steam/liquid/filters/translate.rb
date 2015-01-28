@@ -1,28 +1,38 @@
 module Locomotive
-  module Steam
-    module Liquid
-      module Filters
-        module Translate
+  module Liquid
+    module Filters
+      module Translate
 
-          def translate(key, locale = nil, scope = nil)
-            locale ||= I18n.locale.to_s
-            if scope.blank?
-              translation = @context.registers[:mounting_point].translations[key.to_s]
+        # Return the translation described by a key.
+        #
+        # @param [ String ] key The key of the translation.
+        # @param [ String ] locale By default, it uses the value returned by I18n.locale
+        # @param [ String ] scope If specified, instead of looking in the translations, it will use I18n instead.
+        #
+        # @return [ String ] the translated text
+        #
+        def translate(input, locale = nil, scope = nil)
+          locale ||= I18n.locale.to_s
 
-              if translation
-                translation.get(locale) || translation.get(Locomotive::Mounter.locale.to_s)
-              else
-                "[unknown translation key: #{key}]"
-              end
+          if scope.blank?
+            translation = @context.registers[:site].translations.where(key: input).first
+
+            # key not found
+            return input if translation.nil?
+
+            if translation.values[locale].present?
+              translation.values[locale]
             else
-              I18n.t(key, scope: scope.split('.'), locale: locale)
+              translation.values[I18n.default_locale.to_s]
             end
+          else
+            I18n.t(input, scope: scope.split('.'), locale: locale)
           end
         end
 
-        ::Liquid::Template.register_filter(Translate)
-
       end
+
+      ::Liquid::Template.register_filter(Translate)
     end
   end
 end

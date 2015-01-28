@@ -1,63 +1,75 @@
 module Locomotive
-  module Steam
-    module Liquid
-      module Tags
+  module Liquid
+    module Tags
 
-        class Snippet < ::Liquid::Include
+      class Snippet < ::Liquid::Include
 
-          def render(context)
-            name    = @template_name.gsub(/[\"\']/, '')
-            snippet = context.registers[:mounting_point].snippets[name]
+        attr_accessor :slug
+        attr_accessor :partial
 
-            raise ::Liquid::StandardError.new("Unknown snippet \"#{name}\"") if snippet.nil?
+        def initialize(tag_name, markup, tokens, context)
+          super
 
-            partial   = self.parse_template(snippet)
+          @slug = @template_name.gsub(/['"]/o, '')
 
-            variable  = context[@variable_name || @template_name[1..-2]]
-
-            context.stack do
-              @attributes.each do |key, value|
-                context[key] = context[value]
-              end
-
-              output = (if variable.is_a?(Array)
-                variable.collect do |variable|
-                  context[@template_name[1..-2]] = variable
-                  partial.render(context)
-                end
-              else
-                context[@template_name[1..-2]] = variable
-                partial.render(context)
-              end)
-
-              Locomotive::Common::Logger.info "  Steamed snippet #{name}"
-
-              output
-            end
+          if @context[:snippets].present?
+            (@context[:snippets] << @slug).uniq!
+          else
+            @context[:snippets] = [@slug]
           end
 
-          protected
-
-          def parse_template(snippet)
-            begin
-              ::Liquid::Template.parse(snippet.source)
-            rescue ::Liquid::Error => e
-              # do it again on the raw source instead so that the error line matches
-              # the source file.
-              begin
-                ::Liquid::Template.parse(snippet.template.raw_source)
-              rescue ::Liquid::Error => e
-                e.backtrace.unshift "#{snippet.template.filepath}:#{e.line + 1}:in `#{snippet.name}'"
-                e.line = self.line - 1
-                raise e
-              end
-            end
+          if @context[:site].present?
+            snippet = @context[:site].snippets.where(slug: @slug).first
+            self.refresh(snippet) if snippet
           end
-
         end
 
-        ::Liquid::Template.register_tag('include', Snippet)
+        def render(context)
+          return '' if @partial.nil?
+
+          variable = context[@variable_name || @template_name[1..-2]]
+
+          context.stack do
+            @attributes.each do |key, value|
+              context[key] = context[value]
+            end
+
+            output = (if variable.is_a?(Array)
+              variable.collect do |variable|
+                context[@template_name[1..-2]] = variable
+                @partial.render(context)
+              end
+            else
+              context[@template_name[1..-2]] = variable
+              @partial.render(context)
+            end)
+
+            output
+          end
+        end
+
+        def refresh(snippet, context = {})
+          if snippet.destroyed?
+            @snippet_id = nil
+            @partial = nil
+          else
+            @snippet_id = snippet.id
+            @partial = ::Liquid::Template.parse(snippet.template, context.merge(@context))
+            @partial.root.context.clear
+          end
+        end
+
+        def nodelist
+          if @partial
+            @partial.root.nodelist
+          else
+            []
+          end
+        end
+
       end
+
+      ::Liquid::Template.register_tag('include', Snippet)
     end
   end
 end

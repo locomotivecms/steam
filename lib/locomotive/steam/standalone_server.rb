@@ -5,7 +5,7 @@ require_relative 'version'
 require_relative 'exceptions'
 require_relative 'server'
 
-require 'locomotive/models'
+# require 'locomotive/models'
 
 module Locomotive
   module Steam

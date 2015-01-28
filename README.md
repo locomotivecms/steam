@@ -1,7 +1,7 @@
 Steam
 ======
 
-The rendering stack used by both Steam and Station (new name of the engine). It includes the rack stack and the liquid drops/filters/tags.
+The rendering stack used by both Wagon and Engine. It includes the rack stack and the liquid drops/filters/tags.
 
 [![Gem Version](https://badge.fury.io/rb/steam.png)](http://badge.fury.io/rb/locomotivecms_steam)
 

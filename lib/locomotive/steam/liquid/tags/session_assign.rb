@@ -1,41 +1,39 @@
 module Locomotive
-  module Steam
-    module Liquid
-      module Tags
+  module Liquid
+    module Tags
 
-        # Assign sets a variable in your session.
-        #
-        #   {% session_assign foo = 'monkey' %}
-        #
-        # You can then use the variable later in the page.
-        #
-        #   {{ session.foo }}
-        #
-        class SessionAssign < ::Liquid::Tag
-          Syntax = /(#{::Liquid::VariableSignature}+)\s*=\s*(#{::Liquid::QuotedFragment}+)/
+      # Assign sets a variable in your session.
+      #
+      #   {% session_assign foo = 'monkey' %}
+      #
+      # You can then use the variable later in the page.
+      #
+      #   {{ session.foo }}
+      #
+      class SessionAssign < ::Liquid::Tag
+        Syntax = /(#{::Liquid::VariableSignature}+)\s*=\s*(#{::Liquid::QuotedFragment}+)/
 
-          def initialize(tag_name, markup, tokens, options)
-            if markup =~ Syntax
-              @to = $1
-              @from = $2
-            else
-              raise ::Liquid::SyntaxError.new(options[:locale].t("errors.syntax.session_assign"), options[:line])
-            end
-
-            super
+        def initialize(tag_name, markup, tokens, context)
+          if markup =~ Syntax
+            @to = $1
+            @from = $2
+          else
+            raise ::Liquid::SyntaxError.new("Syntax Error in 'session_assign' - Valid syntax: assign [var] = [source]")
           end
 
-          def render(context)
-            request = context.registers[:request]
-
-            request.session[@to.to_sym] = context[@from]
-            ''
-          end
-
+          super
         end
 
-        ::Liquid::Template.register_tag('session_assign', SessionAssign)
+        def render(context)
+          controller = context.registers[:controller]
+
+          controller.session[@to.to_sym] = context[@from]
+          ''
+        end
+
       end
+
+      ::Liquid::Template.register_tag('session_assign', SessionAssign)
     end
   end
 end

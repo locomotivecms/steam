@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe 'Locomotive::Steam::Entities::Page' do
 
+  before { skip }
+
   it 'builds an empty page' do
     build_page.should_not be_nil
   end
