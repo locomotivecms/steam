@@ -1,6 +1,6 @@
 module Locomotive
   module Steam
-    module Liquid
+    module Services
 
       class AssetHost
 

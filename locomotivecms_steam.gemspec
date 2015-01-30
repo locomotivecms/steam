@@ -38,6 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'coffee-script',          '~> 2.2.0'
   spec.add_dependency 'haml',                   '~> 4.0.6'
   spec.add_dependency 'compass',                '~> 1.0.3'
+  spec.add_dependency 'mimetype-fu',            '~> 0.1.2'
 
 
   # spec.add_dependency 'locomotivecms_models',   '~> 0.0.1.pre.alpha'

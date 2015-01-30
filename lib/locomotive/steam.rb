@@ -7,10 +7,18 @@ require_relative 'steam/decorators'
 require_relative 'steam/configuration'
 require_relative 'steam/liquid'
 
+require_relative 'steam/morphine'
+# require_relative 'steam/default_repositories/theme_asset'
+require_relative 'steam/repositories'
+require_relative 'steam/services'
+
+# TODO: move into a file named dependencies
 require 'sprockets'
 require 'sprockets-sass'
 require 'haml'
 require 'compass'
+require 'mimetype_fu'
+require 'mime-types'
 
 require 'active_support'
 require 'active_support/concern'
@@ -23,7 +31,14 @@ require 'mime/types'
 module Locomotive
   module Steam
 
-    TEMPLATE_EXTENSIONS = %w(liquid haml)
+    # Locomotive::Steam.repositories.get(:site)
+    # Locomotive::Steam.repositories.get(:theme_assets, site)
+
+    # a la fin de chaque requete => on clean les repositories
+
+    # Locomotive::Steam.repositories[:theme_assets](site)
+
+    # TEMPLATE_EXTENSIONS = %w(liquid haml)
 
     class << self
       attr_writer :configuration

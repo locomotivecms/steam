@@ -23,36 +23,27 @@ module Locomotive::Steam
     def _call(env)
       set_request(env)
 
-      set_path(env)
+      register_services(env)
 
       fetch_site(env)
-
-      set_services(env)
 
       @app.call(env)
     end
 
     protected
 
-    def set_path(env)
-      env['steam.path'] = options.fetch(:path)
-    end
     def set_request(env)
-      @request = Rack::Request.new(env)
-      env['steam.request'] = @request
+      env['steam.request'] = Rack::Request.new(env)
     end
 
     def fetch_site(env)
-      # one single mounting point per site
-      env['steam.site'] = Locomotive::Models[:sites].find_by_host(@request.host)
+      site = env['steam.services'].site_finder.find
+      env['steam.site'] = env['steam.services'].repositories.current_site = site
+
     end
 
-    def set_services(env)
-      env['steam.services'] = {
-        dragonfly:      Locomotive::Steam::Services::Dragonfly.new(options.fetch(:path)),
-        markdown:       Locomotive::Steam::Services::Markdown.new,
-        external_api:   Locomotive::Steam::Services::ExternalAPI.new
-      }
+    def register_services(env)
+      env['steam.services'] = Locomotive::Steam::Services.instance(env['steam.request'], options)
     end
 
   end
