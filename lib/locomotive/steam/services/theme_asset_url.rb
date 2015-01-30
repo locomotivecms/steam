@@ -4,7 +4,7 @@ module Locomotive
 
       class ThemeAssetUrl < Struct.new(:repository, :asset_host, :checksum)
 
-        def buid(path)
+        def build(path)
           # keep the query string safe
           path.gsub!(/(\?+.+)$/, '')
           query_string = $1
@@ -16,7 +16,7 @@ module Locomotive
           timestamp = query_string.blank? ? checksums[path] : nil
 
           # prefix by a asset host if given
-          url = asset_host.compute(_url, timestamp)
+          url = asset_host ? asset_host.compute(_url, timestamp) : _url
 
           query_string ? "#{url}#{query_string}" : url
         end

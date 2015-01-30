@@ -100,13 +100,14 @@ module Locomotive
           def flash_tag(input, *args)
             path = get_url_from_asset(input)
             embed_options = inline_options(args_to_options(args))
-            %{
-              <object #{embed_options}>
-                <param name="movie" value="#{path}">
-                <embed src="#{path}" #{embed_options}>
-                </embed>
-              </object>
-            }.gsub(/ >/, '>').strip
+            html = <<-EOF
+<object #{embed_options}>
+  <param name="movie" value="#{path}">
+  <embed src="#{path}" #{embed_options}>
+  </embed>
+</object>
+EOF
+            html.gsub(/ >/, '>').strip
           end
 
         end

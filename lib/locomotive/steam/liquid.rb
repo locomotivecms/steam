@@ -2,7 +2,6 @@ require 'solid'
 # require 'locomotive/models'
 
 # require_relative 'liquid/scopeable'
-require_relative 'liquid/asset_host'
 require_relative 'liquid/errors'
 require_relative 'liquid/patches'
 require_relative 'liquid/drops/base'

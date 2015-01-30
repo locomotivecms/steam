@@ -21,7 +21,7 @@ module Locomotive
         end
 
         register :theme_asset_url do
-          Services::ThemeAssetUrl.new(current_site, asset_host, configuration.theme_assets_checksum)
+          Services::ThemeAssetUrl.new(repositories.theme_asset, asset_host, configuration.theme_assets_checksum)
         end
 
         register :asset_host do

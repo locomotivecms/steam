@@ -5,9 +5,15 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   include Locomotive::Steam::Liquid::Filters::Base
   include Locomotive::Steam::Liquid::Filters::Html
 
-  before(:each) do
-    @context = build_context
-  end
+  # let(:url_service) { instance_double('UrlService', ) }
+  let(:site)          { instance_double('Site', _id: 42)}
+  let(:services)      { Locomotive::Steam::Services.instance(nil).tap { |s| s.repositories.current_site = site } }
+  let(:context)       { instance_double('Context', registers: { services: services }) }
+
+  let(:theme_asset_url)         { services.theme_asset_url }
+  let(:theme_asset_repository)  { services.repositories.theme_asset }
+
+  before { @context = context }
 
   it 'writes the tag to display a rss/atom feed' do
     expect(auto_discovery_link_tag('/foo/bar')).to eq %(
@@ -20,20 +26,32 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   end
 
   it 'returns an url for a stylesheet file' do
-    result = "/sites/000000000000000000000042/theme/stylesheets/main.css"
+    result = "/sites/42/theme/stylesheets/main.css"
     expect(stylesheet_url('main.css')).to eq(result)
     expect(stylesheet_url('main')).to eq(result)
     expect(stylesheet_url(nil)).to eq('')
   end
 
-  it 'returnss an url with the checksum' do
-    @context.registers.merge!(theme_assets_checksum: { 'stylesheets/main.css' => 42 })
-    result = "/sites/000000000000000000000042/theme/stylesheets/main.css?42"
-    expect(stylesheet_url('main.css')).to eq(result)
+  describe 'with checksum' do
+
+    before do
+      Locomotive::Steam.configure { |c| c.theme_assets_checksum = true }
+      allow(theme_asset_repository).to receive(:checksums).and_return('stylesheets/main.css' => 42)
+    end
+
+    after do
+      Locomotive::Steam.reset
+    end
+
+    it 'returns an url with the checksum' do
+      result = "/sites/42/theme/stylesheets/main.css?42"
+      expect(stylesheet_url('main.css')).to eq(result)
+    end
+
   end
 
   it 'returns an url for a stylesheet file with folder' do
-    result = "/sites/000000000000000000000042/theme/stylesheets/trash/main.css"
+    result = "/sites/42/theme/stylesheets/trash/main.css"
     expect(stylesheet_url('trash/main.css')).to eq(result)
   end
 
@@ -56,19 +74,19 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   end
 
   it 'returns an url for a stylesheet file with respect to URL-parameters' do
-    result = "/sites/000000000000000000000042/theme/stylesheets/main.css?v=42"
+    result = "/sites/42/theme/stylesheets/main.css?v=42"
     expect(stylesheet_url('main.css?v=42')).to eq(result)
   end
 
   it 'returns a link tag for a stylesheet file' do
-    result = "<link href=\"/sites/000000000000000000000042/theme/stylesheets/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"/sites/42/theme/stylesheets/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\">"
     expect(stylesheet_tag('main.css')).to eq(result)
     expect(stylesheet_tag('main')).to eq(result)
     expect(stylesheet_tag(nil)).to eq('')
   end
 
   it 'returns a link tag for a stylesheet file with folder' do
-    result = "<link href=\"/sites/000000000000000000000042/theme/stylesheets/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"/sites/42/theme/stylesheets/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\">"
     expect(stylesheet_tag('trash/main.css')).to eq(result)
   end
 
@@ -92,20 +110,20 @@ describe Locomotive::Steam::Liquid::Filters::Html do
 
   it 'returns a link tag for a stylesheet stored in Amazon S3' do
     url = 'https://com.citrrus.locomotive.s3.amazonaws.com/sites/42/theme/stylesheets/bootstrap2.css'
-    stubs(:asset_url).returns(url)
+    allow(theme_asset_url).to receive(:build).and_return(url)
     result = "<link href=\"#{url}\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\">"
     expect(stylesheet_tag('bootstrap2.css')).to eq(result)
   end
 
   it 'returns a link tag for a stylesheet file and media attribute set to print' do
-    result = "<link href=\"/sites/000000000000000000000042/theme/stylesheets/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"/sites/42/theme/stylesheets/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\">"
     expect(stylesheet_tag('main.css','print')).to eq(result)
     expect(stylesheet_tag('main','print')).to eq(result)
     expect(stylesheet_tag(nil)).to eq('')
   end
 
   it 'returns a link tag for a stylesheet file with folder and media attribute set to print' do
-    result = "<link href=\"/sites/000000000000000000000042/theme/stylesheets/trash/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"/sites/42/theme/stylesheets/trash/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\">"
     expect(stylesheet_tag('trash/main.css','print')).to eq(result)
   end
 
@@ -128,14 +146,14 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   end
 
   it 'returns an url for a javascript file' do
-    result = "/sites/000000000000000000000042/theme/javascripts/main.js"
+    result = "/sites/42/theme/javascripts/main.js"
     expect(javascript_url('main.js')).to eq(result)
     expect(javascript_url('main')).to eq(result)
     expect(javascript_url(nil)).to eq('')
   end
 
   it 'returns an url for a javascript file with folder' do
-    result = "/sites/000000000000000000000042/theme/javascripts/trash/main.js"
+    result = "/sites/42/theme/javascripts/trash/main.js"
     expect(javascript_url('trash/main.js')).to eq(result)
     expect(javascript_url('trash/main')).to eq(result)
   end
@@ -159,19 +177,19 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   end
 
   it 'returns an url for a javascript file with respect to URL-parameters' do
-    result = "/sites/000000000000000000000042/theme/javascripts/main.js?v=42"
+    result = "/sites/42/theme/javascripts/main.js?v=42"
     expect(javascript_url('main.js?v=42')).to eq(result)
   end
 
   it 'returns a script tag for a javascript file' do
-    result = %{<script src="/sites/000000000000000000000042/theme/javascripts/main.js" type="text/javascript" ></script>}
+    result = %{<script src="/sites/42/theme/javascripts/main.js" type="text/javascript" ></script>}
     expect(javascript_tag('main.js')).to eq(result)
     expect(javascript_tag('main')).to eq(result)
     expect(javascript_tag(nil)).to eq('')
   end
 
   it 'returns a script tag for a javascript file with folder' do
-    result = %{<script src="/sites/000000000000000000000042/theme/javascripts/trash/main.js" type="text/javascript" ></script>}
+    result = %{<script src="/sites/42/theme/javascripts/trash/main.js" type="text/javascript" ></script>}
     expect(javascript_tag('trash/main.js')).to eq(result)
     expect(javascript_tag('trash/main')).to eq(result)
   end
@@ -200,11 +218,11 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   end
 
   it 'returns an image tag for a given theme file without parameters' do
-    expect(theme_image_tag('foo.jpg')).to eq("<img src=\"/sites/000000000000000000000042/theme/images/foo.jpg\" >")
+    expect(theme_image_tag('foo.jpg')).to eq("<img src=\"/sites/42/theme/images/foo.jpg\" >")
   end
 
   it 'returns an image tag for a given theme file with size' do
-    expect(theme_image_tag('foo.jpg', 'width:100', 'height:100')).to eq("<img src=\"/sites/000000000000000000000042/theme/images/foo.jpg\" height=\"100\" width=\"100\" >")
+    expect(theme_image_tag('foo.jpg', 'width:100', 'height:100')).to eq("<img src=\"/sites/42/theme/images/foo.jpg\" height=\"100\" width=\"100\" >")
   end
 
   it 'returns an image tag without parameters' do
@@ -217,40 +235,41 @@ describe Locomotive::Steam::Liquid::Filters::Html do
 
   it 'returns a flash tag without parameters' do
     expect(flash_tag('foo.flv')).to eq(%{
-            <object>
-              <param name="movie" value="foo.flv">
-              <embed src="foo.flv">
-              </embed>
-            </object>
+<object>
+  <param name="movie" value="foo.flv">
+  <embed src="foo.flv">
+  </embed>
+</object>
     }.strip)
   end
 
   it 'returns a flash tag with size' do
     expect(flash_tag('foo.flv', 'width:100', 'height:50')).to eq(%{
-            <object height=\"50\" width=\"100\">
-              <param name="movie" value="foo.flv">
-              <embed src="foo.flv" height=\"50\" width=\"100\">
-              </embed>
-            </object>
+<object height=\"50\" width=\"100\">
+  <param name="movie" value="foo.flv">
+  <embed src="foo.flv" height=\"50\" width=\"100\">
+  </embed>
+</object>
     }.strip)
   end
 
-  def build_context
-    klass = Class.new
-    klass.class_eval do
-      def registers
-        @registers ||= {
-          site: FactoryGirl.build(:site, id: fake_bson_id(42)),
-          theme_assets_checksum: {},
-          asset_host: TimestampAssetHost.new
-        }
-      end
+  # def build_context
+  #   instance_double('Context', registers: 'PCH')
+  #   # klass = Class.new
+  #   # klass.class_eval do
+  #   #   def registers
+  #   #     @registers ||= {
+  #   #       site: FactoryGirl.build(:site, id: fake_bson_id(42)),
+  #   #       theme_assets_checksum: {},
+  #   #       asset_host: TimestampAssetHost.new
+  #   #     }
+  #   #   end
 
-      def fake_bson_id(id)
-        BSON::ObjectId.from_string(id.to_s.rjust(24, '0'))
-      end
-    end
-    klass.new
-  end
+  #   #   def fake_bson_id(id)
+  #   #     BSON::ObjectId.from_string(id.to_s.rjust(24, '0'))
+  #   #   end
+  #   # end
+  #   # klass.new
+  # end
 
 end

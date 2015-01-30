@@ -5,7 +5,7 @@ module Locomotive
       class ThemeAsset < Struct.new(:site)
 
         def url_for(path)
-          URI.join('sites', site._id, 'theme', path).to_s
+          ['', 'sites', site._id.to_s, 'theme', path].join('/')
         end
 
         def checksums
