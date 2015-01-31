@@ -5,7 +5,6 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   include Locomotive::Steam::Liquid::Filters::Base
   include Locomotive::Steam::Liquid::Filters::Html
 
-  # let(:url_service) { instance_double('UrlService', ) }
   let(:site)          { instance_double('Site', _id: 42)}
   let(:services)      { Locomotive::Steam::Services.instance(nil).tap { |s| s.repositories.current_site = site } }
   let(:context)       { instance_double('Context', registers: { services: services }) }
