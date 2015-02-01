@@ -1,15 +1,15 @@
-require 'kramdown'
+require 'RedCloth'
 
 module Locomotive
   module Steam
     module Services
 
-      class Markdown
+      class Textile
 
         def to_html(text)
           return '' if text.blank?
 
-          Kramdown::Document.new(text, auto_ids: false).to_html
+          ::RedCloth.new(text).to_html
         end
 
       end

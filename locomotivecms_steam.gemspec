@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dragonfly',              '~> 1.0.7'
   spec.add_dependency 'kaminari',               '~> 0.16.2'
   spec.add_dependency 'kramdown',               '~> 1.5.0'
+  spec.add_dependency 'RedCloth',               '~> 4.2.9'
   spec.add_dependency 'coffee-script',          '~> 2.2.0'
   spec.add_dependency 'haml',                   '~> 4.0.6'
   spec.add_dependency 'compass',                '~> 1.0.3'

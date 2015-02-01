@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     locomotivecms_steam (0.1.2.pre.beta)
+      RedCloth (~> 4.2.9)
       activesupport (~> 4.2.0)
       coffee-script (~> 2.2.0)
       compass (~> 1.0.3)
@@ -26,6 +27,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    RedCloth (4.2.9)
     actionpack (4.2.0)
       actionview (= 4.2.0)
       activesupport (= 4.2.0)

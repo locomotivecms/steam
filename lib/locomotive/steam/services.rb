@@ -32,6 +32,14 @@ module Locomotive
           Services::ImageResizer.new(::Dragonfly.app(:steam), configuration.assets_path)
         end
 
+        register :markdown do
+          Services::Markdown.new
+        end
+
+        register :textile do
+          Services::Textile.new
+        end
+
         register :configuration do
           Locomotive::Steam.configuration
         end
