@@ -28,12 +28,16 @@ module Locomotive
           Services::AssetHost.new(request, current_site, configuration.asset_host)
         end
 
-        def current_site
-          repositories.current_site
+        register :image_resizer do
+          Services::ImageResizer.new(::Dragonfly.app(:steam), configuration.assets_path)
         end
 
-        def configuration
+        register :configuration do
           Locomotive::Steam.configuration
+        end
+
+        def current_site
+          repositories.current_site
         end
 
       end

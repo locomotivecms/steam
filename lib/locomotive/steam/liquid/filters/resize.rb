@@ -1,18 +1,18 @@
 module Locomotive
-  module Liquid
-    module Filters
-      module Resize
+  module Steam
+    module Liquid
+      module Filters
+        module Resize
 
-        def resize(input, resize_string)
-          source = input.instance_variable_get(:@_source) || input
+          def resize(input, resize_string)
+            @context.registers[:services].image_resizer.resize(input, resize_string) || ''
+          end
 
-          Locomotive::Dragonfly.resize_url(source, resize_string)
         end
 
+        ::Liquid::Template.register_filter(Resize)
+
       end
-
-      ::Liquid::Template.register_filter(Resize)
-
     end
   end
 end

@@ -43,7 +43,6 @@ module Locomotive::Steam
     def fetch_site(env)
       site = env['steam.services'].site_finder.find
       env['steam.site'] = env['steam.services'].repositories.current_site = site
-
     end
 
     def register_services(env)

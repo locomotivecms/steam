@@ -4,7 +4,7 @@ module Locomotive
 
       class AssetHost
 
-        IsHTTP = /^https?\/\//o
+        IsHTTP = /^https?:\/\//o
 
         attr_reader :request, :site, :host
 
