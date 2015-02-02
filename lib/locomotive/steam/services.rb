@@ -38,6 +38,14 @@ module Locomotive
           Services::Translator.new(repositories.translation, I18n.locale)
         end
 
+        register :external_api do
+          Services::ExternalAPI.new
+        end
+
+        register :cache do
+          Services::NoCache.new
+        end
+
         register :markdown do
           Services::Markdown.new
         end

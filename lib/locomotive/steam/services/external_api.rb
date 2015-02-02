@@ -9,36 +9,50 @@ module Locomotive
         include ::HTTParty
 
         def consume(url, options = {})
-          url = ::HTTParty.normalize_base_uri(url)
-
-          uri = URI.parse(url)
-          options[:base_uri] = "#{uri.scheme}://#{uri.host}"
-          options[:base_uri] += ":#{uri.port}" if uri.port != 80
-          path = uri.request_uri
+          options[:base_uri], path = extract_base_uri_and_path(url)
 
           options.delete(:format) if options[:format] == 'default'
 
+          # auth ?
           username, password = options.delete(:username), options.delete(:password)
           options[:basic_auth] = { username: username, password: password } if username
 
-          path ||= '/'
+          perform_request_to(path, options)
+        end
 
-          # Locomotive::Common::Logger.debug "[WebService] consuming #{path}, #{options.inspect}"
+        private
 
-          response = self.class.get(path, options)
+        def extract_base_uri_and_path(url)
+          url = HTTParty.normalize_base_uri(url)
+
+          uri       = URI.parse(url)
+          path      = uri.request_uri || '/'
+          base_uri  = "#{uri.scheme}://#{uri.host}"
+          base_uri  += ":#{uri.port}" if uri.port != 80
+
+          [base_uri, path]
+        end
+
+        def perform_request_to(path, options)
+          # [DEBUG] puts "[WebService] consuming #{path}, #{options.inspect}"
+
+          # sanitize the options
+          options[:format]  = options[:format].gsub(/[\'\"]/, '').to_sym if options.has_key?(:format)
+          options[:headers] = { 'User-Agent' => 'LocomotiveCMS' } if options[:with_user_agent]
+
+          response        = self.class.get(path, options)
+          parsed_response = response.parsed_response
 
           if response.code == 200
-            _response = response.parsed_response
-            if _response.respond_to?(:underscore_keys)
-              _response.underscore_keys
+            if parsed_response.respond_to?(:underscore_keys)
+              parsed_response.underscore_keys
             else
-              _response.collect(&:underscore_keys)
+              parsed_response.collect(&:underscore_keys)
             end
           else
             Locomotive::Common::Logger.error "[WebService] consumed #{path}, #{options.inspect}, response = #{response.inspect}"
             nil
           end
-
         end
 
       end
