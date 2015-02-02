@@ -14,9 +14,12 @@ module Locomotive
 
         include Morphine
 
-        # default repositories
         register :site do
           Repositories::Site.new
+        end
+
+        register :page do
+          Repositories::Page.new
         end
 
         register :theme_asset do

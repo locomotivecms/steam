@@ -7,17 +7,16 @@ module Locomotive
         #
         # Usage:
         #
-        # {% fetch_page 'about_us' as a_page %}
+        # {% fetch_page about_us as a_page %}
         # <p>{{ a_page.title }}</p>
         #
         class FetchPage < ::Liquid::Tag
 
           Syntax = /(#{::Liquid::VariableSignature}+)\s+as\s+(#{::Liquid::VariableSignature}+)/
 
-          def initialize(tag_name, markup, tokens, context)
+          def initialize(tag_name, markup, options)
             if markup =~ Syntax
-              @handle = $1
-              @var = $2
+              @handle, @var = $1, $2
             else
               raise SyntaxError.new("Syntax Error in 'fetch_page' - Valid syntax: fetch_page page_handle as variable")
             end
@@ -26,7 +25,8 @@ module Locomotive
           end
 
           def render(context)
-            context.scopes.last[@var] = context.registers[:site].pages.where(handle: @handle).first
+            page = context.registers[:repositories].page.find_by_handle(@handle)
+            context.scopes.last[@var] = page
             ''
           end
         end
