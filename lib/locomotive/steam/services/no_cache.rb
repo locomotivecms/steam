@@ -5,7 +5,11 @@ module Locomotive
       class NoCache
 
         def fetch(key, options = {}, &block)
-          block.call
+          @last_response = block.call
+        end
+
+        def read(key)
+          nil
         end
 
       end

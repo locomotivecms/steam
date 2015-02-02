@@ -19,15 +19,13 @@ module Locomotive
 
           def initialize(tag_name, markup, options)
             if markup =~ Syntax
-              @target = $1
+              @name = $1.to_s
 
               self.prepare_url($2)
               self.prepare_api_arguments($3)
             else
               raise ::Liquid::SyntaxError.new("Syntax Error in 'consume' - Valid syntax: consume <var> from \"<url>\" [username: value, password: value]")
             end
-
-            @local_cache_key = self.hash
 
             super
           end
@@ -64,22 +62,8 @@ module Locomotive
             @expires_in   = @api_options.delete(:expires_in) || 0
           end
 
-          def page_fragment_cache_key(url)
-            Digest::SHA1.hexdigest(@target.to_s + url)
-          end
-
-          def cached_response
-            @@local_cache ||= {}
-            @@local_cache[@local_cache_key]
-          end
-
-          def cached_response=(response)
-            @@local_cache ||= {}
-            @@local_cache[@local_cache_key] = response
-          end
-
           def render_all_and_cache_it(context)
-            cache_service(context).fetch(page_fragment_cache_key(@url), expires_in: @expires_in, force: @expires_in == 0) do
+            cache_service(context).fetch(page_fragment_cache_key, expires_in: @expires_in, force: @expires_in == 0) do
               self.render_all_without_cache(context)
             end
           end
@@ -87,10 +71,9 @@ module Locomotive
           def render_all_without_cache(context)
             context.stack do
               begin
-                context.scopes.last[@target.to_s] = service(context).consume(@url, @api_options)
-                self.cached_response = context.scopes.last[@target.to_s]
+                context.scopes.last[@name] = service(context).consume(@url, @api_options)
               rescue Timeout::Error
-                context.scopes.last[@target.to_s] = self.cached_response
+                context.scopes.last[@name] = last_response(context)
               end
 
               @body.render(context)
@@ -103,6 +86,14 @@ module Locomotive
 
           def cache_service(context)
             context.registers[:services].cache
+          end
+
+          def last_response(context)
+            cache_service(context).read(page_fragment_cache_key)
+          end
+
+          def page_fragment_cache_key
+            Digest::SHA1.hexdigest(@name + @url)
           end
 
         end

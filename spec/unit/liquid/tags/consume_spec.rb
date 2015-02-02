@@ -77,11 +77,9 @@ describe Locomotive::Steam::Liquid::Tags::Consume do
     end
 
     it 'should return the previous successful response if a timeout occurs' do
-      allow(services.external_api).to receive(:consume).and_return(response)
-      is_expected.to eq 'first response'
-
+      allow(services.cache).to receive(:read).and_return(response)
       allow(services.external_api).to receive(:consume).and_raise(Timeout::Error)
-      is_expected.to eq 'first response'
+      expect(subject).to eq 'first response'
     end
 
   end
