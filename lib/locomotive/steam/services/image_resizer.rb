@@ -7,13 +7,13 @@ module Locomotive
         IsHTTP = /^https?:\/\//o
 
         def resize(source, geometry)
-          return source if disabled? || geometry.blank?
+          return nil if disabled? || geometry.blank?
 
           if file = fetch_file(source)
             file.thumb(geometry).url
           else
             Locomotive::Common::Logger.error "Unable to resize on the fly: #{source.inspect}"
-            source
+            nil
           end
         end
 

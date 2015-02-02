@@ -29,7 +29,8 @@ module Locomotive::Steam
 
       register_services(env)
 
-      fetch_site(env)
+      # TODO: A middleware will take care of it.
+      # fetch_site(env)
 
       @app.call(env)
     end
@@ -40,13 +41,14 @@ module Locomotive::Steam
       env['steam.request'] = Rack::Request.new(env)
     end
 
-    def fetch_site(env)
-      site = env['steam.services'].site_finder.find
-      env['steam.site'] = env['steam.services'].repositories.current_site = site
-    end
+    # TODO: move it the right middleware
+    # def fetch_site(env)
+    #   site = env['steam.services'].site_finder.find
+    #   env['steam.site'] = env['steam.services'].repositories.current_site = site
+    # end
 
     def register_services(env)
-      env['steam.services'] = Locomotive::Steam::Services.instance(env['steam.request'], options)
+      env['steam.services'] = Locomotive::Steam::Services.build_instance(env['steam.request'], options)
     end
 
   end

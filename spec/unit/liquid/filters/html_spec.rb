@@ -6,7 +6,7 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   include Locomotive::Steam::Liquid::Filters::Html
 
   let(:site)          { instance_double('Site', _id: 42)}
-  let(:services)      { Locomotive::Steam::Services.instance(nil).tap { |s| s.repositories.current_site = site } }
+  let(:services)      { Locomotive::Steam::Services.build_instance.tap { |s| s.repositories.current_site = site } }
   let(:context)       { instance_double('Context', registers: { services: services }) }
 
   let(:theme_asset_url)         { services.theme_asset_url }
@@ -251,24 +251,5 @@ describe Locomotive::Steam::Liquid::Filters::Html do
 </object>
     }.strip)
   end
-
-  # def build_context
-  #   instance_double('Context', registers: 'PCH')
-  #   # klass = Class.new
-  #   # klass.class_eval do
-  #   #   def registers
-  #   #     @registers ||= {
-  #   #       site: FactoryGirl.build(:site, id: fake_bson_id(42)),
-  #   #       theme_assets_checksum: {},
-  #   #       asset_host: TimestampAssetHost.new
-  #   #     }
-  #   #   end
-
-  #   #   def fake_bson_id(id)
-  #   #     BSON::ObjectId.from_string(id.to_s.rjust(24, '0'))
-  #   #   end
-  #   # end
-  #   # klass.new
-  # end
 
 end

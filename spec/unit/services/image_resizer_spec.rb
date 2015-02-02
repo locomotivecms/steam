@@ -14,7 +14,7 @@ describe Locomotive::Steam::Services::ImageResizer do
     subject { service.resize(input, geometry) }
 
     describe 'no resizer' do
-      it { is_expected.to eq input }
+      it { is_expected.to eq nil }
     end
 
     describe 'DragonFly' do
@@ -23,7 +23,7 @@ describe Locomotive::Steam::Services::ImageResizer do
 
       describe 'no geometry' do
         let(:geometry) { '' }
-        it { is_expected.to eq input }
+        it { is_expected.to eq nil }
       end
 
       it { is_expected.to match /images\/dynamic\/.*\/240px-Metropolitan_railway_steam_locomotive_2781022036.png/ }

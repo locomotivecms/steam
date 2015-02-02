@@ -4,7 +4,7 @@ describe Locomotive::Steam::Liquid::Filters::Text do
 
   include Locomotive::Steam::Liquid::Filters::Text
 
-  let(:services)  { Locomotive::Steam::Services.instance(nil) }
+  let(:services)  { Locomotive::Steam::Services.build_instance }
   let(:context)   { instance_double('Context', registers: { services: services }) }
 
   before { @context = context }

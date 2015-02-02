@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Locomotive::Steam::Repositories do
 
   let(:site) { instance_double('Site', name: 'PCH') }
-  let(:repositories) { Locomotive::Steam::Repositories.instance(site) }
+  let(:repositories) { Locomotive::Steam::Repositories.build_instance(site) }
 
   describe '#theme_asset' do
 

@@ -4,7 +4,7 @@ module Locomotive
   module Steam
     module Repositories
 
-      def self.instance(site = nil)
+      def self.build_instance(site = nil)
         Registered.new(site)
       end
 
@@ -19,6 +19,10 @@ module Locomotive
 
         register :theme_asset do
           Repositories::ThemeAsset.new(current_site)
+        end
+
+        register :translation do
+          Repositories::Translation.new(current_site)
         end
 
       end

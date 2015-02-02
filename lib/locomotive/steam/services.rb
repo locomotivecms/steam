@@ -4,7 +4,7 @@ module Locomotive
   module Steam
     module Services
 
-      def self.instance(request, options = {})
+      def self.build_instance(request = nil, options = {})
         Registered.new(request, options)
       end
 
@@ -13,7 +13,7 @@ module Locomotive
         include Morphine
 
         register :repositories do
-          Repositories.instance
+          Repositories.build_instance
         end
 
         register :site_finder do
@@ -30,6 +30,10 @@ module Locomotive
 
         register :image_resizer do
           Services::ImageResizer.new(::Dragonfly.app(:steam), configuration.assets_path)
+        end
+
+        register :translator do
+          Services::Translator.new(repositories.translation, I18n.locale)
         end
 
         register :markdown do

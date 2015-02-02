@@ -9,7 +9,7 @@ module Locomotive
         end
 
         def checksums
-          @site.theme_assets.checksums
+          site.theme_assets.checksums
         end
 
       end

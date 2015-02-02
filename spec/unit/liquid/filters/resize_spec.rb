@@ -4,9 +4,9 @@ describe Locomotive::Steam::Liquid::Filters::Resize do
 
   include Locomotive::Steam::Liquid::Filters::Resize
 
-  let(:services)  { Locomotive::Steam::Services.instance(nil) }
+  let(:services)  { Locomotive::Steam::Services.build_instance }
   let(:context)   { instance_double('Context', registers: { services: services }) }
-  let(:input)     { nil }
+  let(:input)     { '' }
   let(:geometry)  { nil }
 
   subject { resize(input, geometry) }
