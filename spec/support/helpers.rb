@@ -2,24 +2,9 @@ require 'locomotive/common'
 # require 'locomotive/models'
 # require 'locomotive/adapters/memory_adapter'
 require_relative '../../lib/locomotive/steam/initializers'
-require_relative '../../lib/locomotive/steam/loaders/yml_loader'
 
 module Spec
   module Helpers
-
-    def bootstrap_site_content
-      Locomotive::Steam::Loader::YmlLoader.new(default_fixture_site_path, mapper).load!
-    end
-
-    def mapper
-      # TODO
-      # @mapper ||= begin
-      #   adapter = Locomotive::Adapters::MemoryAdapter
-      #   Locomotive::Mapper.load_from_file! adapter, File.join(File.expand_path('lib/locomotive/steam/mapper.rb'))
-      # end
-    end
-
-    alias :bootstrap_models :mapper
 
     def reset!
       FileUtils.rm_rf(File.expand_path('../../../site', __FILE__))

@@ -31,6 +31,19 @@ module Locomotive
             input.respond_to?(:url) ? input.url : input
           end
 
+          def css_js_asset_url(input, extension, folder)
+            return '' if input.nil?
+
+            if input =~ /^(\/|https?:)/
+              uri = URI(input)
+            else
+              uri = URI(asset_url("#{folder}/#{input}"))
+            end
+
+            uri.path = "#{uri.path}#{extension}" unless uri.path.ends_with?(extension)
+            uri.to_s
+          end
+
           def asset_url(path)
             @context.registers[:services].theme_asset_url.build(path)
           end

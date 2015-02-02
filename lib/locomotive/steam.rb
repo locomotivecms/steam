@@ -7,7 +7,6 @@ require_relative 'steam/decorators'
 require_relative 'steam/configuration'
 require_relative 'steam/liquid'
 
-require_relative 'steam/morphine'
 require_relative 'steam/repositories'
 require_relative 'steam/services'
 

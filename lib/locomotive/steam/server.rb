@@ -1,7 +1,6 @@
 require_relative 'core_ext'
 require_relative 'monkey_patches'
 
-require_relative 'morphine'
 require_relative 'repositories'
 require_relative 'services'
 

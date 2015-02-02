@@ -1,5 +1,7 @@
 Dir[File.join(File.dirname(__FILE__), 'repositories', '*.rb')].each { |lib| require lib }
 
+require 'morphine'
+
 module Locomotive
   module Steam
     module Repositories

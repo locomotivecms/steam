@@ -27,7 +27,6 @@ RSpec.configure do |config|
   config.before(:all) { remove_logs }
   config.before do
     reset!
-    bootstrap_models
   end
   config.after  { reset! }
 end

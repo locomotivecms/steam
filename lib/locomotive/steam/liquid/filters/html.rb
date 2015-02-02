@@ -21,16 +21,7 @@ module Locomotive
           # Write the url of a theme stylesheet
           # input: name of the css file
           def stylesheet_url(input)
-            return '' if input.nil?
-
-            if input =~ /^(\/|https?:)/
-              uri = URI(input)
-            else
-              uri = URI(asset_url("stylesheets/#{input}"))
-            end
-
-            uri.path = "#{uri.path}.css" unless uri.path.ends_with?('.css')
-            uri.to_s
+            css_js_asset_url(input, '.css', 'stylesheets')
           end
 
           # Write the link tag of a theme stylesheet
@@ -46,16 +37,7 @@ module Locomotive
           # Write the url to javascript resource
           # input: name of the javascript file
           def javascript_url(input)
-            return '' if input.nil?
-
-            if input =~ /^(\/|https?:)/
-              uri = URI(input)
-            else
-              uri = URI(asset_url("javascripts/#{input}"))
-            end
-
-            uri.path = "#{uri.path}.js" unless uri.path.ends_with?('.js')
-            uri.to_s
+            css_js_asset_url(input, '.js', 'javascripts')
           end
 
           # Write the link to javascript resource
