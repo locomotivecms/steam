@@ -7,11 +7,13 @@ module Locomotive
           class Param < ::Liquid::Tag
 
             def render(context)
-              controller  = context.registers[:controller]
-              name        = controller.send(:request_forgery_protection_token).to_s
-              value       = controller.send(:form_authenticity_token)
+              service  = context.registers[:services].csrf_protection
 
-              %(<input type="hidden" name="#{name}" value="#{value}">)
+              if service.enabled?
+                %(<input type="hidden" name="#{service.field}" value="#{service.token}" />)
+              else
+                ''
+              end
             end
 
           end
@@ -19,14 +21,16 @@ module Locomotive
           class Meta < ::Liquid::Tag
 
             def render(context)
-              controller  = context.registers[:controller]
-              name        = controller.send(:request_forgery_protection_token).to_s
-              value       = controller.send(:form_authenticity_token)
+              service  = context.registers[:services].csrf_protection
 
-              %{
-                <meta name="csrf-param" content="#{name}">
-                <meta name="csrf-token" content="#{value}">
-              }
+              if service.enabled?
+                %{
+                  <meta name="csrf-param" content="#{service.field}" />
+                  <meta name="csrf-token" content="#{service.token}" />
+                }
+              else
+                ''
+              end
             end
 
           end

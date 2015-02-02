@@ -18,6 +18,7 @@ require 'haml'
 require 'compass'
 require 'mimetype_fu'
 require 'mime-types'
+require 'rack/csrf'
 
 require 'active_support'
 require 'active_support/concern'

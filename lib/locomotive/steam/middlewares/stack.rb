@@ -25,9 +25,14 @@ module Locomotive
               use Middlewares::StaticAssets, {
                 urls: ['/images', '/fonts', '/samples', '/media']
               }
-
               use Middlewares::DynamicAssets
             end
+
+            use Rack::Csrf,
+              field:    'authenticity_token',
+              skip_if:  -> (request) {
+                !(request.post? && request.params[:content_type_slug].present?)
+              }
 
             use ::Dragonfly::Middleware, :steam
 

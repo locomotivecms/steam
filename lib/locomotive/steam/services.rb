@@ -42,6 +42,10 @@ module Locomotive
           Services::ExternalAPI.new
         end
 
+        register :csrf_protection do
+          Services::CsrfProtection.new(configuration.csrf_protection, Rack::Csrf.field, Rack::Csrf.token(request.env))
+        end
+
         register :cache do
           Services::NoCache.new
         end
