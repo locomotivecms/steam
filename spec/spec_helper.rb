@@ -28,5 +28,7 @@ RSpec.configure do |config|
   config.before do
     reset!
   end
-  config.after  { reset! }
+  config.after  { reset!
+  }
+  config.order = 'random'
 end
