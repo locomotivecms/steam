@@ -8,7 +8,7 @@ describe Locomotive::Steam::Liquid::Tags::SessionAssign do
   let(:assigns)   { {} }
   let(:context)   { ::Liquid::Context.new(assigns, {}, { request: request }) }
 
-  let!(:output)    { render_template(source, context) }
+  let!(:output)   { render_template(source, context) }
 
   subject { session[:title] }
 

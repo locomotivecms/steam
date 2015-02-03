@@ -23,11 +23,11 @@ module Locomotive
           # register the tag
           tag_name :with_scope
 
-          def initialize(tag_name, arguments_string, tokens, context = {})
+          def initialize(name, markup, options)
             # convert symbol operators into valid ruby code
-            arguments_string.gsub!(SYMBOL_OPERATORS_REGEXP, ':"\1" =>')
+            markup.gsub!(SYMBOL_OPERATORS_REGEXP, ':"\1" =>')
 
-            super(tag_name, arguments_string, tokens, context)
+            super(name, markup, options)
           end
 
           def display(options = {}, &block)
@@ -42,13 +42,8 @@ module Locomotive
           def decode(options)
             HashWithIndifferentAccess.new.tap do |hash|
               options.each do |key, value|
-                _key, _operator = key.to_s.split('.')
-
                 # _slug instead of _permalink
-                _key = '_slug' if _key == '_permalink'
-
-                # key to h4s symbol
-                _key = _key.to_s.to_sym.send(_operator.to_sym) if _operator
+                _key = key.to_s == '_permalink' ? '_slug' : key.to_s
 
                 hash[_key] = (case value
                   # regexp inside a string
