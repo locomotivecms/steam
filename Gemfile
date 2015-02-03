@@ -18,9 +18,9 @@ group :test do
 
   gem 'pry'
 
+  gem 'codeclimate-test-reporter', require: false
   # gem 'coveralls', require: false
-  # gem 'codeclimate-test-reporter', require: nil
-  gem 'simplecov', require: false
+  # gem 'simplecov', require: false
 end
 
 # platform :jruby do

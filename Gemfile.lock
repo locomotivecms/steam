@@ -48,6 +48,8 @@ GEM
     addressable (2.3.6)
     builder (3.2.2)
     chunky_png (1.3.3)
+    codeclimate-test-reporter (0.4.6)
+      simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
     coffee-script (2.3.0)
       coffee-script-source
@@ -172,10 +174,10 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.7)
+  codeclimate-test-reporter
   i18n-spec (~> 0.6.0)
   json_spec (~> 1.1.4)
   locomotivecms_steam!
   pry
   rake (~> 10.4.2)
   rspec (~> 3.1.0)
-  simplecov

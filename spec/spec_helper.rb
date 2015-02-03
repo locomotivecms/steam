@@ -1,8 +1,12 @@
-# require 'codeclimate-test-reporter'
-# CodeClimate::TestReporter.start
+require 'codeclimate-test-reporter'
 
 require 'simplecov'
 SimpleCov.start do
+  formatter SimpleCov::Formatter::MultiFormatter[
+    SimpleCov::Formatter::HTMLFormatter,
+    CodeClimate::TestReporter::Formatter
+  ]
+
   add_filter 'spec/'
 
   add_group "Liquid Filters", "lib/locomotive/steam/liquid/filters"
@@ -11,13 +15,14 @@ SimpleCov.start do
   add_group "Services",       "lib/locomotive/steam/services"
 end
 
+# disabled for now
+# require 'coveralls'
+# Coveralls.wear!
+
 require 'rubygems'
 require 'bundler/setup'
 
 require 'i18n-spec'
-
-# require 'coveralls'
-# Coveralls.wear!
 
 require File.join(File.dirname(__FILE__), '../lib/locomotive/steam/repositories')
 
