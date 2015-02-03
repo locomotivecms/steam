@@ -21,3 +21,9 @@ module Liquid
     end
   end
 end
+
+def liquid_instance_double(doubled_class, stubs)
+  instance_double(doubled_class, stubs).tap do |double|
+    allow(double).to receive(:to_liquid).and_return(double)
+  end
+end
