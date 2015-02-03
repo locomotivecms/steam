@@ -37,22 +37,8 @@ module Locomotive
             to_time   = to_time!(input)
             from_time = to_time!(from_time)
 
-            distance_in_minutes = (((to_time - from_time).abs)/60).round
-            distance_in_seconds = ((to_time - from_time).abs).round
-
             ::I18n.with_options(scope: :'datetime.distance_in_words') do |locale|
-              case distance_in_minutes
-                when 0..1            then to_distance_in_seconds(locale, distance_in_minutes, distance_in_seconds, include_seconds)
-                when 2..44           then locale.t :x_minutes,      count: distance_in_minutes
-                when 45..89          then locale.t :about_x_hours,  count: 1
-                when 90..1439        then locale.t :about_x_hours,  count: (distance_in_minutes.to_f / 60.0).round
-                when 1440..2519      then locale.t :x_days,         count: 1
-                when 2520..43199     then locale.t :x_days,         count: (distance_in_minutes.to_f / 1440.0).round
-                when 43200..86399    then locale.t :about_x_months, count: 1
-                when 86400..525599   then locale.t :x_months,       count: (distance_in_minutes.to_f / 43200.0).round
-                else
-                  to_distance_in_years(locale, from_time, to_time, distance_in_minutes)
-              end
+              _distance_of_time_in_words(locale, from_time, to_time, include_seconds)
             end
           end
 
@@ -97,6 +83,24 @@ module Locomotive
             to_time(input).to_time
           end
 
+          def _distance_of_time_in_words(locale, from_time, to_time, include_seconds = false)
+            distance_in_minutes = (((to_time - from_time).abs) / 60).round
+            distance_in_seconds = ((to_time - from_time).abs).round
+
+            case distance_in_minutes
+              when 0..1            then to_distance_in_seconds(locale, distance_in_minutes, distance_in_seconds, include_seconds)
+              when 2..44           then locale.t :x_minutes,      count: distance_in_minutes
+              when 45..89          then locale.t :about_x_hours,  count: 1
+              when 90..1439        then locale.t :about_x_hours,  count: (distance_in_minutes.to_f / 60.0).round
+              when 1440..2519      then locale.t :x_days,         count: 1
+              when 2520..43199     then locale.t :x_days,         count: (distance_in_minutes.to_f / 1440.0).round
+              when 43200..86399    then locale.t :about_x_months, count: 1
+              when 86400..525599   then locale.t :x_months,       count: (distance_in_minutes.to_f / 43200.0).round
+              else
+                to_distance_in_years(locale, from_time, to_time, distance_in_minutes)
+            end
+          end
+
           def to_distance_in_seconds(locale, distance_in_minutes, distance_in_seconds, include_seconds)
             return distance_in_minutes == 0 ?
                          locale.t(:less_than_x_minutes, count: 1) :
@@ -113,20 +117,16 @@ module Locomotive
           end
 
           def to_distance_in_years(locale, from_time, to_time, distance_in_minutes)
-            fyear = from_time.year
-            fyear += 1 if from_time.month >= 3
-            tyear = to_time.year
-            tyear -= 1 if to_time.month < 3
-            leap_years = (fyear > tyear) ? 0 : (fyear..tyear).count{|x| ::Date.leap?(x)}
-            minute_offset_for_leap_year = leap_years * 1440
             # Discount the leap year days when calculating year distance.
             # e.g. if there are 20 leap year days between 2 dates having the same day
             # and month then the based on 365 days calculation
             # the distance in years will come out to over 80 years when in written
             # english it would read better as about 80 years.
+            minute_offset_for_leap_year = get_minute_offset_for_leap_year(from_time, to_time)
             minutes_with_offset         = distance_in_minutes - minute_offset_for_leap_year
             remainder                   = (minutes_with_offset % 525600)
             distance_in_years           = (minutes_with_offset / 525600)
+
             if remainder < 131400
               locale.t(:about_x_years,  count: distance_in_years)
             elsif remainder < 394200
@@ -134,6 +134,15 @@ module Locomotive
             else
               locale.t(:almost_x_years, count: distance_in_years + 1)
             end
+          end
+
+          def get_minute_offset_for_leap_year(from_time, to_time)
+            fyear = from_time.year
+            fyear += 1 if from_time.month >= 3
+            tyear = to_time.year
+            tyear -= 1 if to_time.month < 3
+            leap_years = (fyear > tyear) ? 0 : (fyear..tyear).count{|x| ::Date.leap?(x)}
+            leap_years * 1440
           end
 
         end
