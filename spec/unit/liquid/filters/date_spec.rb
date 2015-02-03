@@ -85,6 +85,27 @@ describe Locomotive::Steam::Liquid::Filters::Date do
       expect(distance_of_time_in_words(date)).to eq('over 5 years')
     end
 
+    it 'prints the distance of time in words from a time' do
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/06/29 00:00:01', true)).to eq('less than 5 seconds')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/06/29 00:00:05', true)).to eq('less than 10 seconds')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/06/29 00:00:10', true)).to eq('less than 20 seconds')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/06/29 00:00:20', true)).to eq('half a minute')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/06/29 00:00:30', true)).to eq('half a minute')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/06/29 00:00:40', true)).to eq('less than a minute')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/06/29 00:01:00', true)).to eq('1 minute')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/06/29 00:00:01')).to eq('less than a minute')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/06/29 00:02:00')).to eq('2 minutes')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/06/29 00:45:00')).to eq('about 1 hour')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/06/29 01:32:00')).to eq('about 2 hours')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/06/30 00:00:00')).to eq('1 day')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/07/01 00:00:00')).to eq('2 days')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/08/01 00:00:00')).to eq('about 1 month')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2007/10/01 00:00:00')).to eq('3 months')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2008/06/29 00:00:00')).to eq('about 1 year')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2008/09/29 00:00:00')).to eq('over 1 year')
+      expect(distance_of_time_in_words('2007/06/29 00:00:00', '2009/03/29 00:00:00')).to eq('almost 2 years')
+    end
+
     it 'prints the distance of time in words with a different from_time variable' do
       expect(distance_of_time_in_words(date, '2010/11/25 00:00:00')).to eq('over 3 years')
     end
@@ -96,6 +117,14 @@ describe Locomotive::Steam::Liquid::Filters::Date do
     it 'prints an empty string it is nil or empty' do
       expect(localized_date(nil)).to eq('')
       expect(localized_date('')).to eq('')
+    end
+
+    it 'prints a date from a string' do
+      expect(localized_date('2007-06-29')).to eq('2007-06-29')
+    end
+
+    it 'prints a date from a not-formated string' do
+      expect(localized_date('29/06/2007')).to eq('2007-06-29')
     end
 
     it 'prints a date' do

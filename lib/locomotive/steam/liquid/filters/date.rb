@@ -34,8 +34,8 @@ module Locomotive
             return '' if input.blank?
 
             # make sure we deal with instances of Time
-            to_time   = to_time!(input)
-            from_time = to_time!(from_time)
+            to_time   = convert_to_time!(input)
+            from_time = convert_to_time!(from_time)
 
             ::I18n.with_options(scope: :'datetime.distance_in_words') do |locale|
               _distance_of_time_in_words(locale, from_time, to_time, include_seconds)
@@ -70,17 +70,17 @@ module Locomotive
 
           private
 
-          def to_time(input)
+          def convert_to_time(input)
             case input
-            when Date   then input.to_time
-            when String then Time.zone.parse(input)
+            when ::Date   then input.to_time
+            when ::String then Time.zone.parse(input)
             else
               input
             end
           end
 
-          def to_time!(input)
-            to_time(input).to_time
+          def convert_to_time!(input)
+            convert_to_time(input).to_time
           end
 
           def _distance_of_time_in_words(locale, from_time, to_time, include_seconds = false)

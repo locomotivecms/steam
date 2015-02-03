@@ -15,10 +15,6 @@ SimpleCov.start do
   add_group "Services",       "lib/locomotive/steam/services"
 end
 
-# disabled for now
-# require 'coveralls'
-# Coveralls.wear!
-
 require 'rubygems'
 require 'bundler/setup'
 

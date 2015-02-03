@@ -18,13 +18,13 @@ describe Locomotive::Steam::Liquid::Tags::Snippet do
 
     it { expect(listener.event_names.first).to eq :include }
 
-    describe 'with an editable_element inside', pending: true do
+    # describe 'with an editable_element inside', pending: true do
 
-      let(:snippet) { instance_double('Snippet', source: '{% editable_text company %}built by NoCoffee{% endeditable_text %}') }
+    #   let(:snippet) { instance_double('Snippet', source: '{% editable_text company %}built by NoCoffee{% endeditable_text %}') }
 
-      it { expect(listener.events.size).to eq 2 }
+    #   it { expect(listener.events.size).to eq 2 }
 
-    end
+    # end
 
   end
 

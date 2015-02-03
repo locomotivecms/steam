@@ -21,6 +21,16 @@ describe Locomotive::Steam::Liquid::Filters::Misc do
     expect(default(nil, 42)).to eq 42
   end
 
+  describe 'index' do
+
+    let(:array)     { [1, 2, 3, 4] }
+    let(:position)  { 2 }
+    subject { index(array, position) }
+
+    it { is_expected.to eq 3 }
+
+  end
+
   describe 'split' do
 
     let(:string) { nil }
