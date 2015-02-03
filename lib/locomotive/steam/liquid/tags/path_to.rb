@@ -16,7 +16,7 @@ module Locomotive
 
         end
 
-        ::Liquid::Template.register_tag('path_to', PathTo)
+        ::Liquid::Template.register_tag('path_to'.freeze, PathTo)
       end
     end
   end

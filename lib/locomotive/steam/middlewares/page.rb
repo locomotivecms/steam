@@ -37,8 +37,8 @@ module Locomotive::Steam
       def decorated(locale)
         entity = yield
         unless entity.nil?
-          Locomotive::Steam::Decorators::PageDecorator.new(
-            Locomotive::Decorators::I18nDecorator.new(entity, locale))
+          # Locomotive::Steam::Decorators::PageDecorator.new(
+          #   Locomotive::Decorators::I18nDecorator.new(entity, locale))
         end
       end
 

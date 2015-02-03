@@ -32,7 +32,7 @@ module Locomotive
 
         end
 
-        ::Liquid::Template.register_tag('session_assign', SessionAssign)
+        ::Liquid::Template.register_tag('session_assign'.freeze, SessionAssign)
       end
     end
   end

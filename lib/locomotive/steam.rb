@@ -4,7 +4,7 @@ require 'locomotive/common'
 
 require_relative 'steam/core_ext'
 require_relative 'steam/exceptions'
-require_relative 'steam/decorators'
+# require_relative 'steam/decorators'
 require_relative 'steam/configuration'
 require_relative 'steam/liquid'
 

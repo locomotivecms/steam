@@ -19,7 +19,11 @@ module Locomotive
         end
 
         register :page do
-          Repositories::Page.new
+          Repositories::Page.new(current_site)
+        end
+
+        register :snippet do
+          Repositories::Snippet.new(current_site)
         end
 
         register :theme_asset do

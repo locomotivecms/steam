@@ -32,7 +32,7 @@ module Locomotive
 
         end
 
-        ::Liquid::Template.register_tag('block', InheritedBlock)
+        ::Liquid::Template.register_tag('block'.freeze, InheritedBlock)
       end
     end
   end

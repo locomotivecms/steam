@@ -8,8 +8,8 @@ require 'rspec'
 # === Gems install tasks ===
 Bundler::GemHelper.install_tasks
 
-require 'coveralls/rake/task'
-Coveralls::RakeTask.new
+# require 'coveralls/rake/task'
+# Coveralls::RakeTask.new
 
 require_relative 'lib/locomotive/steam'
 

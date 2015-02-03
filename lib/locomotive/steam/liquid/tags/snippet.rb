@@ -5,72 +5,34 @@ module Locomotive
 
         class Snippet < ::Liquid::Include
 
-          attr_accessor :slug
-          attr_accessor :partial
+          def parse(tokens)
+            if listener = options[:events_listener]
+              listener.emit(:include, page: options[:page], name: @template_name)
 
-          def initialize(tag_name, markup, tokens, context)
-            super
-
-            @slug = @template_name.gsub(/['"]/o, '')
-
-            if @context[:snippets].present?
-              (@context[:snippets] << @slug).uniq!
-            else
-              @context[:snippets] = [@slug]
-            end
-
-            if @context[:site].present?
-              snippet = @context[:site].snippets.where(slug: @slug).first
-              self.refresh(snippet) if snippet
-            end
-          end
-
-          def render(context)
-            return '' if @partial.nil?
-
-            variable = context[@variable_name || @template_name[1..-2]]
-
-            context.stack do
-              @attributes.each do |key, value|
-                context[key] = context[value]
+              # look for editable elements
+              if snippet = find_snippet(options[:repositories].snippet, @template_name)
+                ::Liquid::Template.parse(snippet, options.merge(snippet: @template_name))
               end
-
-              output = (if variable.is_a?(Array)
-                variable.collect do |variable|
-                  context[@template_name[1..-2]] = variable
-                  @partial.render(context)
-                end
-              else
-                context[@template_name[1..-2]] = variable
-                @partial.render(context)
-              end)
-
-              output
             end
           end
 
-          def refresh(snippet, context = {})
-            if snippet.destroyed?
-              @snippet_id = nil
-              @partial = nil
-            else
-              @snippet_id = snippet.id
-              @partial = ::Liquid::Template.parse(snippet.template, context.merge(@context))
-              @partial.root.context.clear
-            end
+          private
+
+          def read_template_from_file_system(context)
+            snippet = find_snippet(context.registers[:repositories].snippet, @template_name)
+
+            raise SnippetNotFound.new("Snippet with slug '#{@template_name}' was not found") if snippet.nil?
+
+            snippet.source
           end
 
-          def nodelist
-            if @partial
-              @partial.root.nodelist
-            else
-              []
-            end
+          def find_snippet(repository, slug)
+            repository.by_slug(slug)
           end
 
         end
 
-        ::Liquid::Template.register_tag('include', Snippet)
+        ::Liquid::Template.register_tag('include'.freeze, Snippet)
       end
     end
   end

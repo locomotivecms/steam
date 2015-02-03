@@ -17,9 +17,10 @@ group :test do
   # gem 'mocha',              require: false
 
   gem 'pry'
-  gem 'coveralls', require: false
 
-  gem 'codeclimate-test-reporter', require: nil
+  # gem 'coveralls', require: false
+  # gem 'codeclimate-test-reporter', require: nil
+  gem 'simplecov', require: false
 end
 
 # platform :jruby do

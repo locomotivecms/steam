@@ -1,11 +1,11 @@
-def render_template(template, context = nil)
+def render_template(source, context = nil)
   context ||= ::Liquid::Context.new
   context.exception_handler = ->(e) { true }
-  ::Liquid::Template.parse(template).render(context)
+  ::Liquid::Template.parse(source).render(context)
 end
 
-def parse_template(template, options = nil)
-  ::Liquid::Template.parse(template, options || {})
+def parse_template(source, options = nil)
+  ::Liquid::Template.parse(source, options || {})
 end
 
 module Liquid
@@ -14,10 +14,10 @@ module Liquid
       (@stack ||= []) << [name, options]
     end
     def event_names
-      @stack.map { |(name, _)| name }
+      (@stack || []).map { |(name, _)| name }
     end
     def events
-      @stack
+      @stack || []
     end
   end
 end

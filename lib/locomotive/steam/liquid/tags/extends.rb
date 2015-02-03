@@ -22,7 +22,7 @@ module Locomotive
 
         end
 
-        ::Liquid::Template.register_tag('extends', Extends)
+        ::Liquid::Template.register_tag('extends'.freeze, Extends)
       end
     end
   end

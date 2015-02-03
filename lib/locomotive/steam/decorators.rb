@@ -1,1 +1,1 @@
-require_relative 'decorators/page_decorator'
+# require_relative 'decorators/page_decorator'

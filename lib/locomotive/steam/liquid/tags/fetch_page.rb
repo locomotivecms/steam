@@ -31,7 +31,7 @@ module Locomotive
           end
         end
 
-        ::Liquid::Template.register_tag('fetch_page', FetchPage)
+        ::Liquid::Template.register_tag('fetch_page'.freeze, FetchPage)
       end
     end
   end
