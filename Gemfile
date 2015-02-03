@@ -18,6 +18,8 @@ group :test do
 
   gem 'pry'
   gem 'coveralls', require: false
+
+  gem 'codeclimate-test-reporter', require: nil
 end
 
 # platform :jruby do
