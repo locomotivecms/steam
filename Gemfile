@@ -6,7 +6,8 @@ group :development do
   # gem 'locomotivecms_common', '~> 0.0.2', path: '../common'
   # gem 'locomotivecms_models', '~> 0.0.1', path: '../models'
   # gem 'locomotivecms_models', '0.0.1.pre.alpha'
-  gem 'thin'
+  # gem 'locomotivecms-liquid', path: '/Users/didier/Documents/LocomotiveCMS/gems/liquid'
+  # gem 'thin'
 end
 
 group :test do

@@ -40,11 +40,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'haml',                   '~> 4.0.6'
   spec.add_dependency 'mimetype-fu',            '~> 0.1.2'
 
-
-
-
   # spec.add_dependency 'locomotivecms_models',   '~> 0.0.1.pre.alpha'
-  spec.add_dependency 'locomotivecms-solid',      '~> 4.0.0.alpha'
+  spec.add_dependency 'locomotivecms-solid',      '~> 4.0.0.alpha1'
   spec.add_dependency 'locomotivecms_common',   '~> 0.0.2'
 
   # spec.required_ruby_version = '~> 2.0'

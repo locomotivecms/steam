@@ -8,7 +8,7 @@ describe Locomotive::Steam::Liquid::Tags::FetchPage do
   let(:context)       { ::Liquid::Context.new(assigns, {}, { repositories: repositories }) }
 
   let(:page)  { instance_double('Page', to_liquid: { 'title' => 'About Us' }) }
-  before      { allow(repositories.page).to receive(:find_by_handle).and_return(page) }
+  before      { allow(repositories.page).to receive(:by_handle).and_return(page) }
 
   subject { render_template(template, context) }
 

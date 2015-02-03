@@ -25,7 +25,7 @@ module Locomotive
           end
 
           def render(context)
-            page = context.registers[:repositories].page.find_by_handle(@handle)
+            page = context.registers[:repositories].page.by_handle(@handle)
             context.scopes.last[@var] = page
             ''
           end
