@@ -2,7 +2,9 @@ require 'rubygems'
 require 'bundler/setup'
 
 require 'i18n-spec'
+
 require 'coveralls'
+Coveralls.wear!
 
 begin
   require 'pry'
@@ -12,7 +14,6 @@ end
 require_relative '../lib/locomotive/steam'
 require_relative 'support'
 
-Coveralls.wear!
 
 Locomotive::Steam.configure do |config|
   config.mode = :test
@@ -25,10 +26,7 @@ RSpec.configure do |config|
   config.run_all_when_everything_filtered = true
 
   config.before(:all) { remove_logs }
-  config.before do
-    reset!
-  end
-  config.after  { reset!
-  }
+  config.before { reset! }
+  config.after  { reset! }
   config.order = 'random'
 end

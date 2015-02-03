@@ -4,35 +4,32 @@ module Locomotive
       module Tags
         module Csrf
 
-          class Param < ::Liquid::Tag
-
+          class Base < ::Liquid::Tag
             def render(context)
               service  = context.registers[:services].csrf_protection
 
               if service.enabled?
-                %(<input type="hidden" name="#{service.field}" value="#{service.token}" />)
+                render_csrf(service)
+
               else
                 ''
               end
             end
-
           end
 
-          class Meta < ::Liquid::Tag
-
-            def render(context)
-              service  = context.registers[:services].csrf_protection
-
-              if service.enabled?
-                %{
-                  <meta name="csrf-param" content="#{service.field}" />
-                  <meta name="csrf-token" content="#{service.token}" />
-                }
-              else
-                ''
-              end
+          class Param < Base
+            def render_csrf(service)
+              %(<input type="hidden" name="#{service.field}" value="#{service.token}" />)
             end
+          end
 
+          class Meta < Base
+            def render_csrf(service)
+              %{
+                <meta name="csrf-param" content="#{service.field}" />
+                <meta name="csrf-token" content="#{service.token}" />
+              }
+            end
           end
 
         end

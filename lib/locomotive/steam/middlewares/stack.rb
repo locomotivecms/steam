@@ -38,6 +38,16 @@ module Locomotive
 
             use Rack::Session::Moneta, options[:moneta]
 
+            use_steam_middlewares(self)
+
+            run Middlewares::Renderer.new
+          end
+        end
+
+        protected
+
+        def use_steam_middlewares(builder)
+          builder.instance_eval do
             use Middlewares::Logging
 
             use Middlewares::EntrySubmission
@@ -48,12 +58,8 @@ module Locomotive
 
             use Middlewares::Page
             use Middlewares::TemplatizedPage
-
-            run Middlewares::Renderer.new
           end
         end
-
-        protected
 
         def prepare_options(options)
           {

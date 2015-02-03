@@ -5,7 +5,6 @@ module Locomotive
         class LinkTo < Hybrid
 
           include PathHelper
-          # include ActionView::Helpers::UrlHelper
 
           def render(context)
             render_path(context) do |page, path|
@@ -16,7 +15,7 @@ module Locomotive
                 label = super.html_safe
               end
 
-              link_to label, path
+              %{<a href="#{path}">#{label}</a>}
             end
           end
 
