@@ -10,7 +10,7 @@ module Locomotive
             def render_element(context, element)
               with_inline_editing(context, element) do
                 if element.default_content?
-                  render_default_content(context)
+                  render_default_content
                 else
                   element.content
                 end
@@ -31,7 +31,7 @@ module Locomotive
 
             def default_element_attributes
               super.merge(
-                content_from_default: self.render_default_content(nil),
+                content_from_default: self.render_default_content,
                 format:               @options[:format] || 'html',
                 rows:                 @options[:rows] || 10,
                 line_break:           @options[:line_break].blank? ? true : @options[:line_break]

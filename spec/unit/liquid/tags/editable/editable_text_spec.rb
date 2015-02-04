@@ -35,7 +35,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
       let(:source) { "{% editable_text title %}{{ test }}{% endeditable_text %}" }
 
       it 'does not allow it' do
-        expect { subject }.to raise_error(::Liquid::SyntaxError, "Liquid syntax error: No liquid tags are allowed inside the \"title\" editable_text (default)")
+        expect { subject }.to raise_error(::Liquid::SyntaxError, "Liquid syntax error: No liquid tags are allowed inside the editable_text \"title\" (block: default)")
       end
 
     end
@@ -135,66 +135,5 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
     end
 
   end
-
-
-
-    #   let(:content) { '' }
-    #   subject { build_tag('text', content).send(:default_element_attributes) }
-
-    #   it { is_expected.to include(slug: 'title') }
-    #   it { is_expected.to include(hint: 'Simple short text') }
-    #   it { is_expected.to include(_type: 'Locomotive::EditableText') }
-    #   it { is_expected.to include(format: 'html') }
-    #   it { is_expected.to include(rows: 10) }
-    #   it { is_expected.to include(line_break: true) }
-
-    #   describe 'default content' do
-
-    #     context 'only text' do
-
-    #       let(:content) { 'Lorem ipsum' }
-    #       it { is_expected.to include(content_from_default: 'Lorem ipsum') }
-
-    #     end
-
-    #     context 'liquid tags' do
-
-    #       let(:content) { ['hello ', ::Liquid::Variable.new("{{ 'world' }}")] }
-    #       it { expect { subject }.to raise_error(::Liquid::SyntaxError, "Error in the default block for the title editable_element - No liquid tags are allowed inside.") }
-
-    #     end
-
-    #   end
-
-    #   context 'editable_short_text' do
-
-    #     subject { build_tag('short_text').send(:default_element_attributes) }
-
-    #     it { is_expected.to include(format: 'raw') }
-    #     it { is_expected.to include(rows: 2) }
-    #     it { is_expected.to include(line_break: false) }
-
-    #   end
-
-    #   context 'editable_long_text' do
-
-    #     subject { build_tag('long_text').send(:default_element_attributes) }
-
-    #     it { is_expected.to include(format: 'html') }
-    #     it { is_expected.to include(rows: 15) }
-    #     it { is_expected.to include(line_break: true) }
-
-    #   end
-
-    # end
-
-    # def build_tag(tag_name = 'text', content = nil)
-    #   klass = "Locomotive::Liquid::Tags::Editable::#{tag_name.camelize}".constantize
-    #   klass.new("editable_#{tag_name}", markup, ["{% endeditable_#{tag_name} %}"], {}).tap do |tag|
-    #     tag.instance_variable_set(:@nodelist, [*content]) if content
-    #   end
-    # end
-
-  # end
 
 end

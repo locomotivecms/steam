@@ -65,13 +65,12 @@ module Locomotive
               options[:inherited_blocks].try(:[], :nested).try(:last)
             end
 
-            def render_default_content(context)
+            def render_default_content
               begin
                 if nodelist.all? { |n| n.is_a? String }
-                  context ||= ::Liquid::Context.new
-                  @body.render(context)
+                  @body.render(::Liquid::Context.new)
                 else
-                  raise ::Liquid::SyntaxError.new("No liquid tags are allowed inside the \"#{@slug}\" #{@tag_name} (#{current_inherited_block_name || 'default'})")
+                  raise ::Liquid::SyntaxError.new("No liquid tags are allowed inside the #{@tag_name} \"#{@slug}\" (block: #{current_inherited_block_name || 'default'})")
                 end
               end
             end
