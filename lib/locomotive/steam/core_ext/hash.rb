@@ -1,3 +1,5 @@
+# Big thanks to Tim Ruffles (https://github.com/timruffles)
+# https://gist.github.com/timruffles/2780508
 module HashConverter
   class << self
     def to_underscore hash
