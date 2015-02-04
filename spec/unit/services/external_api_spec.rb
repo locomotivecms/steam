@@ -6,9 +6,11 @@ describe Locomotive::Steam::Services::ExternalAPI do
 
   describe '#consume' do
 
-    let(:url)       { '' }
-    let(:options)   { {} }
-    let(:response)  { instance_double('Response', code: 200, parsed_response: OpenStruct.new) }
+    let(:url)             { '' }
+    let(:options)         { {} }
+    let(:code)            { 200 }
+    let(:parsed_response) { Hash.new }
+    let(:response)        { instance_double('Response', code: code, parsed_response: parsed_response) }
 
     subject { service.consume(url, options) }
 
@@ -18,6 +20,26 @@ describe Locomotive::Steam::Services::ExternalAPI do
       it do
         expect(service.class).to receive(:get).with('/', { base_uri: 'http://blog.locomotiveapp.org' }).and_return(response)
         subject
+      end
+
+      describe 'wrong response (<> 200)' do
+
+        let(:code) { 500 }
+        it do
+          expect(service.class).to receive(:get).with('/', { base_uri: 'http://blog.locomotiveapp.org' }).and_return(response)
+          expect(subject).to eq nil
+        end
+
+      end
+
+      describe 'returns a collection instead of a hash' do
+
+        let(:parsed_response) { [{ 'averagePrice' => 1 }] }
+        it do
+          expect(service.class).to receive(:get).with('/', { base_uri: 'http://blog.locomotiveapp.org' }).and_return(response)
+          expect(subject.first['average_price']).to eq 1
+        end
+
       end
 
     end

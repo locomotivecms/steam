@@ -56,6 +56,13 @@ describe Locomotive::Steam::Services::ImageResizer do
 
       end
 
+      describe 'unable to fetch a file' do
+
+        before { allow(service).to receive(:fetch_file).and_return(nil) }
+        it { is_expected.to eq nil }
+
+      end
+
     end
 
   end

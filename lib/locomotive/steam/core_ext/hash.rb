@@ -1,27 +1,24 @@
-class Hash
-
-  def underscore_keys
-    new_hash = {}
-
-    self.each_pair do |key, value|
-      if value.respond_to?(:collect!) # Array
-        value.collect do |item|
-          if item.respond_to?(:each_pair) # Hash item within
-            item.underscore_keys
-          else
-            item
-          end
-        end
-      elsif value.respond_to?(:each_pair) # Hash
-        value = value.underscore_keys
-      end
-
-      new_key = key.is_a?(String) ? key.underscore : key # only String keys
-
-      new_hash[new_key] = value
+module HashConverter
+  class << self
+    def to_underscore hash
+      convert hash, :underscore
     end
-
-    self.replace(new_hash)
+    def to_camel_case hash
+      convert hash, :camelize, :lower
+    end
+    def convert obj, *method
+      case obj
+      when Hash
+        obj.inject({}) do |h,(k,v)|
+          v = convert v, *method
+          h[k.send(*method)] = v
+          h
+        end
+      when Array
+        obj.map {|m| convert m, *method }
+      else
+        obj
+      end
+    end
   end
-
 end

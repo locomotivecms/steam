@@ -75,7 +75,7 @@ GEM
       multi_json (~> 1.0)
       rack
     erubis (2.7.0)
-    execjs (2.2.2)
+    execjs (2.3.0)
     ffi (1.9.6)
     haml (4.0.6)
       tilt
