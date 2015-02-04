@@ -1,7 +1,7 @@
-def render_template(source, context = nil)
+def render_template(source, context = nil, options = {})
   context ||= ::Liquid::Context.new
   context.exception_handler = ->(e) { true }
-  ::Liquid::Template.parse(source).render(context)
+  ::Liquid::Template.parse(source, options).render(context)
 end
 
 def parse_template(source, options = nil)

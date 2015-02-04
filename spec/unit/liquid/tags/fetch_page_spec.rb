@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Tags::FetchPage do
 
-  let(:template)      { "{% fetch_page about_us as a_page %}{{ a_page.title }}" }
+  let(:source)      { "{% fetch_page about_us as a_page %}{{ a_page.title }}" }
   let(:assigns)       { {} }
   let(:repositories)  { Locomotive::Steam::Services.build_instance.repositories }
   let(:context)       { ::Liquid::Context.new(assigns, {}, { repositories: repositories }) }
@@ -10,14 +10,14 @@ describe Locomotive::Steam::Liquid::Tags::FetchPage do
   let(:page)  { instance_double('Page', to_liquid: { 'title' => 'About Us' }) }
   before      { allow(repositories.page).to receive(:by_handle).and_return(page) }
 
-  subject { render_template(template, context) }
+  subject { render_template(source, context) }
 
   describe 'validating syntax' do
 
     it { expect { subject }.not_to raise_exception }
 
     describe 'raises an error if the syntax is incorrect' do
-      let(:template) { "{% fetch_page 'about_us' %}{{ a_page.title }}" }
+      let(:source) { "{% fetch_page 'about_us' %}{{ a_page.title }}" }
       it { expect { subject }.to raise_exception }
     end
 
