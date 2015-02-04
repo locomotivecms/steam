@@ -8,13 +8,26 @@ describe Locomotive::Steam::Liquid::Tags::SessionAssign do
   let(:assigns)   { {} }
   let(:context)   { ::Liquid::Context.new(assigns, {}, { request: request }) }
 
-  let!(:output)   { render_template(source, context) }
+  let(:output)    { render_template(source, context) }
 
   subject { session[:title] }
 
   it { expect(output).to eq '' }
 
+  describe 'parsing' do
+
+    context 'wrong syntax' do
+
+      let(:source) { '{% session_assign title %}' }
+      it { expect { output }.to raise_error(::Liquid::SyntaxError) }
+
+    end
+
+  end
+
   describe 'store the object in the session' do
+
+    before { output }
 
     it { is_expected.to eq 42 }
 

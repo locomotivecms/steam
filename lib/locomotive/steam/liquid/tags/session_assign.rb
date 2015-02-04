@@ -18,7 +18,7 @@ module Locomotive
             if markup =~ Syntax
               @to, @from = $1, $2
             else
-              raise ::Liquid::SyntaxError.new("Syntax Error in 'session_assign' - Valid syntax: assign [var] = [source]")
+              raise ::Liquid::SyntaxError.new("Valid syntax: session_assign [var] = [source]")
             end
 
             super

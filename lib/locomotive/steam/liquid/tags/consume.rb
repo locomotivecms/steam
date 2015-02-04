@@ -45,10 +45,8 @@ module Locomotive
           def prepare_url(token)
             if token.match(::Liquid::QuotedString)
               @url = token.gsub(/['"]/, '')
-            elsif token.match(::Liquid::VariableSignature)
-              @variable_name = token
             else
-              raise ::Liquid::SyntaxError.new("Syntax Error in 'consume' - Valid syntax: consume <var> from \"<url>\" [username: value, password: value]")
+              @variable_name = token
             end
           end
 
