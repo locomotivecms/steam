@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Locomotive::Steam::Liquid::Tags::Editable::Text do
+describe Locomotive::Steam::Liquid::Tags::Editable::Control do
 
   let(:page)        { instance_double('Page') }
   let(:listener)    { Liquid::SimpleEventsListener.new }
@@ -71,7 +71,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
     let(:inline_editing) { false }
 
     let(:page)      { instance_double('Page', fullpath: 'hello-world') }
-    let(:element)   { instance_double('Control', id: 42, content: false) }
+    let(:element)   { instance_double('EditableControl', id: 42, content: false) }
     let(:services)  { Locomotive::Steam::Services.build_instance(nil) }
     let(:context)   { ::Liquid::Context.new({ 'inline_editing' => inline_editing }, {}, { page: page, services: services }) }
 
@@ -90,7 +90,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
     context 'modified value' do
 
-      let(:element) { instance_double('Control', content: 'true', default_content?: false) }
+      let(:element) { instance_double('EditableControl', content: 'true') }
       it { is_expected.to eq 'true' }
 
     end

@@ -73,7 +73,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
     let(:inline_editing) { false }
 
     let(:page)      { instance_double('Page', fullpath: 'hello-world') }
-    let(:element)   { instance_double('Text', id: 42, default_content?: true, inline_editing?: true) }
+    let(:element)   { instance_double('EditableText', id: 42, default_content?: true, inline_editing?: true) }
     let(:services)  { Locomotive::Steam::Services.build_instance(nil) }
     let(:context)   { ::Liquid::Context.new({ 'inline_editing' => inline_editing }, {}, { page: page, services: services }) }
 
@@ -92,7 +92,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
     context 'modified content' do
 
-      let(:element) { instance_double('Text', content: 'Hello world!', default_content?: false) }
+      let(:element) { instance_double('EditableText', content: 'Hello world!', default_content?: false) }
       it { is_expected.to eq 'Hello world!' }
 
     end
