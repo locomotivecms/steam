@@ -3,8 +3,12 @@
 module HashConverter
   class << self
 
-    def to_underscore hash
-      convert hash, :underscore
+    def to_underscore(hash)
+      convert(hash, :underscore)
+    end
+
+    def to_string(hash)
+      convert(hash, :to_s)
     end
 
     # FIXME: not sure it will be ever needed
@@ -12,16 +16,16 @@ module HashConverter
     #   convert hash, :camelize, :lower
     # end
 
-    def convert obj, *method
+    def convert(obj, *method)
       case obj
       when Hash
-        obj.inject({}) do |h,(k,v)|
-          v = convert v, *method
+        obj.inject({}) do |h, (k,v)|
+          v = convert(v, *method)
           h[k.send(*method)] = v
           h
         end
       when Array
-        obj.map {|m| convert m, *method }
+        obj.map { |m| convert(m, *method) }
       else
         obj
       end

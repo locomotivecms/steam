@@ -12,7 +12,7 @@ module Locomotive
         #   {{ session.foo }}
         #
         class SessionAssign < ::Liquid::Tag
-          Syntax = /(#{::Liquid::VariableSignature}+)\s*=\s*(#{::Liquid::QuotedFragment}+)/
+          Syntax = /(#{::Liquid::VariableSignature}+)\s*=\s*(#{::Liquid::QuotedFragment}+)/o
 
           def initialize(tag_name, markup, options)
             if markup =~ Syntax

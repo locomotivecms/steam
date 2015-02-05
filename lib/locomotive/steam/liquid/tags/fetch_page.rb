@@ -12,7 +12,7 @@ module Locomotive
         #
         class FetchPage < ::Liquid::Tag
 
-          Syntax = /(#{::Liquid::VariableSignature}+)\s+as\s+(#{::Liquid::VariableSignature}+)/
+          Syntax = /(#{::Liquid::VariableSignature}+)\s+as\s+(#{::Liquid::VariableSignature}+)/o
 
           def initialize(tag_name, markup, options)
             if markup =~ Syntax

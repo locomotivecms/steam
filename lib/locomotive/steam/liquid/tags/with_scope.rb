@@ -18,7 +18,7 @@ module Locomotive
 
           OPERATORS = %w(all exists gt gte in lt lte ne nin size near within)
 
-          SYMBOL_OPERATORS_REGEXP = /(\w+\.(#{OPERATORS.join('|')})){1}\s*\:/
+          SYMBOL_OPERATORS_REGEXP = /(\w+\.(#{OPERATORS.join('|')})){1}\s*\:/o
 
           # register the tag
           tag_name :with_scope

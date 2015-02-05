@@ -63,21 +63,4 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
 
   end
 
-  # describe "advanced queries thanks to h4s" do
-
-  #   it 'decodes criteria with gt and lt' do
-  #     scope   = Locomotive::Liquid::Tags::WithScope.new('with_scope', 'price.gt:42.0, price.lt:50', ["{% endwith_scope %}"], {})
-  #     options = decode_options(scope)
-  #     expect(options[:price.gt]).to eq(42.0)
-  #     expect(options[:price.lt]).to eq(50)
-  #   end
-
-  # end
-
-  # def decode_options(tag, assigns = {})
-  #   context   = ::Liquid::Context.new(assigns)
-  #   arguments = tag.instance_variable_get(:@arguments)
-  #   tag.send(:decode, *arguments.interpolate(context))
-  # end
-
 end
