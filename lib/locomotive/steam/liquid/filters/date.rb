@@ -84,20 +84,19 @@ module Locomotive
           end
 
           def _distance_of_time_in_words(locale, from_time, to_time, include_seconds = false)
-            distance_in_minutes = (((to_time - from_time).abs) / 60).round
-            distance_in_seconds = ((to_time - from_time).abs).round
+            in_minutes, in_seconds = get_distance_in_minutes_and_seconds(from_time, to_time)
 
-            case distance_in_minutes
-              when 0..1            then to_distance_in_seconds(locale, distance_in_minutes, distance_in_seconds, include_seconds)
-              when 2..44           then locale.t :x_minutes,      count: distance_in_minutes
+            case in_minutes
+              when 0..1            then to_distance_in_seconds(locale, in_minutes, in_seconds, include_seconds)
+              when 2..44           then locale.t :x_minutes,      count: in_minutes
               when 45..89          then locale.t :about_x_hours,  count: 1
-              when 90..1439        then locale.t :about_x_hours,  count: (distance_in_minutes.to_f / 60.0).round
+              when 90..1439        then locale.t :about_x_hours,  count: (in_minutes.to_f / 60.0).round
               when 1440..2519      then locale.t :x_days,         count: 1
-              when 2520..43199     then locale.t :x_days,         count: (distance_in_minutes.to_f / 1440.0).round
+              when 2520..43199     then locale.t :x_days,         count: (in_minutes.to_f / 1440.0).round
               when 43200..86399    then locale.t :about_x_months, count: 1
-              when 86400..525599   then locale.t :x_months,       count: (distance_in_minutes.to_f / 43200.0).round
+              when 86400..525599   then locale.t :x_months,       count: (in_minutes.to_f / 43200.0).round
               else
-                to_distance_in_years(locale, from_time, to_time, distance_in_minutes)
+                to_distance_in_years(locale, from_time, to_time, in_minutes)
             end
           end
 
@@ -143,6 +142,13 @@ module Locomotive
             tyear -= 1 if to_time.month < 3
             leap_years = (fyear > tyear) ? 0 : (fyear..tyear).count{|x| ::Date.leap?(x)}
             leap_years * 1440
+          end
+
+          def get_distance_in_minutes_and_seconds(from_time, to_time)
+            in_minutes = (((to_time - from_time).abs) / 60).round
+            in_seconds = ((to_time - from_time).abs).round
+
+            [in_minutes, in_seconds]
           end
 
         end
