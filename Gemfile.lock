@@ -47,6 +47,10 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.3.6)
     builder (3.2.2)
+    byebug (3.5.1)
+      columnize (~> 0.8)
+      debugger-linecache (~> 1.2)
+      slop (~> 3.6)
     chunky_png (1.3.3)
     codeclimate-test-reporter (0.4.6)
       simplecov (>= 0.7.1, < 1.0.0)
@@ -56,6 +60,7 @@ GEM
       execjs
     coffee-script-source (1.9.0)
     colorize (0.7.5)
+    columnize (0.9.0)
     compass (1.0.3)
       chunky_png (~> 1.2)
       compass-core (~> 1.0.2)
@@ -68,6 +73,7 @@ GEM
       sass (>= 3.3.0, < 3.5)
     compass-import-once (1.0.5)
       sass (>= 3.2, < 3.5)
+    debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
     dragonfly (1.0.7)
@@ -118,6 +124,9 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    pry-byebug (2.0.0)
+      byebug (~> 3.4)
+      pry (~> 0.10)
     rack (1.6.0)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -178,6 +187,6 @@ DEPENDENCIES
   i18n-spec (~> 0.6.0)
   json_spec (~> 1.1.4)
   locomotivecms_steam!
-  pry
+  pry-byebug
   rake (~> 10.4.2)
   rspec (~> 3.1.0)

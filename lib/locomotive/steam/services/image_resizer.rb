@@ -18,7 +18,7 @@ module Locomotive
         end
 
         def disabled?
-          resizer.nil?
+          resizer.nil? || resizer.plugins[:imagemagick].nil?
         end
 
         protected

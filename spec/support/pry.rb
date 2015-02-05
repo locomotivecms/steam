@@ -1,4 +1,4 @@
-# begin
-#   require 'pry'
-# rescue LoadError
-# end
+begin
+  require 'pry'
+rescue LoadError
+end

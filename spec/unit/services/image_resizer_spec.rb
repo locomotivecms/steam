@@ -21,6 +21,11 @@ describe Locomotive::Steam::Services::ImageResizer do
 
       let(:resizer) { Dragonfly.app(:steam) }
 
+      describe 'no imagemagick' do
+        before { expect(resizer.plugins).to receive(:[]).with(:imagemagick).and_return(nil) }
+        it { is_expected.to eq nil }
+      end
+
       describe 'no geometry' do
         let(:geometry) { '' }
         it { is_expected.to eq nil }

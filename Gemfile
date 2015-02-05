@@ -15,7 +15,7 @@ group :test do
   gem 'json_spec',          '~> 1.1.4'
   gem 'i18n-spec',          '~> 0.6.0'
 
-  gem 'pry'
+  gem 'pry-byebug'
 
   gem 'codeclimate-test-reporter', require: false
 end

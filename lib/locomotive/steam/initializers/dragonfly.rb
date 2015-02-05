@@ -1,27 +1,56 @@
-begin
-  require 'dragonfly'
+module Locomotive
+  module Steam
+    module Initializers
 
-  Dragonfly.app(:steam).configure do
-    plugin :imagemagick,
-      convert_command:  `which convert`.strip.presence || '/usr/local/bin/convert',
-      identify_command: `which identify`.strip.presence || '/usr/local/bin/identify'
+      class Dragonfly
 
-    verify_urls true
+        def run
+          require 'dragonfly'
 
-    secret Locomotive::Steam.configuration.image_resizer_secret
+          # need to be called outside of the configure method
+          imagemagick_commands = find_imagemagick_commands
 
-    url_format '/images/dynamic/:job/:basename.:ext'
+          ::Dragonfly.app(:steam).configure do
+            if imagemagick_commands
+              plugin :imagemagick, imagemagick_commands
+            end
 
-    fetch_file_whitelist /public/
+            verify_urls true
 
-    fetch_url_whitelist /.+/
-  end
+            secret Locomotive::Steam.configuration.image_resizer_secret
 
-  Dragonfly.logger = Locomotive::Common::Logger.instance
+            url_format '/images/dynamic/:job/:basename.:ext'
 
-rescue Exception => e
-  Locomotive::Common::Logger.warn %{
+            fetch_file_whitelist /public/
+
+            fetch_url_whitelist /.+/
+          end
+
+          ::Dragonfly.logger = Locomotive::Common::Logger.instance
+        end
+
+        def find_imagemagick_commands
+          convert   = `which convert`.strip.presence || '/usr/local/bin/convert'
+          identify  = `which identify`.strip.presence || '/usr/local/bin/identify'
+
+          if File.exists?(convert)
+            { convert_command: convert, identify_command: identify }
+          else
+            missing_image_magick
+            nil
+          end
+        end
+
+        def missing_image_magick
+          Locomotive::Common::Logger.warn <<-EOF
 [Dragonfly] !disabled!
-[Dragonfly] If you want to take full benefits of all the features in the LocomotiveWagon, we recommend you to install ImageMagick and RMagick. Check out the documentation here: http://doc.locomotivecms.com/editor/installation.
-}
+[Dragonfly] If you want to take full benefits of all the features in Locomotive Steam, we recommend you to install ImageMagick. Check out the documentation here: http://doc.locomotivecms.com.
+EOF
+        end
+
+      end
+    end
+  end
 end
+
+Locomotive::Steam::Initializers::Dragonfly.new.run

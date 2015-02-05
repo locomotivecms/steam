@@ -2,12 +2,16 @@
 # https://gist.github.com/timruffles/2780508
 module HashConverter
   class << self
+
     def to_underscore hash
       convert hash, :underscore
     end
-    def to_camel_case hash
-      convert hash, :camelize, :lower
-    end
+
+    # FIXME: not sure it will be ever needed
+    # def to_camel_case hash
+    #   convert hash, :camelize, :lower
+    # end
+
     def convert obj, *method
       case obj
       when Hash
@@ -22,5 +26,6 @@ module HashConverter
         obj
       end
     end
+
   end
 end
