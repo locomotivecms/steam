@@ -12,6 +12,10 @@ module Locomotive
           end
         end
 
+        def public_submission_url_for(content_type)
+          "/entry_submissions/#{content_type.slug}"
+        end
+
       end
 
     end

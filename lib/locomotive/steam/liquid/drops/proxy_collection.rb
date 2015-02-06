@@ -5,20 +5,19 @@ module Locomotive
 
         class ProxyCollection < ::Liquid::Drop
 
-          delegate :first, :last, :each, :each_with_index, :empty?, :any?, to: :@collection
+          attr_reader :collection
+
+          delegate :first, :last, :each, :each_with_index, :empty?, :any?, to: :collection
 
           def initialize(collection)
             @collection = collection
           end
 
           def count
-            @count ||= @collection.count
+            @count ||= collection.count
           end
 
-          def all
-            @collection
-          end
-
+          alias :all    :collection
           alias :size   :count
           alias :length :count
 
