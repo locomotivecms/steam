@@ -16,6 +16,14 @@ module Locomotive
           site.pages.where(fullpath: path).first
         end
 
+        def root
+          site.pages.root.first
+        end
+
+        def children_of(page)
+          page.children
+        end
+
         def editable_element_for(page, block, slug)
           page.editable_elements.where(block: block, slug: slug).first
         end

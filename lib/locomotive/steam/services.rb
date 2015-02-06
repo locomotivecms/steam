@@ -22,6 +22,10 @@ module Locomotive
           Services::SiteFinder.new(request, repositories.site, options)
         end
 
+        register :url_builder do
+          Services::UrlBuilder.new(current_site, I18n.locale)
+        end
+
         register :theme_asset_url do
           Services::ThemeAssetUrl.new(repositories.theme_asset, asset_host, configuration.theme_assets_checksum)
         end

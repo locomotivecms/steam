@@ -1,161 +1,232 @@
-# require 'spec_helper'
+require 'spec_helper'
 
-# describe 'Locomotive::Steam::Liquid::Tags::Nav' do
+describe 'Locomotive::Steam::Liquid::Tags::Nav' do
 
-#   before { skip }
+  let(:index) { instance_double('IndexPage', fullpath: 'index', published: true) }
+  let(:depth_1) do
+    [
+      instance_double('Child1', title: 'Child #1', slug: 'child-1', fullpath: 'child-1', published?: true, listed?: true, templatized?: false, to_liquid: { 'title' => 'Child #1' }),
+      instance_double('Child2', title: 'Child #2', slug: 'child-2', fullpath: 'child-2', published?: true, listed?: true, templatized?: false, to_liquid: { 'title' => 'Child #2' })
+    ]
+  end
+  let(:depth_2) do
+    [
+      instance_double('Child2_1', title: 'Child #2.1', slug: 'child-2-1', fullpath: 'child-2/child-2-1', published?: true, listed?: true, templatized?: false),
+      instance_double('Child2_2', title: 'Child #2.2', slug: 'child-2-2', fullpath: 'child-2/child-2-2', published?: true, listed?: true, templatized?: false),
+      instance_double('UnpublishedChild2_3', title: 'Child #2.3', slug: 'child-2-3', fullpath: 'child-2/child-2-3', published?: false, listed?: true, templatized?: false),
+      instance_double('TemplatizedChild2_4', title: 'Child #2.4', slug: 'child-2-4', fullpath: 'child-2/child-2-4', published?: true, listed?: true, templatized?: true),
+      instance_double('UnlistedChild2_4', title: 'Child #2.5', slug: 'child-2-5', fullpath: 'child-2/child-2-5', published?: true, listed?: false, templatized?: false)
+    ]
+  end
 
-#   subject { Locomotive::Steam::Liquid::Tags::Nav }
-#   let(:entity_class)  { Locomotive::Steam::Entities::Page }
-#   let(:site_class)    { Locomotive::Steam::Entities::Site }
-#   let(:home)          { new_page fullpath: { en: 'index' }}
-#   let(:site)          { site_class.new locales: %w(en fr) }
+  let(:source)      { '{% nav site %}' }
+  let(:site)        { instance_double('Site', name: 'My portfolio', default_locale: 'en') }
+  let(:page)        { index }
+  let(:services)    { Locomotive::Steam::Services.build_instance(nil) }
+  let(:repository)  { services.repositories.page }
+  let(:assigns)     { {} }
+  let(:registers)   { { services: services, site: site, page: page } }
+  let(:context)     { ::Liquid::Context.new(assigns, {}, registers) }
+  let(:options)     { { services: services } }
 
-#   before do
-#     home_children = [
-#       new_page(title: { en: 'Child #1' }, fullpath: { en: 'child_1' }, slug: { en: 'child_1' }, published: true, listed: true),
-#       new_page(title: { en: 'Child #2' }, fullpath: { en: 'child_2' }, slug: { en: 'child_2' }, published: true, listed: true)
-#     ]
-#     home.stub(children: home_children)
+  let(:output) { render_template(source, context, options) }
 
-#     other_children = [
-#       new_page(title: { en: 'Child #2.1' }, fullpath: { en: 'child_2/sub_child_1' }, slug: { en: 'sub_child_1' }, published: true, listed: true),
-#       new_page(title: { en: 'Child #2.2' }, fullpath: { en: 'child_2/sub_child_2' }, slug: { en: 'sub_child_2' }, published: true, listed: true),
-#       new_page(title: { en: 'Unpublished #2.2' }, fullpath: { en: 'child_2/sub_child_unpublishd_2' }, slug: { en: 'sub_child_unpublished_2' }, published: false, listed: true),
-#       new_page(title: { en: 'Templatized #2.3' }, fullpath: { en: 'child_2/sub_child_template_3' },   slug: { en: 'sub_child_template_3' },    published: true,   templatized: true, listed: true),
-#       new_page(title: { en: 'Unlisted    #2.4' }, fullpath: { en: 'child_2/sub_child_unlisted_4' },   slug: { en: 'sub_child_unlisted_4' },    published: true,   listed: false)
-#     ]
-#     home.children.last.stub(children: other_children)
+  before { services.repositories.current_site = site }
 
-#     pages = [home]
-#     Locomotive::Models['pages'].stub(root: pages)
-#     Locomotive::Models['pages'].stub(all: pages)
-#     Locomotive::Models['pages'].stub(:[]).with('index').and_return home
-#   end
+  describe 'rendering' do
 
-#   context '#rendering' do
+    subject { output }
 
-#     it 'renders from site' do
-#       render_nav.should == '<nav id="nav"><ul><li id="child-1-link" class="link first"><a href="/child_1">Child #1</a></li><li id="child-2-link" class="link last"><a href="/child_2">Child #2</a></li></ul></nav>'
-#     end
+    describe 'from a site' do
 
-#     it 'renders from page' do
-#       render_nav('page').should == '<nav id="nav"><ul><li id="child-1-link" class="link first"><a href="/child_1">Child #1</a></li><li id="child-2-link" class="link last"><a href="/child_2">Child #2</a></li></ul></nav>'
-#     end
+      before do
+        allow(repository).to receive(:root).and_return(index)
+        allow(repository).to receive(:children_of).with(index).and_return(depth_1)
+      end
 
-#     it 'renders from parent' do
-#       (page = home.children.last.children.first).stub(parent: home.children.last)
-#       output = render_nav 'parent', { page: page }
-#       output.should == '<nav id="nav"><ul><li id="sub-child-1-link" class="link on first"><a href="/child_2/sub_child_1">Child #2.1</a></li><li id="sub-child-2-link" class="link last"><a href="/child_2/sub_child_2">Child #2.2</a></li></ul></nav>'
-#     end
+      it { is_expected.to eq %{<nav id="nav"><ul><li id="child-1-link" class="link first"><a href="/child-1">Child #1</a></li>\n<li id="child-2-link" class="link last"><a href="/child-2">Child #2</a></li></ul></nav>} }
 
-#     it 'renders children to depth' do
-#       output = render_nav('site', {}, 'depth: 2')
+    end
 
-#       output.should match(/<nav id="nav">/)
-#       output.should match(/<ul>/)
-#       output.should match(/<li id="child-1-link" class="link first">/)
-#       output.should match(/<\/a><ul id="nav-child-2">/)
-#       output.should match(/<li id="sub-child-1-link" class="link first">/)
-#       output.should match(/<li id="sub-child-2-link" class="link last">/)
-#       output.should match(/<\/a><\/li><\/ul><\/li><\/ul><\/nav>/)
-#     end
+    describe 'from a page' do
 
-#     it 'does not render templatized pages' do
-#       output = render_nav('site', {}, 'depth: 2')
+      let(:source) { '{% nav page %}' }
 
-#       output.should_not match(/sub-child-template-3/)
-#     end
+      before do
+        allow(repository).to receive(:children_of).with(index).and_return(depth_1)
+      end
 
-#     it 'does not render unpublished pages' do
-#       output = render_nav('site', {}, 'depth: 2')
+      it { is_expected.to eq %{<nav id="nav"><ul><li id="child-1-link" class="link first"><a href="/child-1">Child #1</a></li>\n<li id="child-2-link" class="link last"><a href="/child-2">Child #2</a></li></ul></nav>} }
 
-#       output.should_not match(/sub-child-unpublished-3/)
-#     end
+    end
 
-#     it 'does not render unlisted pages' do
-#       output = render_nav('site', {}, 'depth: 2')
+    describe 'from the parent page' do
 
-#       output.should_not match(/sub-child-unlisted-3/)
-#     end
+      let(:source) { '{% nav parent %}' }
 
-#     it 'does not render nested excluded pages' do
-#       output = render_nav('site', {}, 'depth: 2, exclude: "child_2/sub_child_2"')
+      describe 'no parent page, use the current page instead' do
 
-#       output.should     match(/<li id="child-2-link" class="link last">/)
-#       output.should     match(/<li id="sub-child-1-link" class="link first last">/)
-#       output.should_not match(/sub-child-2/)
+        before do
+          allow(repository).to receive(:parent_of).with(index).and_return(nil)
+          allow(repository).to receive(:children_of).with(index).and_return(depth_1)
+        end
 
-#       output = render_nav('site', {}, 'depth: 2, exclude: "child_2"')
+        it { is_expected.to eq %{<nav id="nav"><ul><li id="child-1-link" class="link first"><a href="/child-1">Child #1</a></li>\n<li id="child-2-link" class="link last"><a href="/child-2">Child #2</a></li></ul></nav>} }
 
-#       output.should     match(/<li id="child-1-link" class="link first last">/)
-#       output.should_not match(/child-2/)
-#       output.should_not match(/sub-child/)
-#     end
+      end
 
-#     it 'adds an icon before the link' do
-#       render_nav('site', {}, 'icon: true')
-#         .should match(/<li id="child-1-link" class="link first"><a href="\/child_1"><span><\/span> Child #1<\/a>/)
-#       render_nav('site', {}, 'icon: before')
-#         .should match(/<li id="child-1-link" class="link first"><a href="\/child_1"><span><\/span> Child #1<\/a>/)
-#     end
+    end
 
-#     it 'adds an icon after the link' do
-#       render_nav('site', {}, 'icon: after')
-#         .should match(/<li id="child-1-link" class="link first"><a href="\/child_1">Child #1 <span><\/span><\/a><\/li>/)
-#     end
+    describe 'from a page' do
 
-#     it 'renders a snippet for the title' do
-#       render_nav('site', {}, 'snippet: "-{{page.title}} {{ foo.png | theme_image_tag }}-"')
-#         .should match( /<li id="child-1-link" class="link first"><a href="\/child_1">-Child #1 <img src=\"\" \/>-<\/a><\/li>/)
-#     end
+      let(:source) { '{% nav index %}' }
 
-#     it 'assigns a different dom id' do
-#       render_nav('site', {}, 'id: "main-nav"')
-#         .should match(/<nav id="main-nav">/)
-#     end
+      describe 'no parent page, use the current page instead' do
 
-#     it 'assigns a class' do
-#       render_nav('site', {}, 'class: "nav"')
-#         .should match(/<nav id="nav" class="nav">/)
-#     end
+        before do
+          allow(repository).to receive(:by_fullpath).with('index').and_return(index)
+          allow(repository).to receive(:children_of).with(index).and_return(depth_1)
+        end
 
-#     it 'assigns a class other than "on" for a selected item', pending: true do
-#       (page = @home.children.last.children.first).stubs(:parent).returns(@home.children.last)
-#       output = render_nav 'parent', { page: page }, 'active_class: "active"'
-#       output.should match(/<li id="sub-child-1-link" class="link active first">/)
-#     end
+        it { is_expected.to eq %{<nav id="nav"><ul><li id="child-1-link" class="link first"><a href="/child-1">Child #1</a></li>\n<li id="child-2-link" class="link last"><a href="/child-2">Child #2</a></li></ul></nav>} }
 
-#     it 'excludes entries based on a regexp' do
-#       render_nav('page', {}, 'exclude: "child_1"').should == '<nav id="nav"><ul><li id="child-2-link" class="link first last"><a href="/child_2">Child #2</a></li></ul></nav>'
-#     end
+      end
 
-#     it 'does not render the parent ul' do
-#       render_nav('site', {}, 'no_wrapper: true')
-#         .should_not match(/<ul id="nav">/)
-#     end
+    end
 
-#     it 'localizes the links' do
-#       I18n.with_locale('fr') do
-#         render_nav.should == '<nav id="nav"><ul><li id="child-1-link" class="link first"><a href="/fr/child_1">Child #1</a></li><li id="child-2-link" class="link last"><a href="/fr/child_2">Child #2</a></li></ul></nav>'
-#       end
-#     end
+    describe 'no wrapper' do
 
-#   end
+      let(:source) { '{% nav site, no_wrapper: true %}' }
 
-#   def new_page attributes
-#     # Locomotive::Steam::Decorators::PageDecorator.new(
-#     #   Locomotive::Decorators::I18nDecorator.new(
-#     #     entity_class.new(attributes), :en
-#     #   )
-#     # )
-#   end
+      before do
+        allow(repository).to receive(:root).and_return(index)
+        allow(repository).to receive(:children_of).with(index).and_return(depth_1)
+      end
 
-#   def render_nav(source = 'site', registers = {}, template_option = '')
-#     registers = { site: site, page: home }.merge(registers)
-#     liquid_context = ::Liquid::Context.new({}, {}, registers)
+      it { is_expected.to eq %{<li id="child-1-link" class="link first"><a href="/child-1">Child #1</a></li>\n<li id="child-2-link" class="link last"><a href="/child-2">Child #2</a></li>} }
 
-#     output = Liquid::Template.parse("{% nav #{source} #{template_option} %}").render(liquid_context)
-#     output.gsub(/\n\s{0,}/, '')
-#   end
+    end
 
-# end
+    describe 'with icons' do
+
+      before do
+        allow(repository).to receive(:root).and_return(index)
+        allow(repository).to receive(:children_of).with(index).and_return(depth_1)
+      end
+
+      describe 'before' do
+
+        let(:source) { '{% nav site, icon: before, no_wrapper: true %}' }
+        it { is_expected.to include %{<li id="child-1-link" class="link first"><a href="/child-1"><span></span> Child #1</a></li>} }
+
+      end
+
+      describe 'after' do
+
+        let(:source) { '{% nav site, icon: after, no_wrapper: true %}' }
+        it { is_expected.to include %{<li id="child-1-link" class="link first"><a href="/child-1">Child #1 <span></span></a></li>} }
+
+      end
+
+    end
+
+    describe 'including the second levels of pages (depth = 2)' do
+
+      let(:source) { '{% nav site, depth: 2 %}' }
+
+      before do
+        allow(repository).to receive(:root).and_return(index)
+        allow(repository).to receive(:children_of).with(index).and_return(depth_1)
+        allow(repository).to receive(:children_of).with(depth_1.first).and_return([])
+        allow(repository).to receive(:children_of).with(depth_1.last).and_return(depth_2)
+      end
+
+      it { is_expected.to eq %{<nav id="nav"><ul><li id="child-1-link" class="link first"><a href="/child-1">Child #1</a></li>\n<li id="child-2-link" class="link last"><a href="/child-2">Child #2</a><ul id="nav-child-2"><li id="child-2-1-link" class="link first"><a href="/child-2/child-2-1">Child #2.1</a></li>\n<li id="child-2-2-link" class="link last"><a href="/child-2/child-2-2">Child #2.2</a></li></ul></li></ul></nav>} }
+
+      describe 'with bootstrap' do
+
+        let(:source) { '{% nav site, bootstrap: true, depth: 2 %}' }
+        it { is_expected.to eq %{<nav id="nav"><ul><li id="child-1-link" class="link first"><a href="/child-1">Child #1</a></li>\n<li id="child-2-link" class="link last dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Child #2 <b class="caret"></b></a><ul id="nav-child-2" class="dropdown-menu"><li id="child-2-1-link" class="link first"><a href="/child-2/child-2-1">Child #2.1</a></li>\n<li id="child-2-2-link" class="link last"><a href="/child-2/child-2-2">Child #2.2</a></li></ul></li></ul></nav>} }
+
+      end
+
+      describe 'excluding pages' do
+
+        let(:source) { '{% nav site, depth: 2, exclude: "child-2/child-2-2" %}' }
+        it { is_expected.to eq %{<nav id="nav"><ul><li id="child-1-link" class="link first"><a href="/child-1">Child #1</a></li>\n<li id="child-2-link" class="link last"><a href="/child-2">Child #2</a><ul id="nav-child-2"><li id="child-2-1-link" class="link first last"><a href="/child-2/child-2-1">Child #2.1</a></li></ul></li></ul></nav>} }
+
+      end
+
+    end
+
+    describe 'using a snippet to render the title' do
+
+      let(:source) { %({% nav site, snippet: "{{page.title}}!" %}) }
+
+      before do
+        allow(repository).to receive(:root).and_return(index)
+        allow(repository).to receive(:children_of).with(index).and_return(depth_1)
+        allow(repository).to receive(:root).and_return(index)
+      end
+
+      it { is_expected.to include %{<a href="/child-1">Child #1!</a>} }
+
+      describe 'from a registered snippet' do
+
+        let(:source)  { %({% nav site, snippet: nav_title %}) }
+        let(:snippet) { instance_double('Snippet', source: '{{ page.title }}!') }
+
+        before do
+          allow(services.repositories.snippet).to receive(:by_slug).with('nav_title').and_return(snippet)
+        end
+
+        it { is_expected.to include %{<a href="/child-1">Child #1!</a>} }
+
+      end
+
+    end
+
+    describe 'changing the dom id and the class' do
+
+      let(:source) { %({% nav site, id: "main-nav", class: "nav" %}) }
+
+      before do
+        allow(repository).to receive(:root).and_return(index)
+        allow(repository).to receive(:children_of).with(index).and_return(depth_1)
+      end
+
+      it { is_expected.to include %{<nav id="main-nav" class="nav">} }
+
+    end
+
+    describe 'assigning a class other than "on" for a selected item' do
+
+      let(:source)  { %({% nav parent, active_class: "active" %}) }
+      let(:page)    { depth_1.first }
+
+      before do
+        allow(repository).to receive(:parent_of).with(page).and_return(index)
+        allow(repository).to receive(:children_of).with(index).and_return(depth_1)
+      end
+
+      it { is_expected.to include %{<li id="child-1-link" class="link active first">} }
+
+    end
+
+    describe 'localizing the links' do
+
+      let(:source) { %({% nav parent, active_class: "active" %}) }
+
+      before do
+        services.url_builder.locale = 'fr'
+        allow(repository).to receive(:parent_of).with(page).and_return(index)
+        allow(repository).to receive(:children_of).with(index).and_return(depth_1)
+      end
+
+      it { is_expected.to include %{<nav id="nav"><ul><li id="child-1-link" class="link first"><a href="/fr/child-1">Child #1</a></li>\n<li id="child-2-link" class="link last"><a href="/fr/child-2">Child #2</a></li></ul></nav>} }
+
+    end
+
+  end
+
+end
