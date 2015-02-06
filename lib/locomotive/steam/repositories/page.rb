@@ -24,8 +24,16 @@ module Locomotive
           page.parent
         end
 
+        def ancestors_of(page)
+          page.ancestors_and_self
+        end
+
         def children_of(page)
           page.children
+        end
+
+        def editable_elements_of(page)
+          page.editable_elements
         end
 
         def editable_element_for(page, block, slug)

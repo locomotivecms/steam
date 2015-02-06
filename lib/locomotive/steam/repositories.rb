@@ -22,6 +22,10 @@ module Locomotive
           Repositories::Page.new(current_site)
         end
 
+        register :content_type do
+          Repositories::ContentType.new(current_site)
+        end
+
         register :snippet do
           Repositories::Snippet.new(current_site)
         end

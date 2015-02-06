@@ -9,14 +9,12 @@ describe Locomotive::Steam::Liquid::Drops::Site do
 
   subject { drop }
 
-  describe 'general attributes' do
-
-    it { expect(subject.name).to eq 'Locomotive' }
-    it { expect(subject.seo_title).to eq 'seo title' }
-    it { expect(subject.meta_keywords).to eq 'keywords' }
-    it { expect(subject.meta_description).to eq 'description' }
-    it { expect(subject.domains).to eq ['acme.org'] }
-
+  it 'gives access to general attributes' do
+    expect(subject.name).to eq 'Locomotive'
+    expect(subject.seo_title).to eq 'seo title'
+    expect(subject.meta_keywords).to eq 'keywords'
+    expect(subject.meta_description).to eq 'description'
+    expect(subject.domains).to eq ['acme.org']
   end
 
   describe '#index' do

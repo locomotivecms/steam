@@ -1,64 +1,30 @@
-# module Locomotive
-#   module Liquid
-#     module Drops
+module Locomotive
+  module Steam
+    module Liquid
+      module Drops
 
-#       class ProxyCollection < ::Liquid::Drop
+        class ProxyCollection < ::Liquid::Drop
 
-#         def initialize(collection)
-#           @collection = collection
-#         end
+          delegate :first, :last, :each, :each_with_index, :empty?, :any?, to: :@collection
 
-#         def first
-#           self.collection.first
-#         end
+          def initialize(collection)
+            @collection = collection
+          end
 
-#         def last
-#           self.collection.last
-#         end
+          def count
+            @count ||= @collection.count
+          end
 
-#         def each(&block)
-#           self.collection.each(&block)
-#         end
+          def all
+            @collection
+          end
 
-#         def each_with_index(&block)
-#           self.collection.each_with_index(&block)
-#         end
+          alias :size   :count
+          alias :length :count
 
-#         def count
-#           @count ||= self.collection.count
-#         end
+        end
 
-#         def all
-#           self.collection
-#         end
-
-#         alias :size   :count
-#         alias :length :count
-
-#         def empty
-#           self.collection.empty?
-#         end
-
-#         def any
-#           self.collection.any?
-#         end
-
-#         def content_type
-
-#         end
-
-#         protected
-
-#         def paginate(options = {})
-#           @collection = collection.page(options[:page]).per(options[:per_page])
-#         end
-
-#         def collection
-#           @collection
-#         end
-
-#       end
-
-#     end
-#   end
-# end
+      end
+    end
+  end
+end

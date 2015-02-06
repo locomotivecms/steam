@@ -1,10 +1,9 @@
 require 'solid'
-# require 'locomotive/models'
 
-# require_relative 'liquid/scopeable'
 require_relative 'liquid/errors'
 require_relative 'liquid/patches'
 require_relative 'liquid/drops/base'
+require_relative 'liquid/drops/proxy_collection'
 require_relative 'liquid/tags/hybrid'
 require_relative 'liquid/tags/path_helper'
 
