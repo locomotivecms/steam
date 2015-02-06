@@ -36,10 +36,9 @@ module Locomotive
           end
 
           def csrf_html
-            name  = controller.send(:request_forgery_protection_token).to_s
-            value = controller.send(:form_authenticity_token)
+            service = current_context.registers[:services].csrf_protection
 
-            html_tag :input, type: 'hidden', name: name, value: value
+            html_tag :input, type: 'hidden', name: service.field, value: service.token
           end
 
           def callbacks_html(options)
@@ -49,10 +48,6 @@ module Locomotive
           end
 
           private
-
-          def controller
-            current_context.registers[:controller]
-          end
 
           def html_content_tag(name, content, options = {})
             "<#{name} #{inline_options(options)}>#{content}</#{name}>"
