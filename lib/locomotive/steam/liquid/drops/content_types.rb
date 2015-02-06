@@ -6,7 +6,12 @@ module Locomotive
 
           def before_method(meth)
             repository = @context.registers[:services].repositories.content_type
-            ContentTypeProxyCollection.new(repository.by_slug(meth.to_s))
+
+            if content_type = repository.by_slug(meth.to_s)
+              ContentTypeProxyCollection.new(content_type)
+            else
+              nil
+            end
           end
 
         end
