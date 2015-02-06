@@ -1,28 +1,31 @@
 module Locomotive
-  module Liquid
-    module Drops
-      class Site < Base
+  module Steam
+    module Liquid
+      module Drops
+        class Site < Base
 
-        delegate :name, :seo_title, :meta_keywords, :meta_description, to: :@_source
+          delegate :name, :domains, :seo_title, :meta_keywords, :meta_description, to: :@_source
 
-        def index
-          @index ||= @_source.pages.root.first
+          def index
+            @index ||= repository.root.to_liquid
+          end
+
+          def pages
+            @pages ||= liquify(*self.scoped_pages)
+          end
+
+          protected
+
+          def repository
+            @context.registers[:services].repositories.page
+          end
+
+          def scoped_pages
+            repository.all(@context['with_scope'])
+
+          end
+
         end
-
-        def pages
-          liquify(*self.scoped_pages)
-        end
-
-        def domains
-          @_source.domains
-        end
-
-        protected
-
-        def scoped_pages
-          @_source.ordered_pages(@context['with_scope'])
-        end
-
       end
     end
   end

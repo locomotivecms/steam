@@ -4,12 +4,12 @@ module Locomotive
 
       class Page < Struct.new(:site)
 
-        def by_handle(handle)
-          site.pages.where(handle: handle).first
+        def all(conditions = {})
+          site.pages.ordered_pages(conditions)
         end
 
-        def parent_of(page)
-          page.parent
+        def by_handle(handle)
+          site.pages.where(handle: handle).first
         end
 
         def by_fullpath(path)
@@ -18,6 +18,10 @@ module Locomotive
 
         def root
           site.pages.root.first
+        end
+
+        def parent_of(page)
+          page.parent
         end
 
         def children_of(page)

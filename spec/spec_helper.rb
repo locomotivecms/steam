@@ -11,6 +11,7 @@ SimpleCov.start do
 
   add_group "Liquid Filters", "lib/locomotive/steam/liquid/filters"
   add_group "Liquid Tags",    "lib/locomotive/steam/liquid/tags"
+  add_group "Liquid Drops",    "lib/locomotive/steam/liquid/drops"
   add_group "Repositories",   "lib/locomotive/steam/repositories"
   add_group "Services",       "lib/locomotive/steam/services"
 end

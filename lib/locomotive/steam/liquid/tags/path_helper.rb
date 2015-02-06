@@ -4,14 +4,14 @@ module Locomotive
       module Tags
         module PathHelper
 
-          Syntax = /(#{::Liquid::Expression}+)(#{::Liquid::TagAttributes}?)/
+          Syntax = /(#{::Liquid::VariableSignature}+)/o
 
-          def initialize(tag_name, markup, tokens, context)
+          def initialize(tag_name, markup, options)
             if markup =~ Syntax
-              @handle = $1
-              @options = {}
+              @handle       = $1
+              @path_options = {}
               markup.scan(::Liquid::TagAttributes) do |key, value|
-                @options[key] = value
+                @path_options[key] = value
               end
             else
               self.wrong_syntax!
@@ -56,7 +56,7 @@ module Locomotive
             ::Mongoid::Fields::I18n.with_locale(self.locale) do
               if templatized
                 criteria = site.pages.where(target_klass_name: handle.class.to_s, templatized: true)
-                criteria = criteria.where(handle: @options['with']) if @options['with']
+                criteria = criteria.where(handle: @path_options['with']) if @path_options['with']
                 criteria.first.tap do |page|
                   page.content_entry = handle if page
                 end
@@ -77,7 +77,7 @@ module Locomotive
           end
 
           def locale
-            @options['locale'] || I18n.locale
+            @path_options['locale'] || I18n.locale
           end
 
         end

@@ -11,7 +11,7 @@ module Locomotive
           end
 
           def wrong_syntax!
-            raise SyntaxError.new("Syntax Error in 'path_to' - Valid syntax: path_to <page|page_handle|content_entry>(, locale: [fr|de|...], with: <page_handle>")
+            raise SyntaxError.new("Valid syntax: path_to <page|page_handle|content_entry>(, locale: [fr|de|...], with: <page_handle>")
           end
 
         end
