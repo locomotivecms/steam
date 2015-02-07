@@ -4,6 +4,7 @@ require_relative 'steam/core_ext'
 require_relative 'steam/exceptions'
 require_relative 'steam/configuration'
 require_relative 'steam/monkey_patches'
+require_relative 'steam/decorators'
 require_relative 'steam/liquid'
 
 require_relative 'steam/repositories'
