@@ -26,6 +26,7 @@ module Locomotive
           protected
 
           def label_from_page(page)
+            # TODO: page is a liquid drop whose source is I18n decorated
             ::Mongoid::Fields::I18n.with_locale(@options['locale']) do
               if page.templatized?
                 page.content_entry._label

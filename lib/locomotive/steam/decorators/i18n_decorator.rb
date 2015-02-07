@@ -40,6 +40,7 @@ module Locomotive
           end
         end
 
+        #:nocov:
         def inspect
           "[Decorated #{__getobj__.class.name}][I18n] " + @__translated_attributes__.inspect + ', locale: ' + @__locale__.inspect
         end

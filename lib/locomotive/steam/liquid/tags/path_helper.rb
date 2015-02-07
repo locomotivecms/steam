@@ -41,6 +41,7 @@ module Locomotive
           def retrieve_page_from_handle(site, context)
             handle = context[@handle] || @handle
 
+            # Note/TODO: we manipulate here only Liquid drops!
             case handle
             when Locomotive::Page                         then handle
             when Locomotive::Liquid::Drops::Page          then handle.instance_variable_get(:@_source)
@@ -53,6 +54,8 @@ module Locomotive
           end
 
           def fetch_page(site, handle, templatized = false)
+            # TODO: responsability of the page repository, no need of I18n
+            # since the source is a I18nDecorated Page model :-)
             ::Mongoid::Fields::I18n.with_locale(self.locale) do
               if templatized
                 criteria = site.pages.where(target_klass_name: handle.class.to_s, templatized: true)
@@ -67,6 +70,8 @@ module Locomotive
           end
 
           def public_page_fullpath(site, page)
+            # TODO: responsability of the url_builder service
+
             fullpath = site.localized_page_fullpath(page, self.locale)
 
             if page.templatized?
@@ -76,9 +81,9 @@ module Locomotive
             File.join('/', fullpath)
           end
 
-          def locale
-            @path_options['locale'] || I18n.locale
-          end
+          # def locale
+          #   @path_options['locale'] || I18n.locale
+          # end
 
         end
       end
