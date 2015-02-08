@@ -23,12 +23,12 @@ describe Liquid::StandardFilters do
 
     context 'Date' do
       let(:obj) { Date.parse('2007/06/29') }
-      it { is_expected.to eq 1183068000 }
+      it { is_expected.to be >= 1183068000 }
     end
 
     context 'Time' do
       let(:obj) { Time.parse('2007/06/29 00:00:00') }
-      it { is_expected.to eq 1183068000 }
+      it { is_expected.to be >= 1183068000 }
     end
 
     context 'DateTime' do
