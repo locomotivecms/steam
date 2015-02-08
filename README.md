@@ -1,6 +1,6 @@
 # Steam
 
-[![Code Climate](https://codeclimate.com/github/locomotivecms/steam/badges/gpa.svg)](https://codeclimate.com/github/locomotivecms/steam) [![Dependency Status](https://gemnasium.com/locomotivecms/steam.svg)](https://gemnasium.com/locomotivecms/steam) [![Build Status](https://travis-ci.org/locomotivecms/steam.svg?branch=master)](https://travis-ci.org/locomotivecms/steam) [![Test Coverage](https://codeclimate.com/github/locomotivecms/steam/badges/coverage.svg)](https://codeclimate.com/github/locomotivecms/steam)
+[![Code Climate](https://codeclimate.com/github/locomotivecms/steam/badges/gpa.svg)](https://codeclimate.com/github/locomotivecms/steam) [![Dependency Status](https://gemnasium.com/locomotivecms/steam.svg)](https://gemnasium.com/locomotivecms/steam) [![Build Status](https://travis-ci.org/locomotivecms/steam.svg?branch=master)](https://travis-ci.org/locomotivecms/steam) [![Coverage Status](https://coveralls.io/repos/locomotivecms/steam/badge.svg?branch=master)](https://coveralls.io/r/locomotivecms/steam?branch=master)
 
 The rendering stack used by both Wagon and Engine. It includes the rack stack and the liquid drops/filters/tags.
 
