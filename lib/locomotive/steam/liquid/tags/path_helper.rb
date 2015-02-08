@@ -43,14 +43,21 @@ module Locomotive
 
             # Note/TODO: we manipulate here only Liquid drops!
             case handle
-            when Locomotive::Page                         then handle
-            when Locomotive::Liquid::Drops::Page          then handle.instance_variable_get(:@_source)
-            when String                                   then fetch_page(site, handle)
-            when Locomotive::ContentEntry                 then fetch_page(site, handle, true)
-            when Locomotive::Liquid::Drops::ContentEntry  then fetch_page(site, handle.instance_variable_get(:@_source), true)
+            when String                                           then fetch_page(site, handle)
+            when Locomotive::Steam::Liquid::Drops::Page           then handle.instance_variable_get(:@_source)
+            when Locomotive::Steam::Liquid::Drops::ContentEntry   then fetch_page(site, handle.instance_variable_get(:@_source), true)
             else
               nil
             end
+            # case handle
+            # when Locomotive::Page                         then handle
+            # when Locomotive::Liquid::Drops::Page          then handle.instance_variable_get(:@_source)
+            # when String                                   then fetch_page(site, handle)
+            # when Locomotive::ContentEntry                 then fetch_page(site, handle, true)
+            # when Locomotive::Liquid::Drops::ContentEntry  then fetch_page(site, handle.instance_variable_get(:@_source), true)
+            # else
+            #   nil
+            # end
           end
 
           def fetch_page(site, handle, templatized = false)

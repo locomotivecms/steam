@@ -1,78 +1,80 @@
-# module Locomotive
-#   module Liquid
-#     module Drops
-#       class ContentEntry < Base
+module Locomotive
+  module Steam
+    module Liquid
+      module Drops
+        class ContentEntry < Base
 
-#         delegate :_slug, :_permalink, :_translated, :seo_title, :meta_keywords, :meta_description, to: :@_source
+          delegate :_slug, :_translated, :seo_title, :meta_keywords, :meta_description, to: :@_source
 
-#         def _id
-#           @_source._id.to_s
-#         end
+          alias :_permalink :_slug
 
-#         def _label
-#           @_label ||= @_source._label
-#         end
+          def _id
+            @_source._id.to_s
+          end
 
-#         # Returns the next content for the parent content type.
-#         # If no content is found, nil is returned.
-#         #
-#         # Usage:
-#         #
-#         # {% if article.next %}
-#         # <a href="/articles/{{ article.next._permalink }}">Read next article</a>
-#         # {% endif %}
-#         #
-#         def next
-#           @next ||= @_source.next.to_liquid
-#         end
+          def _label
+            @_label ||= @_source._label
+          end
 
-#         # Returns the previous content for the parent content type.
-#         # If no content is found, nil is returned.
-#         #
-#         # Usage:
-#         #
-#         # {% if article.previous %}
-#         # <a href="/articles/{{ article.previous._permalink }}">Read previous article</a>
-#         # {% endif %}
-#         #
-#         def previous
-#           @previous ||= @_source.previous.to_liquid
-#         end
+          # Returns the next content for the parent content type.
+          # If no content is found, nil is returned.
+          #
+          # Usage:
+          #
+          # {% if article.next %}
+          # <a href="{% path_to article.next %}">Read next article</a>
+          # {% endif %}
+          #
+          def next
+            @next ||= repository.next(@_source).to_liquid
+          end
 
-#         def errors
-#           @_source.errors.messages.to_hash.stringify_keys
-#         end
+          # Returns the previous content for the parent content type.
+          # If no content is found, nil is returned.
+          #
+          # Usage:
+          #
+          # {% if article.previous %}
+          # <a href="{% path_to article.previous %}">Read previous article</a>
+          # {% endif %}
+          #
+          def previous
+            @previous ||= repository.previous(@_source).to_liquid
+          end
 
-#         def before_method(meth)
-#           return '' if @_source.nil?
+          def errors
+            @_source.errors.messages.to_hash.stringify_keys
+          end
 
-#           if not @@forbidden_attributes.include?(meth.to_s)
-#             value = @_source.send(meth)
+          def before_method(meth)
+            return '' if @_source.nil?
 
-#             if value.respond_to?(:all) # check for an association
-#               filter_and_order_list(value)
-#             else
-#               value
-#             end
-#           else
-#             nil
-#           end
-#         end
+            if not @@forbidden_attributes.include?(meth.to_s)
+              value = @_source.send(meth)
 
-#         protected
+              # check for an association (lazy loading)
+              if value.respond_to?(:all)
+                filter_association(value)
+              else
+                value
+              end
+            else
+              nil
+            end
+          end
 
-#         def filter_and_order_list(list)
-#           conditions, order_by = HashWithIndifferentAccess.new(_visible: true), nil
+          protected
 
-#           if @context['with_scope']
-#             conditions.merge!(@context['with_scope'])
-#             order_by = conditions.delete(:order_by).try(:split)
-#           end
+          def repository
+            @context.registers[:services].repositories.content_entry
+          end
 
-#           list.filtered(conditions, order_by)
-#         end
+          def filter_association(association)
+            repository.filter(association, @context['with_scope'] || {})
+          end
 
-#       end
-#     end
-#   end
-# end
+        end
+      end
+    end
+  end
+end
