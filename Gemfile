@@ -18,6 +18,7 @@ group :test do
   gem 'pry-byebug'
 
   gem 'codeclimate-test-reporter', require: false
+  gem 'coveralls', require: false
 end
 
 platform :ruby do
