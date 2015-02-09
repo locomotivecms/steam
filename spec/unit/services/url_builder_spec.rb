@@ -21,6 +21,20 @@ describe Locomotive::Steam::Services::UrlBuilder do
 
     end
 
+    describe 'no need to put the index slug' do
+
+      let(:page) { instance_double('Index', fullpath: 'index') }
+      it { is_expected.to eq '/' }
+
+      context 'different locale' do
+
+        let(:locale) { 'fr' }
+        it { is_expected.to eq '/fr' }
+
+      end
+
+    end
+
   end
 
 end

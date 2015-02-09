@@ -2,7 +2,7 @@ module Locomotive
   module Steam
     module Liquid
       module Drops
-        class Page < Base
+        class Page < I18nBase
 
           delegate :fullpath, :depth, :seo_title, :meta_keywords, :meta_description, :redirect_url, :handle, to: :@_source
           delegate :listed?, :published?, :redirect?, :is_layout?, :templatized?, to: :@_source

@@ -3,12 +3,12 @@ require 'spec_helper'
 describe Locomotive::Steam::Decorators::I18nDecorator do
 
   let(:page)            { instance_double('Page', title: 'Hello world', published?: true, attributes: { title: { en: 'Hello world!', fr: 'Bonjour monde' } }) }
-  let(:translated)      { [:title] }
+  let(:localized)       { [:title] }
   let(:locale)          { 'fr' }
   let(:default_locale)  { nil }
-  let(:decorated)       { Locomotive::Steam::Decorators::I18nDecorator.new(page, translated, locale, default_locale) }
+  let(:decorated)       { Locomotive::Steam::Decorators::I18nDecorator.new(page, localized, locale, default_locale) }
 
-  it 'uses the translated version of the title attribute' do
+  it 'uses the localized version of the title attribute' do
     expect(decorated.title).to eq 'Bonjour monde'
   end
 
@@ -16,9 +16,9 @@ describe Locomotive::Steam::Decorators::I18nDecorator do
     expect(decorated.published?).to eq true
   end
 
-  describe 'no translated attributes: use the default method' do
+  describe 'no localized attributes: use the default method' do
 
-    let(:translated) { [] }
+    let(:localized) { [] }
     it { expect(decorated.title).to eq 'Hello world' }
 
   end
@@ -36,6 +36,17 @@ describe Locomotive::Steam::Decorators::I18nDecorator do
     let(:locale)          { 'de' }
     let(:default_locale)  { 'en' }
     it { expect(decorated.title).to eq 'Hello world!' }
+
+  end
+
+  describe 'freeze locale' do
+
+    before { decorated.__freeze_locale__ }
+
+    it 'forbids the modification of the locale' do
+      decorated.__locale__ = 'en'
+      expect(decorated.title).to eq 'Bonjour monde'
+    end
 
   end
 

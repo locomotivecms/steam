@@ -2,7 +2,7 @@ module Locomotive
   module Steam
     module Liquid
       module Drops
-        class ContentEntry < Base
+        class ContentEntry < I18nBase
 
           delegate :_slug, :_translated, :seo_title, :meta_keywords, :meta_description, to: :@_source
 

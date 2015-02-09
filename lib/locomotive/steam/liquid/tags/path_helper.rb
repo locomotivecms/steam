@@ -4,15 +4,12 @@ module Locomotive
       module Tags
         module PathHelper
 
-          Syntax = /(#{::Liquid::VariableSignature}+)/o
+          Syntax = /(#{::Liquid::VariableSignature}+)(\s*,.+)?/o
 
           def initialize(tag_name, markup, options)
             if markup =~ Syntax
               @handle       = $1
-              @path_options = {}
-              markup.scan(::Liquid::TagAttributes) do |key, value|
-                @path_options[key] = value
-              end
+              @path_options = parse_options_from_string($2)
             else
               self.wrong_syntax!
             end
@@ -21,15 +18,16 @@ module Locomotive
           end
 
           def render_path(context, &block)
-            site  = context.registers[:site]
+            set_vars_from_context(context)
 
-            if page = self.retrieve_page_from_handle(site, context)
-              path = self.public_page_fullpath(site, page)
+            # return a drop or model?
+            if page = self.retrieve_page_drop_from_handle
+              # make sure we've got the page/content entry (if templatized)
+              # in the right locale
+              change_locale(locale, page) do
+                path = build_fullpath(page)
 
-              if block_given?
-                block.call page, path
-              else
-                path
+                block_given? ? block.call(page, path) : path
               end
             else
               '' # no page found
@@ -38,59 +36,74 @@ module Locomotive
 
           protected
 
-          def retrieve_page_from_handle(site, context)
-            handle = context[@handle] || @handle
-
-            # Note/TODO: we manipulate here only Liquid drops!
-            case handle
-            when String                                           then fetch_page(site, handle)
-            when Locomotive::Steam::Liquid::Drops::Page           then handle.instance_variable_get(:@_source)
-            when Locomotive::Steam::Liquid::Drops::ContentEntry   then fetch_page(site, handle.instance_variable_get(:@_source), true)
-            else
-              nil
-            end
-            # case handle
-            # when Locomotive::Page                         then handle
-            # when Locomotive::Liquid::Drops::Page          then handle.instance_variable_get(:@_source)
-            # when String                                   then fetch_page(site, handle)
-            # when Locomotive::ContentEntry                 then fetch_page(site, handle, true)
-            # when Locomotive::Liquid::Drops::ContentEntry  then fetch_page(site, handle.instance_variable_get(:@_source), true)
-            # else
-            #   nil
-            # end
+          def services
+            @context.registers[:services]
           end
 
-          def fetch_page(site, handle, templatized = false)
-            # TODO: responsability of the page repository, no need of I18n
-            # since the source is a I18nDecorated Page model :-)
-            ::Mongoid::Fields::I18n.with_locale(self.locale) do
-              if templatized
-                criteria = site.pages.where(target_klass_name: handle.class.to_s, templatized: true)
-                criteria = criteria.where(handle: @path_options['with']) if @path_options['with']
-                criteria.first.tap do |page|
-                  page.content_entry = handle if page
-                end
+          def repository
+            services.repositories.page
+          end
+
+          def change_locale(locale, drop, &block)
+            page = drop.send(:_source)
+
+            page.__with_locale__(locale) do
+              if page.templatized?
+                page.content_entry.__with_locale__(locale) { yield }
               else
-                site.pages.where(handle: handle).first
+                yield
               end
             end
           end
 
-          def public_page_fullpath(site, page)
-            # TODO: responsability of the url_builder service
+          def retrieve_page_drop_from_handle
+            handle = @context[@handle] || @handle
 
-            fullpath = site.localized_page_fullpath(page, self.locale)
-
-            if page.templatized?
-              fullpath.gsub!('content_type_template', page.content_entry._slug)
+            case handle
+            when String
+              _retrieve_page_drop_from(handle)
+            when Locomotive::Steam::Liquid::Drops::ContentEntry
+              _retrieve_templatized_page_drop_from(handle)
+            when Locomotive::Steam::Liquid::Drops::Page
+              handle
+            else
+              nil
             end
-
-            File.join('/', fullpath)
           end
 
-          # def locale
-          #   @path_options['locale'] || I18n.locale
-          # end
+          def _retrieve_page_drop_from(handle)
+            if page = repository.by_handle(handle)
+              page.to_liquid.tap { |d| d.context = @context }
+            end
+          end
+
+          def _retrieve_templatized_page_drop_from(drop)
+            entry = drop.send(:_source)
+
+            if page = repository.template_for(entry, @path_options[:with])
+              page.to_liquid.tap { |d| d.context = @context }
+            end
+          end
+
+          def build_fullpath(page)
+            services.url_builder.url_for(page, locale).tap do |fullpath|
+              if page.templatized?
+                entry = page.send(:_source).content_entry
+                fullpath.gsub!('content_type_template', entry._slug)
+              end
+            end
+          end
+
+          def locale
+            @path_options[:locale] || @locale
+          end
+
+          def set_vars_from_context(context)
+            @context      = context
+            @path_options = interpolate_options(@path_options, context)
+            @site         = context.registers[:site]
+            @locale       = context.registers[:locale]
+          end
 
         end
       end

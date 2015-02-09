@@ -1,4 +1,3 @@
-# Liquify taken from Mephisto sources (http://mephistoblog.com/)
 module Locomotive
   module Steam
     module Liquid
@@ -33,6 +32,10 @@ module Locomotive
 
           def liquify(*records, &block)
             self.class.liquify(*records, &block)
+          end
+
+          def _source
+            @_source
           end
 
         end

@@ -8,7 +8,6 @@ module Locomotive
         #
         # @return [ hash ] The safe full paths
         #
-
         def safe_fullpath
           if index_or_404?
             slug[current_locale]

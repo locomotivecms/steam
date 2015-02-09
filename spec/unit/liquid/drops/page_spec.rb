@@ -4,8 +4,9 @@ describe Locomotive::Steam::Liquid::Drops::Page do
 
   let(:assigns)   { {} }
   let(:services)  { Locomotive::Steam::Services.build_instance }
-  let(:context)   { ::Liquid::Context.new(assigns, {}, { services: services }) }
-  let(:page)      { instance_double('Page', id: 42, title: 'Index', slug: 'index', fullpath: 'index', content_type: nil, depth: 1, templatized?: false, listed?: true, published?: true, is_layout?: true, redirect?: false, seo_title: 'seo title', redirect_url: '/', handle: 'index', meta_keywords: 'keywords', meta_description: 'description') }
+  let(:site)      { instance_double('Site', default_locale: 'en') }
+  let(:context)   { ::Liquid::Context.new(assigns, {}, { locale: 'en', services: services, site: site }) }
+  let(:page)      { instance_double('Page', id: 42, localized_attributes: [], title: 'Index', slug: 'index', fullpath: 'index', content_type: nil, depth: 1, templatized?: false, listed?: true, published?: true, is_layout?: true, redirect?: false, seo_title: 'seo title', redirect_url: '/', handle: 'index', meta_keywords: 'keywords', meta_description: 'description') }
   let(:drop)      { Locomotive::Steam::Liquid::Drops::Page.new(page).tap { |d| d.context = context } }
 
   subject { drop }
@@ -83,7 +84,7 @@ describe Locomotive::Steam::Liquid::Drops::Page do
 
     let(:entry)   { liquid_instance_double('ContentEntry', _label: 'First Article', _slug: 'first-article') }
     let(:assigns) { { 'entry' => entry } }
-    let(:page)    { instance_double('Page', id: 42, title: 'Index', slug: 'index', templatized?: true, content_type: 'articles') }
+    let(:page)    { instance_double('Page', id: 42, title: 'Index', slug: 'index', localized_attributes: [], templatized?: true, content_type: 'articles') }
 
     it { expect(subject.title).to eq 'First Article' }
     it { expect(subject.slug).to eq 'first-article' }
@@ -96,6 +97,36 @@ describe Locomotive::Steam::Liquid::Drops::Page do
 
       it { expect(subject.content_type).not_to eq nil }
 
+    end
+
+  end
+
+  describe 'i18n' do
+
+    let(:page) { instance_double('Page', attributes: { title: { en: 'About us', fr: 'A notre sujet' } }, templatized?: false) }
+    let(:drop) { Locomotive::Steam::Liquid::Drops::Page.new(page, [:title]).tap { |d| d.context = context } }
+
+    it { expect(subject.title).to eq 'About us' }
+
+    context 'change the current locale of the context' do
+
+      let(:context) { ::Liquid::Context.new(assigns, {}, { locale: 'fr', site: site }) }
+      it { expect(subject.title).to eq 'A notre sujet' }
+
+    end
+
+    context 'change the locale down the road' do
+
+      before { subject.send(:_change_locale, 'fr') }
+      it { expect(subject.title).to eq 'A notre sujet' }
+
+    end
+
+    it 'prevents further modifications of the locale' do
+      subject.send(:_change_locale!, 'fr')
+      expect(subject.title).to eq 'A notre sujet'
+      subject.send(:_change_locale, 'en')
+      expect(subject.title).to eq 'A notre sujet'
     end
 
   end

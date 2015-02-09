@@ -218,7 +218,7 @@ describe 'Locomotive::Steam::Liquid::Tags::Nav' do
       let(:source) { %({% nav parent, active_class: "active" %}) }
 
       before do
-        services.url_builder.locale = 'fr'
+        services.url_builder.current_locale = 'fr'
         allow(repository).to receive(:parent_of).with(page).and_return(index)
         allow(repository).to receive(:children_of).with(index).and_return(depth_1)
       end

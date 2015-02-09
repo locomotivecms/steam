@@ -31,7 +31,7 @@ module Locomotive
           end
 
           def render(context)
-            self.set_accessors_from_context(context)
+            self.set_vars_from_context(context)
 
             # get all the children of a source: site (index page), parent or page.
             pages   = children_of(fetch_starting_page)
@@ -77,6 +77,7 @@ module Locomotive
             when 'parent'  then page_repository.parent_of(current_page) || current_page
             when 'page'    then current_page
             else
+              # TODO: locale???
               page_repository.by_fullpath(@source)
             end
           end
@@ -168,13 +169,6 @@ module Locomotive
               css << @_options[:active_class] if self.page_selected?(page)
               css << extra_css if !extra_css.blank?
             end.join ' '
-
-            # _css = ['link']
-
-            # _css = 'link'
-            # _css += " #{@_options[:active_class]}" if self.page_selected?(page)
-
-            # (_css + " #{css}").strip.tap { |p| puts p.inspect }
           end
 
           # Return the HTML output of a page and its children if requested.
@@ -240,10 +234,9 @@ module Locomotive
             end
           end
 
-          # Avoid to call context.registers to get the current page
-          # and the mounting point.
+          # Avoid to call context.registers to get the current page.
           #
-          def set_accessors_from_context(context)
+          def set_vars_from_context(context)
             self.current_page       = context.registers[:page]
             self.services           = context.registers[:services]
             self.page_repository    = self.services.repositories.page

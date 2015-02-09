@@ -16,6 +16,14 @@ module Locomotive
           site.pages.where(fullpath: path).first
         end
 
+        def template_for(entry, handle = nil)
+          criteria = site.pages.where(target_klass_name: entry.class.to_s, templatized: true)
+          criteria = criteria.where(handle: handle) if handle
+          criteria.first.tap do |page|
+            page.content_entry = entry if page
+          end
+        end
+
         def root
           site.pages.root.first
         end

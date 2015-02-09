@@ -22,7 +22,7 @@ module Locomotive
               @name = $1.to_s
 
               self.prepare_url($2)
-              self.prepare_api_arguments($3)
+              @api_options = parse_options_from_string($3)
             else
               raise ::Liquid::SyntaxError.new("Syntax Error in 'consume' - Valid syntax: consume <var> from \"<url>\" [username: value, password: value]")
             end
@@ -50,13 +50,8 @@ module Locomotive
             end
           end
 
-          def prepare_api_arguments(string)
-            string = string.gsub(/^(\s*,)/, '').strip
-            @api_arguments = Solid::Arguments.parse(string)
-          end
-
           def set_api_options(context)
-            @api_options  = @api_arguments ? @api_arguments.interpolate(context).first || {} : {}
+            @api_options  = interpolate_options(@api_options, context)
             @expires_in   = @api_options.delete(:expires_in) || 0
           end
 

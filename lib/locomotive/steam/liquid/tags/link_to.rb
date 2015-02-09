@@ -10,9 +10,11 @@ module Locomotive
             render_path(context) do |page, path|
               label = label_from_page(page)
 
-              if @render_as_block
-                context.scopes.last['target'] = page
-                label = super.html_safe
+              if render_as_block?
+                context.stack do
+                  context.scopes.last['target'] = page
+                  label = super.html_safe
+                end
               end
 
               %{<a href="#{path}">#{label}</a>}
@@ -26,13 +28,10 @@ module Locomotive
           protected
 
           def label_from_page(page)
-            # TODO: page is a liquid drop whose source is I18n decorated
-            ::Mongoid::Fields::I18n.with_locale(@options['locale']) do
-              if page.templatized?
-                page.content_entry._label
-              else
-                page.title
-              end
+            if page.templatized?
+              page.send(:_source).content_entry._label
+            else
+              page.title
             end
           end
 

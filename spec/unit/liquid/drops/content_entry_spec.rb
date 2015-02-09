@@ -2,10 +2,11 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
+  let(:site)      { instance_double('Site', default_locale: 'en') }
   let(:entry)     { instance_double('Article', _id: 42, title: 'Hello world', _label: 'Hello world', _slug: 'hello-world', _translated: false, seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description') }
   let(:assigns)   { {} }
   let(:services)  { Locomotive::Steam::Services.build_instance }
-  let(:context)   { ::Liquid::Context.new(assigns, {}, { services: services }) }
+  let(:context)   { ::Liquid::Context.new(assigns, {}, { services: services, site: site, locale: 'en' }) }
   let(:drop)      { Locomotive::Steam::Liquid::Drops::ContentEntry.new(entry).tap { |d| d.context = context } }
 
   subject { drop }
@@ -74,6 +75,24 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
     end
 
     it { expect(subject.errors).to eq('title' => ['not_blank']) }
+
+  end
+
+  describe 'i18n' do
+
+    let(:entry) { instance_double('Article', attributes: { title: { en: 'Hello world', fr: 'Bonjour monde' } }) }
+    let(:drop)  { Locomotive::Steam::Liquid::Drops::ContentEntry.new(entry, [:title]).tap { |d| d.context = context } }
+
+    subject { drop.before_method(:title) }
+
+    it { is_expected.to eq 'Hello world' }
+
+    context 'change the current locale of the context' do
+
+      let(:context) { ::Liquid::Context.new(assigns, {}, { locale: 'fr', site: site }) }
+      it { is_expected.to eq 'Bonjour monde' }
+
+    end
 
   end
 
