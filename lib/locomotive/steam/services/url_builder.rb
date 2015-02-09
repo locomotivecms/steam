@@ -9,10 +9,11 @@ module Locomotive
             locale ||= current_locale
             same_locale = locale.to_sym == site.default_locale.to_sym
 
+            # locale
             segments << locale unless same_locale
 
             # fullpath
-            segments << sanitized_fullpath(page.fullpath, same_locale)
+            segments << sanitized_fullpath(page, same_locale)
           end.compact.join('/')
         end
 
@@ -22,8 +23,12 @@ module Locomotive
 
         private
 
-        def sanitized_fullpath(path, same_locale)
-          if path == 'index'
+        def sanitized_fullpath(page, same_locale)
+          path = page.fullpath
+
+          if page.templatized? && page.content_entry
+            path.gsub('content_type_template', page.content_entry._slug)
+          elsif path == 'index'
             same_locale ? '' : nil
           else
             path

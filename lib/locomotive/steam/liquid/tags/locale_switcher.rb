@@ -18,67 +18,76 @@ module Locomotive
         #   - "iso" is the default choice for label
         #   - " | " is the default separating code
         #
-        class LocaleSwitcher < ::Liquid::Tag
 
-          Syntax = /(#{::Liquid::Expression}+)?/
+        class LocaleSwitcher < Solid::Tag
 
-          def initialize(tag_name, markup, tokens, context)
-            @options = { label: 'iso', sep: ' | ' }
+          include Concerns::I18nPage
 
-            if markup =~ Syntax
-              markup.scan(::Liquid::TagAttributes) { |key, value| @options[key.to_sym] = value.gsub(/"|'/, '') }
+          tag_name :locale_switcher
 
-              @options[:exclude] = Regexp.new(@options[:exclude]) if @options[:exclude]
-            else
-              raise ::Liquid::SyntaxError.new("Syntax Error in 'locale_switcher' - Valid syntax: locale_switcher <options>")
-            end
-
-            super
-          end
-
-          def render(context)
-            @site, @page = context.registers[:site], context.registers[:page]
-
-            output = %(<div id="locale-switcher">)
-
-            output += @site.locales.collect do |locale|
-              ::Mongoid::Fields::I18n.with_locale(locale) do
-                fullpath = @site.localized_page_fullpath(@page, locale)
-
-                if @page.templatized?
-                  fullpath.gsub!('content_type_template', context['entry']._permalink)
-                end
-
-                css = link_class(locale, context['locale'])
-
-                %(<a href="/#{fullpath}" class="#{css}">#{link_label(locale)}</a>)
-              end
-            end.join(@options[:sep])
-
-            output += %(</div>)
+          def display(*values)
+            @options = { label: 'iso', sep: ' | ' }.merge(values.first || {})
+            %{<div id="locale-switcher">#{build_site_locales}</div>}
           end
 
           private
 
-          def link_class(locale, current_locale)
+          def build_site_locales
+            site.locales.map do |locale|
+              change_page_locale(locale, page) do
+                css   = link_class(locale)
+                path  = link_path(locale)
+
+                %(<a href="#{path}" class="#{css}">#{link_label(locale)}</a>)
+              end
+            end.join(@options[:sep])
+          end
+
+          def link_class(locale)
             css = [locale]
-            css << 'current' if locale == current_locale
+            css << 'current' if locale.to_sym == current_locale.to_sym
             css.join(' ')
+          end
+
+          def link_path(locale)
+            url_builder.url_for(page.send(:_source), locale)
           end
 
           def link_label(locale)
             case @options[:label]
-            when 'iso'     then locale
-            when 'locale'  then I18n.t("locomotive.locales.#{locale}")
-            when 'title'   then @page.title # FIXME: this returns nil if the page has not been translated in the locale
+            when 'locale' then I18n.t("locomotive.locales.#{locale}")
+            when 'title' then page_title
             else
               locale
             end
           end
 
+          def page_title
+            if page.templatized?
+              page.send(:_source).content_entry._label
+            else
+              page.title
+            end
+          end
+
+          def site
+            @site ||= current_context.registers[:site]
+          end
+
+          def page
+            @page ||= current_context['page']
+          end
+
+          def url_builder
+            current_context.registers[:services].url_builder
+          end
+
+          def current_locale
+            @current_locale ||= current_context.registers[:locale]
+          end
+
         end
 
-        ::Liquid::Template.register_tag('locale_switcher', LocaleSwitcher)
       end
     end
   end

@@ -8,7 +8,7 @@ describe Locomotive::Steam::Services::UrlBuilder do
 
   describe '#url_for' do
 
-    let(:page) { instance_double('AboutUs', fullpath: 'about-us') }
+    let(:page) { instance_double('AboutUs', fullpath: 'about-us', templatized?: false) }
 
     subject { service.url_for(page) }
 
@@ -23,7 +23,7 @@ describe Locomotive::Steam::Services::UrlBuilder do
 
     describe 'no need to put the index slug' do
 
-      let(:page) { instance_double('Index', fullpath: 'index') }
+      let(:page) { instance_double('Index', fullpath: 'index', templatized?: false) }
       it { is_expected.to eq '/' }
 
       context 'different locale' do
@@ -32,6 +32,14 @@ describe Locomotive::Steam::Services::UrlBuilder do
         it { is_expected.to eq '/fr' }
 
       end
+
+    end
+
+    describe 'templatized page' do
+
+      let(:article) { instance_double('Article', _slug: 'hello-world') }
+      let(:page)    { instance_double('Template', fullpath: 'articles/content_type_template', templatized?: true, content_entry: article) }
+      it { is_expected.to eq '/articles/hello-world' }
 
     end
 

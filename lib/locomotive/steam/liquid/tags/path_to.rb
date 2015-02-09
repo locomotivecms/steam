@@ -4,7 +4,8 @@ module Locomotive
       module Tags
         class PathTo < ::Liquid::Tag
 
-          include PathHelper
+          include Concerns::I18nPage
+          include Concerns::Path
 
           def render(context)
             render_path(context)
