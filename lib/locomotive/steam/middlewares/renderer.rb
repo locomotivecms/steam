@@ -1,25 +1,38 @@
 module Locomotive::Steam
   module Middlewares
 
-    class Renderer < Base
+    class Renderer
 
-      def _call(env)
-        super
+      def call(env)
+        response = nil
 
-        if page
-          if page.redirect?
-            redirect_to(page.redirect_url, page.redirect_type)
-          else
-            type = page.response_type || 'text/html'
-            html = render_page
+        # time = Benchmark.realtime do
+          # puts "[Rendered] TODO"
+          # self.set_accessors(env)
+          response = [200, { 'Content-Type' => 'text/html' }, ['TODO']]
+        # end
 
-            log 'Rendered liquid page template'
+        # puts "[Benchmark][Renderer] Time elapsed #{time*1000} milliseconds"
+        response
 
-            [200, { 'Content-Type' => type }, [html]]
-          end
-        else
-          [404, { 'Content-Type' => 'text/html' }, [render_404]]
-        end
+        # if page
+        #   if page.redirect?
+        #     redirect_to(page.redirect_url, page.redirect_type)
+        #   else
+        #     type = page.response_type || 'text/html'
+        #     html = render_page
+
+        #     log 'Rendered liquid page template'
+
+        #     [200, { 'Content-Type' => type }, [html]]
+        #   end
+        # else
+        #   [404, { 'Content-Type' => 'text/html' }, [render_404]]
+        # end
+      end
+
+      def self.call(env)
+        raise 'TODO'
       end
 
       protected

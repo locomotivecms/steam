@@ -7,63 +7,71 @@ module Locomotive
     module Services
 
       def self.build_instance(request = nil, options = {})
-        Registered.new(request, options)
+        Instance.new(request, options)
       end
 
-      class Registered < Struct.new(:request, :options)
+      class Instance < Struct.new(:request, :options)
 
         include Morphine
 
         register :repositories do
-          Repositories.build_instance
+          Steam::Repositories.build_instance
         end
 
         register :site_finder do
-          Services::SiteFinder.new(request, repositories.site, options)
+          Steam::Services::SiteFinder.new(repositories.site, request, options)
+        end
+
+        register :page_finder do
+          Steam::Services::PageFinder.new(repositories.page)
         end
 
         register :url_builder do
-          Services::UrlBuilder.new(current_site, I18n.locale)
+          Steam::Services::UrlBuilder.new(current_site, current_locale)
         end
 
         register :theme_asset_url do
-          Services::ThemeAssetUrl.new(repositories.theme_asset, asset_host, configuration.theme_assets_checksum)
+          Steam::Services::ThemeAssetUrl.new(repositories.theme_asset, asset_host, configuration.theme_assets_checksum)
         end
 
         register :asset_host do
-          Services::AssetHost.new(request, current_site, configuration.asset_host)
+          Steam::Services::AssetHost.new(request, current_site, configuration.asset_host)
         end
 
         register :image_resizer do
-          Services::ImageResizer.new(::Dragonfly.app(:steam), configuration.assets_path)
+          Steam::Services::ImageResizer.new(::Dragonfly.app(:steam), configuration.assets_path)
         end
 
         register :translator do
-          Services::Translator.new(repositories.translation, I18n.locale)
+          Steam::Services::Translator.new(repositories.translation, current_locale)
         end
 
         register :external_api do
-          Services::ExternalAPI.new
+          Steam::Services::ExternalAPI.new
         end
 
         register :csrf_protection do
-          Services::CsrfProtection.new(configuration.csrf_protection, Rack::Csrf.field, Rack::Csrf.token(request.env))
+          Steam::Services::CsrfProtection.new(configuration.csrf_protection, Rack::Csrf.field, Rack::Csrf.token(request.env))
         end
 
         register :cache do
-          Services::NoCache.new
+          Steam::Services::NoCache.new
         end
 
         register :markdown do
-          Services::Markdown.new
+          Steam::Services::Markdown.new
         end
 
         register :textile do
-          Services::Textile.new
+          Steam::Services::Textile.new
         end
 
         register :configuration do
           Locomotive::Steam.configuration
+        end
+
+        register :current_locale do
+          I18n.locale
         end
 
         def current_site

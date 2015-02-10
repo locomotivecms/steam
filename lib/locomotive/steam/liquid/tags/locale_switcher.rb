@@ -2,6 +2,7 @@ module Locomotive
   module Steam
     module Liquid
       module Tags
+
         # Display the links to change the locale of the current page
         #
         # Usage:

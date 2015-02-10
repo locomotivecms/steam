@@ -3,7 +3,9 @@ module Locomotive::Steam
 
     # Track the request into the current logger
     #
-    class Logging < Base
+    class Logging < Struct.new(:app)
+
+      include Helpers
 
       def call(env)
         now = Time.now

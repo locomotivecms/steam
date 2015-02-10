@@ -5,7 +5,8 @@ module Locomotive
         class I18nBase < Base
 
           def initialize(source, localized_attributes = [])
-            decorated = Locomotive::Steam::Decorators::I18nDecorator.new(source, localized_attributes)
+            decorated = source if source.respond_to?(:__locale__)
+            decorated ||= Locomotive::Steam::Decorators::I18nDecorator.new(source, localized_attributes)
             super(decorated)
           end
 
@@ -14,7 +15,7 @@ module Locomotive
               @_source.__locale__ = locale
             end
 
-            @_source.__default_locale__ = context.registers[:site].default_locale
+            @_source.__default_locale__ = context.registers[:site].try(:default_locale)
 
             super
           end

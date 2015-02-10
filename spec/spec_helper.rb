@@ -13,9 +13,10 @@ SimpleCov.start do
 
   add_group "Liquid Filters", "lib/locomotive/steam/liquid/filters"
   add_group "Liquid Tags",    "lib/locomotive/steam/liquid/tags"
-  add_group "Liquid Drops",    "lib/locomotive/steam/liquid/drops"
+  add_group "Liquid Drops",   "lib/locomotive/steam/liquid/drops"
   add_group "Repositories",   "lib/locomotive/steam/repositories"
   add_group "Services",       "lib/locomotive/steam/services"
+  add_group "Middlewares",    "lib/locomotive/steam/middlewares"
 end
 
 require 'rubygems'
@@ -38,7 +39,7 @@ RSpec.configure do |config|
   config.filter_run focused: true
   config.run_all_when_everything_filtered = true
 
-  config.before(:all) { remove_logs }
+  config.before(:all) { remove_logs; setup_common }
   config.before { reset! }
   config.after  { reset! }
   config.order = 'random'

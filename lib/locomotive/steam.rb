@@ -1,5 +1,10 @@
 require 'locomotive/common'
 
+require 'active_support'
+require 'active_support/concern'
+require 'active_support/deprecation'
+require 'active_support/core_ext'
+
 require_relative 'steam/core_ext'
 require_relative 'steam/exceptions'
 require_relative 'steam/configuration'
@@ -11,19 +16,11 @@ require_relative 'steam/repositories'
 require_relative 'steam/services'
 
 # TODO: move into a file named dependencies
-require 'sprockets'
-require 'sprockets-sass'
 require 'haml'
 require 'compass'
 require 'mimetype_fu'
 require 'mime-types'
 require 'rack/csrf'
-
-require 'active_support'
-require 'active_support/concern'
-require 'active_support/deprecation'
-require 'active_support/core_ext'
-
 require 'mime/types'
 
 module Locomotive
@@ -45,6 +42,8 @@ module Locomotive
 
     def self.configure
       yield(configuration)
+
+      require_relative 'steam/initializers'
     end
 
     # FIXME: not sure it will be ever needed

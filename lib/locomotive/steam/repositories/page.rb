@@ -2,7 +2,7 @@ module Locomotive
   module Steam
     module Repositories
 
-      class Page < Struct.new(:site)
+      class Page < Struct.new(:site, :locale)
 
         def all(conditions = {})
           site.pages.ordered_pages(conditions)

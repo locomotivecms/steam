@@ -1,3 +1,4 @@
+Dir[File.join(File.dirname(__FILE__), 'repositories', 'filesystem', '*.rb')].each { |lib| require lib }
 Dir[File.join(File.dirname(__FILE__), 'repositories', '*.rb')].each { |lib| require lib }
 
 require 'morphine'
@@ -6,40 +7,41 @@ module Locomotive
   module Steam
     module Repositories
 
-      def self.build_instance(site = nil)
-        Registered.new(site)
+      def self.build_instance(site = nil, current_locale = nil)
+        Instance.new(site, current_locale)
       end
 
-      class Registered < Struct.new(:current_site)
+      class Instance < Struct.new(:current_site, :current_locale)
 
         include Morphine
 
         register :site do
-          Repositories::Site.new
+          Steam::Repositories::Filesystem::Site.new
         end
 
         register :page do
-          Repositories::Page.new(current_site)
+          Steam::Repositories::Filesystem::Page.new(current_site, current_locale)
+          # Steam::Repositories::Page.new(current_site, current_locale)
         end
 
         register :content_type do
-          Repositories::ContentType.new(current_site)
+          Steam::Repositories::ContentType.new(current_site)
         end
 
         register :content_entry do
-          Repositories::ContentEntry.new(current_site)
+          Steam::Repositories::ContentEntry.new(current_site)
         end
 
         register :snippet do
-          Repositories::Snippet.new(current_site)
+          Steam::Repositories::Snippet.new(current_site)
         end
 
         register :theme_asset do
-          Repositories::ThemeAsset.new(current_site)
+          Steam::Repositories::ThemeAsset.new(current_site)
         end
 
         register :translation do
-          Repositories::Translation.new(current_site)
+          Steam::Repositories::Translation.new(current_site)
         end
 
       end

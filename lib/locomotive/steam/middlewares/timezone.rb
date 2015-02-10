@@ -3,14 +3,19 @@ module Locomotive::Steam
 
     # Set the timezone according to the settings of the site
     #
-    class Timezone < Base
+    class Timezone < ThreadSafe
 
-      def _call(env)
-        super
+      include Helpers
 
-        Time.use_zone(site.try(:timezone) || 'UTC') do
-          app.call(env)
-        end
+      def _call
+        timezone = site.try(:timezone) || 'UTC'
+
+        log "Timezone: #{timezone.inspect}"
+
+        # DEBUG
+        # Time.use_zone(timezone) do
+          self.next
+        # end
       end
 
     end

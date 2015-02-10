@@ -6,26 +6,38 @@ require 'bundler/setup'
 Bundler.require
 
 require 'thin'
-# require 'common'
-require 'locomotive/common'
 
 require_relative '../lib/locomotive/steam'
 require_relative '../lib/locomotive/steam/server'
-require_relative '../lib/locomotive/steam/initializers'
 
 path = ENV['SITE_PATH'] || File.join(File.expand_path(File.dirname(__FILE__)), '../spec/fixtures/default')
 
 # reader = Locomotive::Mounter::Reader::FileSystem.instance
 # reader.run!(path: path)
 
-datastore = Locomotive::Steam::FileSystemDatastore.new(path: path)
+# datastore = Locomotive::Steam::FileSystemDatastore.new(path: path)
 
-app = Locomotive::Steam::Server.new(datastore, {
-  serve_assets: true
-})
+# app = Locomotive::Steam::Server.new(datastore, {
+#   serve_assets: true
+# })
 
-server  = Thin::Server.new('localhost', '3333', app)
-server.threaded = true
+Locomotive::Steam.configure do |config|
+  config.mode = :test
+end
+
+Locomotive::Common.reset
+Locomotive::Common.configure do |config|
+  path = File.join(path, 'log/steam.log')
+  config.notifier = Locomotive::Common::Logger.setup(path)
+end
+
+server = Locomotive::Steam::Server.new(path: path)
+
+# THIN
+# server = Thin::Server.new('localhost', '3333', foo)
+# server.threaded = true
+
+Rack::Handler::WEBrick.run server.to_app
 
 Locomotive::Common::Logger.info 'Server started...'
 server.start

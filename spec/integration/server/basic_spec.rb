@@ -1,169 +1,169 @@
-# require File.dirname(__FILE__) + '/../integration_helper'
+require File.dirname(__FILE__) + '/../integration_helper'
 
-# describe Locomotive::Steam::Server do
+describe Locomotive::Steam::Server do
 
-#   include Rack::Test::Methods
+  include Rack::Test::Methods
 
-#   def app
-#     run_server
-#   end
+  def app
+    run_server
+  end
 
-#   it 'can render the index page', pending: true do
-#     get '/index'
-#     last_response.status.should eq(200)
-#   end
+  it 'can render the index page' do
+    get '/index'
+    expect(last_response.status).to eq(200)
+  end
 
-#   it 'shows the index page', pending: true do
-#     get '/index'
-#     last_response.body.should =~ /Upcoming events/
-#   end
+  # it 'shows the index page' do
+  #   get '/index'
+  #   expect(last_response.body).to match(/Upcoming events/)
+  # end
 
-#   it 'shows the 404 page', pending: true do
-#     get '/void'
-#     last_response.status.should eq(404)
-#     last_response.body.should =~ /page not found/
-#   end
+  # it 'shows the 404 page', pending: true do
+  #   get '/void'
+  #   last_response.status.should eq(404)
+  #   last_response.body.should =~ /page not found/
+  # end
 
-#   it 'shows the 404 page with 200 status code when its called explicitly', pending: true do
-#     get '/404'
-#     last_response.status.should eq(200)
-#     last_response.body.should =~ /page not found/
-#   end
+  # it 'shows the 404 page with 200 status code when its called explicitly', pending: true do
+  #   get '/404'
+  #   last_response.status.should eq(200)
+  #   last_response.body.should =~ /page not found/
+  # end
 
-#   it 'shows content', pending: true do
-#     get '/about-us/jane-doe'
-#     last_response.body.should =~ /Lorem ipsum dolor sit amet/
-#   end
+  # it 'shows content', pending: true do
+  #   get '/about-us/jane-doe'
+  #   last_response.body.should =~ /Lorem ipsum dolor sit amet/
+  # end
 
-#   it 'shows a content type template', pending: true do
-#     get '/songs/song-number-1'
-#     last_response.body.should =~ /Song #1/
-#   end
+  # it 'shows a content type template', pending: true do
+  #   get '/songs/song-number-1'
+  #   last_response.body.should =~ /Song #1/
+  # end
 
-#   it 'renders a page under a templatized one', pending: true do
-#     get '/songs/song-number-1/band'
-#     last_response.body.should =~ /Song #1/
-#     last_response.body.should =~ /Leader: Eddie/
-#   end
+  # it 'renders a page under a templatized one', pending: true do
+  #   get '/songs/song-number-1/band'
+  #   last_response.body.should =~ /Song #1/
+  #   last_response.body.should =~ /Leader: Eddie/
+  # end
 
-#   it 'translates strings', pending: true do
-#     get '/en'
-#     last_response.body.should =~ /Powered by/
-#     get '/fr'
-#     last_response.body.should =~ /Propulsé par/
-#     get '/nb'
-#     last_response.body.should_not =~ /Powered by/
-#   end
+  # it 'translates strings', pending: true do
+  #   get '/en'
+  #   last_response.body.should =~ /Powered by/
+  #   get '/fr'
+  #   last_response.body.should =~ /Propulsé par/
+  #   get '/nb'
+  #   last_response.body.should_not =~ /Powered by/
+  # end
 
-#   it 'provides translation in scopes', pending: true do
-#     get '/'
-#     last_response.body.should =~ /scoped_translation=.French./
-#   end
+  # it 'provides translation in scopes', pending: true do
+  #   get '/'
+  #   last_response.body.should =~ /scoped_translation=.French./
+  # end
 
-#   it 'translates a page with link_to tags inside', pending: true do
-#     get '/fr/notre-musique'
-#     last_response.body.should =~ /<h3><a href="\/fr\/songs\/song-number-8">Song #8<\/a><\/h3>/
-#     last_response.body.should =~ /Propulsé par/
-#   end
+  # it 'translates a page with link_to tags inside', pending: true do
+  #   get '/fr/notre-musique'
+  #   last_response.body.should =~ /<h3><a href="\/fr\/songs\/song-number-8">Song #8<\/a><\/h3>/
+  #   last_response.body.should =~ /Propulsé par/
+  # end
 
-#   it 'returns all the pages', pending: true do
-#     get '/all'
-#     last_response.body.should =~ /Home page/
-#     last_response.body.should =~ /<li>Home page<\/li>/
-#     last_response.body.should =~ /<li>John-doe<\/li>/
-#     last_response.body.should =~ /<li>Songs<\/li>/
-#     last_response.body.should =~ /<li>A song template<\/li>/
-#   end
+  # it 'returns all the pages', pending: true do
+  #   get '/all'
+  #   last_response.body.should =~ /Home page/
+  #   last_response.body.should =~ /<li>Home page<\/li>/
+  #   last_response.body.should =~ /<li>John-doe<\/li>/
+  #   last_response.body.should =~ /<li>Songs<\/li>/
+  #   last_response.body.should =~ /<li>A song template<\/li>/
+  # end
 
-#   describe 'snippets', pending: true do
+  # describe 'snippets', pending: true do
 
-#     it 'includes a basic snippet' do
-#       get '/'
-#       last_response.body.should =~ /All photos are licensed under Creative Commons\./
-#     end
+  #   it 'includes a basic snippet' do
+  #     get '/'
+  #     last_response.body.should =~ /All photos are licensed under Creative Commons\./
+  #   end
 
-#     it 'includes a snippet whose name is composed of dash' do
-#       get '/'
-#       last_response.body.should =~ /<p>A complicated one name indeed.<\/p>/
-#     end
+  #   it 'includes a snippet whose name is composed of dash' do
+  #     get '/'
+  #     last_response.body.should =~ /<p>A complicated one name indeed.<\/p>/
+  #   end
 
-#   end
+  # end
 
-#   describe 'nav', pending: true do
+  # describe 'nav', pending: true do
 
-#     subject { get '/all'; last_response.body }
+  #   subject { get '/all'; last_response.body }
 
-#     it { should_not match(/<nav id="nav">/) }
+  #   it { should_not match(/<nav id="nav">/) }
 
-#     it { should match(/<li id="about-us-link" class="link first"><a href="\/about-us">About Us<\/a><\/li>/) }
+  #   it { should match(/<li id="about-us-link" class="link first"><a href="\/about-us">About Us<\/a><\/li>/) }
 
-#     it { should match(/<li id="music-link" class="link"><a href="\/music">Music<\/a><\/li>/) }
+  #   it { should match(/<li id="music-link" class="link"><a href="\/music">Music<\/a><\/li>/) }
 
-#     it { should match(/<li id="store-link" class="link"><a href="\/store">Store<\/a><\/li>/) }
+  #   it { should match(/<li id="store-link" class="link"><a href="\/store">Store<\/a><\/li>/) }
 
-#     it { should match(/<li id="contact-link" class="link last"><a href="\/contact">Contact Us<\/a><\/li>/) }
+  #   it { should match(/<li id="contact-link" class="link last"><a href="\/contact">Contact Us<\/a><\/li>/) }
 
-#     it { should_not match(/<li id="events-link" class="link"><a href="\/events">Events<\/a><\/li>/) }
+  #   it { should_not match(/<li id="events-link" class="link"><a href="\/events">Events<\/a><\/li>/) }
 
-#     describe 'with wrapper' do
+  #   describe 'with wrapper' do
 
-#       subject { get '/tags/nav'; last_response.body }
+  #     subject { get '/tags/nav'; last_response.body }
 
-#       it { should match(/<nav id="nav">/) }
+  #     it { should match(/<nav id="nav">/) }
 
-#     end
+  #   end
 
-#     describe 'very deep' do
+  #   describe 'very deep' do
 
-#       subject { get '/tags/nav_in_deep'; last_response.body }
+  #     subject { get '/tags/nav_in_deep'; last_response.body }
 
-#       it { should match(/<li id=\"john-doe-link\" class=\"link first last\">/) }
+  #     it { should match(/<li id=\"john-doe-link\" class=\"link first last\">/) }
 
-#     end
+  #   end
 
-#   end
+  # end
 
-#   describe 'contents with_scope', pending: true do
-#     subject { get '/grunge_bands'; last_response.body }
+  # describe 'contents with_scope', pending: true do
+  #   subject { get '/grunge_bands'; last_response.body }
 
-#     it { should match(/Layne/)}
-#     it { should_not match(/Peter/) }
-#   end
+  #   it { should match(/Layne/)}
+  #   it { should_not match(/Peter/) }
+  # end
 
-#   describe 'pages with_scope', pending: true do
-#     subject { get '/unlisted_pages'; last_response.body }
-#     it { subject.should match(/Page to test the nav tag/)}
-#     it { should_not match(/About Us/)}
-#   end
+  # describe 'pages with_scope', pending: true do
+  #   subject { get '/unlisted_pages'; last_response.body }
+  #   it { subject.should match(/Page to test the nav tag/)}
+  #   it { should_not match(/About Us/)}
+  # end
 
-#   describe 'theme assets', pending: true do
+  # describe 'theme assets', pending: true do
 
-#     subject { get '/all'; last_response.body }
+  #   subject { get '/all'; last_response.body }
 
-#     it { should match(/<link href="\/stylesheets\/application.css" media="screen" rel="stylesheet" type="text\/css" \/>/) }
+  #   it { should match(/<link href="\/stylesheets\/application.css" media="screen" rel="stylesheet" type="text\/css" \/>/) }
 
-#     it { should match(/<script src="\/javascripts\/application.js" type='text\/javascript'><\/script>/) }
+  #   it { should match(/<script src="\/javascripts\/application.js" type='text\/javascript'><\/script>/) }
 
-#     it { should match(/<link rel="alternate" type="application\/atom\+xml" title="A title" href="\/foo\/bar" \/>/) }
+  #   it { should match(/<link rel="alternate" type="application\/atom\+xml" title="A title" href="\/foo\/bar" \/>/) }
 
-#   end
+  # end
 
-#   describe 'session', pending: true do
+  # describe 'session', pending: true do
 
-#     subject { get '/contest'; last_response.body }
+  #   subject { get '/contest'; last_response.body }
 
-#     it { should match(/Your code is: HELLO WORLD/) }
-#     it { should_not match(/You've already participated to that contest ! Come back later./) }
+  #   it { should match(/Your code is: HELLO WORLD/) }
+  #   it { should_not match(/You've already participated to that contest ! Come back later./) }
 
-#     describe 'assign tag' do
+  #   describe 'assign tag' do
 
-#       subject { 2.times { get '/contest' }; last_response.body }
+  #     subject { 2.times { get '/contest' }; last_response.body }
 
-#       it { should_not match(/Your code is: HELLO WORLD/) }
-#       it { should match(/You've already participated to that contest ! Come back later./) }
+  #     it { should_not match(/Your code is: HELLO WORLD/) }
+  #     it { should match(/You've already participated to that contest ! Come back later./) }
 
-#     end
+  #   end
 
-#   end
+  # end
 
-# end
+end

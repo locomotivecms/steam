@@ -7,33 +7,33 @@ module Locomotive::Steam
     #   /fr/        => locale = :fr
     #   /index      => locale = :en (default one)
     #
-    class Locale < Base
+    class Locale < ThreadSafe
 
-      def _call(env)
-        super
+      include Helpers
 
-        self.set_locale!(env)
-
-        app.call(env)
+      def _call
+        set_locale
       end
 
       protected
 
-      def set_locale!(env)
-        locale  = site.default_locale
+      def set_locale
+        _locale = site.default_locale
+        _path   = path
 
-        if self.path =~ /^(#{self.site.locales.join('|')})+(\/|$)/
-          locale    = $1
-          self.path = self.path.gsub($1 + $2, '')
-          self.path = 'index' if self.path.blank?
+        if _path =~ /^(#{site.locales.join('|')})+(\/|$)/
+          _locale  = $1
+          _path    = _path.gsub($1 + $2, '')
+          _path    = 'index' if _path.blank?
         end
 
-        ::I18n.locale = locale
+        log "Detecting locale #{_locale.upcase}"
 
-        self.log "Detecting locale #{locale.upcase}"
+        services.current_locale = _locale
+        services.repositories.current_locale = _locale
 
-        env['steam.locale'] = locale
-        env['steam.path']   = self.path
+        env['steam.locale']     = _locale
+        env['steam.path']       = _path
       end
 
     end

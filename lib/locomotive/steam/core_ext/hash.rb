@@ -11,6 +11,10 @@ module HashConverter
       convert(hash, :to_s)
     end
 
+    def to_sym(hash)
+      convert(hash, :to_sym)
+    end
+
     # FIXME: not sure it will be ever needed
     # def to_camel_case hash
     #   convert hash, :camelize, :lower

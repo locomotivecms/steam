@@ -5,7 +5,7 @@ module Locomotive
       class SiteFinder < Struct.new(:repository, :request, :options)
 
         def find
-          repository.find_by_host(request.host)
+          repository.by_host(request.host, options)
         end
 
       end

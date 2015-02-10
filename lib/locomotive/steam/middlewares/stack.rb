@@ -15,60 +15,82 @@ module Locomotive
 
         def create
           options = @options
+          # _self   = self
 
           Rack::Builder.new do
             use Rack::Lint
 
-            use Middlewares::Favicon
+            use Steam::Middlewares::Favicon
 
-            if options[:serve_assets]
-              use Middlewares::StaticAssets, {
-                urls: ['/images', '/fonts', '/samples', '/media']
-              }
-              use Middlewares::DynamicAssets
-            end
+            # if options[:serve_assets]
+            #   use Steam::Middlewares::StaticAssets, {
+            #     urls: ['/images', '/fonts', '/samples', '/media']
+            #   }
+            #   use Steam::Middlewares::DynamicAssets
+            # end
 
-            use Rack::Csrf,
-              field:    'authenticity_token',
-              skip_if:  -> (request) {
-                !(request.post? && request.params[:content_type_slug].present?)
-              }
+            # use Rack::Csrf,
+            #   field:    'authenticity_token',
+            #   skip_if:  -> (request) {
+            #     !(request.post? && request.params[:content_type_slug].present?)
+            #   }
 
-            use ::Dragonfly::Middleware, :steam
+            # use ::Dragonfly::Middleware, :steam
 
-            use Rack::Session::Moneta, options[:moneta]
+            # use Rack::Session::Moneta, options[:moneta]
 
-            use_steam_middlewares(self)
+            # _self.send(:use_steam_middlewares, builder)
 
-            run Middlewares::Renderer.new
+            use Middlewares::Logging
+            use Middlewares::Path
+
+            # foo = proc do |env|
+            #   puts "[EndPoint] finishing here..."
+            #   [ 200, {'Content-Type' => 'text/plain'}, ["b"] ]
+            # end
+
+            # run foo
+
+            run Steam::Middlewares::Renderer.new
           end
         end
 
         protected
 
         def use_steam_middlewares(builder)
-          builder.instance_eval do
-            use Middlewares::Logging
+          # builder.use Middlewares::Logging
+          # builder.use Middlewares::Site
+          # builder.use Middlewares::Path
 
-            use Middlewares::EntrySubmission
+          # builder.run Steam::Middlewares::Renderer.new
 
-            use Middlewares::Path
-            use Middlewares::Locale
-            use Middlewares::Timezone
+          # builder.instance_eval do
+          #   use Middlewares::Logging
 
-            use Middlewares::Page
-            use Middlewares::TemplatizedPage
-          end
+          #   use Middlewares::Site
+
+          #   # use Middlewares::EntrySubmission
+
+          #   use Middlewares::Path
+
+          #   nil
+          #   # use Middlewares::Locale
+          #   # use Middlewares::Timezone
+
+          #   # use Middlewares::Page
+          #   # use Middlewares::TemplatizedPage
+          # end
+          # nil
         end
 
-        def prepare_options(options)
-          {
-            serve_assets: false,
-            moneta: {
-              store: Moneta.new(:Memory, :expires => true)
-            }
-          }.merge(options)
-        end
+        # def prepare_options(options)
+        #   {
+        #     serve_assets: false,
+        #     moneta: {
+        #       store: Moneta.new(:Memory, expires: true)
+        #     }
+        #   }.merge(options)
+        # end
 
       end
 

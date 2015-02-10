@@ -2,7 +2,7 @@ module Locomotive
   module Steam
     module Liquid
       module Drops
-        class Site < Base
+        class Site < I18nBase
 
           delegate :name, :domains, :seo_title, :meta_keywords, :meta_description, to: :@_source
 

@@ -1,7 +1,4 @@
 require 'locomotive/common'
-# require 'locomotive/models'
-# require 'locomotive/adapters/memory_adapter'
-require_relative '../../lib/locomotive/steam/initializers'
 
 module Spec
   module Helpers
@@ -14,17 +11,18 @@ module Spec
       FileUtils.rm_rf(File.expand_path('../../fixtures/default/log', __FILE__))
     end
 
-    def run_server
+    def setup_common(logger_output = nil)
       Locomotive::Common.reset
       Locomotive::Common.configure do |config|
-        path = File.join(default_fixture_site_path, 'log/locomotivecms.log')
-        config.notifier = Locomotive::Common::Logger.setup(path)
+        config.notifier = Locomotive::Common::Logger.setup(logger_output)
       end
+    end
 
-      bootstrap_site_content
+    def run_server
+      setup_common(File.join(default_fixture_site_path, 'log/steam.log'))
 
       Locomotive::Common::Logger.info 'Server started...'
-      Locomotive::Steam::Server.new(path: default_fixture_site_path)
+      Locomotive::Steam::Server.new(path: default_fixture_site_path).to_app
     end
 
     def default_fixture_site_path
