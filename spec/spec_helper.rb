@@ -11,12 +11,12 @@ SimpleCov.start do
 
   add_filter 'spec/'
 
+  add_group "Middlewares",    "lib/locomotive/steam/middlewares"
   add_group "Liquid Filters", "lib/locomotive/steam/liquid/filters"
   add_group "Liquid Tags",    "lib/locomotive/steam/liquid/tags"
   add_group "Liquid Drops",   "lib/locomotive/steam/liquid/drops"
   add_group "Repositories",   "lib/locomotive/steam/repositories"
   add_group "Services",       "lib/locomotive/steam/services"
-  add_group "Middlewares",    "lib/locomotive/steam/middlewares"
 end
 
 require 'rubygems'

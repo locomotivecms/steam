@@ -23,3 +23,8 @@ require_relative 'middlewares/page'
 require_relative 'middlewares/renderer'
 
 require_relative 'middlewares/stack'
+
+module Locomotive::Steam
+  module Middlewares
+  end
+end
