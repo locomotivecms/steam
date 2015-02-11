@@ -10,7 +10,11 @@ module Locomotive::Steam
 
       def _call
         if page = fetch_page
-          log "Found page \"#{page.title}\" [#{page.fullpath}]"
+          if !page.not_found?
+            log "Found page \"#{page.title}\" [#{page.fullpath}]"
+          else
+            log "Page not found, rendering the 404 page.".red
+          end
         end
 
         env['steam.page'] = page
@@ -19,45 +23,12 @@ module Locomotive::Steam
       protected
 
       def fetch_page
-        if (pages = services.page_finder.find(path)).size > 1
-          titles = pages.map { |p| p.attributes[:title][repository.current_locale] }
-          self.log "Found multiple pages: #{titles.join(', ')}"
-        end
-
-        if page = pages.first
-          Locomotive::Steam::Decorators::I18nDecorator.new(page, page.localized_attributes, locale, default_locale)
-        else
-          nil
-        end
-
-        # if page = services.page_finder.find(path)
-        #   puts page.inspect
-        #   Locomotive::Steam::Decorators::I18nDecorator.new(page, page.localized_attributes, locale, site.default_locale)
-        # else
-        #   nil
-        # end
-
-        # decorated(locale) do
-        #   Locomotive::Models[:pages].current_locale = locale
-        #   Locomotive::Models[:pages].matching_paths(path_combinations(path)).tap do |pages|
-        #     if pages.size > 1
-        #       self.log "Found multiple pages: #{pages.all.collect(&:title).join(', ')}"
-        #     end
-        #   end.first
-        # end
+        services.page_finder.match(path).tap do |pages|
+          if pages.size > 1
+            self.log "Found multiple pages: #{pages.map(&:title).join(', ')}"
+          end
+        end.first || services.page_finder.find('404')
       end
-
-      # def repository
-      #   services.repositories.page
-      # end
-
-      # def decorated(locale)
-      #   entity = yield
-      #   unless entity.nil?
-      #     # Locomotive::Steam::Decorators::PageDecorator.new(
-      #     #   Locomotive::Decorators::I18nDecorator.new(entity, locale))
-      #   end
-      # end
 
     end
 

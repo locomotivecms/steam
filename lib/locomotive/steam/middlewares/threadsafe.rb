@@ -9,7 +9,7 @@ module Locomotive::Steam::Middlewares
       threadsafed.env = env
 
       # time = Benchmark.realtime do
-        threadsafed._call # thread-safe purpose
+      threadsafed._call # thread-safe purpose
       # end
 
       # puts "[Benchmark][#{self.class.name}] Time elapsed #{time*1000} milliseconds"
@@ -34,6 +34,10 @@ module Locomotive::Steam::Middlewares
 
     def site
       @site ||= env.fetch('steam.site')
+    end
+
+    def page
+      @page ||= env.fetch('steam.page')
     end
 
     def path

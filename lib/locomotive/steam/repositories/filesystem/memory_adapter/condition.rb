@@ -14,7 +14,7 @@ module Locomotive
             def initialize(operator_and_field, value, locale)
               @locale = locale.to_sym
               @operator_and_field, @value = operator_and_field, value
-              @operator, @field = :==, nil
+              @operator, @field = :==, operator_and_field
 
               decode_operator_and_field!
             end

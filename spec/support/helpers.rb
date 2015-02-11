@@ -19,7 +19,7 @@ module Spec
     end
 
     def run_server
-      setup_common(File.join(default_fixture_site_path, 'log/steam.log'))
+      setup_common #(File.join(default_fixture_site_path, 'log/steam.log'))
 
       Locomotive::Common::Logger.info 'Server started...'
       Locomotive::Steam::Server.new(path: default_fixture_site_path).to_app

@@ -25,7 +25,7 @@ module Locomotive::Steam
         use Middlewares::Timezone
         use Middlewares::Page
 
-        run Middlewares::Renderer.new
+        run Middlewares::Renderer.new(nil)
       end
     end
 

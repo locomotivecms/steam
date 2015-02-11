@@ -10,12 +10,24 @@ module Locomotive
         attr_reader   :__default_locale__
 
         def initialize(object, attributes, locale = nil, default_locale = nil)
-          self.__localized_attributes__ = attributes
+          self.__localized_attributes__ = attributes || (object.respond_to?(:localized_attributes) ? object.localized_attributes : [])
           self.__frozen_locale__        = false
           self.__locale__               = locale
           self.__default_locale__       = default_locale
 
           super(object)
+        end
+
+        class << self
+
+          def decorate(object_or_list, attributes = nil, locale = nil, default_locale = nil)
+            decorated = [[object_or_list]].flatten.map do |object|
+              new(object, attributes, locale, default_locale)
+            end
+
+            object_or_list.respond_to?(:attributes) ? decorated.first : decorated
+          end
+
         end
 
         def __locale__=(locale)
@@ -46,6 +58,7 @@ module Locomotive
         end
 
         def method_missing(name, *args, &block)
+          # DEBUG: ::Object.send(:puts, "[#{name}] with #{args.inspect}")
           if __localized_attributes__.include?(name.to_sym)
             field = __getobj__.public_send(:attributes)[name.to_sym]
             field[__locale__] || field[__default_locale__] || super

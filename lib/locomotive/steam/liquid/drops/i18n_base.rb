@@ -4,7 +4,7 @@ module Locomotive
       module Drops
         class I18nBase < Base
 
-          def initialize(source, localized_attributes = [])
+          def initialize(source, localized_attributes = nil)
             decorated = source if source.respond_to?(:__locale__)
             decorated ||= Locomotive::Steam::Decorators::I18nDecorator.new(source, localized_attributes)
             super(decorated)

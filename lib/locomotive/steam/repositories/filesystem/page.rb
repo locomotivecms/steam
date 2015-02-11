@@ -20,7 +20,7 @@ module Locomotive
 
           def by_fullpath(path)
             MemoryAdapter::Query.new(collection, current_locale) do
-              where(fullpath: path)
+              where(:fullpath => path)
             end.first
           end
 

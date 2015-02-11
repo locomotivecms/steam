@@ -13,6 +13,10 @@ module Locomotive::Steam
         self.request.content_type == 'application/json' || File.extname(self.request.path) == '.json'
       end
 
+      def render_response(content, code = 200, type = 'text/html')
+        @next_response = [code, { 'Content-Type' => type }, [content]]
+      end
+
       def redirect_to(location, type = 301)
         self.log "Redirected to #{location}"
         [type, { 'Content-Type' => 'text/html', 'Location' => location }, []]

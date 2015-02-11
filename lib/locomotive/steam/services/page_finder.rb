@@ -7,10 +7,26 @@ module Locomotive
         WILDCARD = 'content-type-template'
 
         def find(path)
-          repository.matching_fullpath(path_combinations(path))
+          decorate do
+            repository.by_fullpath(path)
+          end
+        end
+
+        def match(path)
+          decorate do
+            repository.matching_fullpath(path_combinations(path))
+          end
         end
 
         private
+
+        def decorate(&block)
+          if (object = yield).blank?
+            object
+          else
+            Decorators::PageDecorator.decorate(object, nil, locale, default_locale)
+          end
+        end
 
         def path_combinations(path)
           _path_combinations(path.split('/'))
@@ -29,6 +45,14 @@ module Locomotive
               [_segment]
             end
           end.flatten
+        end
+
+        def locale
+          repository.current_locale
+        end
+
+        def default_locale
+          repository.site.default_locale
         end
 
       end

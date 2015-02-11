@@ -28,6 +28,10 @@ module Locomotive
               !!content_type
             end
 
+            def not_found?
+              attributes[:fullpath].values.first == '404'
+            end
+
             def localized_attributes
               self.class.localized_attributes
             end
@@ -37,7 +41,7 @@ module Locomotive
             end
 
             def to_liquid
-              Steam::Liquids::Drops::Page.new(self, localized_attributes)
+              Steam::Liquids::Drops::Page.new(self)
             end
 
           end
