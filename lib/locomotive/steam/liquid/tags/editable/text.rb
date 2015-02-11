@@ -44,7 +44,7 @@ module Locomotive
 
           class ShortText < Text
             def initialize(tag_name, markup, options)
-               Locomotive::Common::Logger.warn %(The "#{tag_name}" liquid tag is deprecated. Use "editable_text" instead.)
+               Locomotive::Common::Logger.warn %(The "#{tag_name}" liquid tag is deprecated. Use "editable_text" instead.).yellow
               super
             end
             def default_element_attributes

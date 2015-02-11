@@ -12,7 +12,8 @@ module Locomotive
                 published:    false,
                 fullpath:     {},
                 content_type: nil,
-                position:     100
+                position:     100,
+                template:     {}
               }.merge(attributes))
             end
 
@@ -37,7 +38,7 @@ module Locomotive
             end
 
             def self.localized_attributes
-              [:title, :slug, :permalink, :template_path, :fullpath, :seo, :meta_description, :meta_keywords]
+              [:title, :slug, :permalink, :template, :template_path, :fullpath, :seo, :meta_description, :meta_keywords]
             end
 
             def to_liquid

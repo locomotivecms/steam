@@ -2,17 +2,18 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Tags::Snippet do
 
-  let(:snippet)       { instance_double('Snippet', source: 'built by NoCoffee') }
-  let(:source)        { 'Locomotive {% include footer %}' }
-  let(:repositories)  { Locomotive::Steam::Repositories.build_instance(nil) }
+  let(:services)  { Locomotive::Steam::Services.build_instance(nil) }
+  let(:finder)    { services.snippet_finder }
+  let(:snippet)   { instance_double('Snippet', template: nil, :template= => nil, liquid_source: 'built by NoCoffee') }
+  let(:source)    { 'Locomotive {% include footer %}' }
 
-  before { allow(repositories.snippet).to receive(:by_slug).and_return(snippet) }
+  before { allow(finder).to receive(:find).and_return(snippet) }
 
   describe 'parsing' do
 
     let(:page)      { instance_double('Page') }
     let(:listener)  { Liquid::SimpleEventsListener.new }
-    let(:options)   { { events_listener: listener, page: page, repositories: repositories } }
+    let(:options)   { { events_listener: listener, page: page, snippet_finder: finder, parser: services.liquid_parser } }
 
     let!(:template) { parse_template(source, options) }
 
@@ -30,9 +31,9 @@ describe Locomotive::Steam::Liquid::Tags::Snippet do
 
   describe 'rendering' do
 
-    let(:context) { ::Liquid::Context.new({}, {}, { repositories: repositories }) }
+    let(:context) { ::Liquid::Context.new({}, {}, { services: services }) }
 
-    subject       { render_template(source, context) }
+    subject { render_template(source, context) }
 
     it { is_expected.to eq 'Locomotive built by NoCoffee' }
 

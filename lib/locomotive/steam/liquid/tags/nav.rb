@@ -16,14 +16,12 @@ module Locomotive
 
           Syntax = /(#{::Liquid::VariableSignature}+)/o
 
-          attr_accessor :current_page, :services, :page_repository, :snippet_repository
+          attr_accessor :current_page, :services, :page_repository
 
           def initialize(tag_name, markup, options)
             markup =~ Syntax
 
             @source = ($1 || 'page').gsub(/"|'/, '')
-
-            self.snippet_repository = options[:services].repositories.snippet
 
             self.set_options(markup, options)
 
@@ -32,6 +30,8 @@ module Locomotive
 
           def render(context)
             self.set_vars_from_context(context)
+
+            set_template_if_asked
 
             # get all the children of a source: site (index page), parent or page.
             pages   = children_of(fetch_starting_page)
@@ -77,7 +77,6 @@ module Locomotive
             when 'parent'  then page_repository.parent_of(current_page) || current_page
             when 'page'    then current_page
             else
-              # TODO: locale???
               page_repository.by_fullpath(@source)
             end
           end
@@ -226,9 +225,11 @@ module Locomotive
             markup.scan(::Liquid::TagAttributes) { |key, value| @_options[key.to_sym] = value.gsub(/"|'/, '') }
 
             @_options[:exclude] = Regexp.new(@_options[:exclude]) if @_options[:exclude]
+          end
 
+          def set_template_if_asked
             if @_options[:snippet]
-              if template = self.parse_snippet_template(options, @_options[:snippet])
+              if template = parse_snippet_template(@_options[:snippet])
                 @_options[:liquid_render] = template
               end
             end
@@ -246,11 +247,11 @@ module Locomotive
           # If the template_name contains a liquid tag or drop, it will
           # be used an inline template.
           #
-          def parse_snippet_template(context, template_name)
+          def parse_snippet_template(template_name)
             source = if template_name.include?('{{')
               template_name
             else
-              snippet_repository.by_slug(template_name).try(:source)
+              services.snippet_finder.find(template_name).try(:source)
             end
 
             source ? ::Liquid::Template.parse(source) : nil

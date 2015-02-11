@@ -3,13 +3,13 @@ require 'spec_helper'
 describe Locomotive::Steam::Liquid::Tags::InheritedBlock do
 
   let(:parent_source) { 'My product: {% block product %}Random{% endblock %}' }
-  let(:parent)        { instance_double('Index', source: parent_source, template: nil) }
+  let(:parent)        { instance_double('Index', liquid_source: parent_source, template: nil, :template= => nil) }
   let(:source)        { '{% extends parent %}{% block product %}Skis{% endblock %}' }
   let(:page)          { instance_double('Page') }
 
   let(:listener)      { Liquid::SimpleEventsListener.new }
   let(:finder)        { instance_double('Finder', find: parent) }
-  let(:options)       { { page: page, events_listener: listener, parent_finder: finder } }
+  let(:options)       { { page: page, events_listener: listener, parent_finder: finder, parser: Locomotive::Steam::Services::LiquidParser.new } }
 
   let!(:template)     { parse_template(source, options) }
 

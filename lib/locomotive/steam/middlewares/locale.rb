@@ -30,7 +30,6 @@ module Locomotive::Steam
         log "Detecting locale #{_locale.upcase}"
 
         services.current_locale = _locale
-        services.repositories.current_locale = _locale
 
         env['steam.locale']     = _locale
         env['steam.path']       = _path

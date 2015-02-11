@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Decorators::I18nDecorator do
 
-  let(:page)            { instance_double('Page', title: 'Hello world', published?: true, attributes: { title: { en: 'Hello world!', fr: 'Bonjour monde' } }) }
+  let(:page)            { instance_double('Page', published?: true, attributes: { title: { en: 'Hello world!', fr: 'Bonjour monde' } }) }
   let(:localized)       { [:title] }
   let(:locale)          { 'fr' }
   let(:default_locale)  { nil }
@@ -16,11 +16,9 @@ describe Locomotive::Steam::Decorators::I18nDecorator do
     expect(decorated.published?).to eq true
   end
 
-  describe 'no localized attributes: use the default method' do
-
-    let(:localized) { [] }
-    it { expect(decorated.title).to eq 'Hello world' }
-
+  it 'allows to set a new value' do
+    decorated.title = 'Bonjour le monde'
+    expect(decorated.title).to eq 'Bonjour le monde'
   end
 
   describe 'using a different locale' do

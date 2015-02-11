@@ -17,7 +17,8 @@ module Locomotive
             end
 
             # the source has already been parsed before
-            parent.template || ::Liquid::Template.parse(parent.source, options.merge(page: parent))
+            options[:parser]._parse(parent, options.merge(page: parent))
+            # parent.template || ::Liquid::Template.parse(parent.source, options.merge(page: parent))
           end
 
         end

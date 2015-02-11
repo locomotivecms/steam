@@ -4,12 +4,14 @@ describe Locomotive::Steam::Liquid::Tags::Extends do
 
   let(:source)      { '{% extends parent %} ' }
   let(:page)        { instance_double('Page', title: 'About us') }
+  let(:site)        { instance_double('Site', default_locale: :en) }
   let(:listener)    { Liquid::SimpleEventsListener.new }
-  let(:finder)      { Locomotive::Steam::Services::ParentFinder.new(nil) }
-  let(:options)     { { events_listener: listener, parent_finder: finder, page: page } }
+  let(:finder)      { Locomotive::Steam::Services::ParentFinder.new(instance_double('PageRepository', site: site, current_locale: :en)) }
+  let(:parser)      { Locomotive::Steam::Services::LiquidParser.new }
+  let(:options)     { { events_listener: listener, parent_finder: finder, page: page, parser: parser } }
 
   before do
-    allow(finder.repository).to receive(:parent_of).and_return(parent)
+    expect(finder.repository).to receive(:parent_of).with(page).and_return(parent)
   end
 
   describe 'no parent page found' do
@@ -28,7 +30,7 @@ describe Locomotive::Steam::Liquid::Tags::Extends do
     describe 'parent template already parsed' do
 
       let(:parent_template) { parse_template('Hello world') }
-      let(:parent)          { instance_double('Index', template: parent_template) }
+      let(:parent)          { instance_double('Index', attributes: { template: { en: parent_template } }, localized_attributes: [:template]) }
 
       it { expect(listener.event_names.first).to eq :extends }
       it { expect(template.render).to eq 'Hello world' }
@@ -38,7 +40,7 @@ describe Locomotive::Steam::Liquid::Tags::Extends do
 
     describe 'parent template not parsed yet' do
 
-      let(:parent) { instance_double('Index', source: 'Hello world!', template: nil) }
+      let(:parent) { instance_double('Index', attributes: { source: { en: 'Hello world!' }, template: { en: nil } }, localized_attributes: [:template, :source]) }
 
       it { expect(listener.event_names.first).to eq :extends }
       it { expect(template.render).to eq 'Hello world!' }

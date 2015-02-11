@@ -4,9 +4,11 @@ module Locomotive
       module Filesystem
         module Models
 
-          class Site < Struct.new(:attributes)
+          class Snippet < Struct.new(:attributes)
 
-            attr_accessor :root_path
+            def initialize(attributes)
+              super({ template: {} }.merge(attributes))
+            end
 
             def method_missing(name, *args, &block)
               if attributes.include?(name)
@@ -21,19 +23,7 @@ module Locomotive
             end
 
             def self.localized_attributes
-              [:seo, :meta_description, :meta_keywords]
-            end
-
-            def default_locale
-              self.locales.try(:first) || :en
-            end
-
-            def locales
-              attributes[:locales].map(&:to_sym)
-            end
-
-            def to_liquid
-              Steam::Liquids::Drops::Site.new(self, localized_attributes)
+              [:template, :template_path]
             end
 
           end

@@ -21,11 +21,17 @@ module Locomotive::Steam
       end
 
       def render_missing_404
+        log "[Warning] Your 404 page is missing. Please create it.".red
         render_response('Missing 404 page', 404)
       end
 
       def parse_and_render_liquid
-        page.source.tap { |s| puts s.inspect }
+        document = services.liquid_parser.parse(page)
+
+        puts document.inspect
+        # page #.tap { |s| puts s.inspect }
+
+        'TEST'
       end
 
 

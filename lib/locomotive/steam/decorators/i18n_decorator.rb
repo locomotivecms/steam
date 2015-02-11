@@ -61,7 +61,10 @@ module Locomotive
           # DEBUG: ::Object.send(:puts, "[#{name}] with #{args.inspect}")
           if __localized_attributes__.include?(name.to_sym)
             field = __getobj__.public_send(:attributes)[name.to_sym]
-            field[__locale__] || field[__default_locale__] || super
+            field[__locale__] || field[__default_locale__]
+          elsif name.to_s.end_with?('=') && __localized_attributes__.include?(name.to_s.chop.to_sym)
+            field = __getobj__.public_send(:attributes)[name.to_s.chop.to_sym]
+            field[__locale__] = args.first
           else
             super
           end

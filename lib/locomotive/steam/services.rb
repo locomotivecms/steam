@@ -1,4 +1,4 @@
-Dir[File.join(File.dirname(__FILE__), 'services', '*.rb')].each { |lib| require lib }
+Dir[File.join(File.dirname(__FILE__), 'services', '**/*.rb')].each { |lib| require lib }
 
 require 'morphine'
 
@@ -15,7 +15,11 @@ module Locomotive
         include Morphine
 
         register :repositories do
-          Steam::Repositories.build_instance
+          if (klass = options[:repositories_builder_klass]).nil?
+            require_relative 'repositories/filesystem.rb'
+            klass = Steam::Repositories::Filesystem
+          end
+          klass.build_instance
         end
 
         register :site_finder do
@@ -24,6 +28,18 @@ module Locomotive
 
         register :page_finder do
           Steam::Services::PageFinder.new(repositories.page)
+        end
+
+        register :parent_finder do
+          Steam::Services::ParentFinder.new(repositories.page)
+        end
+
+        register :snippet_finder do
+          Steam::Services::SnippetFinder.new(repositories.snippet)
+        end
+
+        register :liquid_parser do
+          Steam::Services::LiquidParser.new(parent_finder, snippet_finder)
         end
 
         register :url_builder do
@@ -72,6 +88,15 @@ module Locomotive
 
         register :current_locale do
           I18n.locale
+        end
+
+        def current_locale
+          @current_locale || I18n.locale
+        end
+
+        def current_locale=(locale)
+          # Note: "repositories" has already been initialized when called here.
+          @current_locale = repositories.current_locale = locale
         end
 
         def current_site

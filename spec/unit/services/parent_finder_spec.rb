@@ -2,16 +2,17 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Services::ParentFinder do
 
-  let(:service)     { Locomotive::Steam::Services::ParentFinder.new(nil) }
-  let(:repository)  { service.repository }
+  let(:site)        { instance_double('Site', default_locale: :en) }
+  let(:repository)  { instance_double('PageRepository', site: site, current_locale: :en)}
+  let(:service)     { Locomotive::Steam::Services::ParentFinder.new(repository) }
 
   describe '#find' do
 
     let(:name)          { '' }
-    let(:another_page)  { instance_double('Index', title: 'Index') }
+    let(:another_page)  { instance_double('Index', title: 'Index', attributes: {}) }
     let(:page)          { instance_double('AboutUs', title: 'About us') }
 
-    subject { service.find(page, name) }
+    subject { service.find(page, name).try(:title) }
 
     it { is_expected.to eq nil }
 
@@ -21,7 +22,7 @@ describe Locomotive::Steam::Services::ParentFinder do
 
       before { expect(repository).to receive(:parent_of).and_return(another_page) }
 
-      it { is_expected.to eq another_page }
+      it { is_expected.to eq 'Index' }
 
     end
 
@@ -31,7 +32,7 @@ describe Locomotive::Steam::Services::ParentFinder do
 
       before { expect(repository).to receive(:by_fullpath).with('index').and_return(another_page) }
 
-      it { is_expected.to eq another_page }
+      it { is_expected.to eq 'Index' }
 
     end
 

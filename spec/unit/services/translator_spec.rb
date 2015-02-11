@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Locomotive::Steam::Services::Translator do
 
   let(:default_locale)  { 'en' }
-  let(:repository)      { Locomotive::Steam::Repositories::Translation.new(nil) }
+  let(:repository)      { Locomotive::Steam::Repositories::Filesystem::Translation.new(nil) }
   let(:service)         { Locomotive::Steam::Services::Translator.new(repository, default_locale) }
 
   describe '#translate' do

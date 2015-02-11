@@ -10,8 +10,8 @@ module Locomotive
               listener.emit(:include, page: options[:page], name: @template_name)
 
               # look for editable elements
-              if snippet = find_snippet(options[:repositories].snippet, @template_name)
-                ::Liquid::Template.parse(snippet, options.merge(snippet: @template_name))
+              if snippet = options[:snippet_finder].find(@template_name)
+                options[:parser]._parse(snippet, options.merge(snippet: @template_name))
               end
             end
           end
@@ -19,15 +19,12 @@ module Locomotive
           private
 
           def read_template_from_file_system(context)
-            snippet = find_snippet(context.registers[:repositories].snippet, @template_name)
+            service = context.registers[:services]
+            snippet = service.snippet_finder.find(@template_name)
 
             raise SnippetNotFound.new("Snippet with slug '#{@template_name}' was not found") if snippet.nil?
 
-            snippet.source
-          end
-
-          def find_snippet(repository, slug)
-            repository.by_slug(slug)
+            snippet.liquid_source
           end
 
         end

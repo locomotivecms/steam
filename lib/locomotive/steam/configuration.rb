@@ -4,6 +4,9 @@ module Locomotive
     class Configuration
 
       attr_accessor :mode
+
+      attr_accessor :repositories_builder_klass
+
       attr_accessor :theme_assets_checksum
       attr_accessor :asset_host
 

@@ -177,7 +177,7 @@ describe 'Locomotive::Steam::Liquid::Tags::Nav' do
         let(:snippet) { instance_double('Snippet', source: '{{ page.title }}!') }
 
         before do
-          allow(services.repositories.snippet).to receive(:by_slug).with('nav_title').and_return(snippet)
+          allow(services.snippet_finder).to receive(:find).with('nav_title').and_return(snippet)
         end
 
         it { is_expected.to include %{<a href="/child-1">Child #1!</a>} }

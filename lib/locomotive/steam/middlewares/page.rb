@@ -13,7 +13,7 @@ module Locomotive::Steam
           if !page.not_found?
             log "Found page \"#{page.title}\" [#{page.fullpath}]"
           else
-            log "Page not found, rendering the 404 page.".red
+            log "Page not found, rendering the 404 page.".magenta
           end
         end
 
