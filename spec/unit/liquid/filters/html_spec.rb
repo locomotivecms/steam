@@ -12,6 +12,8 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   let(:theme_asset_url)         { services.theme_asset_url }
   let(:theme_asset_repository)  { services.repositories.theme_asset }
 
+  before { services.repositories.theme_asset = EngineThemeAsset.new(site) }
+
   before { @context = context }
 
   it 'writes the tag to display a rss/atom feed' do
@@ -250,6 +252,12 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   </embed>
 </object>
     }.strip)
+  end
+
+  class EngineThemeAsset < Locomotive::Steam::Repositories::Filesystem::ThemeAsset
+    def url_for(path)
+      ['', 'sites', site._id.to_s, 'theme', path].join('/')
+    end
   end
 
 end
