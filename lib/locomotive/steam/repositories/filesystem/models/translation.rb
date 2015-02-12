@@ -4,7 +4,7 @@ module Locomotive
       module Filesystem
         module Models
 
-          class Translation < Struct.new(:key, :values)
+          class Translation < Base
           end
 
         end

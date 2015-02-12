@@ -9,7 +9,8 @@ module Locomotive
             extend ActiveSupport::Concern
 
             def query(&block)
-              MemoryAdapter::Query.new(collection, current_locale, &block)
+              _locale = respond_to?(:current_locale) ? current_locale : nil
+              MemoryAdapter::Query.new(collection, _locale, &block)
             end
 
             private

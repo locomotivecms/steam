@@ -12,7 +12,7 @@ module Locomotive
             attr_reader :field, :operator, :value
 
             def initialize(operator_and_field, value, locale)
-              @locale = locale.to_sym
+              @locale = locale.try(:to_sym)
               @operator_and_field, @value = operator_and_field, value
               @operator, @field = :==, operator_and_field
 

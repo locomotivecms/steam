@@ -3,29 +3,15 @@ module Locomotive
     module Repositories
       module Filesystem
 
-        class Translation < Struct.new(:site)
+        class Translation < Struct.new(:loader, :site)
 
-          # include Concerns::Queryable
+          include Concerns::Queryable
 
-          # Engine: site.translations.where(key: input).first
+          set_collection model: Filesystem::Models::Translation
+
+          # Engine: site.translations.where(key: key).first
           def find(key)
-            query { where(key: key) }
-          end
-
-          private
-
-          def query(&block)
-            MemoryAdapter::Query.new(collection, current_locale, &block)
-          end
-
-          def collection
-            return @collection if @collection
-
-            @collection = loader.list_of_attributes.map do |attributes|
-              Filesystem::Models::Translation.new(attributes)
-            end
-
-            Filesystem::Sanitizers::Page.new(@collection, site.locales).apply
+            query { where(key: key) }.first
           end
 
         end

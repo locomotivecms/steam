@@ -28,7 +28,7 @@ describe Locomotive::Steam::Repositories::Filesystem::Page do
 
     it { is_expected.to eq nil }
 
-    context 'existing snippet' do
+    context 'existing page' do
 
       let(:path) { 'index' }
       it { expect(subject.title).to eq({ en: 'Home' }) }

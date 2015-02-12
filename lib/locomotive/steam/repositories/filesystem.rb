@@ -1,5 +1,8 @@
-Dir[File.join(File.dirname(__FILE__), 'filesystem', 'yaml_loaders', 'concerns', '*.rb')].each { |lib| require lib }
-%w(concerns memory_adapter yaml_loaders sanitizers models .).each do |name|
+require_relative 'filesystem/models/base'
+require_relative 'filesystem/concerns/queryable.rb'
+require_relative 'filesystem/yaml_loaders/concerns/common.rb'
+
+%w(memory_adapter yaml_loaders sanitizers models .).each do |name|
   Dir[File.join(File.dirname(__FILE__), 'filesystem', name, '*.rb')].each { |lib| require lib }
 end
 
@@ -44,7 +47,8 @@ module Locomotive
           end
 
           register :translation do
-            Filesystem::Translation.new(current_site)
+            loader = YAMLLoaders::Translation.new(options[:path], cache)
+            Filesystem::Translation.new(loader, current_site)
           end
 
           register :cache do

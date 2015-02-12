@@ -2,6 +2,7 @@ module Locomotive
   module Steam
     module Liquid
       module Filters
+
         module Translate
 
           def translate(input, locale = nil, scope = nil)

@@ -5,7 +5,7 @@ module Locomotive
 
         class Page < Struct.new(:loader, :site, :current_locale)
 
-          include Locomotive::Steam::Repositories::Filesystem::Concerns::Queryable
+          include Concerns::Queryable
 
           set_collection model: Filesystem::Models::Page, sanitizer: Filesystem::Sanitizers::Page
 

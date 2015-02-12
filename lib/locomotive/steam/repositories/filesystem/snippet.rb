@@ -5,7 +5,7 @@ module Locomotive
 
         class Snippet < Struct.new(:loader, :site, :current_locale)
 
-          include Locomotive::Steam::Repositories::Filesystem::Concerns::Queryable
+          include Concerns::Queryable
 
           set_collection model: Filesystem::Models::Snippet, sanitizer: Filesystem::Sanitizers::Snippet
 
