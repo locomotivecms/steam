@@ -4,7 +4,7 @@ module Locomotive
 
       class SnippetFinder < Struct.new(:repository)
 
-        include Concerns::Decorator
+        include Locomotive::Steam::Services::Concerns::Decorator
 
         def find(slug)
           decorate do

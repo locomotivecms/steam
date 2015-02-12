@@ -1,5 +1,5 @@
 Dir[File.join(File.dirname(__FILE__), 'filesystem', 'yaml_loaders', 'concerns', '*.rb')].each { |lib| require lib }
-%w(memory_adapter yaml_loaders sanitizers models .).each do |name|
+%w(concerns memory_adapter yaml_loaders sanitizers models .).each do |name|
   Dir[File.join(File.dirname(__FILE__), 'filesystem', name, '*.rb')].each { |lib| require lib }
 end
 

@@ -1,4 +1,6 @@
-Dir[File.join(File.dirname(__FILE__), 'services', '**/*.rb')].each { |lib| require lib }
+%w(concerns .).each do |name|
+  Dir[File.join(File.dirname(__FILE__), 'services', name, '*.rb')].each { |lib| require lib }
+end
 
 require 'morphine'
 

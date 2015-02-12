@@ -17,9 +17,23 @@ module Locomotive
             def apply
               sorted_collection.each do |page|
                 locales.each do |locale|
-                  modify_if_templatized(page, locale)
                   set_fullpath_for(page, locale)
+                  modify_if_templatized(page, locale)
+                  build_editable_elements(page, locale)
                 end
+              end
+            end
+
+            def build_editable_elements(page, locale)
+              elements = page.editable_elements[locale] || {}
+              elements.stringify_keys!
+
+              elements.each do |name, content|
+                segments    = name.split('/')
+                block, slug = segments[0..-2].join('/'), segments.last
+                block       = nil if block.blank?
+
+                elements[name] = Filesystem::Models::EditableElement.new(block, slug, content)
               end
             end
 
@@ -28,31 +42,41 @@ module Locomotive
 
               if page.templatized? && content_type.nil?
                 # change the slug of a templatized page
-                page.attributes[:slug][locale] = 'content_type_template'
+                page[:slug][locale] = 'content_type_template'
 
                 # make sure its children will have its content type
                 set_content_type(page._fullpath, page.content_type)
               else
-                page.attributes[:content_type] = content_type
+                page[:content_type] = content_type
               end
             end
 
             def set_fullpath_for(page, locale)
-              slug = fullpath = page.attributes[:slug][locale].try(:dasherize)
+              page._fullpath ||= page.attributes.delete(:_fullpath)
+
+              slug = fullpath = page.slug[locale].try(:dasherize)
 
               return if slug.blank?
 
-              if depth(page) > 1
+              if page.depth > 1
                 base = parent_fullpath(page)
                 fullpath = (fetch_localized_fullpath(base, locale) || base) + '/' + slug
               end
 
               set_localized_fullpath(page._fullpath, fullpath, locale)
-              page.attributes[:fullpath][locale] = fullpath
+              page[:fullpath][locale] = fullpath
             end
 
             def depth(page)
-              page._fullpath.split('/').size
+              return page.depth if page.depth
+
+              page.depth = page[:_fullpath].split('/').size
+
+              if page.depth == 1 && (page.slug == 'index' || page.slug == '404')
+                page.depth = 0
+              end
+
+              page.depth
             end
 
             def sorted_collection

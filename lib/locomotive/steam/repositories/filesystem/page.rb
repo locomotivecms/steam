@@ -5,26 +5,22 @@ module Locomotive
 
         class Page < Struct.new(:loader, :site, :current_locale)
 
+          # Engine: site.pages.ordered_pages(conditions)
           def all(conditions = {})
             raise 'TODO all'
-            # site.pages.ordered_pages(conditions)
           end
 
+          # Engine: site.pages.where(handle: handle).first
           def by_handle(handle)
             raise 'TODO by_handle'
-            # site.pages.where(handle: handle).first
           end
 
           def by_fullpath(path)
-            MemoryAdapter::Query.new(collection, current_locale) do
-              where(fullpath: path)
-            end.first
+            query { where(fullpath: path) }.first
           end
 
           def matching_fullpath(list)
-            MemoryAdapter::Query.new(collection, current_locale) do
-              where('fullpath.in' => list)
-            end.all
+            query { where('fullpath.in' => list) }.all
           end
 
           def template_for(entry, handle = nil)
@@ -37,36 +33,44 @@ module Locomotive
           end
 
           def root
-            raise 'TODO root'
-            # site.pages.root.first
+            query { where(depth: 1, 'slug.ne' => nil) }.all
           end
 
+          # Engine: page.parent
           def parent_of(page)
             raise 'TODO parent_of'
-            # page.parent
           end
 
+          # Engine: page.ancestors_and_self
           def ancestors_of(page)
             raise 'TODO ancestors_of'
-            # page.ancestors_and_self
           end
 
+          # Engine: page.children
           def children_of(page)
-            raise 'TODO children_of'
-            # page.children
+            query { where(depth: 1, 'slug.ne' => nil) }.all
           end
 
+          # Engine: page.editable_elements
           def editable_elements_of(page)
-            raise 'TODO editable_elements_of'
-            # page.editable_elements
+            page.editable_elements.values
           end
 
+          # Engine: page.editable_elements.where(block: block, slug: slug).first
           def editable_element_for(page, block, slug)
-            raise 'TODO editable_element_for'
-            # page.editable_elements.where(block: block, slug: slug).first
+            if elements = page.editable_elements
+              name = [block, slug].compact.join('/')
+              elements[name]
+            else
+              nil
+            end
           end
 
           private
+
+          def query(&block)
+            MemoryAdapter::Query.new(collection, current_locale, &block)
+          end
 
           def collection
             return @collection if @collection

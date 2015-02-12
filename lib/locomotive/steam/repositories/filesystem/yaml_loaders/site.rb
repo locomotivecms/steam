@@ -9,7 +9,7 @@ module Locomotive
             include YAMLLoaders::Concerns::Common
 
             def attributes
-              cache.fetch('config/site.yml') do
+              cache.fetch('config/site') do
                 load(File.join(root_path, 'config', 'site.yml'))
               end
             end

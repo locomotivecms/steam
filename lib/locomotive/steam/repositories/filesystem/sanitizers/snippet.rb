@@ -4,9 +4,9 @@ module Locomotive
       module Filesystem
         module Sanitizers
 
-          class Snippet < Struct.new(:collection, :default_locale, :locales)
+          class Snippet < Struct.new(:default_locale, :locales)
 
-            def apply
+            def apply_to(collection)
               collection.each do |snippet|
                 # if there a missing template in one of the locales,
                 # then use the one from the default locale

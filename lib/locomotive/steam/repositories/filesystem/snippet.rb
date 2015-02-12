@@ -5,22 +5,12 @@ module Locomotive
 
         class Snippet < Struct.new(:loader, :site, :current_locale)
 
+          include Locomotive::Steam::Repositories::Filesystem::Concerns::Queryable
+
+          set_collection model: Filesystem::Models::Snippet, sanitizer: Filesystem::Sanitizers::Snippet
+
           def by_slug(slug)
-            MemoryAdapter::Query.new(collection, current_locale) do
-              where(slug: slug)
-            end.first
-          end
-
-          private
-
-          def collection
-            return @collection if @collection
-
-            @collection = loader.list_of_attributes.map do |attributes|
-              Filesystem::Models::Snippet.new(attributes)
-            end
-
-            Filesystem::Sanitizers::Snippet.new(@collection, site.default_locale, site.locales).apply
+            query { where(slug: slug) }.first
           end
 
         end

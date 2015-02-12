@@ -81,10 +81,10 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Control do
 
     it { is_expected.to eq 'false' }
 
-    context 'no element found' do
+    context 'no element found, render the default content' do
 
       let(:element) { nil }
-      it { is_expected.to eq '' }
+      it { is_expected.to eq 'false' }
 
     end
 

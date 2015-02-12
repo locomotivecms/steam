@@ -9,7 +9,7 @@ module Locomotive
             include YAMLLoaders::Concerns::Common
 
             def list_of_attributes
-              cache.fetch('app/views/pages') { load_list }
+              cache.fetch('app/views/snippets') { load_list }
             end
 
             private
@@ -34,12 +34,12 @@ module Locomotive
               {
                 name:           slug.humanize,
                 slug:           slug,
-                template_path:  { _locale => filepath }
+                template_path:  { locale => filepath }
               }
             end
 
-            def update(element, filepath, slug, locale)
-              element[:template_path][_locale] = filepath
+            def update(element, filepath, locale)
+              element[:template_path][locale] = filepath
             end
 
             def each_file(&block)
@@ -48,7 +48,7 @@ module Locomotive
                 slug, locale = File.basename(filepath).split('.')[0..1]
                 locale = default_locale if template_extensions.include?(locale)
 
-                yield(filepath, slug, locale.to_sym)
+                yield(filepath, slug.permalink, locale.to_sym)
               end
             end
 

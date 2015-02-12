@@ -80,10 +80,10 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
 
     it { is_expected.to eq 'http://www.placehold.it/500x500' }
 
-    context 'no element found' do
+    context 'no element found, render the default content' do
 
       let(:element) { nil }
-      it { is_expected.to eq '' }
+      it { is_expected.to eq 'http://www.placehold.it/500x500' }
 
     end
 

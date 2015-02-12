@@ -20,6 +20,14 @@ module Locomotive
               end
             end
 
+            def []=(name, value)
+              attributes[name.to_sym] = value
+            end
+
+            def [](name)
+              attributes[name.to_sym]
+            end
+
             def self.set_localized_attributes(list)
               singleton = class << self; self; end
               singleton.class_eval do

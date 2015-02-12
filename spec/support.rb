@@ -1,4 +1,5 @@
 require_relative 'support/helpers'
+require_relative 'support/cache_store'
 require_relative 'support/liquid'
 require_relative 'support/matchers/hash'
 require_relative 'support/examples/matching_locale'

@@ -4,7 +4,7 @@ module Locomotive
 
       class PageFinder < Struct.new(:repository)
 
-        include Concerns::Decorator
+        include Locomotive::Steam::Services::Concerns::Decorator
 
         WILDCARD = 'content-type-template'
 

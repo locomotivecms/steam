@@ -34,8 +34,8 @@ module Locomotive
             end
 
             def build(filepath, fullpath, locale)
-              slug = fullpath.split('/').last
-              attributes = load(filepath, true)
+              slug        = fullpath.split('/').last
+              attributes  = get_attributes(filepath, fullpath)
 
               {
                 title:              { locale => attributes.delete(:title) || (default_locale == locale ? slug.humanize : nil) },
@@ -47,8 +47,8 @@ module Locomotive
             end
 
             def update(leaf, filepath, fullpath, locale)
-              slug = fullpath.split('/').last
-              attributes = load(filepath, true)
+              slug        = fullpath.split('/').last
+              attributes  = get_attributes(filepath, fullpath)
 
               leaf[:title][locale] = attributes.delete(:title) || slug.humanize
               leaf[:slug][locale] = attributes.delete(:slug) || slug
@@ -56,6 +56,13 @@ module Locomotive
               leaf[:template_path][locale] = filepath
 
               leaf.merge!(attributes)
+            end
+
+            def get_attributes(filepath, fullpath)
+              load(filepath, true).tap do |attributes|
+                # make sure index/404 are the slugs of the index/404 pages
+                attributes.delete(:slug) if %w(index 404).include?(fullpath)
+              end
             end
 
             def each_file(&block)

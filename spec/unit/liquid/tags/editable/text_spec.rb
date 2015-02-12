@@ -83,10 +83,10 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
     it { is_expected.to eq 'Hello world' }
 
-    context 'no element found' do
+    context 'no element found, render the default content' do
 
       let(:element) { nil }
-      it { is_expected.to eq '' }
+      it { is_expected.to eq 'Hello world' }
 
     end
 
