@@ -16,6 +16,7 @@ module Locomotive::Steam
       private
 
       def render_page
+        # TODO: redirection
         content = parse_and_render_liquid
         render_response(content, page.not_found? ? 404: 200)
       end
@@ -27,11 +28,49 @@ module Locomotive::Steam
 
       def parse_and_render_liquid
         document = services.liquid_parser.parse(page)
+        document.render(liquid_context)
+      end
 
-        puts document.inspect
-        # page #.tap { |s| puts s.inspect }
+      # == TEST ==
 
-        'TEST'
+      def liquid_context
+        ::Liquid::Context.new(liquid_assigns, {}, liquid_registers, true)
+      end
+
+      def liquid_registers
+        {
+          request:        request,
+          locale:         locale,
+          site:           site,
+          page:           page,
+          services:       services,
+          repositories:   services.repositories,
+          logger:         Locomotive::Common::Logger
+        }
+      end
+
+      def liquid_assigns
+        {
+          'site'              => site.to_liquid,
+          'page'              => page.to_liquid,
+          'models'            => Locomotive::Steam::Liquid::Drops::ContentTypes.new,
+          'contents'          => Locomotive::Steam::Liquid::Drops::ContentTypes.new,
+          'current_page'      => params[:page],
+          'params'            => params.stringify_keys,
+          'path'              => request.path,
+          'fullpath'          => request.fullpath,
+          'url'               => request.url,
+          'ip_address'        => request.ip,
+          'post?'             => request.post?,
+          'host'              => request.host_with_port,
+          'now'               => Time.zone.now,
+          'today'             => Date.today,
+          'locale'            => locale,
+          'default_locale'    => site.default_locale.to_s,
+          'locales'           => site.locales.map(&:to_s),
+          'current_user'      => {},
+          'session'           => Locomotive::Steam::Liquid::Drops::SessionProxy.new,
+        }
       end
 
 

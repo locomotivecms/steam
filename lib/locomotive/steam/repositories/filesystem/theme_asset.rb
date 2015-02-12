@@ -6,12 +6,13 @@ module Locomotive
         class ThemeAsset < Struct.new(:site)
 
           def url_for(path)
-            ['', 'sites', site._id.to_s, 'theme', path].join('/')
+            path
+            # ['', 'sites', site._id.to_s, 'theme', path].join('/') # Engine
           end
 
           def checksums
             raise 'TODO checksums'
-            # site.theme_assets.checksums
+            # site.theme_assets.checksums # Engine
           end
 
         end

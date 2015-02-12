@@ -2,14 +2,18 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Decorators::I18nDecorator do
 
-  let(:page)            { instance_double('Page', published?: true, attributes: { title: { en: 'Hello world!', fr: 'Bonjour monde' } }) }
-  let(:localized)       { [:title] }
+  let(:page)            { instance_double('Page', published?: true, attributes: { title: { en: 'Hello world!', fr: 'Bonjour monde' }, slug: 'hello-world' }) }
+  let(:localized)       { [:title, :slug] }
   let(:locale)          { 'fr' }
   let(:default_locale)  { nil }
   let(:decorated)       { Locomotive::Steam::Decorators::I18nDecorator.new(page, localized, locale, default_locale) }
 
   it 'uses the localized version of the title attribute' do
     expect(decorated.title).to eq 'Bonjour monde'
+  end
+
+  it 'uses the same value for all the locales' do
+    expect(decorated.slug).to eq 'hello-world'
   end
 
   it 'allows access to the other methods of the model too' do
@@ -53,6 +57,20 @@ describe Locomotive::Steam::Decorators::I18nDecorator do
       expect(decorated.title).to eq 'Hello world!'
     end
     expect(decorated.__locale__).to eq :fr
+  end
+
+  describe 'with a model' do
+
+    let(:model)     { Locomotive::Steam::Repositories::Filesystem::Models::Site.new(name: 'Acme') }
+    let(:decorated) { Locomotive::Steam::Decorators::I18nDecorator.new(model, nil, locale, default_locale) }
+
+    it 'runs some basic tests' do
+      expect(model.localized_attributes).to eq [:seo, :meta_description, :meta_keywords]
+      expect(model.class.localized_attributes).to eq [:seo, :meta_description, :meta_keywords]
+      expect(decorated.name).to eq 'Acme'
+      expect(decorated.meta_description).to eq nil
+    end
+
   end
 
 end

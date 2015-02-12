@@ -13,9 +13,9 @@ module Locomotive::Steam
         log "Timezone: #{timezone.inspect}"
 
         # DEBUG
-        # Time.use_zone(timezone) do
+        Time.use_zone(timezone) do
           self.next
-        # end
+        end
       end
 
     end

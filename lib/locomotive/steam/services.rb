@@ -19,7 +19,7 @@ module Locomotive
             require_relative 'repositories/filesystem.rb'
             klass = Steam::Repositories::Filesystem
           end
-          klass.build_instance
+          klass.build_instance(nil, nil, options)
         end
 
         register :site_finder do

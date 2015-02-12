@@ -4,7 +4,9 @@ module Locomotive
       module Filesystem
         module Models
 
-          class Page < Struct.new(:attributes)
+          class Page < Base
+
+            set_localized_attributes [:title, :slug, :permalink, :template, :template_path, :fullpath, :seo, :meta_description, :meta_keywords]
 
             def initialize(attributes)
               super({
@@ -17,14 +19,6 @@ module Locomotive
               }.merge(attributes))
             end
 
-            def method_missing(name, *args, &block)
-              if attributes.include?(name)
-                attributes[name.to_sym] # getter
-              else
-                super
-              end
-            end
-
             def templatized?
               !!content_type
             end
@@ -33,16 +27,8 @@ module Locomotive
               attributes[:fullpath].values.first == '404'
             end
 
-            def localized_attributes
-              self.class.localized_attributes
-            end
-
-            def self.localized_attributes
-              [:title, :slug, :permalink, :template, :template_path, :fullpath, :seo, :meta_description, :meta_keywords]
-            end
-
             def to_liquid
-              Steam::Liquids::Drops::Page.new(self)
+              Steam::Liquid::Drops::Page.new(self)
             end
 
           end

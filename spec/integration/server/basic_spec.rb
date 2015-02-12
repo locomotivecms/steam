@@ -8,10 +8,10 @@ describe Locomotive::Steam::Server do
     run_server
   end
 
-  it 'can render the index page', pending: true do
-    get '/index'
-    expect(last_response.status).to eq(200)
-  end
+  # it 'can render the index page' do
+  #   get '/index'
+  #   expect(last_response.status).to eq(200)
+  # end
 
   # it 'shows the index page' do
   #   get '/index'

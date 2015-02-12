@@ -4,25 +4,11 @@ module Locomotive
       module Filesystem
         module Models
 
-          class Site < Struct.new(:attributes)
+          class Site < Base
+
+            set_localized_attributes [:seo, :meta_description, :meta_keywords]
 
             attr_accessor :root_path
-
-            def method_missing(name, *args, &block)
-              if attributes.include?(name)
-                attributes[name.to_sym] # getter
-              else
-                super
-              end
-            end
-
-            def localized_attributes
-              self.class.localized_attributes
-            end
-
-            def self.localized_attributes
-              [:seo, :meta_description, :meta_keywords]
-            end
 
             def default_locale
               self.locales.try(:first) || :en
@@ -33,7 +19,7 @@ module Locomotive
             end
 
             def to_liquid
-              Steam::Liquids::Drops::Site.new(self, localized_attributes)
+              Steam::Liquid::Drops::Site.new(self)
             end
 
           end
