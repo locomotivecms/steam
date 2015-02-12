@@ -1,3 +1,5 @@
+require_relative 'page_finder'
+
 module Locomotive
   module Steam
     module Services

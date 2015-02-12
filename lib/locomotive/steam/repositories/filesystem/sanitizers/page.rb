@@ -4,18 +4,17 @@ module Locomotive
       module Filesystem
         module Sanitizers
 
-          class Page < Struct.new(:collection, :locales)
+          class Page < Struct.new(:default_locale, :locales)
 
-            def initialize(collection, locales)
+            def initialize(default_locale, locales)
               super
-
               @content_types  = {}
               @localized      = {}
               locales.each { |locale| @localized[locale] = {} }
             end
 
-            def apply
-              sorted_collection.each do |page|
+            def apply_to(collection)
+              sorted_collection(collection).each do |page|
                 locales.each do |locale|
                   set_fullpath_for(page, locale)
                   modify_if_templatized(page, locale)
@@ -71,16 +70,17 @@ module Locomotive
               return page.depth if page.depth
 
               page.depth = page[:_fullpath].split('/').size
+              slug = (page.slug || {}).try(:values).compact.first
 
-              if page.depth == 1 && (page.slug == 'index' || page.slug == '404')
+              if page.depth == 1 && %w(index 404).include?(slug)
                 page.depth = 0
               end
 
               page.depth
             end
 
-            def sorted_collection
-              collection.sort { |a, b| depth(a) <=> depth(b) }
+            def sorted_collection(collection)
+              collection.sort_by { |page| depth(page) }
             end
 
             def parent_fullpath(page)

@@ -5,6 +5,10 @@ module Locomotive
 
         class Page < Struct.new(:loader, :site, :current_locale)
 
+          include Locomotive::Steam::Repositories::Filesystem::Concerns::Queryable
+
+          set_collection model: Filesystem::Models::Page, sanitizer: Filesystem::Sanitizers::Page
+
           # Engine: site.pages.ordered_pages(conditions)
           def all(conditions = {})
             raise 'TODO all'
@@ -64,22 +68,6 @@ module Locomotive
             else
               nil
             end
-          end
-
-          private
-
-          def query(&block)
-            MemoryAdapter::Query.new(collection, current_locale, &block)
-          end
-
-          def collection
-            return @collection if @collection
-
-            @collection = loader.list_of_attributes.map do |attributes|
-              Filesystem::Models::Page.new(attributes)
-            end
-
-            Filesystem::Sanitizers::Page.new(@collection, site.locales).apply
           end
 
         end

@@ -18,11 +18,11 @@ describe Locomotive::Steam::Server do
   #   expect(last_response.body).to match(/Upcoming events/)
   # end
 
-  # it 'shows the 404 page' do
-  #   get '/void'
-  #   expect(last_response.status).to eq(404)
-  #   expect(last_response.body).to match /page not found/
-  # end
+  it 'shows the 404 page' do
+    get '/void'
+    expect(last_response.status).to eq(404)
+    expect(last_response.body).to match /page not found/
+  end
 
   # it 'shows the 404 page with 200 status code when its called explicitly', pending: true do
   #   get '/404'
