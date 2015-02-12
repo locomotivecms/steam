@@ -28,12 +28,14 @@ module Locomotive
           end
 
           register :snippet do
-            loader = YAMLLoaders::Snippet.new(options[:path], current_site.try(:default_locale), cache)
-            Filesystem::Snippet.new(loader, current_site, current_locale)
+            Filesystem::Snippet.new(
+              YAMLLoaders::Snippet.new(options[:path], current_site.try(:default_locale), cache),
+              current_site, current_locale)
           end
 
           register :content_type do
-            Filesystem::ContentType.new(current_site)
+            Filesystem::ContentType.new(
+              YAMLLoaders::ContentType.new(options[:path], cache), current_site)
           end
 
           register :content_entry do
