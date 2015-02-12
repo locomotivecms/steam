@@ -50,26 +50,48 @@ module Locomotive::Steam
       end
 
       def liquid_assigns
+        _default_liquid_assigns.merge(
+          _locale_liquid_assigns.merge(
+            _request_liquid_assigns.merge(
+              _steam_liquid_assigns)))
+      end
+
+      def _default_liquid_assigns
         {
-          'site'              => site.to_liquid,
-          'page'              => page.to_liquid,
-          'models'            => Locomotive::Steam::Liquid::Drops::ContentTypes.new,
-          'contents'          => Locomotive::Steam::Liquid::Drops::ContentTypes.new,
           'current_page'      => params[:page],
           'params'            => params.stringify_keys,
-          'path'              => request.path,
-          'fullpath'          => request.fullpath,
-          'url'               => request.url,
-          'ip_address'        => request.ip,
-          'post?'             => request.post?,
-          'host'              => request.host_with_port,
           'now'               => Time.zone.now,
-          'today'             => Date.today,
-          'locale'            => locale,
-          'default_locale'    => site.default_locale.to_s,
-          'locales'           => site.locales.map(&:to_s),
-          'current_user'      => {},
-          'session'           => Locomotive::Steam::Liquid::Drops::SessionProxy.new,
+          'today'             => Date.today
+        }
+      end
+
+      def _steam_liquid_assigns
+        {
+          'site'          => site.to_liquid,
+          'page'          => page.to_liquid,
+          'models'        => Locomotive::Steam::Liquid::Drops::ContentTypes.new,
+          'contents'      => Locomotive::Steam::Liquid::Drops::ContentTypes.new,
+          'current_user'  => {},
+          'session'       => Locomotive::Steam::Liquid::Drops::SessionProxy.new,
+        }
+      end
+
+      def _locale_liquid_assigns
+        {
+          'locale'         => locale,
+          'default_locale' => site.default_locale.to_s,
+          'locales'        => site.locales.map(&:to_s)
+        }
+      end
+
+      def _request_liquid_assigns
+        {
+          'path'        => request.path,
+          'fullpath'    => request.fullpath,
+          'url'         => request.url,
+          'ip_address'  => request.ip,
+          'post?'       => request.post?,
+          'host'        => request.host_with_port
         }
       end
 

@@ -9,7 +9,7 @@ describe Locomotive::Steam::Repositories::Filesystem::YAMLLoaders::Snippet do
 
   describe '#list_of_attributes' do
 
-    subject { loader.list_of_attributes }
+    subject { loader.list_of_attributes.sort { |a, b| a[:_fullpath] <=> b[:_fullpath] } }
 
     it 'tests various stuff' do
       expect(subject.size).to eq 4

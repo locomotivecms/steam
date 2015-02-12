@@ -3,7 +3,7 @@ module Locomotive
     module Repositories
       module Filesystem
 
-        class Translation < Struct.new(:loader, :site)
+        class Translation < Struct.new(:loader)
 
           include Concerns::Queryable
 

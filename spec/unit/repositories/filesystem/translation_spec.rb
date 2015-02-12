@@ -3,10 +3,9 @@ require 'spec_helper'
 describe Locomotive::Steam::Repositories::Filesystem::Translation do
 
   let(:loader)  { instance_double('Loader', list_of_attributes: [{ key: 'powered_by', values: { en: 'Powered by Steam', fr: 'Propulsé par Steam' } }]) }
-  let(:site)    { instance_double('Site', default_locale: :en, locales: [:en, :fr]) }
   let(:locale)  { :en }
 
-  let(:repository) { Locomotive::Steam::Repositories::Filesystem::Translation.new(loader, site) }
+  let(:repository) { Locomotive::Steam::Repositories::Filesystem::Translation.new(loader) }
 
   describe '#collection' do
 

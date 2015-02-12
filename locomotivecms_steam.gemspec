@@ -24,7 +24,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'morphine',               '~> 0.1.1'
   spec.add_dependency 'httparty',               '~> 0.13.3'
 
-  # spec.add_dependency 'httmultiparty',          '~> 0.3.10'
   spec.add_dependency 'rack-cache',             '~> 1.2'
   spec.add_dependency 'dragonfly',              '~> 1.0.7'
   spec.add_dependency 'moneta',                 '~> 0.8.0'
@@ -43,9 +42,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mime-types',             '~> 2.4.3'
 
 
-  # spec.add_dependency 'locomotivecms_models',   '~> 0.0.1.pre.alpha'
   spec.add_dependency 'locomotivecms-solid',      '~> 4.0.0.alpha2'
   spec.add_dependency 'locomotivecms_common',     '~> 0.0.2'
 
-  # spec.required_ruby_version = '~> 2.0'
+  spec.required_ruby_version = '>= 2.0'
 end

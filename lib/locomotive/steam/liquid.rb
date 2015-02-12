@@ -6,7 +6,4 @@ require_relative 'liquid/drops/base'
 require_relative 'liquid/drops/i18n_base'
 require_relative 'liquid/drops/proxy_collection'
 require_relative 'liquid/tags/hybrid'
-
-%w{. drops filters tags/concerns tags}.each do |dir|
-  Dir[File.join(File.dirname(__FILE__), 'liquid', dir, '*.rb')].each { |lib| require lib }
-end
+require_relative_all %w(. drops filters tags/concerns tags), 'liquid'

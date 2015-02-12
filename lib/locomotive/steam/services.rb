@@ -1,8 +1,6 @@
-%w(concerns .).each do |name|
-  Dir[File.join(File.dirname(__FILE__), 'services', name, '*.rb')].each { |lib| require lib }
-end
-
 require 'morphine'
+
+require_relative_all %w(concerns .), 'services'
 
 module Locomotive
   module Steam
