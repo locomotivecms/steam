@@ -5,14 +5,14 @@ module Locomotive
 
         class ThemeAsset < Struct.new(:site)
 
+          # Engine: ['', 'sites', site._id.to_s, 'theme', path].join('/')
           def url_for(path)
             path
-            # ['', 'sites', site._id.to_s, 'theme', path].join('/') # Engine
           end
 
+          # Engine: site.theme_assets.checksums
           def checksums
-            raise 'TODO checksums'
-            # site.theme_assets.checksums # Engine
+            {}
           end
 
         end

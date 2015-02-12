@@ -9,13 +9,13 @@ describe Locomotive::Steam::Repositories::Filesystem::YAMLLoaders::Snippet do
 
   describe '#list_of_attributes' do
 
-    subject { loader.list_of_attributes.sort { |a, b| a[:_fullpath] <=> b[:_fullpath] } }
+    subject { loader.list_of_attributes.sort { |a, b| a[:name] <=> b[:name] } }
 
     it 'tests various stuff' do
       expect(subject.size).to eq 4
-      expect(subject.first[:name]).to eq('Song')
-      expect(subject.first[:slug]).to eq('song')
-      expect(subject[1][:slug]).to eq('a_complicated-one')
+      expect(subject.first[:slug]).to eq('a_complicated-one')
+      expect(subject[1][:name]).to eq('Footer')
+      expect(subject[1][:slug]).to eq('footer')
     end
 
   end
