@@ -8,7 +8,8 @@ module Locomotive
 
             def initialize(attributes)
               super({
-                type: :string
+                type:       :string,
+                localized:  false
               }.merge(attributes))
             end
 

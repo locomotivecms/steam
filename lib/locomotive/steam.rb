@@ -16,6 +16,8 @@ require_relative 'steam/repositories'
 require_relative 'steam/services'
 
 # TODO: move into a file named dependencies
+
+# TODO: move them to a different place
 require 'haml'
 require 'compass'
 require 'mimetype_fu'

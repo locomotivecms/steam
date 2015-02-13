@@ -6,7 +6,7 @@ module Locomotive
 
           class Page < Base
 
-            set_localized_attributes [:title, :slug, :permalink, :editable_elements, :template, :template_path, :fullpath, :seo, :meta_description, :meta_keywords]
+            set_localized_attributes [:title, :slug, :permalink, :editable_elements, :template, :template_path, :fullpath, :seo_title, :meta_description, :meta_keywords]
 
             attr_accessor :depth, :_fullpath
 

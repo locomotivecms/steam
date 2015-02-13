@@ -39,7 +39,9 @@ module Locomotive
           end
 
           register :content_entry do
-            Filesystem::ContentEntry.new(current_site)
+            Filesystem::ContentEntry.new(
+              YAMLLoaders::ContentEntry.new(options[:path], cache),
+              current_site, current_locale)
           end
 
           register :theme_asset do

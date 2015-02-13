@@ -14,7 +14,7 @@ module Locomotive
 
             def method_missing(name, *args, &block)
               if attributes.include?(name)
-                attributes[name.to_sym]
+                self[name]
               else
                 super
               end

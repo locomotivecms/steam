@@ -17,7 +17,9 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentType do
 
     it 'applies the sanitizer' do
       expect(subject.name).to eq('Articles')
+      expect(subject.slug).to eq('articles')
       expect(subject.fields.size).to eq 2
+      expect(subject.fields_by_name.size).to eq 2
     end
 
     describe 'a field of the first element' do

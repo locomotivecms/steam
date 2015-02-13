@@ -39,7 +39,7 @@ module Locomotive
             end
 
             def order_by(order_string)
-              @sorting = order_string.downcase.split.map(&:to_sym) unless order_string.empty?
+              @sorting = order_string.downcase.split.map(&:to_sym) unless order_string.blank?
               self
             end
 

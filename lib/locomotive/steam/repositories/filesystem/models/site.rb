@@ -6,7 +6,7 @@ module Locomotive
 
           class Site < Base
 
-            set_localized_attributes [:seo, :meta_description, :meta_keywords]
+            set_localized_attributes [:seo_title, :meta_description, :meta_keywords]
 
             attr_accessor :root_path
 
