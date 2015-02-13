@@ -14,7 +14,7 @@ describe Locomotive::Steam::Repositories::Filesystem::YAMLLoaders::ContentEntry 
     it 'tests various stuff' do
       expect(subject.size).to eq 3
       expect(subject.first[:_label]).to eq 'Alice in Chains'
-      expect(subject.first.content_type).to eq content_type
+      expect(subject.first[:content_type]).to eq content_type
     end
 
   end

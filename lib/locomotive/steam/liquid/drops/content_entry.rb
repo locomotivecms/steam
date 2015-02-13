@@ -51,15 +51,6 @@ module Locomotive
 
             if not @@forbidden_attributes.include?(meth.to_s)
               repository.value_for(meth, @_source, @context['with_scope'])
-
-              # value = @_source.send(meth)
-
-              # # check for an association (lazy loading)
-              # if value.respond_to?(:all)
-              #   filter_association(value)
-              # else
-              #   value
-              # end
             else
               nil
             end
@@ -70,10 +61,6 @@ module Locomotive
           def repository
             @context.registers[:services].repositories.content_entry
           end
-
-          # def fetch_association(name)
-          #   repository.association(name, @_source, @context['with_scope'] || {})
-          # end
 
         end
       end

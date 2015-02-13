@@ -29,11 +29,11 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
     describe 'relationship field' do
 
-      let(:authors) { instance_double('Authors', all: ['john', 'jane']) }
+      let(:authors) { instance_double('Authors', all: ['john', 'jane'], association: true) }
       let(:entry)   { instance_double('Article', authors: authors) }
 
       before do
-        allow(services.repositories.content_entry).to receive(:filter).with(authors, {}).and_return(authors.all)
+        allow(services.repositories.content_entry).to receive(:association).and_return(authors.all)
       end
 
       it { expect(subject.before_method(:authors).first).to eq 'john' }
@@ -89,7 +89,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
     context 'change the current locale of the context' do
 
-      let(:context) { ::Liquid::Context.new(assigns, {}, { locale: 'fr', site: site }) }
+      let(:context) { ::Liquid::Context.new(assigns, {}, { services: services, locale: 'fr', site: site }) }
       it { is_expected.to eq 'Bonjour monde' }
 
     end

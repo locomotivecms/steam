@@ -65,8 +65,8 @@ describe Locomotive::Steam::Decorators::I18nDecorator do
     let(:decorated) { Locomotive::Steam::Decorators::I18nDecorator.new(model, nil, locale, default_locale) }
 
     it 'runs some basic tests' do
-      expect(model.localized_attributes).to eq [:seo, :meta_description, :meta_keywords]
-      expect(model.class.localized_attributes).to eq [:seo, :meta_description, :meta_keywords]
+      expect(model.localized_attributes).to eq [:seo_title, :meta_description, :meta_keywords]
+      expect(model.class.localized_attributes).to eq [:seo_title, :meta_description, :meta_keywords]
       expect(decorated.name).to eq 'Acme'
       expect(decorated.meta_description).to eq nil
     end

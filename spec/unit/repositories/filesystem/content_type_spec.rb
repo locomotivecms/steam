@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Repositories::Filesystem::ContentType do
 
-  let(:fields)  { [{ title: { hint: 'Title of the article' } }, { author: { type: 'string', label: 'Fullname of the author' } }] }
+  let(:fields)  { [{ title: { hint: 'Title of the article', type: 'string' } }, { author: { type: 'string', label: 'Fullname of the author' } }] }
   let(:loader)  { instance_double('Loader', list_of_attributes: [{ slug: 'articles', name: 'Articles', fields: fields }]) }
   let(:site)    { instance_double('Site', default_locale: :en, locales: [:en, :fr]) }
   let(:locale)  { :en }
