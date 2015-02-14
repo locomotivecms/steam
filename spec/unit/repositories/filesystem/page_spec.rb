@@ -199,8 +199,8 @@ describe Locomotive::Steam::Repositories::Filesystem::Page do
 
     context 'index' do
 
-      let(:page) { instance_double('Page', title: 'Index', index?: true) }
-      it { expect(subject.map(&:title)).to eq ['Index'] }
+      let(:page) { instance_double('Page', fullpath: 'index') }
+      it { expect(subject.map(&:title)).to eq([{ en: 'Home' }]) }
 
     end
 
@@ -216,6 +216,77 @@ describe Locomotive::Steam::Repositories::Filesystem::Page do
       let(:page) { instance_double('Page', title: { en: 'Foo' }, index?: false, fullpath: { en: 'bar/foo' }) }
 
       it { expect(subject.map { |p| p.title.values.first }).to eq ['Home', 'Bar', 'Foo'] }
+
+    end
+
+  end
+
+  describe '#children_of' do
+
+    let(:page) { nil }
+    subject { repository.children_of(page) }
+
+    it { is_expected.to eq [] }
+
+    context 'with pages' do
+
+      let(:pages) do
+        [
+          { title: { en: 'Foo' }, slug: { en: 'foo' }, _fullpath: 'bar/foo', template_path: { en: 'bar/foo.liquid' } },
+          { title: { en: 'Bar' }, slug: { en: 'bar' }, _fullpath: 'bar', template_path: { en: 'bar.liquid' } },
+          { title: { en: 'Home' }, slug: { en: 'index' }, _fullpath: 'index', template_path: { en: 'index.liquid' } }
+        ]
+      end
+      let(:page) { instance_double('Page', title: { en: 'Home' }, depth: 0, index?: true, fullpath: { en: 'index' }) }
+
+      it { expect(subject.map { |p| p.title.values.first }).to eq ['Bar'] }
+
+      context 'from a nested page' do
+
+        let(:page) { instance_double('Page', title: { en: 'Bar' }, index?: false, depth: 1, fullpath: { en: 'bar' }) }
+        it { expect(subject.map { |p| p.title.values.first }).to eq ['Foo'] }
+
+      end
+
+    end
+
+    describe '#editable_elements_of' do
+
+      let(:page) { nil }
+      subject { repository.editable_elements_of(page) }
+
+      it { is_expected.to eq nil }
+
+      context 'page with editable elements' do
+
+        let(:elements) { { 'title' => instance_double('Element', content: 'Stuff here') } }
+        let(:page) { instance_double('Page', editable_elements: { en: elements }) }
+
+        it { expect(subject.map(&:content)).to eq ['Stuff here'] }
+
+      end
+
+    end
+
+    describe '#editable_element_for' do
+
+      let(:page)  { nil }
+      let(:block) { nil }
+      let(:slug)  { nil }
+      subject { repository.editable_element_for(page, block, slug) }
+
+      it { is_expected.to eq nil }
+
+      context 'page with editable elements' do
+
+        let(:elements)  { { 'title' => instance_double('Element', content: 'Stuff here') } }
+        let(:page)      { instance_double('Page', editable_elements: { en: elements }) }
+        let(:block)     { nil }
+        let(:slug)      { 'title' }
+
+        it { expect(subject.content).to eq 'Stuff here' }
+
+      end
 
     end
 

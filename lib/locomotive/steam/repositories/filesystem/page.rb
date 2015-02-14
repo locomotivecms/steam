@@ -57,33 +57,39 @@ module Locomotive
           # Engine: page.ancestors_and_self
           def ancestors_of(page)
             return [] if page.nil?
-            return [page] if page.index?
 
             # Example: foo/bar/test
-            # ['index', 'foo', 'foo/bar', 'foo/bar/test']
+            # ['foo', 'foo/bar', 'foo/bar/test']
             segments = localized_attribute(page, :fullpath).split('/')
-            paths = ['index'].tap do |_paths|
-              0.upto(segments.size - 1) do |i|
-                _paths << segments[0..i].join('/')
-              end
-            end
+            paths = 0.upto(segments.size - 1).map { |i| segments[0..i].join('/') }
 
-            query { where('fullpath.in' => paths) }.all
+            query { where('fullpath.in' => ['index'] + paths) }.all
           end
 
           # Engine: page.children
           def children_of(page)
-            query { where(depth: 1, 'slug.ne' => nil) }.all
+            return [] if page.nil?
+
+            conditions = { 'slug.ne' => nil, depth: page.depth + 1 }
+
+            unless page.index?
+              conditions[:fullpath] = /^#{localized_attribute(page, :fullpath)}\//
+            end
+
+            query { where(conditions) }.all
           end
 
           # Engine: page.editable_elements
           def editable_elements_of(page)
-            page.editable_elements.values
+            return nil if page.nil?
+            localized_attribute(page, :editable_elements).values
           end
 
           # Engine: page.editable_elements.where(block: block, slug: slug).first
           def editable_element_for(page, block, slug)
-            if elements = page.editable_elements
+            return nil if page.nil?
+
+            if elements = localized_attribute(page, :editable_elements)
               name = [block, slug].compact.join('/')
               elements[name]
             else
