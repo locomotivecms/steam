@@ -66,11 +66,7 @@ module Locomotive
           end
 
           def localized_slug(entry)
-            if (values = entry._slug).is_a?(Hash)
-              values[current_locale]
-            else
-              values
-            end
+            localized_attribute(entry, :_slug)
           end
 
           def association(metadata, conditions = {})

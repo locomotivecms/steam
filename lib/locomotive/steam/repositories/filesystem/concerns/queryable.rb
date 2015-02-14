@@ -15,6 +15,14 @@ module Locomotive
 
             private
 
+            def localized_attribute(object, method)
+              if (values = object.send(method)).is_a?(Hash)
+                values[current_locale]
+              else
+                values
+              end
+            end
+
             def memoized_collection(*args)
               return @collection if @collection
 

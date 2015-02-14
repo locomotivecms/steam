@@ -70,13 +70,22 @@ module Locomotive
               return page.depth if page.depth
 
               page.depth = page[:_fullpath].split('/').size
-              slug = (page.slug || {}).try(:values).compact.first
+
+              slug = get_slug(page)
 
               if page.depth == 1 && %w(index 404).include?(slug)
                 page.depth = 0
               end
 
               page.depth
+            end
+
+            def get_slug(page)
+              if page.slug.is_a?(Hash)
+                page.slug.values.compact.first
+              else
+                page.slug
+              end
             end
 
             def sorted_collection(collection)

@@ -27,6 +27,10 @@ module Locomotive
             alias :_id :_slug
             alias :_permalink :_slug
 
+            def content_type_slug
+              content_type.try(:slug)
+            end
+
             def _label
               self[content_type.label_field_name]
             end

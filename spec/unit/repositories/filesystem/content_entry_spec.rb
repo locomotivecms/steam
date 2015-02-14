@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Repositories::Filesystem::ContentEntry do
 
-  # let(:fields)  { [{ title: { hint: 'Title of the article' } }, { author: { type: 'string', label: 'Fullname of the author' } }] }
   let(:type)    { instance_double('Articles', slug: 'articles', order_by: nil, label_field_name: :title, localized_fields_names: [:title], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
   let(:loader)  { instance_double('Loader', list_of_attributes: [{ content_type: type, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' }]) }
   let(:site)    { instance_double('Site', default_locale: :en, locales: [:en, :fr]) }
@@ -27,6 +26,15 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentEntry do
       it { expect(subject.content_type).to eq type }
 
     end
+
+  end
+
+  describe '#all' do
+
+    let(:conditions) { nil }
+    subject { repository.all(type, conditions) }
+
+    it { expect(subject.size).to eq 1 }
 
   end
 
@@ -103,15 +111,6 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentEntry do
       end
 
     end
-
-  end
-
-  describe '#all' do
-
-    let(:conditions) { nil }
-    subject { repository.all(type, conditions) }
-
-    it { expect(subject.size).to eq 1 }
 
   end
 

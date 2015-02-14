@@ -11,12 +11,13 @@ module Locomotive
 
           # Engine: site.pages.ordered_pages(conditions)
           def all(conditions = {})
-            raise 'TODO all'
+            default_order = 'depth_and_position asc'
+            query { where(conditions || {}).order_by(default_order) }.all
           end
 
           # Engine: site.pages.where(handle: handle).first
           def by_handle(handle)
-            raise 'TODO by_handle'
+            query { where(handle: handle) }.first
           end
 
           def by_fullpath(path)
@@ -27,27 +28,47 @@ module Locomotive
             query { where('fullpath.in' => list) }.all
           end
 
+          # Engine: ???
           def template_for(entry, handle = nil)
-            raise 'TODO template_for'
-            # criteria = site.pages.where(target_klass_name: entry.class.to_s, templatized: true)
-            # criteria = criteria.where(handle: handle) if handle
-            # criteria.first.tap do |page|
-            #   page.content_entry = entry if page
-            # end
+            conditions = { templatized?: true, content_type: entry.try(:content_type_slug) }
+
+            conditions[:handle] = handle if handle
+
+            query { where(conditions) }.first.tap do |page|
+              page.content_entry = entry if page
+            end
           end
 
           def root
-            query { where(depth: 1, 'slug.ne' => nil) }.all
+            query { where(fullpath: 'index') }.first
           end
 
           # Engine: page.parent
           def parent_of(page)
-            raise 'TODO parent_of'
+            return nil if page.nil? || page.index?
+
+            segments = localized_attribute(page, :fullpath).split('/')
+            path = segments[0..-2].join('/')
+            path = 'index' if path.blank?
+
+            by_fullpath(path)
           end
 
           # Engine: page.ancestors_and_self
           def ancestors_of(page)
-            raise 'TODO ancestors_of'
+            return [] if page.nil?
+            return [page] if page.index?
+
+            # Example: foo/bar/test
+            # ['index', 'foo', 'foo/bar', 'foo/bar/test']
+            segments = localized_attribute(page, :fullpath).split('/')
+            paths = ['index'].tap do |_paths|
+              0.upto(segments.size - 1) do |i|
+                _paths << segments[0..i].join('/')
+              end
+            end
+
+            query { where('fullpath.in' => paths) }.all
           end
 
           # Engine: page.children

@@ -5,7 +5,21 @@ describe Locomotive::Steam::Repositories::Filesystem::Models::Page do
   let(:attributes) { {} }
   let(:page) { Locomotive::Steam::Repositories::Filesystem::Models::Page.new(attributes) }
 
-  describe '#not_found' do
+  describe '#index?' do
+
+    let(:attributes) { { fullpath: { en: 'foo/index' } } }
+
+    subject { page.index? }
+    it { is_expected.to eq false }
+
+    context 'true' do
+      let(:attributes) { { fullpath: { en: 'index' } } }
+      it { is_expected.to eq true }
+    end
+
+  end
+
+  describe '#not_found?' do
 
     let(:attributes) { { fullpath: { en: 'index' } } }
 
