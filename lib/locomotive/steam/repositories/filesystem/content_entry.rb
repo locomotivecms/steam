@@ -51,7 +51,20 @@ module Locomotive
 
           # Engine: content_type.entries.klass.send(:group_by_select_option, name, content_type.order_by_definition)
           def group_by_select_option(type, name)
-            raise 'TODO group_by_select_option'
+            return {} if type.nil? || name.nil? || type.fields_by_name[name].type != :select
+
+            _groups = all(type).group_by(&name)
+
+            groups = content_type_repository.select_options(type, name).map do |option|
+              { name: option, entries: _groups.delete(option) || [] }
+            end
+
+            unless _groups.blank?
+              groups << (empty = { name: nil, entries: [] })
+              _groups.values.each { |list| empty[:entries] += list }
+            end
+
+            groups
           end
 
           private

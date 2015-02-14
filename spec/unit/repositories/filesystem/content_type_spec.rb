@@ -85,7 +85,7 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentType do
       context 'not a select field' do
 
         let(:name) { :title }
-      it { is_expected.to eq nil }
+        it { is_expected.to eq nil }
 
       end
 

@@ -179,4 +179,43 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentEntry do
 
   end
 
+  describe '#group_by_select_option' do
+
+    let(:type) { nil }
+    let(:name) { nil }
+
+    subject { repository.group_by_select_option(type, name) }
+
+    it { is_expected.to eq({}) }
+
+    context 'select field' do
+
+      let(:fields) do
+        {
+          title:    instance_double('TitleField', name: :title, type: :string),
+          category: instance_double('SelectField', name: :category, type: :select, select_options: { en: ['cooking', 'bread'], fr: ['cuisine', 'pain'] })
+        }
+      end
+      let(:type) { instance_double('Articles', slug: 'articles', order_by: '_position asc', label_field_name: :title, localized_fields_names: [:title, :category], fields_by_name: fields) }
+      let(:name) { :category }
+
+      let(:entries) do
+        [
+          { content_type: type, _position: 0, _label: 'Recipe #1', category: 'cooking' },
+          { content_type: type, _position: 1, _label: 'Recipe #2', category: 'bread' },
+          { content_type: type, _position: 2, _label: 'Recipe #3', category: 'bread' },
+          { content_type: type, _position: 3, _label: 'Recipe #4', category: 'unknown' }
+        ]
+      end
+
+      before { allow(content_type_repository).to receive(:select_options).and_return(%w(cooking wine bread)) }
+
+      it { expect(subject.size).to eq 4 }
+      it { expect(subject.map { |h| h[:name] }).to eq ['cooking', 'wine', 'bread', nil] }
+      it { expect(subject.map { |h| h[:entries].size }).to eq [1, 0, 2, 1] }
+
+    end
+
+  end
+
 end
