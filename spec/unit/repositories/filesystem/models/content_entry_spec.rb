@@ -37,7 +37,7 @@ describe Locomotive::Steam::Repositories::Filesystem::Models::ContentEntry do
 
     let(:field_type)  { :string }
     let(:attributes)  { { my_field: value } }
-    let(:field)       { instance_double('Field', type: field_type) }
+    let(:field)       { instance_double('Field', name: :my_field, type: field_type) }
     before { allow(type).to receive(:fields_by_name).and_return(my_field: field) }
 
     subject { content_entry.my_field }

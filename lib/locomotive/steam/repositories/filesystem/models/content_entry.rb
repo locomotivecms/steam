@@ -8,6 +8,8 @@ module Locomotive
 
           class ContentEntry < Base
 
+            ASSOCIATION_NAMES = [:belongs_to, :has_many, :many_to_many].freeze
+
             set_localized_attributes [:_id, :_slug, :seo_title, :meta_description, :meta_keywords]
 
             attr_accessor :content_type
@@ -44,23 +46,55 @@ module Locomotive
             end
 
             def cast_value(name)
-              case (field = content_type.fields_by_name[name]).type
-              when :integer   then _cast_value(name, &:to_i)
-              when :float     then _cast_value(name, &:to_f)
-              when :date      then _cast_value(name) { |v| v.is_a?(String) ? Chronic.parse(v).to_date : v }
-              when :date_time then _cast_value(name) { |v| v.is_a?(String) ? Chronic.parse(v).to_datetime : v }
-              when :file      then _cast_value(name) { |v| v.present? ? { 'url' => v } : nil }
-              when :belongs_to, :has_many, :many_to_many
-                AssociationMetadata.new(field.type, self, field, [*attributes[name]])
-              else
-                attributes[name]
+              field = content_type.fields_by_name[name]
+
+              begin
+                _cast_value(field)
+              rescue Exception => e
+                Locomotive::Common::Logger.info "[#{content_type.slug}][#{_label}] Unable to cast the \"#{name}\" field, reason: #{e.message}".yellow
+                nil
               end
-            rescue Exception => e
-              Locomotive::Common::Logger.info "[#{content_type.slug}][#{_label}] Unable to cast the \"#{name}\" field, reason: #{e.message}".yellow
-              nil
             end
 
-            def _cast_value(name, &block)
+            def _cast_value(field)
+              if ASSOCIATION_NAMES.include?(field.type)
+                AssociationMetadata.new(field.type, self, field, [*attributes[field.name]])
+              elsif private_methods.include?(:"_cast_#{field.type}")
+                send(:"_cast_#{field.type}", field.name)
+              else
+                attributes[field.name]
+              end
+            end
+
+            def _cast_integer(name)
+              _cast_convertor(name, &:to_i)
+            end
+
+            def _cast_float(name)
+              _cast_convertor(name, &:to_f)
+            end
+
+            def _cast_file(name)
+              _cast_convertor(name) do |value|
+                value.present? ? { 'url' => value } : nil
+              end
+            end
+
+            def _cast_date(name)
+              _cast_time(name, :to_date)
+            end
+
+            def _cast_date_time(name)
+              _cast_time(name, :to_date)
+            end
+
+            def _cast_time(name, end_method)
+              _cast_convertor(name) do |value|
+                value.is_a?(String) ? Chronic.parse(value).send(end_method) : value
+              end
+            end
+
+            def _cast_convertor(name, &block)
               if (value = attributes[name]).is_a?(Hash)
                 value.each { |l, _value| value[l] = yield(_value) }
               else
