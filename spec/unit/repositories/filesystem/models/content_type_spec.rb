@@ -30,4 +30,21 @@ describe Locomotive::Steam::Repositories::Filesystem::Models::ContentType do
 
   end
 
+  describe '#order_by' do
+
+    subject { content_type.order_by }
+    it { is_expected.to eq '_position asc' }
+
+    context 'specifying manually' do
+
+      before do
+        content_type.attributes[:order_by] = 'manually'
+        content_type.attributes[:order_direction] = 'desc'
+      end
+      it { is_expected.to eq '_position desc' }
+
+    end
+
+  end
+
 end

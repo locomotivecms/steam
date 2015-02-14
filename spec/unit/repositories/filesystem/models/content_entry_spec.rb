@@ -91,13 +91,23 @@ describe Locomotive::Steam::Repositories::Filesystem::Models::ContentEntry do
     end
 
     context 'a date time' do
-      let(:field_type)  { :date }
+      let(:field_type)  { :date_time }
       let(:value)       { '2007/06/29 00:00:00' }
       let(:datetime)    { DateTime.parse('2007/06/29 00:00:00') }
       it { is_expected.to eq datetime }
       context 'localized' do
         let(:value) { { en: '2007/06/29 00:00:00', fr: datetime } }
         it { is_expected.to eq({ en: datetime, fr: datetime }) }
+      end
+    end
+
+    context 'a file' do
+      let(:field_type)  { :file }
+      let(:value)       { 'foo.png' }
+      it { is_expected.to eq({ 'url' => 'foo.png' }) }
+      context 'localized' do
+        let(:value) { { en: 'foo-en.png', fr: 'foo-fr.png' } }
+        it { is_expected.to eq({ en: { 'url' => 'foo-en.png' }, fr: { 'url' => 'foo-fr.png' } }) }
       end
     end
 

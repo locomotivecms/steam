@@ -3,12 +3,13 @@ require 'spec_helper'
 describe Locomotive::Steam::Repositories::Filesystem::ContentEntry do
 
   # let(:fields)  { [{ title: { hint: 'Title of the article' } }, { author: { type: 'string', label: 'Fullname of the author' } }] }
-  let(:type)    { instance_double('Articles', slug: 'articles', label_field_name: :title, localized_fields_names: [:title], fields_by_name: { title: instance_double('Field', type: :string) }) }
+  let(:type)    { instance_double('Articles', slug: 'articles', order_by: nil, label_field_name: :title, localized_fields_names: [:title], fields_by_name: { title: instance_double('Field', type: :string) }) }
   let(:loader)  { instance_double('Loader', list_of_attributes: [{ content_type: type, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' }]) }
   let(:site)    { instance_double('Site', default_locale: :en, locales: [:en, :fr]) }
   let(:locale)  { :en }
 
-  let(:repository) { Locomotive::Steam::Repositories::Filesystem::ContentEntry.new(loader, site, locale) }
+  let(:content_type_repository) { instance_double('ContentTypeRepository') }
+  let(:repository) { Locomotive::Steam::Repositories::Filesystem::ContentEntry.new(loader, site, locale, content_type_repository) }
 
   describe '#collection' do
 
@@ -29,6 +30,20 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentEntry do
 
   end
 
+  describe '#by_slug' do
+
+    let(:slug) { nil }
+    subject { repository.by_slug(type, slug) }
+
+    it { is_expected.to eq nil }
+
+    context 'existing slug' do
+      let(:slug) { 'update-1' }
+      it { expect(subject.title).to eq({ en: 'Update #1', fr: 'Mise a jour #1' }) }
+    end
+
+  end
+
   describe '#value_for' do
 
     let(:name)    { :title }
@@ -38,9 +53,54 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentEntry do
 
     it { is_expected.to eq 'Hello world' }
 
-    context 'association' do
+    describe 'association do' do
 
-      # TODO
+      let(:author_type) { instance_double('AuthorType') }
+      let(:entry) { instance_double('Article', _slug: 'hello-world', author: association, authors: association) }
+
+      before do
+        allow(content_type_repository).to receive(:by_slug).with(:authors).and_return(:author_type)
+      end
+
+      context 'belongs_to association' do
+
+        let(:association) { instance_double('Association', type: :belongs_to, association: true, target_class_slug: :authors, target_slugs: ['john-doe'], order_by: nil) }
+        let(:name) { :author }
+
+        before do
+          expect(repository).to receive(:by_slug).with(:author_type, 'john-doe').and_return('John Doe')
+        end
+
+        it { expect(subject).to eq 'John Doe' }
+
+      end
+
+      context 'has_many association' do
+
+        let(:association) { instance_double('Association', type: :has_many, association: true, target_class_slug: :authors, target_field: :article, order_by: 'created_at') }
+        let(:name) { :authors }
+
+        before do
+          allow(association).to receive(:source).and_return(entry)
+          expect(repository).to receive(:all).with(:author_type, { article: 'hello-world', order_by: 'created_at' }).and_return(%w(jane john))
+        end
+
+        it { expect(subject).to eq %w(jane john) }
+
+      end
+
+      context 'many_to_many association' do
+
+        let(:association) { instance_double('Association', type: :many_to_many, association: true, target_class_slug: :authors, target_slugs: %w(jane john), order_by: nil) }
+        let(:name) { :authors }
+
+        before do
+          expect(repository).to receive(:all).with(:author_type, { '_slug.in' => %w(jane john) }).and_return(%w(jane john))
+        end
+
+        it { expect(subject).to eq %w(jane john) }
+
+      end
 
     end
 
@@ -54,28 +114,5 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentEntry do
     it { expect(subject.size).to eq 1 }
 
   end
-
-  # describe '#by_slug' do
-
-  #   let(:slug) { nil }
-  #   subject { repository.by_slug(slug) }
-
-  #   it { is_expected.to eq nil }
-
-  #   context 'existing content type' do
-
-  #     let(:slug) { 'articles' }
-  #     it { expect(subject.name).to eq 'Articles' }
-
-  #   end
-
-  #   context 'slug is already a content type' do
-
-  #     let(:slug) { instance_double('ContentType') }
-  #     it { is_expected.to eq slug }
-
-  #   end
-
-  # end
 
 end

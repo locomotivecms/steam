@@ -3,7 +3,7 @@ module Locomotive
     module Repositories
       module Filesystem
 
-        class ContentEntry < Struct.new(:loader, :site, :current_locale)
+        class ContentEntry < Struct.new(:loader, :site, :current_locale, :content_type_repository)
 
           include Concerns::Queryable
 
@@ -11,13 +11,21 @@ module Locomotive
 
           # Engine: ???
           def all(type, conditions = {})
-            conditions ||= {}
+            conditions = { _visible: true }.merge(conditions || {})
 
-            # TODO: order_by goes here (get settings from the type)
+            # priority:
+            # 1/ order_by passed in the conditions parameter
+            # 2/ the default order (_position) defined in the content type
+            order_by = conditions.delete(:order_by) || type.order_by
 
             query(type) do
-              where(conditions.merge(_visible: true)).order_by(conditions.delete(:order_by))
+              where(conditions).order_by(order_by)
             end.all
+          end
+
+          # Engine: not necessary
+          def by_slug(type, slug)
+            query(type) { where(_slug: slug) }.first
           end
 
           # Engine: entry.name :-)
@@ -29,17 +37,6 @@ module Locomotive
             else
               value
             end
-          end
-
-          # Note:
-          def association(metadata, conditions = {})
-            # only visible entries
-            # conditions[:_visible] = true
-
-            # order_by = conditions.delete(:order_by).try(:split)
-
-            # association.filtered(conditions, order_by)
-            raise 'TODO filter'
           end
 
           # Engine: entry.next
@@ -63,6 +60,51 @@ module Locomotive
           end
 
           private
+
+          def type_from(slug)
+            content_type_repository.by_slug(slug)
+          end
+
+          def localized_slug(entry)
+            if (values = entry._slug).is_a?(Hash)
+              values[current_locale]
+            else
+              values
+            end
+          end
+
+          def association(metadata, conditions = {})
+            case metadata.type
+            when :belongs_to    then belongs_to_association(metadata)
+            when :has_many      then has_many_association(metadata, conditions)
+            when :many_to_many  then many_to_many_association(metadata, conditions)
+            end
+          end
+
+          def belongs_to_association(metadata)
+            type = type_from(metadata.target_class_slug)
+            by_slug(type, metadata.target_slugs.first)
+          end
+
+          def has_many_association(metadata, conditions)
+            many_association(metadata,
+              { metadata.target_field => localized_slug(metadata.source) }.merge(conditions))
+          end
+
+          def many_to_many_association(metadata, conditions)
+            many_association(metadata,
+              { '_slug.in' => metadata.target_slugs }.merge(conditions))
+          end
+
+          def many_association(metadata, conditions)
+            type = type_from(metadata.target_class_slug)
+
+            if order_by = metadata.order_by
+              conditions = { order_by: order_by }.merge(conditions)
+            end
+
+            all(type, conditions)
+          end
 
           def memoized_collection(content_type)
             slug = content_type.slug

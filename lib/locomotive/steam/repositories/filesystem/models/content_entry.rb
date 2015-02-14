@@ -14,8 +14,10 @@ module Locomotive
 
             def initialize(attributes = {})
               super({
-                _visible:   true,
-                _position:  0
+                _visible:     true,
+                _position:    0,
+                created_at:   Time.now,
+                updated_at:   Time.now
               }.merge(attributes))
             end
 
@@ -68,6 +70,9 @@ module Locomotive
 
             class AssociationMetadata < Struct.new(:type, :source, :field, :target_slugs)
               def association; true; end
+              def inverse_of; field.inverse_of; end
+              def target_class_slug; field.class_name; end
+              def order_by; field[:order_by]; end
             end
 
           end
