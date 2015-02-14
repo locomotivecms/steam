@@ -7,7 +7,7 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentType do
   let(:site)    { instance_double('Site', default_locale: :en, locales: [:en, :fr]) }
   let(:locale)  { :en }
 
-  let(:repository) { Locomotive::Steam::Repositories::Filesystem::ContentType.new(loader, site) }
+  let(:repository) { Locomotive::Steam::Repositories::Filesystem::ContentType.new(loader, site, locale) }
 
   describe '#collection' do
 
@@ -57,6 +57,37 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentType do
 
       let(:slug) { instance_double('ContentType') }
       it { is_expected.to eq slug }
+
+    end
+
+  end
+
+  describe '#select_options' do
+
+    let(:type)  { repository.by_slug('articles') }
+    let(:name)  { nil }
+    subject { repository.select_options(type, name) }
+
+    it { is_expected.to eq nil }
+
+    context 'a select field' do
+
+      let(:fields) do
+        [
+          { title: { hint: 'Title of the article', type: 'string' } },
+          { category: { type: 'select', select_options: { en: ['cooking', 'bread'], fr: ['cuisine', 'pain'] } } }
+        ]
+      end
+
+      let(:name) { :category }
+      it { is_expected.to eq %w(cooking bread) }
+
+      context 'not a select field' do
+
+        let(:name) { :title }
+      it { is_expected.to eq nil }
+
+      end
 
     end
 

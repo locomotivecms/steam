@@ -41,22 +41,17 @@ module Locomotive
 
           # Engine: entry.next
           def next(entry)
-            raise 'TODO next'
+            next_or_previous(entry, 'gt', 'lt')
           end
 
           # Engine: entry.previous
           def previous(entry)
-            raise 'TODO previous'
+            next_or_previous(entry, 'lt', 'gt')
           end
 
           # Engine: content_type.entries.klass.send(:group_by_select_option, name, content_type.order_by_definition)
           def group_by_select_option(type, name)
             raise 'TODO group_by_select_option'
-          end
-
-          # Engine: content_type.entries.klass.send(:"#{name}_options").map { |option| option['name'] }
-          def select_options(type, name)
-            raise 'TODO select_options'
           end
 
           private
@@ -109,6 +104,17 @@ module Locomotive
             return @collections[slug] if @collections[slug]
 
             @collections[slug] = collection(content_type)
+          end
+
+          def next_or_previous(entry, asc_op, desc_op)
+            return nil if entry.nil?
+
+            type      = entry.content_type
+            column, direction = type.order_by.split
+            operator  = direction == 'asc' ? asc_op : desc_op
+            value     = localized_attribute(entry, column)
+
+            query(type) { where("#{column}.#{operator}" => value) }.first
           end
 
         end

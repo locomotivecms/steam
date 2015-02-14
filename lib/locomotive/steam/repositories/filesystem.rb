@@ -35,7 +35,8 @@ module Locomotive
 
           register :content_type do
             Filesystem::ContentType.new(
-              YAMLLoaders::ContentType.new(options[:path], cache), current_site)
+              YAMLLoaders::ContentType.new(options[:path], cache),
+              current_site, current_locale)
           end
 
           register :content_entry do

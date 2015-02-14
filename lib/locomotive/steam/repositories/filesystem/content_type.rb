@@ -3,7 +3,7 @@ module Locomotive
     module Repositories
       module Filesystem
 
-        class ContentType < Struct.new(:loader, :site)
+        class ContentType < Struct.new(:loader, :site, :current_locale)
 
           include Concerns::Queryable
 
@@ -15,6 +15,19 @@ module Locomotive
               query { where(slug: slug_or_content_type) }.first
             else
               slug_or_content_type
+            end
+          end
+
+          # Engine: content_type.entries.klass.send(:"#{name}_options").map { |option| option['name'] }
+          def select_options(type, name)
+            return nil if type.nil? || name.nil?
+
+            field = type.fields_by_name[name]
+
+            if field.type == :select
+              localized_attribute(field, :select_options)
+            else
+              nil
             end
           end
 

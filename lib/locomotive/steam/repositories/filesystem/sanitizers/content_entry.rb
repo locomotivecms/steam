@@ -30,7 +30,7 @@ module Locomotive
               _slugify = -> (i) { [base, i].compact.join('-') }
 
               while !is_slug_unique?(_slugify.call(index), collection, locale)
-                index += 1
+                index = index ? index + 1 : 1
               end
 
               _slugify.call(index)

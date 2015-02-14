@@ -24,6 +24,13 @@ describe Locomotive::Steam::Repositories::Filesystem::Models::ContentEntry do
 
   end
 
+  describe '#content_type_slug' do
+
+    subject { content_entry.content_type_slug }
+    it { is_expected.to eq 'articles' }
+
+  end
+
   describe '#localized_attributes' do
 
     subject { content_entry.localized_attributes }

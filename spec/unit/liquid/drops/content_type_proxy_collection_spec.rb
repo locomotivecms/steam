@@ -57,7 +57,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentTypeProxyCollection do
   describe 'get options of a select field' do
 
     before do
-      expect(services.repositories.content_entry).to receive(:select_options).with(content_type, 'category').and_return(['a', 'b'])
+      expect(services.repositories.content_type).to receive(:select_options).with(content_type, 'category').and_return(['a', 'b'])
     end
 
     it { expect(drop.before_method(:category_options)).to eq ['a', 'b'] }

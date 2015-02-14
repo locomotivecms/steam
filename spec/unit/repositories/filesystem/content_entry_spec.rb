@@ -3,7 +3,8 @@ require 'spec_helper'
 describe Locomotive::Steam::Repositories::Filesystem::ContentEntry do
 
   let(:type)    { instance_double('Articles', slug: 'articles', order_by: nil, label_field_name: :title, localized_fields_names: [:title], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
-  let(:loader)  { instance_double('Loader', list_of_attributes: [{ content_type: type, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' }]) }
+  let(:entries) { [{ content_type: type, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' }] }
+  let(:loader)  { instance_double('Loader', list_of_attributes: entries) }
   let(:site)    { instance_double('Site', default_locale: :en, locales: [:en, :fr]) }
   let(:locale)  { :en }
 
@@ -109,6 +110,70 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentEntry do
         it { expect(subject).to eq %w(jane john) }
 
       end
+
+    end
+
+  end
+
+  describe '#next' do
+
+    let(:type) { instance_double('Articles', slug: 'articles', order_by: '_position asc', label_field_name: :title, localized_fields_names: [:title], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
+    let(:entries) do
+      [
+        { content_type: type, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' },
+        { content_type: type, _position: 1, _label: 'Update #2', title: { fr: 'Mise a jour #2' }, text: { en: 'bla bla', fr: 'blabbla' }, date: '2009/05/12', category: 'General' },
+        { content_type: type, _position: 2, _label: 'Update #3', title: { fr: 'Mise a jour #2' }, text: { en: 'bla bla', fr: 'blabbla' }, date: '2009/05/12', category: 'General' }
+      ]
+    end
+
+    let(:entry) { nil }
+    subject { repository.next(entry) }
+
+    it { is_expected.to eq nil }
+
+    context 'being last' do
+
+      let(:entry) { instance_double('Entry', content_type: type, _position: 2) }
+      it { repository.send(:collection, type).inspect; is_expected.to eq nil }
+
+    end
+
+    context 'being middle' do
+
+      let(:entry) { instance_double('Entry', content_type: type, _position: 1) }
+      it { expect(subject._position).to eq 2 }
+
+    end
+
+  end
+
+  describe '#previous' do
+
+    let(:type) { instance_double('Articles', slug: 'articles', order_by: '_position asc', label_field_name: :title, localized_fields_names: [:title], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
+    let(:entries) do
+      [
+        { content_type: type, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' },
+        { content_type: type, _position: 1, _label: 'Update #2', title: { fr: 'Mise a jour #2' }, text: { en: 'bla bla', fr: 'blabbla' }, date: '2009/05/12', category: 'General' },
+        { content_type: type, _position: 2, _label: 'Update #3', title: { fr: 'Mise a jour #2' }, text: { en: 'bla bla', fr: 'blabbla' }, date: '2009/05/12', category: 'General' }
+      ]
+    end
+
+    let(:entry) { nil }
+    subject { repository.previous(entry) }
+
+    it { is_expected.to eq nil }
+
+    context 'being first' do
+
+      let(:entry) { instance_double('Entry', content_type: type, _position: 0) }
+      it { repository.send(:collection, type).inspect; is_expected.to eq nil }
+
+    end
+
+    context 'being middle' do
+
+      let(:entry) { instance_double('Entry', content_type: type, _position: 1) }
+      it { expect(subject._position).to eq 0 }
 
     end
 

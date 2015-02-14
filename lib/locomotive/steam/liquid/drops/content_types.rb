@@ -36,7 +36,7 @@ module Locomotive
             if (meth.to_s =~ /^group_by_(.+)$/) == 0
               repository.group_by_select_option(@content_type, $1)
             elsif (meth.to_s =~ /^(.+)_options$/) == 0
-              repository.select_options(@content_type, $1)
+              content_type_repository.select_options(@content_type, $1)
             else
               Locomotive::Common::Logger.warn "[Liquid template] trying to call #{meth} on a content_type object"
               nil
@@ -51,6 +51,10 @@ module Locomotive
 
           def repository
             services.repositories.content_entry
+          end
+
+          def content_type_repository
+            services.repositories.content_type
           end
 
           def collection
