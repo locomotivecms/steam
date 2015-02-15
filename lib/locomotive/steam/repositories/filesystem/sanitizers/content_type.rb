@@ -26,7 +26,7 @@ module Locomotive
                   _attributes[:label] = name.to_s.humanize
                 end
 
-                _attributes[:type] = _attributes[:type].to_sym
+                _attributes[:type] = _attributes[:type].try(:to_sym)
 
                 Filesystem::Models::ContentTypeField.new(_attributes)
               end

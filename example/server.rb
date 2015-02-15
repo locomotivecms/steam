@@ -14,6 +14,8 @@ path = ENV['SITE_PATH'] || File.join(File.expand_path(File.dirname(__FILE__)), '
 
 Locomotive::Steam.configure do |config|
   config.mode = :test
+  config.serve_assets = true
+  config.assets_path = File.join(path, 'public')
 end
 
 Locomotive::Common.reset

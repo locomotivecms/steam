@@ -29,7 +29,8 @@ require_relative '../lib/locomotive/steam/repositories/filesystem'
 require_relative 'support'
 
 Locomotive::Steam.configure do |config|
-  config.mode = :test
+  config.mode         = :test
+  config.assets_path  = File.join(File.expand_path(File.dirname(__FILE__)), 'fixtures', 'default', 'public')
 end
 
 RSpec.configure do |config|

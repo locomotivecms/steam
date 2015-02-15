@@ -8,21 +8,23 @@ describe Locomotive::Steam::Server do
     run_server
   end
 
-  # it 'can render the index page' do
-  #   get '/index'
-  #   expect(last_response.status).to eq(200)
-  # end
-
-  # it 'shows the index page' do
-  #   get '/index'
-  #   expect(last_response.body).to match(/Upcoming events/)
-  # end
-
-  it 'shows the 404 page' do
-    get '/void'
-    expect(last_response.status).to eq(404)
-    expect(last_response.body).to match /page not found/
+  it 'shows the index page' do
+    get '/index'
+    expect(last_response.status).to eq(200)
+    expect(last_response.body).to match(/Upcoming events/)
   end
+
+  it 'renders an image' do
+    get '/images/nav_on.png'
+    expect(last_response.status).to eq(200)
+  end
+
+  # it 'shows the 404 page' do
+  #   get '/void'
+  #   expect(last_response.status).to eq(404)
+  #   expect(last_response.body).to match /page not found/
+  #   puts last_response.body.inspect
+  # end
 
   # it 'shows the 404 page with 200 status code when its called explicitly', pending: true do
   #   get '/404'

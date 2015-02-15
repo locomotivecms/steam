@@ -6,15 +6,25 @@ module Locomotive
 
         def liquid_source
           if attributes.key?(:template_path)
-            source = File.open(template_path).read.force_encoding('utf-8')
-
-            if match = source.match(/^((---\s*\n.*?\n?)^(---\s*$\n?))?(?<template>.*)/m)
-              match[:template]
-            else
-              source
-            end
+            source_from_template_file
           else
             self.source
+          end
+        end
+
+        private
+
+        def source_from_template_file
+          source = File.open(template_path).read.force_encoding('utf-8')
+
+          if match = source.match(/^((---\s*\n.*?\n?)^(---\s*$\n?))?(?<template>.*)/m)
+            source = match[:template]
+          end
+
+          if template_path.ends_with?('.haml')
+            Haml::Engine.new(source).render
+          else
+            source
           end
         end
 

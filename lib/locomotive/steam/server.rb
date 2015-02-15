@@ -15,6 +15,14 @@ module Locomotive::Steam
       Rack::Builder.new do
         use Rack::Lint
 
+        if server.options[:serve_assets]
+          use ::Rack::Static, {
+            root: Locomotive::Steam.configuration.assets_path,
+            urls: ['/images', '/fonts', '/samples', '/media']
+          }
+          # use Middlewares::DynamicAssets # TODO
+        end
+
         use Middlewares::Favicon
 
         use Middlewares::DefaultEnv, server.options

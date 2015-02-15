@@ -10,6 +10,10 @@ module Locomotive
 
             attr_accessor :root_path
 
+            def initialize(attributes = {})
+              super({ timezone: 'UTC' }.merge(attributes))
+            end
+
             def default_locale
               self.locales.try(:first) || :en
             end

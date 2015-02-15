@@ -10,8 +10,8 @@ require_relative 'middlewares/logging'
 require_relative 'middlewares/path'
 require_relative 'middlewares/page'
 
-# require_relative 'middlewares/static_assets'
-# require_relative 'middlewares/dynamic_assets'
+require_relative 'middlewares/static_assets'
+require_relative 'middlewares/dynamic_assets'
 
 # require_relative 'middlewares/entry_submission'
 

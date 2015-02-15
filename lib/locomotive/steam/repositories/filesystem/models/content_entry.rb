@@ -47,6 +47,10 @@ module Locomotive
               self.class.localized_attributes + content_type.localized_fields_names
             end
 
+            def to_liquid
+              Locomotive::Steam::Liquid::Drops::ContentEntry.new(self)
+            end
+
             private
 
             def is_dynamic_attribute?(name)

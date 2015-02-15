@@ -10,6 +10,7 @@ module Locomotive
       attr_accessor :theme_assets_checksum
       attr_accessor :asset_host
 
+      attr_accessor :serve_assets
       attr_accessor :assets_path
       attr_accessor :image_resizer_secret
 
@@ -18,6 +19,8 @@ module Locomotive
       def initialize
         self.mode                   = :production
         self.theme_assets_checksum  = false
+
+        self.serve_assets           = false
 
         self.image_resizer_secret   = 'please change it'
 
