@@ -12,17 +12,22 @@ describe Locomotive::Steam::Server do
 
     subject { get '/all'; last_response.body }
 
-    it { is_expected.not_to include('<nav id="nav">') }
+    it 'generates the right nav' do
+      is_expected.not_to include('<nav id="nav">')
+      is_expected.to include('<li id="about-us-link" class="link first"><a href="/about-us">About Us</a></li>')
+      is_expected.to include('<li id="music-link" class="link"><a href="/music">Music</a></li>')
+      is_expected.to include('<li id="store-link" class="link"><a href="/store">Store</a></li>')
+      is_expected.to include('<li id="contact-link" class="link last"><a href="/contact">Contact Us</a></li>')
+      is_expected.not_to include('<li id="events-link" class="link"><a href="/events">Events</a></li>')
+    end
 
-    it { is_expected.to include('<li id="about-us-link" class="link first"><a href="/about-us">About Us</a></li>') }
-
-    it { is_expected.to include('<li id="music-link" class="link"><a href="/music">Music</a></li>') }
-
-    it { is_expected.to include('<li id="store-link" class="link"><a href="/store">Store</a></li>') }
-
-    it { is_expected.to include('<li id="contact-link" class="link last"><a href="/contact">Contact Us</a></li>') }
-
-    it { is_expected.not_to include('<li id="events-link" class="link"><a href="/events">Events</a></li>') }
+    it 'lists all the pages' do
+      is_expected.to include('Home page')
+      is_expected.not_to include('<li>Page not found</li>')
+      is_expected.to include('<li>Home page</li>')
+      is_expected.to include('<li>John doe</li>')
+      is_expected.to include('<li>A song template</li>')
+    end
 
     describe 'with wrapper' do
 

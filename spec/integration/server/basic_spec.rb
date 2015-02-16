@@ -87,44 +87,24 @@ describe Locomotive::Steam::Server do
 
   end
 
-  # it 'returns all the pages', pending: true do
-  #   get '/all'
-  #   last_response.body.should =~ /Home page/
-  #   last_response.body.should =~ /<li>Home page<\/li>/
-  #   last_response.body.should =~ /<li>John-doe<\/li>/
-  #   last_response.body.should =~ /<li>Songs<\/li>/
-  #   last_response.body.should =~ /<li>A song template<\/li>/
-  # end
+  describe 'contents with_scope' do
 
-  # describe 'contents with_scope', pending: true do
-  #   subject { get '/grunge_bands'; last_response.body }
+    subject { get '/grunge-bands'; last_response.body }
 
-  #   it { should match(/Layne/)}
-  #   it { should_not match(/Peter/) }
-  # end
+    it 'filters content entries' do
+      is_expected.to include 'Layne'
+      is_expected.not_to include 'Peter'
+    end
 
-  # describe 'pages with_scope', pending: true do
-  #   subject { get '/unlisted_pages'; last_response.body }
-  #   it { subject.should match(/Page to test the nav tag/)}
-  #   it { should_not match(/About Us/)}
-  # end
+  end
 
-  # describe 'session', pending: true do
+  describe 'pages with_scope' do
 
-  #   subject { get '/contest'; last_response.body }
+    subject { get '/unlisted-pages'; last_response.body }
 
-  #   it { should match(/Your code is: HELLO WORLD/) }
-  #   it { should_not match(/You've already participated to that contest ! Come back later./) }
+    it { is_expected.to include 'Page to test the nav tag' }
+    it { is_expected.not_to include 'About Us' }
 
-  #   describe 'assign tag' do
-
-  #     subject { 2.times { get '/contest' }; last_response.body }
-
-  #     it { should_not match(/Your code is: HELLO WORLD/) }
-  #     it { should match(/You've already participated to that contest ! Come back later./) }
-
-  #   end
-
-  # end
+  end
 
 end

@@ -25,11 +25,11 @@ module Locomotive::Steam
       server = self
 
       Rack::Builder.new do
-        use Rack::Lint
-
         server.serve_assets(self) if server.options[:serve_assets]
-
         use Middlewares::Favicon
+
+        use Rack::Lint
+        use Rack::Session::Moneta, server.options[:moneta]
 
         use Middlewares::DefaultEnv, server.options
         use Middlewares::Logging

@@ -21,7 +21,9 @@ module Locomotive
           end
 
           def scoped_pages
-            repository.all(@context['with_scope'])
+            conditions = @context['with_scope'] || {}
+            conditions['slug.ne'] = '404'
+            repository.all(conditions)
 
           end
 
