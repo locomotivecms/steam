@@ -5,17 +5,17 @@ describe 'Locomotive::Steam::Liquid::Tags::Nav' do
   let(:index) { instance_double('IndexPage', fullpath: 'index', published: true) }
   let(:depth_1) do
     [
-      instance_double('Child1', title: 'Child #1', slug: 'child-1', fullpath: 'child-1', published?: true, listed?: true, templatized?: false, to_liquid: { 'title' => 'Child #1' }),
-      instance_double('Child2', title: 'Child #2', slug: 'child-2', fullpath: 'child-2', published?: true, listed?: true, templatized?: false, to_liquid: { 'title' => 'Child #2' })
+      instance_double('Child1', title: 'Child #1', slug: 'child-1', fullpath: 'child-1', published?: true, listed?: true, templatized?: false, localized_attributes: [], to_liquid: { 'title' => 'Child #1' }),
+      instance_double('Child2', title: 'Child #2', slug: 'child-2', fullpath: 'child-2', published?: true, listed?: true, templatized?: false, localized_attributes: [], to_liquid: { 'title' => 'Child #2' })
     ]
   end
   let(:depth_2) do
     [
-      instance_double('Child2_1', title: 'Child #2.1', slug: 'child-2-1', fullpath: 'child-2/child-2-1', published?: true, listed?: true, templatized?: false),
-      instance_double('Child2_2', title: 'Child #2.2', slug: 'child-2-2', fullpath: 'child-2/child-2-2', published?: true, listed?: true, templatized?: false),
-      instance_double('UnpublishedChild2_3', title: 'Child #2.3', slug: 'child-2-3', fullpath: 'child-2/child-2-3', published?: false, listed?: true, templatized?: false),
-      instance_double('TemplatizedChild2_4', title: 'Child #2.4', slug: 'child-2-4', fullpath: 'child-2/child-2-4', published?: true, listed?: true, templatized?: true),
-      instance_double('UnlistedChild2_4', title: 'Child #2.5', slug: 'child-2-5', fullpath: 'child-2/child-2-5', published?: true, listed?: false, templatized?: false)
+      instance_double('Child2_1', title: 'Child #2.1', slug: 'child-2-1', fullpath: 'child-2/child-2-1', published?: true, listed?: true, templatized?: false, localized_attributes: []),
+      instance_double('Child2_2', title: 'Child #2.2', slug: 'child-2-2', fullpath: 'child-2/child-2-2', published?: true, listed?: true, templatized?: false, localized_attributes: []),
+      instance_double('UnpublishedChild2_3', title: 'Child #2.3', slug: 'child-2-3', fullpath: 'child-2/child-2-3', published?: false, listed?: true, templatized?: false, localized_attributes: []),
+      instance_double('TemplatizedChild2_4', title: 'Child #2.4', slug: 'child-2-4', fullpath: 'child-2/child-2-4', published?: true, listed?: true, templatized?: true, localized_attributes: []),
+      instance_double('UnlistedChild2_4', title: 'Child #2.5', slug: 'child-2-5', fullpath: 'child-2/child-2-5', published?: true, listed?: false, templatized?: false, localized_attributes: [])
     ]
   end
 

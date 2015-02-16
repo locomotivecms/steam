@@ -25,7 +25,7 @@ module Locomotive
           end
 
           def matching_fullpath(list)
-            query { where('fullpath.in' => list) }.all
+            all('fullpath.in' => list)
           end
 
           # Engine: ???
@@ -63,7 +63,7 @@ module Locomotive
             segments = localized_attribute(page, :fullpath).split('/')
             paths = 0.upto(segments.size - 1).map { |i| segments[0..i].join('/') }
 
-            query { where('fullpath.in' => ['index'] + paths) }.all
+            all('fullpath.in' => ['index'] + paths)
           end
 
           # Engine: page.children
@@ -76,7 +76,7 @@ module Locomotive
               conditions[:fullpath] = /^#{localized_attribute(page, :fullpath)}\//
             end
 
-            query { where(conditions) }.all
+            all(conditions)
           end
 
           # Engine: page.editable_elements

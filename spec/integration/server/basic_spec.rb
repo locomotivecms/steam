@@ -90,40 +90,6 @@ describe Locomotive::Steam::Server do
   #   last_response.body.should =~ /<li>A song template<\/li>/
   # end
 
-  # describe 'nav', pending: true do
-
-  #   subject { get '/all'; last_response.body }
-
-  #   it { should_not match(/<nav id="nav">/) }
-
-  #   it { should match(/<li id="about-us-link" class="link first"><a href="\/about-us">About Us<\/a><\/li>/) }
-
-  #   it { should match(/<li id="music-link" class="link"><a href="\/music">Music<\/a><\/li>/) }
-
-  #   it { should match(/<li id="store-link" class="link"><a href="\/store">Store<\/a><\/li>/) }
-
-  #   it { should match(/<li id="contact-link" class="link last"><a href="\/contact">Contact Us<\/a><\/li>/) }
-
-  #   it { should_not match(/<li id="events-link" class="link"><a href="\/events">Events<\/a><\/li>/) }
-
-  #   describe 'with wrapper' do
-
-  #     subject { get '/tags/nav'; last_response.body }
-
-  #     it { should match(/<nav id="nav">/) }
-
-  #   end
-
-  #   describe 'very deep' do
-
-  #     subject { get '/tags/nav_in_deep'; last_response.body }
-
-  #     it { should match(/<li id=\"john-doe-link\" class=\"link first last\">/) }
-
-  #   end
-
-  # end
-
   # describe 'contents with_scope', pending: true do
   #   subject { get '/grunge_bands'; last_response.body }
 

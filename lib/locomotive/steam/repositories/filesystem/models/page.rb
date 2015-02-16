@@ -13,11 +13,11 @@ module Locomotive
             def initialize(attributes)
               super({
                 handle:             nil,
-                listed:             true,
-                published:          false,
+                listed:             false,
+                published:          true,
                 fullpath:           {},
                 content_type:       nil,
-                position:           100,
+                position:           99,
                 template:           {},
                 editable_elements:  {}
               }.merge(attributes))
@@ -31,7 +31,7 @@ module Locomotive
             end
 
             def depth_and_position
-              depth * 200 + position
+              depth * 100 + position
             end
 
             def index?

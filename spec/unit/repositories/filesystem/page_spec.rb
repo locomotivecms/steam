@@ -27,7 +27,8 @@ describe Locomotive::Steam::Repositories::Filesystem::Page do
 
     let(:pages) do
       [
-        { title: { en: 'About us' }, slug: { en: 'about-us' }, _fullpath: 'about-us', template_path: { en: 'about-us.liquid' } },
+        { title: { en: 'Contact' }, slug: { en: 'contact' }, _fullpath: 'contact', template_path: { en: 'contact.liquid' } },
+        { title: { en: 'About us' }, position: 2, slug: { en: 'about-us' }, _fullpath: 'about-us', template_path: { en: 'about-us.liquid' } },
         { title: { en: 'Jane Doe' }, slug: { en: 'jane-doe' }, _fullpath: 'team/jane-doe', template_path: { en: 'team/jane-doe.liquid' } },
         { title: { en: 'John Doe' }, position: 1, slug: { en: 'john-doe' }, _fullpath: 'team/john-doe', template_path: { en: 'team/john-doe.liquid' } },
         { title: { en: 'Home' }, slug: { en: 'index' }, _fullpath: 'index', template_path: { en: 'index.liquid' } }
@@ -38,13 +39,13 @@ describe Locomotive::Steam::Repositories::Filesystem::Page do
 
     subject { repository.all(conditions) }
 
-    it { expect(subject.size).to eq 4 }
+    it { expect(subject.size).to eq 5 }
 
     describe 'default order' do
 
       subject { repository.all(conditions).map { |p| p.title.values.first } }
 
-      it { is_expected.to eq ['Home', 'About us', 'John Doe', 'Jane Doe'] }
+      it { is_expected.to eq ['Home', 'About us', 'Contact', 'John Doe', 'Jane Doe'] }
 
     end
 

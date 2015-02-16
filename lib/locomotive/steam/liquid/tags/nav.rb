@@ -16,7 +16,7 @@ module Locomotive
 
           Syntax = /(#{::Liquid::VariableSignature}+)/o
 
-          attr_accessor :current_page, :services, :page_repository
+          attr_accessor :current_site, :current_page, :current_locale, :services, :page_repository
 
           def initialize(tag_name, markup, options)
             markup =~ Syntax
@@ -179,6 +179,7 @@ module Locomotive
           # @return [ String ] The HTML output
           #
           def render_entry_link(page, css, depth)
+            page      = decorate_page(page)
             url       = self.entry_url(page)
             label     = self.entry_label(page)
             css       = self.entry_css(page, css)
@@ -238,8 +239,10 @@ module Locomotive
           # Avoid to call context.registers to get the current page.
           #
           def set_vars_from_context(context)
+            self.current_site       = context.registers[:site]
             self.current_page       = context.registers[:page]
             self.services           = context.registers[:services]
+            self.current_locale     = context.registers[:locale]
             self.page_repository    = self.services.repositories.page
           end
 
@@ -271,6 +274,11 @@ module Locomotive
             options << %{class="#{html_options[:css]}"} if html_options[:css].present?
 
             %{<#{tag_name}#{options.join(' ')}>#{yield}</#{tag_name}>}
+          end
+
+          def decorate_page(page)
+            klass = Locomotive::Steam::Decorators::I18nDecorator
+            klass.new(page, page.localized_attributes, current_locale, current_site.default_locale)
           end
 
           def bootstrap?
