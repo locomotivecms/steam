@@ -60,6 +60,13 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
 
       end
 
+      context 'inside another block' do
+
+        let(:source) { '{% block header %}My links: {% link_to index %} & {% link_to index %}here too{% endlink_to %}{% endblock %}' }
+        it { is_expected.to eq 'My links: <a href="/">Home</a> & <a href="/">here too</a>' }
+
+      end
+
     end
 
     describe 'used as a block' do

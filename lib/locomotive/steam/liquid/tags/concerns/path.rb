@@ -13,7 +13,7 @@ module Locomotive
 
                 # FIXME: the with option needs a string with quotes.
                 # this is a hack for sites which don't follow the new syntax.
-                _options.gsub!(/with: ([\w-]+)/, 'with: "\1"') if _options
+                make_options_compatible_with_previous_version(_options)
 
                 @raw_path_options = parse_options_from_string(_options)
               else
@@ -96,6 +96,14 @@ module Locomotive
 
             def evaluate_path_options(context)
               interpolate_options(@raw_path_options, context)
+            end
+
+            def make_options_compatible_with_previous_version(options)
+              if options
+                %w(with locale).each do |name|
+                  options.gsub!(/#{name}: ([\w-]+)/, name + ': "\1"')
+                end
+              end
             end
 
           end

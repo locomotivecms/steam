@@ -24,7 +24,6 @@ module Locomotive
             conditions = @context['with_scope'] || {}
             conditions['slug.ne'] = '404'
             repository.all(conditions)
-
           end
 
         end
