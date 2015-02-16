@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Repositories::Filesystem::Translation do
 
-  let(:loader)  { instance_double('Loader', list_of_attributes: [{ key: 'powered_by', values: { en: 'Powered by Steam', fr: 'Propulsé par Steam' } }]) }
+  let(:loader)  { instance_double('Loader', list_of_attributes: [{ key: 'powered_by', values: { 'en' => 'Powered by Steam', 'fr' => 'Propulsé par Steam' } }]) }
   let(:locale)  { :en }
 
   let(:repository) { Locomotive::Steam::Repositories::Filesystem::Translation.new(loader) }
@@ -26,7 +26,7 @@ describe Locomotive::Steam::Repositories::Filesystem::Translation do
     context 'existing translation' do
 
       let(:key) { 'powered_by' }
-      it { expect(subject.values).to eq({ en: 'Powered by Steam', fr: 'Propulsé par Steam' }) }
+      it { expect(subject.values).to eq({ 'en' => 'Powered by Steam', 'fr' => 'Propulsé par Steam' }) }
 
     end
 

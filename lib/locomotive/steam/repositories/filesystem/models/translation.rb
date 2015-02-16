@@ -5,6 +5,11 @@ module Locomotive
         module Models
 
           class Translation < Base
+
+            def values
+              self[:values]
+            end
+
           end
 
         end

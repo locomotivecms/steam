@@ -19,7 +19,19 @@ module Locomotive
                   set_fullpath_for(page, locale)
                   modify_if_templatized(page, locale)
                   build_editable_elements(page, locale)
+                  use_default_locale_template_path(page, locale)
                 end
+              end
+            end
+
+            # If the page does not have a template in a locale
+            # then use the template of the default locale
+            #
+            def use_default_locale_template_path(page, locale)
+              paths = page.template_path
+
+              if paths[locale] == false
+                paths[locale] = paths[default_locale]
               end
             end
 

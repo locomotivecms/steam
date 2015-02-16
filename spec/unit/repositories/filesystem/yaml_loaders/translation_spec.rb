@@ -13,7 +13,7 @@ describe Locomotive::Steam::Repositories::Filesystem::YAMLLoaders::Translation d
     it 'tests various stuff' do
       expect(subject.size).to eq 1
       expect(subject.first[:key]).to eq('powered_by')
-      expect(subject.first[:values]).to eq({ en: 'Powered by', fr: 'Propulsé par' })
+      expect(subject.first[:values]).to eq({ 'en' => 'Powered by', 'fr' => 'Propulsé par' })
     end
 
   end

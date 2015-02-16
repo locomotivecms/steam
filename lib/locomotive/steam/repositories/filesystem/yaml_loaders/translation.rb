@@ -17,7 +17,7 @@ module Locomotive
             def load_array
               [].tap do |array|
                 load(path).each do |key, values|
-                  array << { key: key.to_s, values: values }
+                  array << { key: key.to_s, values: HashConverter.to_string(values) }
                 end
               end
             end

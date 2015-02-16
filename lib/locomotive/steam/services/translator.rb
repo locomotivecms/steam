@@ -2,7 +2,7 @@ module Locomotive
   module Steam
     module Services
 
-      class Translator < Struct.new(:repository, :default_locale)
+      class Translator < Struct.new(:repository, :current_locale)
 
         # Return the translation described by a key.
         #
@@ -13,10 +13,17 @@ module Locomotive
         # @return [ String ] the translated text or nil if not found
         #
         def translate(input, locale, scope = nil)
+          locale ||= current_locale
+
           if scope.blank?
             values = repository.find(input).try(:values) || {}
 
-            values[locale.to_s] || values[default_locale.to_s]
+            if translation = values[locale.to_s]
+              translation
+            else
+              Locomotive::Common::Logger.warn "Missing translation '#{input}' for the '#{locale}' locale".yellow
+              input
+            end
           else
             I18n.t(input, scope: scope.split('.'), locale: locale)
           end

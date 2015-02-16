@@ -7,16 +7,18 @@ module Locomotive
 
             module Common
 
-              def load(path, frontmatter = false)
+              def load(path, frontmatter = false, &block)
                 if File.exists?(path)
-                  yaml = File.open(path).read.force_encoding('utf-8')
+                  yaml      = File.open(path).read.force_encoding('utf-8')
+                  template  = nil
 
-                  if frontmatter
-                    yaml =~ /^(---\s*\n.*?\n?)^(---\s*$\n?)(.*)/m
-                    yaml = $1
+                  if frontmatter && match = yaml.match(FRONTMATTER_REGEXP)
+                    yaml, template = match[:yaml], match[:template]
                   end
 
-                  HashConverter.to_sym(YAML.load(yaml))
+                  HashConverter.to_sym(YAML.load(yaml)).tap do |attributes|
+                    block.call(attributes, template) if block_given?
+                  end
                 else
                   Locomotive::Common::Logger.error "No #{path} file found"
                   {}

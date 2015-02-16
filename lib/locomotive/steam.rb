@@ -18,6 +18,8 @@ require_relative 'steam/services'
 module Locomotive
   module Steam
 
+    FRONTMATTER_REGEXP = /^(?<yaml>(---\s*\n.*?\n?)^(---\s*$\n?))?(?<template>.*)/mo
+
     class << self
       attr_writer :configuration
     end

@@ -61,14 +61,12 @@ describe Locomotive::Steam::Server do
   #   last_response.body.should =~ /Leader: Eddie/
   # end
 
-  # it 'translates strings', pending: true do
-  #   get '/en'
-  #   last_response.body.should =~ /Powered by/
-  #   get '/fr'
-  #   last_response.body.should =~ /Propulsé par/
-  #   get '/nb'
-  #   last_response.body.should_not =~ /Powered by/
-  # end
+  it 'translates strings' do
+    get '/en'
+    expect(last_response.body).to include 'Powered by'
+    get '/fr'
+    expect(last_response.body).to include 'Propulsé par'
+  end
 
   # it 'provides translation in scopes', pending: true do
   #   get '/'

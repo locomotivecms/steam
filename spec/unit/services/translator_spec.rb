@@ -27,7 +27,7 @@ describe Locomotive::Steam::Services::Translator do
       context 'no translation found' do
 
         let(:translation) { nil }
-        it { is_expected.to eq nil }
+        it { is_expected.to eq 'example_test' }
 
       end
 
@@ -43,7 +43,7 @@ describe Locomotive::Steam::Services::Translator do
         let(:locale) { 'nl' }
 
         it 'reverts to default locale' do
-          is_expected.to eq "Example text"
+          is_expected.to eq "example_test"
         end
 
       end
