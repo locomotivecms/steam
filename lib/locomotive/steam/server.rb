@@ -38,6 +38,7 @@ module Locomotive::Steam
         use Middlewares::Locale
         use Middlewares::Timezone
         use Middlewares::Page
+        use Middlewares::TemplatizedPage
 
         run Middlewares::Renderer.new(nil)
       end

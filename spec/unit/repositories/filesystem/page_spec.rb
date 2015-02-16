@@ -104,6 +104,18 @@ describe Locomotive::Steam::Repositories::Filesystem::Page do
 
     end
 
+    context 'templatized page' do
+
+      let(:paths) { ['articles/content-type-template', 'content-type-template/hello-world', 'articles/hello-world']  }
+
+      let(:pages) do
+        [{ title: { en: 'Templatized article' }, slug: { en: 'template' }, content_type: 'articles', _fullpath: 'articles/template', template_path: { en: 'articles/template.liquid' } }]
+      end
+
+      it { expect(subject.first.title).to eq({ en: 'Templatized article' }) }
+
+    end
+
   end
 
   describe '#template_for' do

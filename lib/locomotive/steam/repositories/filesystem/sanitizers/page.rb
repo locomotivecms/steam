@@ -49,15 +49,20 @@ module Locomotive
             end
 
             def modify_if_templatized(page, locale)
-              content_type = fetch_content_type(parent_fullpath(page))
-
-              if page.templatized? && content_type.nil?
+              if page.templatized?
                 # change the slug of a templatized page
-                page[:slug][locale] = 'content_type_template'
+                page[:slug][locale] = 'content-type-template'
+
+                # this also means to change the fullpath
+                if page[:fullpath][locale]
+                  page[:fullpath][locale].gsub!(/[^\/]+$/, 'content-type-template')
+                end
 
                 # make sure its children will have its content type
                 set_content_type(page._fullpath, page.content_type)
-              else
+              elsif content_type = fetch_content_type(parent_fullpath(page))
+                # not a templatized page but it becomes one because
+                # its parent is one of them
                 page[:content_type] = content_type
               end
             end

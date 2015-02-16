@@ -15,7 +15,7 @@ module Locomotive
             type  = options[:type] || 'application/rss+xml'
             title = options[:title] || 'RSS'
 
-            %{<link rel="#{rel}" type="#{type}" title="#{title}" href="#{input}">}
+            %{<link rel="#{rel}" type="#{type}" title="#{title}" href="#{input}" />}
           end
 
           # Write the url of a theme stylesheet
@@ -31,7 +31,7 @@ module Locomotive
 
             input = stylesheet_url(input)
 
-            %{<link href="#{input}" media="#{media}" rel="stylesheet" type="text/css">}
+            %{<link href="#{input}" media="#{media}" rel="stylesheet" type="text/css" />}
           end
 
           # Write the url to javascript resource
@@ -44,10 +44,11 @@ module Locomotive
           # input: url of the javascript file
           def javascript_tag(input, *args)
             return '' if input.nil?
+
             javascript_options = inline_options(args_to_options(args))
             input = javascript_url(input)
 
-            "<script src=\"#{input}\" type=\"text/javascript\" #{javascript_options}></script>"
+            %{<script src="#{input}" type="text/javascript" #{javascript_options}></script>}
           end
 
           def theme_image_url(input)
@@ -64,7 +65,7 @@ module Locomotive
           def theme_image_tag(input, *args)
             image_options = inline_options(args_to_options(args))
 
-            "<img src=\"#{theme_image_url(input)}\" #{image_options}>"
+            %{<img src="#{theme_image_url(input)}" #{image_options}>}
           end
 
           # Write an image tag
@@ -72,7 +73,7 @@ module Locomotive
           def image_tag(input, *args)
             image_options = inline_options(args_to_options(args))
 
-            "<img src=\"#{get_url_from_asset(input)}\" #{image_options}>"
+            %{<img src="#{get_url_from_asset(input)}" #{image_options}>}
           end
 
           # Embed a flash movie into a page

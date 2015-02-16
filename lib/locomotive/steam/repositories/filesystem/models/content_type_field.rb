@@ -13,6 +13,10 @@ module Locomotive
               }.merge(attributes))
             end
 
+            def class_name
+              self[:class_name] || self[:target]
+            end
+
           end
 
         end

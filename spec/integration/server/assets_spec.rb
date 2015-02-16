@@ -8,6 +8,16 @@ describe Locomotive::Steam::Server do
     run_server
   end
 
+  describe 'theme assets' do
+
+    subject { get '/all'; last_response.body }
+
+    it { is_expected.to include('<link href="/stylesheets/application.css" media="screen" rel="stylesheet" type="text/css" />') }
+    it { is_expected.to include('<script src="/javascripts/application.js" type=\'text/javascript\'></script>') }
+    it { is_expected.to include('<link rel="alternate" type="application/atom+xml" title="A title" href="/foo/bar" />') }
+
+  end
+
   describe 'Static assets' do
 
     it 'renders an image' do

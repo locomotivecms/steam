@@ -26,7 +26,7 @@ module Locomotive
             end
 
             def slugify(label, collection, locale = nil)
-              base, index = label.singularize.parameterize('-'), nil
+              base, index = label.permalink(false), nil
               _slugify = -> (i) { [base, i].compact.join('-') }
 
               while !is_slug_unique?(_slugify.call(index), collection, locale)

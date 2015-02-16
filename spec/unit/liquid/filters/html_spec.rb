@@ -18,11 +18,11 @@ describe Locomotive::Steam::Liquid::Filters::Html do
 
   it 'writes the tag to display a rss/atom feed' do
     expect(auto_discovery_link_tag('/foo/bar')).to eq %(
-      <link rel="alternate" type="application/rss+xml" title="RSS" href="/foo/bar">
+      <link rel="alternate" type="application/rss+xml" title="RSS" href="/foo/bar" />
     ).strip
 
     expect(auto_discovery_link_tag('/foo/bar', 'rel:alternate2', 'type:atom', 'title:Hello world')).to eq %(
-      <link rel="alternate2" type="atom" title="Hello world" href="/foo/bar">
+      <link rel="alternate2" type="atom" title="Hello world" href="/foo/bar" />
     ).strip
   end
 
@@ -80,31 +80,31 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   end
 
   it 'returns a link tag for a stylesheet file' do
-    result = "<link href=\"/sites/42/theme/stylesheets/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"/sites/42/theme/stylesheets/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
     expect(stylesheet_tag('main.css')).to eq(result)
     expect(stylesheet_tag('main')).to eq(result)
     expect(stylesheet_tag(nil)).to eq('')
   end
 
   it 'returns a link tag for a stylesheet file with folder' do
-    result = "<link href=\"/sites/42/theme/stylesheets/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"/sites/42/theme/stylesheets/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
     expect(stylesheet_tag('trash/main.css')).to eq(result)
   end
 
   it 'returns a link tag for a stylesheet file without touching the url that starts with "/"' do
-    result = "<link href=\"/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
     expect(stylesheet_tag('/trash/main.css')).to eq(result)
     expect(stylesheet_tag('/trash/main')).to eq(result)
   end
 
   it 'returns a link tag for a stylesheet file without touching the url that starts with "http:"' do
-    result = "<link href=\"http://cdn.example.com/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"http://cdn.example.com/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
     expect(stylesheet_tag('http://cdn.example.com/trash/main.css')).to eq(result)
     expect(stylesheet_tag('http://cdn.example.com/trash/main')).to eq(result)
   end
 
   it 'returns a link tag for a stylesheet file without touching the url that starts with "https:"' do
-    result = "<link href=\"https://cdn.example.com/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"https://cdn.example.com/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
     expect(stylesheet_tag('https://cdn.example.com/trash/main.css')).to eq(result)
     expect(stylesheet_tag('https://cdn.example.com/trash/main')).to eq(result)
   end
@@ -112,36 +112,36 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   it 'returns a link tag for a stylesheet stored in Amazon S3' do
     url = 'https://com.citrrus.locomotive.s3.amazonaws.com/sites/42/theme/stylesheets/bootstrap2.css'
     allow(theme_asset_url).to receive(:build).and_return(url)
-    result = "<link href=\"#{url}\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"#{url}\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
     expect(stylesheet_tag('bootstrap2.css')).to eq(result)
   end
 
   it 'returns a link tag for a stylesheet file and media attribute set to print' do
-    result = "<link href=\"/sites/42/theme/stylesheets/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"/sites/42/theme/stylesheets/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\" />"
     expect(stylesheet_tag('main.css','print')).to eq(result)
     expect(stylesheet_tag('main','print')).to eq(result)
     expect(stylesheet_tag(nil)).to eq('')
   end
 
   it 'returns a link tag for a stylesheet file with folder and media attribute set to print' do
-    result = "<link href=\"/sites/42/theme/stylesheets/trash/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"/sites/42/theme/stylesheets/trash/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\" />"
     expect(stylesheet_tag('trash/main.css','print')).to eq(result)
   end
 
   it 'returns a link tag for a stylesheet file without touching the url that starts with "/" and media attribute set to print' do
-    result = "<link href=\"/trash/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"/trash/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\" />"
     expect(stylesheet_tag('/trash/main.css','print')).to eq(result)
     expect(stylesheet_tag('/trash/main','print')).to eq(result)
   end
 
   it 'returns a link tag for a stylesheet file without touching the url that starts with "http:" and media attribute set to print' do
-    result = "<link href=\"http://cdn.example.com/trash/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"http://cdn.example.com/trash/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\" />"
     expect(stylesheet_tag('http://cdn.example.com/trash/main.css','print')).to eq(result)
     expect(stylesheet_tag('http://cdn.example.com/trash/main','print')).to eq(result)
   end
 
   it 'returns a link tag for a stylesheet file without touching the url that starts with "https:" and media attribute set to print' do
-    result = "<link href=\"https://cdn.example.com/trash/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\">"
+    result = "<link href=\"https://cdn.example.com/trash/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\" />"
     expect(stylesheet_tag('https://cdn.example.com/trash/main.css','print')).to eq(result)
     expect(stylesheet_tag('https://cdn.example.com/trash/main','print')).to eq(result)
   end

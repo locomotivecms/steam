@@ -23,7 +23,7 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentEntry do
 
       it { expect(subject.class).to eq Locomotive::Steam::Repositories::Filesystem::Models::ContentEntry }
       it { expect(subject.title).to eq({ en: 'Update #1', fr: 'Mise a jour #1' }) }
-      it { expect(subject._slug).to eq({ en: 'update-1', fr: 'mise-a-jour-1' }) }
+      it { expect(subject._slug).to eq({ en: 'update-number-1', fr: 'mise-a-jour-number-1' }) }
       it { expect(subject.content_type).to eq type }
 
     end
@@ -47,7 +47,7 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentEntry do
     it { is_expected.to eq nil }
 
     context 'existing slug' do
-      let(:slug) { 'update-1' }
+      let(:slug) { 'update-number-1' }
       it { expect(subject.title).to eq({ en: 'Update #1', fr: 'Mise a jour #1' }) }
     end
 

@@ -1,30 +1,57 @@
 module Locomotive::Steam
   module Middlewares
 
-    class TemplatizedPage < Base
+    class TemplatizedPage < ThreadSafe
 
-      def _call(env)
-        super
+      include Helpers
 
-        if self.page && self.page.templatized?
-          self.set_content_entry!(env)
+      def _call
+        if page && page.templatized?
+          self.set_content_entry!
         end
-
-        app.call(env)
       end
 
       protected
 
-      def set_content_entry!(env)
-        %r(^#{self.page.safe_fullpath.gsub('*', '([^\/]+)')}$) =~ self.path
+      def set_content_entry!
+        # extract the slug of the content entry
+        %r(^#{page.fullpath.gsub('content-type-template', '([^\/]+)')}$) =~ path
 
-        permalink = $1
+        if entry = fetch_content_entry($1)
+          # the entry will be available in the template under different keys
+          ['content_entry', 'entry', entry.content_type.slug.singularize].each do |key|
+           env['steam.liquid_assigns'][key] = entry
+          end
 
-        if content_entry = self.page.content_type.find_entry(permalink)
-          env['steam.content_entry'] = content_entry
+          env['steam.content_entry'] = page.content_entry = entry
+
+          # log it
+          log "Found content entry: #{entry._label}"
         else
+          # force the rendering of the 404 page
           env['steam.page'] = nil
         end
+      end
+
+      def fetch_content_entry(slug)
+        if type = content_type_repository.by_slug(page.content_type)
+          decorate(content_entry_repository.by_slug(type, slug))
+        else
+          nil
+        end
+      end
+
+      def decorate(entry)
+        return nil if entry.nil?
+        Locomotive::Steam::Decorators::I18nDecorator.new(entry, nil, default_locale)
+      end
+
+      def content_type_repository
+        services.repositories.content_type
+      end
+
+      def content_entry_repository
+        services.repositories.content_entry
       end
 
     end

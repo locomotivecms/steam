@@ -50,34 +50,42 @@ describe Locomotive::Steam::Server do
 
   end
 
-  # it 'shows a content type template', pending: true do
-  #   get '/songs/song-number-1'
-  #   last_response.body.should =~ /Song #1/
-  # end
+  describe 'templatized page' do
 
-  # it 'renders a page under a templatized one', pending: true do
-  #   get '/songs/song-number-1/band'
-  #   last_response.body.should =~ /Song #1/
-  #   last_response.body.should =~ /Leader: Eddie/
-  # end
+    it 'shows a content type template' do
+      get '/songs/song-number-1'
+      expect(last_response.body).to include 'Song #1'
+    end
 
-  it 'translates strings' do
-    get '/en'
-    expect(last_response.body).to include 'Powered by'
-    get '/fr'
-    expect(last_response.body).to include 'Propulsé par'
+    it 'renders a page under a templatized one' do
+      get '/songs/song-number-1/band'
+      expect(last_response.body).to include 'Song #1'
+      expect(last_response.body).to include 'Leader: Eddie'
+    end
+
   end
 
-  # it 'provides translation in scopes', pending: true do
-  #   get '/'
-  #   last_response.body.should =~ /scoped_translation=.French./
-  # end
+  describe 'translations' do
 
-  # it 'translates a page with link_to tags inside', pending: true do
-  #   get '/fr/notre-musique'
-  #   last_response.body.should =~ /<h3><a href="\/fr\/songs\/song-number-8">Song #8<\/a><\/h3>/
-  #   last_response.body.should =~ /Propulsé par/
-  # end
+    it 'translates strings' do
+      get '/en'
+      expect(last_response.body).to include 'Powered by'
+      get '/fr'
+      expect(last_response.body).to include 'Propulsé par'
+    end
+
+    # it 'provides translation in scopes', pending: true do
+    #   get '/'
+    #   last_response.body.should =~ /scoped_translation=.French./
+    # end
+
+    # it 'translates a page with link_to tags inside', pending: true do
+    #   get '/fr/notre-musique'
+    #   last_response.body.should =~ /<h3><a href="\/fr\/songs\/song-number-8">Song #8<\/a><\/h3>/
+    #   last_response.body.should =~ /Propulsé par/
+    # end
+
+  end
 
   # it 'returns all the pages', pending: true do
   #   get '/all'
@@ -99,18 +107,6 @@ describe Locomotive::Steam::Server do
   #   subject { get '/unlisted_pages'; last_response.body }
   #   it { subject.should match(/Page to test the nav tag/)}
   #   it { should_not match(/About Us/)}
-  # end
-
-  # describe 'theme assets', pending: true do
-
-  #   subject { get '/all'; last_response.body }
-
-  #   it { should match(/<link href="\/stylesheets\/application.css" media="screen" rel="stylesheet" type="text\/css" \/>/) }
-
-  #   it { should match(/<script src="\/javascripts\/application.js" type='text\/javascript'><\/script>/) }
-
-  #   it { should match(/<link rel="alternate" type="application\/atom\+xml" title="A title" href="\/foo\/bar" \/>/) }
-
   # end
 
   # describe 'session', pending: true do

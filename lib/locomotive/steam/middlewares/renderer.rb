@@ -73,7 +73,7 @@ module Locomotive::Steam
           'contents'      => Locomotive::Steam::Liquid::Drops::ContentTypes.new,
           'current_user'  => {},
           'session'       => Locomotive::Steam::Liquid::Drops::SessionProxy.new,
-        }
+        }.merge(env['steam.liquid_assigns'])
       end
 
       def _locale_liquid_assigns
