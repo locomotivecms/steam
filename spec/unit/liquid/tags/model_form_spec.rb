@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rack/csrf'
 
 describe Locomotive::Steam::Liquid::Tags::ModelForm do
 

@@ -10,7 +10,7 @@ describe Locomotive::Steam::Repositories::Filesystem::ThemeAsset do
     let(:path) { 'main.css' }
     subject { repository.url_for(path) }
 
-    it { is_expected.to eq 'main.css' }
+    it { is_expected.to eq '/main.css' }
 
   end
 

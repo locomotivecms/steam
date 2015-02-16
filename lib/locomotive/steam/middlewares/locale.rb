@@ -18,7 +18,7 @@ module Locomotive::Steam
       protected
 
       def set_locale
-        _locale = site.default_locale
+        _locale = default_locale
         _path   = path
 
         if _path =~ /^(#{site.locales.join('|')})+(\/|$)/

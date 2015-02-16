@@ -7,7 +7,7 @@ module Locomotive
 
           # Engine: ['', 'sites', site._id.to_s, 'theme', path].join('/')
           def url_for(path)
-            path
+            '/' + path
           end
 
           # Engine: site.theme_assets.checksums
