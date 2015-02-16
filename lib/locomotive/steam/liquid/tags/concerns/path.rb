@@ -9,8 +9,13 @@ module Locomotive
 
             def initialize(tag_name, markup, options)
               if markup =~ Syntax
-                @handle       = $1
-                @path_options = parse_options_from_string($2)
+                @handle, _options = $1, $2
+
+                # FIXME: the with option needs a string with quotes.
+                # this is a hack for sites which don't follow the new syntax.
+                _options.gsub!(/with: ([\w-]+)/, 'with: "\1"') if _options
+
+                @raw_path_options = parse_options_from_string(_options)
               else
                 self.wrong_syntax!
               end
@@ -84,9 +89,13 @@ module Locomotive
 
             def set_vars_from_context(context)
               @context      = context
-              @path_options = interpolate_options(@path_options, context)
+              @path_options = evaluate_path_options(context)
               @site         = context.registers[:site]
               @locale       = context.registers[:locale]
+            end
+
+            def evaluate_path_options(context)
+              interpolate_options(@raw_path_options, context)
             end
 
           end

@@ -74,16 +74,16 @@ describe Locomotive::Steam::Server do
       expect(last_response.body).to include 'Propulsé par'
     end
 
-    # it 'provides translation in scopes', pending: true do
-    #   get '/'
-    #   last_response.body.should =~ /scoped_translation=.French./
-    # end
+    it 'provides translation in scopes' do
+      get '/'
+      expect(last_response.body).to match /scoped_translation=.French./
+    end
 
-    # it 'translates a page with link_to tags inside', pending: true do
-    #   get '/fr/notre-musique'
-    #   last_response.body.should =~ /<h3><a href="\/fr\/songs\/song-number-8">Song #8<\/a><\/h3>/
-    #   last_response.body.should =~ /Propulsé par/
-    # end
+    it 'translates a page with link_to tags inside' do
+      get '/fr/notre-musique'
+      expect(last_response.body).to include '<h3><a href="/fr/songs/song-number-8">Song #8</a></h3>'
+      expect(last_response.body).to include 'Propulsé par'
+    end
 
   end
 

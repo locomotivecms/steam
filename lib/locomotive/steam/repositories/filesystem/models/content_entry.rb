@@ -32,7 +32,7 @@ module Locomotive
             end
 
             def content_type_slug
-              content_type.try(:slug)
+              content_type.slug
             end
 
             def _label

@@ -49,7 +49,7 @@ describe Locomotive::Steam::Liquid::Tags::LocaleSwitcher do
     let(:entry_drop)  { Locomotive::Steam::Liquid::Drops::ContentEntry.new(entry, [:_label, :_slug]) }
     let(:entry)       { liquid_instance_double('Article', attributes: { _label: { en: 'Hello world', fr: 'Bonjour monde' }, _slug: { en: 'hello-world', fr: 'bonjour-monde' } }) }
     let(:drop)        { Locomotive::Steam::Liquid::Drops::Page.new(page, [:fullpath]) }
-    let(:attributes)  { { fullpath: { en: 'my-articles/content_type_template', fr: 'mes-articles/content_type_template' } } }
+    let(:attributes)  { { fullpath: { en: 'my-articles/content-type-template', fr: 'mes-articles/content-type-template' } } }
     let(:page)        { liquid_instance_double('ArticleTemplate', title: 'Article template', attributes: attributes, content_entry: entry_drop.send(:_source), templatized?: true) }
 
     let(:source) { '{% locale_switcher label: "title" %}' }
