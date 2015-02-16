@@ -14,27 +14,25 @@ describe Locomotive::Steam::Server do
     expect(last_response.body).to match(/Upcoming events/)
   end
 
-  it 'renders an image' do
-    get '/images/nav_on.png'
-    expect(last_response.status).to eq(200)
+  describe 'Page not found' do
+
+    it 'shows the 404 page' do
+      get '/void'
+      expect(last_response.status).to eq(404)
+      expect(last_response.body).to match /page not found/
+    end
+
+    it 'shows the 404 page with a 404 status code when its called explicitly' do
+      get '/404'
+      expect(last_response.status).to eq(404)
+      expect(last_response.body).to match /page not found/
+    end
+
   end
 
-  # it 'shows the 404 page' do
-  #   get '/void'
-  #   expect(last_response.status).to eq(404)
-  #   expect(last_response.body).to match /page not found/
-  #   puts last_response.body.inspect
-  # end
-
-  # it 'shows the 404 page with 200 status code when its called explicitly', pending: true do
-  #   get '/404'
-  #   last_response.status.should eq(200)
-  #   last_response.body.should =~ /page not found/
-  # end
-
-  # it 'shows content', pending: true do
+  # it 'shows content' do
   #   get '/about-us/jane-doe'
-  #   last_response.body.should =~ /Lorem ipsum dolor sit amet/
+  #   expect(last_response.body).to match /Lorem ipsum dolor sit amet/
   # end
 
   # it 'shows a content type template', pending: true do

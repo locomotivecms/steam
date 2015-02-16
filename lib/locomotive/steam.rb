@@ -15,20 +15,8 @@ require_relative 'steam/liquid'
 require_relative 'steam/repositories'
 require_relative 'steam/services'
 
-# TODO: move into a file named dependencies
-
-# TODO: move them to a different place
-require 'haml'
-require 'compass'
-require 'mimetype_fu'
-require 'mime-types'
-require 'rack/csrf'
-require 'mime/types'
-
 module Locomotive
   module Steam
-
-    # TEMPLATE_EXTENSIONS = %w(liquid haml)
 
     class << self
       attr_writer :configuration

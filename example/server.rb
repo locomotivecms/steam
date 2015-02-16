@@ -14,8 +14,6 @@ path = ENV['SITE_PATH'] || File.join(File.expand_path(File.dirname(__FILE__)), '
 
 Locomotive::Steam.configure do |config|
   config.mode = :test
-  config.serve_assets = true
-  config.assets_path = File.join(path, 'public')
 end
 
 Locomotive::Common.reset
@@ -23,13 +21,20 @@ Locomotive::Common.configure do |config|
   config.notifier = Locomotive::Common::Logger.setup(File.join(path, 'log/steam.log'))
 end
 
-server = Locomotive::Steam::Server.new(path: path)
+server = Locomotive::Steam::Server.new({
+  path: path,
+  serve_assets: true,
+  minify_assets: false
+})
 
-# Note: alt thin settings
-# server = Thin::Server.new('localhost', '3333', foo)
-# server.threaded = true
+# Note: alt thin settings (Threaded)
+server = Thin::Server.new('localhost', '8080', server.to_app)
+server.threaded = true
+server.start
+# FIXME: Rack::Handler::Thin.run server.to_app (not threaded)
 
-Rack::Handler::Thin.run server.to_app
+# WEBRick rack handler
+# Rack::Handler::WEBrick.run server.to_app
 
 Locomotive::Common::Logger.info 'Server started...'
-server.start
+

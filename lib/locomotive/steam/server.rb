@@ -1,3 +1,15 @@
+require 'haml'
+require 'compass'
+require 'mimetype_fu'
+require 'mime-types'
+require 'mime/types'
+
+require 'rack/csrf'
+require 'rack/session/moneta'
+require 'rack/builder'
+require 'rack/lint'
+require 'dragonfly/middleware'
+
 require_relative 'middlewares'
 
 module Locomotive::Steam
@@ -15,13 +27,7 @@ module Locomotive::Steam
       Rack::Builder.new do
         use Rack::Lint
 
-        if server.options[:serve_assets]
-          use ::Rack::Static, {
-            root: Locomotive::Steam.configuration.assets_path,
-            urls: ['/images', '/fonts', '/samples', '/media']
-          }
-          # use Middlewares::DynamicAssets # TODO
-        end
+        server.serve_assets(self) if server.options[:serve_assets]
 
         use Middlewares::Favicon
 
@@ -40,10 +46,25 @@ module Locomotive::Steam
     def prepare_options(options)
       {
         serve_assets: false,
+        minify:       false,
         moneta: {
           store: Moneta.new(:Memory, expires: true)
         }
       }.merge(options)
+    end
+
+    def serve_assets(builder)
+      public_path = File.join(options[:path], 'public')
+
+      builder.use ::Rack::Static, {
+        root: public_path,
+        urls: ['/images', '/fonts', '/samples', '/media']
+      }
+
+      builder.use Middlewares::DynamicAssets, {
+        root:   public_path,
+        minify: options[:minify_assets]
+      }
     end
 
   end
