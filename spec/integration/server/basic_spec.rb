@@ -54,12 +54,12 @@ describe Locomotive::Steam::Server do
 
     it 'shows a content type template' do
       get '/songs/song-number-1'
-      expect(last_response.body).to include 'Song #1'
+      expect(last_response.body).to include 'another version'
     end
 
     it 'renders a page under a templatized one' do
-      get '/songs/song-number-1/band'
-      expect(last_response.body).to include 'Song #1'
+      get '/songs/song-number-2/band'
+      expect(last_response.body).to include 'Song #2'
       expect(last_response.body).to include 'Leader: Eddie'
     end
 

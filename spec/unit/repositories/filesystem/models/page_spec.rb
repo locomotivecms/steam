@@ -33,4 +33,11 @@ describe Locomotive::Steam::Repositories::Filesystem::Models::Page do
 
   end
 
+  describe '#valid?' do
+
+    subject { page.valid? }
+    it { is_expected.to eq true }
+
+  end
+
 end

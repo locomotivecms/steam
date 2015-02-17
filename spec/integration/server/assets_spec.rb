@@ -8,6 +8,14 @@ describe Locomotive::Steam::Server do
     run_server
   end
 
+  describe 'no favicon' do
+
+    subject { get '/favicon.ico'; last_response.body }
+
+    it { is_expected.to include('') }
+
+  end
+
   describe 'theme assets' do
 
     subject { get '/all'; last_response.body }
@@ -18,7 +26,7 @@ describe Locomotive::Steam::Server do
 
   end
 
-  describe 'Static assets' do
+  describe 'static assets' do
 
     it 'renders an image' do
       get '/images/nav_on.png'
@@ -27,7 +35,7 @@ describe Locomotive::Steam::Server do
 
   end
 
-  describe 'Dynamic assets (SCSS + Coffeescript)' do
+  describe 'dynamic assets (SCSS + Coffeescript)' do
 
     it 'renders a stylesheet' do
       get '/stylesheets/application.css'

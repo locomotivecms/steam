@@ -42,6 +42,7 @@ module Locomotive::Steam
         else
           message = "[Important] YUICompressor requires java to be installed. The JAVA_HOME variable should also be set.\n"
           Locomotive::Common::Logger.warn message.red
+          false
         end
       end
 

@@ -9,7 +9,7 @@ describe Locomotive::Steam::Server do
   end
 
   it 'converts {{ page.templatized? }} => true on templatized page' do
-    get '/songs/song-number-1'
+    get '/songs/song-number-2'
     expect(last_response.body).to include "templatized='true'"
   end
 
@@ -24,12 +24,12 @@ describe Locomotive::Steam::Server do
   end
 
   it "provides an access to page's content_type collection" do
-    get '/songs/song-number-1'
+    get '/songs/song-number-2'
     expect(last_response.body).to include "content_type_size='8'"
   end
 
   it 'provides count alias on collections' do
-    get '/songs/song-number-1'
+    get '/songs/song-number-2'
     expect(last_response.body).to include "content_type_count='8'"
   end
 

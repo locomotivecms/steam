@@ -13,19 +13,28 @@ describe 'ContactForm' do
     expect(last_response.body).to include '/entry_submissions/messages.json'
   end
 
-  describe '#submit' do
+  describe 'submit a new entry (old version)' do
 
+    let(:url) { '/entry_submissions/messages' }
     let(:params) { {
       'entry' => { 'name' => 'John', 'email' => 'j@doe.net', 'message' => 'Bla bla' },
       'success_callback' => '/events',
       'error_callback' => '/contact' } }
-    let(:response) { post_contact_form(params, false) }
+    let(:response) { post_contact_form(url, params, false) }
     let(:status) { response.status }
 
     describe 'with json request' do
 
-      let(:response) { post_contact_form(params, true) }
+      let(:response) { post_contact_form(url, params, true) }
       let(:entry) { JSON.parse(response.body) }
+
+      context 'unknown content type' do
+
+        let(:url) { '/entry_submissions/foo' }
+
+        it { expect { response }.to raise_error('Unknown content type "foo"') }
+
+      end
 
       context 'when not valid' do
 
@@ -73,11 +82,21 @@ describe 'ContactForm' do
           expect(response.body.to_s).to include "can't not be blank"
         end
 
+        context 'redirects outside the site' do
+
+          let(:params) { { 'error_callback' => 'http://www.locomotivecms.com' } }
+
+          it 'returns a success status' do
+            expect(response.status).to eq 301
+          end
+
+        end
+
       end
 
       context 'when valid' do
 
-        let(:response) { post_contact_form(params, false, true) }
+        let(:response) { post_contact_form(url, params, false, true) }
 
         it 'returns a success status' do
           expect(response.status).to eq 200
@@ -93,14 +112,66 @@ describe 'ContactForm' do
 
   end
 
-  def post_contact_form(params, json = false, follow_redirect = false)
-    url = '/entry_submissions/messages'
-    url += '.json' if json
-    params = params.symbolize_keys if json
-    post url, params
-    if follow_redirect
-      follow_redirect!
+  describe 'submit a new entry (new version)' do
+
+    let(:url) { '/events' }
+    let(:params) { {
+      'content_type_slug' => 'messages',
+      'entry' => { 'name' => 'John', 'email' => 'j@doe.net', 'message' => 'Bla bla' } } }
+    let(:response) { post_contact_form(url, params) }
+    let(:status) { response.status }
+
+    context 'when not valid' do
+
+      let(:params) { { 'content_type_slug' => 'messages' } }
+
+      it 'returns a success status' do
+        expect(response.status).to eq 200
+      end
+
+      it 'displays errors' do
+        expect(response.body.to_s).to include "can't not be blank"
+      end
+
     end
+
+    context 'when valid' do
+
+      let(:response) { post_contact_form(url, params, false, true) }
+
+      it 'returns a success status' do
+        expect(response.status).to eq 200
+      end
+
+      it 'displays a success message' do
+        expect(response.body.to_s).to include 'Thank you John'
+      end
+
+    end
+
+    context 'in a different locale' do
+
+      let(:url)       { '/fr/evenements' }
+      let(:response)  { post_contact_form(url, params, false, true) }
+
+      it 'returns a success status' do
+        expect(response.status).to eq 200
+      end
+
+    end
+
+  end
+
+  def post_contact_form(url, params, json = false, follow_redirect = false)
+    if json
+      url += '.json'
+      params = params.symbolize_keys
+    end
+
+    post url, params
+
+    follow_redirect! if follow_redirect
+
     last_response
   end
 

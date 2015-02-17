@@ -31,8 +31,6 @@ module Locomotive::Steam
         document.render(liquid_context)
       end
 
-      # == TEST ==
-
       def liquid_context
         ::Liquid::Context.new(liquid_assigns, {}, liquid_registers, true)
       end

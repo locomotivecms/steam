@@ -2,6 +2,16 @@ require 'spec_helper'
 
 describe String do
 
+  describe '#permalink!' do
+
+    let(:string) { 'foo bar' }
+
+    before { string.permalink! }
+
+    it { expect(string).to eq 'foo-bar' }
+
+  end
+
   describe '#to_bool' do
 
     subject { string.to_bool }

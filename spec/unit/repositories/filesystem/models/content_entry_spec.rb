@@ -27,6 +27,14 @@ describe Locomotive::Steam::Repositories::Filesystem::Models::ContentEntry do
 
     end
 
+    describe 'adding a custom error message' do
+
+      before { content_entry.errors.add(:title, 'is mandatory') }
+
+      it { expect(content_entry.errors[:title]).to eq(['is mandatory']) }
+
+    end
+
   end
 
   describe '#_label' do
