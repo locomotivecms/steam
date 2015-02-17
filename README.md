@@ -2,21 +2,30 @@
 
 [![Code Climate](https://codeclimate.com/github/locomotivecms/steam/badges/gpa.svg)](https://codeclimate.com/github/locomotivecms/steam) [![Dependency Status](https://gemnasium.com/locomotivecms/steam.svg)](https://gemnasium.com/locomotivecms/steam) [![Build Status](https://travis-ci.org/locomotivecms/steam.svg?branch=master)](https://travis-ci.org/locomotivecms/steam) [![Coverage Status](https://coveralls.io/repos/locomotivecms/steam/badge.svg?branch=master)](https://coveralls.io/r/locomotivecms/steam?branch=master)
 
-The rendering stack used by both Wagon and Engine. It includes the rack stack and the liquid drops/filters/tags.
+The rendering stack used by both Wagon and Engine (WIP). It includes:
 
-## Installation
+- the rack stack to serve assets (SCSS, Coffeescript, ...etc) and pages
+- the liquid drops/filters/tags libs to parse and render liquid templates
+- a filesystem repository which reads the source of a site written for Wagon
 
-Add this line to your application's Gemfile:
+**Note:** Steam passes all the specifications from Wagon.
 
-    gem 'locomotivecms_steam'
+## Installation [WIP]
 
-And then execute:
+    gem install thin
+    gem install locomotivecms_steam --pre
 
-    $ bundle
+## Usage
 
-Or install it yourself as:
+    steam <PATH to a Wagon site>
 
-    $ gem install locomotivecms_steam
+open your browser
+
+    open localhost:8080
+
+## TODO
+
+see the list in the issues section.
 
 ## Contributing
 
