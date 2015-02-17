@@ -73,4 +73,36 @@ describe Locomotive::Steam::Liquid::Filters::Misc do
     expect(random_number.class).to eq Fixnum
   end
 
+  describe '#map' do
+
+    context 'to_liquid' do
+
+      subject { map(['4', '5'], 'to_liquid') }
+      it { is_expected.to eq(['4', '5']) }
+
+    end
+
+    context 'to_i' do
+
+      subject { map(['4', '5'], 'to_i') }
+      it { is_expected.to eq([4, 5]) }
+
+    end
+
+    context 'to_f' do
+
+      subject { map(['4.3', '5.2'], 'to_f') }
+      it { is_expected.to eq([4.3, 5.2]) }
+
+    end
+
+    context 'property' do
+
+      subject { map([{ 'title' => 'a' }, { 'title' => 'b' }], 'title') }
+      it { is_expected.to eq(['a', 'b']) }
+
+    end
+
+  end
+
 end

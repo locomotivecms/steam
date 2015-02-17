@@ -27,6 +27,16 @@ module Locomotive
             alias :_id :_slug
             alias :_permalink :_slug
 
+            def method_missing(name, *args, &block)
+              if is_dynamic_attribute?(name)
+                cast_value(name)
+              elsif attributes.include?(name)
+                self[name]
+              else
+                super
+              end
+            end
+
             def content_type
               @content_type || attributes[:content_type]
             end
@@ -37,10 +47,6 @@ module Locomotive
 
             def _label
               self[content_type.label_field_name]
-            end
-
-            def [](name)
-              is_dynamic_attribute?(name) ? cast_value(name) : super
             end
 
             def localized_attributes

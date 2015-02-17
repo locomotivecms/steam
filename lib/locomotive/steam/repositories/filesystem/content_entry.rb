@@ -16,7 +16,7 @@ module Locomotive
             # priority:
             # 1/ order_by passed in the conditions parameter
             # 2/ the default order (_position) defined in the content type
-            order_by = conditions.delete(:order_by) || type.order_by
+            order_by = conditions.delete(:order_by)|| conditions.delete('order_by') || type.order_by
 
             query(type) do
               where(conditions).order_by(order_by)

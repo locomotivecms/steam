@@ -57,6 +57,13 @@ describe Locomotive::Steam::Repositories::Filesystem::Models::ContentEntry do
 
     end
 
+    context 'no provided value, should return nil' do
+
+      let(:attributes)  { {} }
+      it { is_expected.to eq nil }
+
+    end
+
     context 'a string' do
       let(:value) { 'Hello world' }
       it { is_expected.to eq 'Hello world' }
