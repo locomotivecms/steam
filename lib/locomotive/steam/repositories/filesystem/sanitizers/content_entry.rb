@@ -53,7 +53,7 @@ module Locomotive
               if entry.attributes[name].is_a?(Hash) # localized?
                 entry.attributes[name][default_locale] = value
               else
-                entry.attributes[name] = value
+                entry.attributes[name] ||= value
               end
             end
 

@@ -57,7 +57,7 @@ module Locomotive::Steam::Middlewares
     end
 
     def params
-      @params ||= HashConverter.to_sym(self.request.params)
+      @params ||= self.request.params.with_indifferent_access
     end
 
   end

@@ -28,6 +28,11 @@ module Locomotive
               @@store.clear
             end
 
+            #:nocov:
+            def _store
+              @@store
+            end
+
           end
 
         end

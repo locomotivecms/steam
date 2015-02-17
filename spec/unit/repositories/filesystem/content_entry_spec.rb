@@ -50,12 +50,13 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentEntry do
 
   describe '#persist' do
 
-    let(:entry) { instance_double('NewEntry', _visible: true, content_type: type, _label: 'Hello world') }
+    let(:entry) { instance_double('NewEntry', _visible: true, content_type: type, _label: 'Hello world', attributes: { title: 'Hello world' }) }
     subject { repository.persist(entry) }
 
     before do
       expect(entry).to receive(:[]).with(:_slug).and_return(nil)
       expect(entry).to receive(:[]=).with(:_slug, 'hello-world')
+      expect(loader).to receive(:write).with(type, { title: 'Hello world' })
     end
 
     it { expect { subject }.to change { repository.all(type).size }.by(1) }

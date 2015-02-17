@@ -40,7 +40,10 @@ module Locomotive
             # slugify entry
             sanitizer.set_slug(entry, collection)
 
-            collection << entry
+            collection << entry # immediate result
+
+            # make sure we write it back to the data source
+            loader.write(entry.content_type, entry.attributes)
           end
 
           # Engine: all(conditions).count > 0

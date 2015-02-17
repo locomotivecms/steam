@@ -19,7 +19,7 @@ module Locomotive
         end
 
         def find(type_slug, slug)
-          type = get_type(slug)
+          type = get_type(type_slug)
 
           return nil if type.nil?
 

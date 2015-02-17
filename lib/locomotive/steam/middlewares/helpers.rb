@@ -22,8 +22,8 @@ module Locomotive::Steam
         @next_response = [type, { 'Content-Type' => 'text/html', 'Location' => location }, []]
       end
 
-      def log(msg)
-        Locomotive::Common::Logger.info msg
+      def log(msg, offset = 2)
+        Locomotive::Common::Logger.info (' ' * offset) + msg
       end
 
     end

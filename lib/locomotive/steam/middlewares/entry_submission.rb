@@ -13,16 +13,16 @@ module Locomotive::Steam
       SUBMITTED_PARAM         = 'submitted_entry_slug'
 
       def _call
-        if slug = get_content_type_slug
-          # we didn't go through the locale middleware yet,
-          # so set the locale manually. Needed to build a localized
-          # version of the entry + error messages (if present).
-          with_locale do
+        # we didn't go through the locale middleware yet,
+        # so set the locale manually. Needed to build a localized
+        # version of the entry + error messages (if present).
+        with_locale do
+          if slug = get_content_type_slug
             entry = create_entry(slug)
             navigation_behavior(entry)
+          else
+            fetch_entry
           end
-        else
-          fetch_entry
         end
       end
 
@@ -41,7 +41,7 @@ module Locomotive::Steam
 
       def navigation_success(entry)
         if html?
-          redirect_to success_location(entry_to_query_string(query))
+          redirect_to success_location(entry_to_query_string(entry))
         elsif json?
           json_response(entry)
         end
@@ -79,7 +79,7 @@ module Locomotive::Steam
       def with_locale(&block)
         locale = default_locale || params[:locale]
 
-        if path =~ /^\/(#{site.locales.join('|')})+(\/|$)/
+        if request.path_info =~ /^\/(#{site.locales.join('|')})+(\/|$)/
           locale = $1
         end
 
@@ -120,7 +120,7 @@ module Locomotive::Steam
       #
       #
       def create_entry(slug)
-        attributes = self.params[:entry] || self.params[:content] || {}
+        attributes = HashConverter.to_sym(params[:entry] || params[:content] || {})
 
         if entry = services.entry_submission.submit(slug, attributes)
           entry
@@ -132,7 +132,7 @@ module Locomotive::Steam
       # Get the content entry from the params.
       #
       def fetch_entry
-        if type_slug = params[SUBMITTED_TYPE_PARAM] && slug = params[SUBMITTED_PARAM]
+        if (type_slug = params[SUBMITTED_TYPE_PARAM]) && (slug = params[SUBMITTED_PARAM])
           if entry = services.entry_submission.find(type_slug, slug)
             store_in_liquid(entry)
           end
@@ -147,7 +147,7 @@ module Locomotive::Steam
       #
       def json_response(entry, status = 200)
         json = services.entry_submission.to_json(entry)
-        [status, { 'Content-Type' => 'application/json' }, [json]]
+        render_response(json, status, 'application/json')
       end
 
     end

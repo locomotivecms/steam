@@ -12,6 +12,12 @@ module Locomotive
               cache.fetch("data/#{content_type.slug}") { load_list(content_type) }
             end
 
+            def write(content_type, attributes)
+              list = cache.read("data/#{content_type.slug}")
+
+              list << attributes.merge(content_type: content_type)
+            end
+
             private
 
             def load_list(content_type)
