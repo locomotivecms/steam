@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    locomotivecms_steam (0.2.0.pre.beta)
+    locomotivecms_steam (1.0.0.pre.alpha)
       RedCloth (~> 4.2.9)
       activesupport (~> 4.2.0)
       chronic (~> 0.10.2)
