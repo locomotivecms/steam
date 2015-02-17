@@ -28,8 +28,7 @@ module Locomotive::Steam
           # log it
           log "Found content entry: #{entry._label}"
         else
-          # force the rendering of the 404 page
-          env['steam.page'] = nil
+          redirect_to '/404', 302
         end
       end
 

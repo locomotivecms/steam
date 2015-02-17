@@ -14,7 +14,13 @@ describe Locomotive::Steam::Server do
     expect(last_response.body).to match(/Upcoming events/)
   end
 
-  describe 'Page not found' do
+  it 'shows an inner page' do
+    get '/about-us/jane-doe'
+    expect(last_response.body).to include '<link href="/stylesheets/application.css"'
+    expect(last_response.body).to include 'Lorem ipsum dolor sit amet'
+  end
+
+  describe 'page not found' do
 
     it 'shows the 404 page' do
       get '/void'
@@ -28,12 +34,6 @@ describe Locomotive::Steam::Server do
       expect(last_response.body).to include 'page not found'
     end
 
-  end
-
-  it 'shows content' do
-    get '/about-us/jane-doe'
-    expect(last_response.body).to include '<link href="/stylesheets/application.css"'
-    expect(last_response.body).to include 'Lorem ipsum dolor sit amet'
   end
 
   describe 'snippets' do
@@ -61,6 +61,13 @@ describe Locomotive::Steam::Server do
       get '/songs/song-number-1/band'
       expect(last_response.body).to include 'Song #1'
       expect(last_response.body).to include 'Leader: Eddie'
+    end
+
+    it 'redirects to the 404 if it does not match a content entry' do
+      get '/songs/unknown'
+      expect(last_response).to be_redirect
+      follow_redirect!
+      expect(last_response.status).to eq(404)
     end
 
   end
