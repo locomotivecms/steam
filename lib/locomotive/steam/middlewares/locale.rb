@@ -12,27 +12,29 @@ module Locomotive::Steam
       include Helpers
 
       def _call
-        set_locale
+        locale = extract_locale
+
+        log "Detecting locale #{locale.upcase}"
+
+        I18n.with_locale(locale) do
+          self.next
+        end
       end
 
       protected
 
-      def set_locale
-        _locale = default_locale
-        _path   = path
+      def extract_locale
+        _locale = params[:locale] || default_locale
+        _path   = request.path_info
 
-        if _path =~ /^(#{site.locales.join('|')})+(\/|$)/
+        if _path =~ /^\/(#{site.locales.join('|')})+(\/|$)/
           _locale  = $1
           _path    = _path.gsub($1 + $2, '')
-          _path    = 'index' if _path.blank?
+          # _path    = 'index' if _path.blank? # TODO
         end
 
-        log "Detecting locale #{_locale.upcase}"
-
-        services.current_locale = _locale
-
-        env['steam.locale']     = _locale
-        env['steam.path']       = _path
+        env['steam.path']   = _path
+        env['steam.locale'] = services.current_locale = _locale
       end
 
     end

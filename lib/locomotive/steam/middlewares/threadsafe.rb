@@ -48,12 +48,16 @@ module Locomotive::Steam::Middlewares
       @locale ||= env.fetch('steam.locale')
     end
 
+    def liquid_assigns
+      @liquid_assigns ||= env.fetch('steam.liquid_assigns')
+    end
+
     def default_locale
       site.default_locale
     end
 
     def params
-      @params ||= self.request.params #.deep_symbolize_keys
+      @params ||= HashConverter.to_sym(self.request.params)
     end
 
   end

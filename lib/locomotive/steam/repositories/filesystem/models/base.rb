@@ -6,6 +6,8 @@ module Locomotive
 
           class Base
 
+            include Concerns::Validation
+
             attr_accessor :attributes
 
             def initialize(attributes)

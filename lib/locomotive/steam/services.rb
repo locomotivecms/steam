@@ -38,6 +38,10 @@ module Locomotive
           Steam::Services::SnippetFinder.new(repositories.snippet)
         end
 
+        register :entry_submission do
+          Steam::Services::EntrySubmission.new(repositories.content_type, repositories.content_entry, current_locale)
+        end
+
         register :liquid_parser do
           Steam::Services::LiquidParser.new(parent_finder, snippet_finder)
         end

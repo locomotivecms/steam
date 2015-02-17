@@ -39,6 +39,52 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentEntry do
 
   end
 
+  describe '#build' do
+
+    let(:attributes) { { title: 'Hello world' } }
+    subject { repository.build(type, attributes) }
+
+    it { expect(subject.title).to eq 'Hello world' }
+
+  end
+
+  describe '#persist' do
+
+    let(:entry) { instance_double('NewEntry', _visible: true, content_type: type, _label: 'Hello world') }
+    subject { repository.persist(entry) }
+
+    before do
+      expect(entry).to receive(:[]).with(:_slug).and_return(nil)
+      expect(entry).to receive(:[]=).with(:_slug, 'hello-world')
+    end
+
+    it { expect { subject }.to change { repository.all(type).size }.by(1) }
+
+  end
+
+  describe '#exists?' do
+
+    let(:conditions) { {} }
+    subject { repository.exists?(type, conditions) }
+
+    it { expect(subject).to eq true }
+
+    context 'more specific conditions' do
+
+      let(:conditions) { { '_slug' => 'update-number-1' } }
+      it { expect(subject).to eq true }
+
+    end
+
+    context 'conditions which do match any entries' do
+
+      let(:conditions) { { '_slug' => 'foo' } }
+      it { expect(subject).to eq false }
+
+    end
+
+  end
+
   describe '#by_slug' do
 
     let(:slug) { nil }

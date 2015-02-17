@@ -7,7 +7,7 @@ module Locomotive::Steam
 
       def _call
         if page && page.templatized?
-          self.set_content_entry!
+          set_content_entry!
         end
       end
 
@@ -20,7 +20,7 @@ module Locomotive::Steam
         if entry = fetch_content_entry($1)
           # the entry will be available in the template under different keys
           ['content_entry', 'entry', entry.content_type.slug.singularize].each do |key|
-           env['steam.liquid_assigns'][key] = entry
+           liquid_assigns[key] = entry
           end
 
           env['steam.content_entry'] = page.content_entry = entry

@@ -18,8 +18,8 @@ module Locomotive::Steam
       end
 
       def redirect_to(location, type = 301)
-        self.log "Redirected to #{location}"
-        [type, { 'Content-Type' => 'text/html', 'Location' => location }, []]
+        self.log "Redirected to #{location}".blue
+        @next_response = [type, { 'Content-Type' => 'text/html', 'Location' => location }, []]
       end
 
       def log(msg)

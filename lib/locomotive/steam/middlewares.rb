@@ -8,7 +8,7 @@ require_relative 'middlewares/locale'
 require_relative 'middlewares/timezone'
 require_relative 'middlewares/logging'
 require_relative 'middlewares/path'
-# require_relative 'middlewares/entry_submission'
+require_relative 'middlewares/entry_submission'
 require_relative 'middlewares/page'
 require_relative 'middlewares/templatized_page'
 

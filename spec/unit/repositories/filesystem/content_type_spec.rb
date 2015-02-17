@@ -62,6 +62,40 @@ describe Locomotive::Steam::Repositories::Filesystem::ContentType do
 
   end
 
+  describe '#fields_for' do
+
+    let(:type) { nil }
+    subject { repository.fields_for(type) }
+
+    it { is_expected.to eq nil }
+
+    context 'with fields' do
+
+      let(:type) { instance_double('ContentType', fields: [true]) }
+      it { is_expected.to eq([true]) }
+
+    end
+
+  end
+
+  describe '#look_for_unique_fields' do
+
+    let(:type) { nil }
+    subject { repository.look_for_unique_fields(type) }
+
+    it { is_expected.to eq nil }
+
+    context 'with fields' do
+
+      let(:field) { instance_double('Field', name: :title) }
+      let(:type)  { instance_double('ContentType', query_fields: [field])}
+
+      it { expect(subject).to eq(title: field) }
+
+    end
+
+  end
+
   describe '#select_options' do
 
     let(:type)  { repository.by_slug('articles') }

@@ -20,7 +20,7 @@ module Locomotive
               list.map do |attributes|
                 name, _attributes = attributes.keys.first, attributes.values.first
 
-                _attributes[:name] = name
+                _attributes[:name] = name.to_sym
 
                 if _attributes[:label].blank?
                   _attributes[:label] = name.to_s.humanize

@@ -27,6 +27,7 @@ en:
       session_assign: "Syntax Error in 'session_assign' - Valid syntax: session_assign [var] = [source]"
     messages:
       blank: "can't not be blank"
+      unique: "must be unique"
 
   pagination:
     previous: "&laquo; Previous"

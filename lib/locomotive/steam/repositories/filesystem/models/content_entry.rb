@@ -37,6 +37,15 @@ module Locomotive
               end
             end
 
+            def valid?
+              errors.clear
+              content_type.fields_by_name.each do |name, field|
+                next unless field.required?
+                errors.add_on_blank(name.to_sym)
+              end
+              errors.empty?
+            end
+
             def content_type
               @content_type || attributes[:content_type]
             end

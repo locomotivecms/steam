@@ -17,6 +17,7 @@ fr:
   errors:
     messages:
       blank: "doit être rempli(e)"
+      unique: "doit être unique"
 
   pagination:
     previous: "&laquo; Précédent"

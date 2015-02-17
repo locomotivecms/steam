@@ -2,12 +2,31 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Repositories::Filesystem::Models::ContentEntry do
 
-  let(:type)        { instance_double('ContentType', slug: 'articles', label_field_name: :title, localized_fields_names: [:title], fields_by_name: {}) }
+  let(:fields)      { {} }
+  let(:type)        { instance_double('ContentType', slug: 'articles', label_field_name: :title, localized_fields_names: [:title], fields_by_name: fields) }
   let(:attributes)  { { title: 'Hello world', _slug: 'hello-world' } }
   let(:content_entry)  do
     Locomotive::Steam::Repositories::Filesystem::Models::ContentEntry.new(attributes).tap do |entry|
       entry.content_type = type
     end
+  end
+
+  describe '#valid?' do
+
+    let(:fields) { { title: instance_double('TitleField', name: :title, type: :string, required?: true)} }
+
+    subject { content_entry.valid? }
+    it { is_expected.to eq true }
+
+    context 'missing attribute' do
+
+      let(:attributes) { {} }
+      it { is_expected.to eq false }
+      it { subject; expect(content_entry.errors[:title]).to eq(["can't not be blank"]) }
+      it { subject; expect(content_entry.errors.empty?).to eq false }
+
+    end
+
   end
 
   describe '#_label' do

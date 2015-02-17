@@ -9,13 +9,18 @@ module Locomotive
             def initialize(attributes)
               super({
                 type:       :string,
-                localized:  false
+                localized:  false,
+                required:   false,
+                unique:     false
               }.merge(attributes))
             end
 
             def class_name
               self[:class_name] || self[:target]
             end
+
+            def required?; self[:required]; end
+            def localized?; self[:localized]; end
 
           end
 

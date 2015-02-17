@@ -1,3 +1,4 @@
+require_relative 'filesystem/models/concerns/validation.rb'
 require_relative 'filesystem/models/base'
 require_relative 'filesystem/concerns/queryable.rb'
 require_relative 'filesystem/yaml_loaders/concerns/common.rb'

@@ -23,6 +23,31 @@ module Locomotive
             end.all
           end
 
+          # Engine: content_type.entries.build(attributes)
+          def build(type, attributes = {})
+            collection_options[:model].new(attributes).tap do |entry|
+              # set the reference to the content type
+              entry.content_type = type
+            end
+          end
+
+          # Engine: entry.save
+          def persist(entry)
+            return nil if entry.nil?
+
+            collection = memoized_collection(entry.content_type)
+
+            # slugify entry
+            sanitizer.set_slug(entry, collection)
+
+            collection << entry
+          end
+
+          # Engine: all(conditions).count > 0
+          def exists?(type, conditions = {})
+            query(type) { where(conditions) }.all.size > 0
+          end
+
           # Engine: not necessary
           def by_slug(type, slug)
             query(type) { where(_slug: slug) }.first

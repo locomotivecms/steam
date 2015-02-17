@@ -34,9 +34,10 @@ module Locomotive::Steam
         use Middlewares::DefaultEnv, server.options
         use Middlewares::Logging
         use Middlewares::Site
-        use Middlewares::Path
-        use Middlewares::Locale
         use Middlewares::Timezone
+        use Middlewares::EntrySubmission
+        use Middlewares::Locale
+        use Middlewares::Path
         use Middlewares::Page
         use Middlewares::TemplatizedPage
 

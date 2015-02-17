@@ -18,11 +18,29 @@ module Locomotive
             end
           end
 
-          # Engine: content_type.entries.klass.send(:"#{name}_options").map { |option| option['name'] }
-          def select_options(type, name)
-            return nil if type.nil? || name.nil?
+          # Engine: content_type.entries_custom_fields.where(unique: true)
+          def look_for_unique_fields(content_type)
+            return nil if content_type.nil?
 
-            field = type.fields_by_name[name]
+            {}.tap do |hash|
+              content_type.query_fields { where(unique: true) }.each do |field|
+                hash[field.name] = field
+              end
+            end
+          end
+
+          # Engine: content_type.entries_custom_fields
+          def fields_for(content_type)
+            return nil if content_type.nil?
+
+            content_type.fields
+          end
+
+          # Engine: content_type.entries.klass.send(:"#{name}_options").map { |option| option['name'] }
+          def select_options(content_type, name)
+            return nil if content_type.nil? || name.nil?
+
+            field = content_type.fields_by_name[name]
 
             if field.type == :select
               localized_attribute(field, :select_options)

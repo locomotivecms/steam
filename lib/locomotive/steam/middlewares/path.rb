@@ -14,7 +14,7 @@ module Locomotive::Steam
       protected
 
       def set_path!(env)
-        path = env['PATH_INFO'].clone
+        path = env['steam.path'] || request.path_info
 
         path.gsub!(/\.[a-zA-Z][a-zA-Z0-9]{2,}$/, '')
         path.gsub!(/^\//, '')

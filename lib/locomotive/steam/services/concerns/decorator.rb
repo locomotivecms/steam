@@ -7,12 +7,16 @@ module Locomotive
 
           private
 
-          def decorate(&block)
+          def decorate(klass = Decorators::TemplateDecorator, &block)
             if (object = yield).blank?
               object
             else
-              Decorators::TemplateDecorator.decorate(object, nil, locale, default_locale)
+              klass.decorate(object, nil, locale, default_locale)
             end
+          end
+
+          def i18n_decorate(&block)
+            decorate(Decorators::I18nDecorator, &block)
           end
 
           def locale
