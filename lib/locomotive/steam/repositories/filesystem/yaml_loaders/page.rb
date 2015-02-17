@@ -42,6 +42,7 @@ module Locomotive
                 slug:               { locale => attributes.delete(:slug) || slug },
                 editable_elements:  { locale => attributes.delete(:editable_elements) },
                 template_path:      { locale => template_path(filepath, attributes, locale) },
+                redirect_url:       { locale => attributes.delete(:redirect_url) },
                 _fullpath:          fullpath
               }.merge(attributes)
             end
@@ -54,6 +55,7 @@ module Locomotive
               leaf[:slug][locale]               = attributes.delete(:slug) || slug
               leaf[:editable_elements][locale]  = attributes.delete(:editable_elements)
               leaf[:template_path][locale]      = template_path(filepath, attributes, locale)
+              leaf[:redirect_url][locale]       = attributes.delete(:redirect_url)
 
               leaf.merge!(attributes)
             end

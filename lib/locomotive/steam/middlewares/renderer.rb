@@ -16,9 +16,12 @@ module Locomotive::Steam
       private
 
       def render_page
-        # TODO: redirection
-        content = parse_and_render_liquid
-        render_response(content, page.not_found? ? 404: 200)
+        if page.redirect_url
+          redirect_to(page.redirect_url, page.redirect_type)
+        else
+          content = parse_and_render_liquid
+          render_response(content, page.not_found? ? 404: 200)
+        end
       end
 
       def render_missing_404

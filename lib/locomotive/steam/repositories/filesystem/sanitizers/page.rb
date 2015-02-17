@@ -20,6 +20,7 @@ module Locomotive
                   modify_if_templatized(page, locale)
                   build_editable_elements(page, locale)
                   use_default_locale_template_path(page, locale)
+                  set_default_redirect_type(page, locale)
                 end
               end
             end
@@ -32,6 +33,12 @@ module Locomotive
 
               if paths[locale] == false
                 paths[locale] = paths[default_locale]
+              end
+            end
+
+            def set_default_redirect_type(page, locale)
+              if page.redirect_url[locale]
+                page.attributes[:redirect_type] ||= 301
               end
             end
 

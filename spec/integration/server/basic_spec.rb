@@ -20,6 +20,30 @@ describe Locomotive::Steam::Server do
     expect(last_response.body).to include 'Lorem ipsum dolor sit amet'
   end
 
+  describe 'redirection' do
+
+    let(:url) { '/store' }
+
+    subject { get url; last_response }
+
+    it 'redirects to another site' do
+      expect(subject.status).to eq(301)
+      expect(subject.location).to eq('http://www.apple.com/en/itunes/')
+    end
+
+    context 'localized page' do
+
+      let(:url) { '/fr/magasin' }
+
+      it 'redirects to another site' do
+        expect(subject.status).to eq(301)
+        expect(subject.location).to eq('http://www.apple.com/fr/itunes/')
+      end
+
+    end
+
+  end
+
   describe 'page not found' do
 
     it 'shows the 404 page' do

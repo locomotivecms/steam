@@ -6,7 +6,7 @@ module Locomotive
 
           class Page < Base
 
-            set_localized_attributes [:title, :slug, :permalink, :editable_elements, :template, :template_path, :fullpath, :seo_title, :meta_description, :meta_keywords]
+            set_localized_attributes [:title, :slug, :permalink, :editable_elements, :template, :template_path, :redirect_url, :fullpath, :seo_title, :meta_description, :meta_keywords]
 
             attr_accessor :depth, :_fullpath, :content_entry
 
@@ -19,7 +19,8 @@ module Locomotive
                 content_type:       nil,
                 position:           99,
                 template:           {},
-                editable_elements:  {}
+                editable_elements:  {},
+                redirect_url:       {}
               }.merge(attributes))
             end
 
