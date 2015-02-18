@@ -5,14 +5,14 @@ require 'active_support/concern'
 require 'active_support/deprecation'
 require 'active_support/core_ext'
 
-require_relative 'steam/core_ext'
-require_relative 'steam/configuration'
-require_relative 'steam/monkey_patches'
-require_relative 'steam/decorators'
-require_relative 'steam/liquid'
+require_relative      'steam/core_ext'
+require_relative      'steam/configuration'
+require_relative_all  'steam/monkey_patches'
+require_relative_all  'steam/decorators'
+require_relative      'steam/liquid'
 
-require_relative 'steam/repositories'
-require_relative 'steam/services'
+require_relative      'steam/repositories'
+require_relative      'steam/services'
 
 module Locomotive
   module Steam
@@ -37,7 +37,7 @@ module Locomotive
       require_relative 'steam/initializers'
     end
 
-    # FIXME: not sure it will be ever needed
+    # FIXME: not sure it will ever be needed
     # class << self
     #   def method_missing(name, *args, &block)
     #     Locomotive::Steam.configuration.public_send(name)

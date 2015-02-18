@@ -1,5 +1,4 @@
 require 'coffee_script'
-require 'yui/compressor'
 
 module Locomotive::Steam
   module Middlewares
@@ -34,6 +33,8 @@ module Locomotive::Steam
 
       def install_yui_compressor(sprockets, options)
         return unless options[:minify]
+
+        require 'yui/compressor'
 
         if is_java_installed?
           # minify javascripts and stylesheets

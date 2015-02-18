@@ -9,40 +9,40 @@ module Locomotive
     module Repositories
       module Filesystem
 
-        def self.build_instance(site = nil, current_locale = nil, options = {})
-          Instance.new(site, current_locale, options)
+        def self.build_instance(site = nil, current_locale = nil, path = nil)
+          Instance.new(site, current_locale, path)
         end
 
-        class Instance < Struct.new(:current_site, :current_locale, :options)
+        class Instance < Struct.new(:current_site, :current_locale, :path)
 
           include Morphine
 
           register :site do
             Filesystem::Site.new(
-              YAMLLoaders::Site.new(options[:path], cache))
+              YAMLLoaders::Site.new(path, cache))
           end
 
           register :page do
             Filesystem::Page.new(
-              YAMLLoaders::Page.new(options[:path], current_site.try(:default_locale), cache),
+              YAMLLoaders::Page.new(path, current_site.try(:default_locale), cache),
               current_site, current_locale)
           end
 
           register :snippet do
             Filesystem::Snippet.new(
-              YAMLLoaders::Snippet.new(options[:path], current_site.try(:default_locale), cache),
+              YAMLLoaders::Snippet.new(path, current_site.try(:default_locale), cache),
               current_site, current_locale)
           end
 
           register :content_type do
             Filesystem::ContentType.new(
-              YAMLLoaders::ContentType.new(options[:path], cache),
+              YAMLLoaders::ContentType.new(path, cache),
               current_site, current_locale)
           end
 
           register :content_entry do
             Filesystem::ContentEntry.new(
-              YAMLLoaders::ContentEntry.new(options[:path], cache),
+              YAMLLoaders::ContentEntry.new(path, cache),
               current_site, current_locale, content_type)
           end
 
@@ -52,7 +52,7 @@ module Locomotive
 
           register :translation do
             Filesystem::Translation.new(
-              YAMLLoaders::Translation.new(options[:path], cache))
+              YAMLLoaders::Translation.new(path, cache))
           end
 
           register :cache do

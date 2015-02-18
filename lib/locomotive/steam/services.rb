@@ -6,24 +6,21 @@ module Locomotive
   module Steam
     module Services
 
-      def self.build_instance(request = nil, options = {})
-        Instance.new(request, options)
+      def self.build_instance(request = nil)
+        Instance.new(request)
       end
 
-      class Instance < Struct.new(:request, :options)
+      class Instance < Struct.new(:request)
 
         include Morphine
 
         register :repositories do
-          if (klass = options[:repositories_builder_klass]).nil?
-            require_relative 'repositories/filesystem.rb'
-            klass = Steam::Repositories::Filesystem
-          end
-          klass.build_instance(nil, nil, options)
+          require_relative 'repositories/filesystem.rb'
+          Steam::Repositories::Filesystem.build_instance(nil, nil, configuration.site_path)
         end
 
         register :site_finder do
-          Steam::Services::SiteFinder.new(repositories.site, request, options)
+          Steam::Services::SiteFinder.new(repositories.site, request)
         end
 
         register :page_finder do

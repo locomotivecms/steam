@@ -2,10 +2,10 @@ module Locomotive
   module Steam
     module Services
 
-      class SiteFinder < Struct.new(:repository, :request, :options)
+      class SiteFinder < Struct.new(:repository, :request)
 
         def find
-          repository.by_host(request.host, options)
+          repository.by_host(request.host)
         end
 
       end

@@ -1,7 +1,7 @@
 module Locomotive::Steam
   module Middlewares
 
-    class DefaultEnv < Struct.new(:app, :options)
+    class DefaultEnv < Struct.new(:app)
 
       def call(env)
         request = Rack::Request.new(env)
@@ -16,7 +16,7 @@ module Locomotive::Steam
       private
 
       def build_services(request)
-        Locomotive::Steam::Services.build_instance(request, options)
+        Locomotive::Steam::Services.build_instance(request)
       end
 
     end

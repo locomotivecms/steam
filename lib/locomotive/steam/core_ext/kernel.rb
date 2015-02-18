@@ -4,7 +4,7 @@ module Kernel
     main_path = File.dirname(caller.first.sub(/:\d+$/, ''))
     main_path = File.join(main_path, sub) if sub
 
-    paths.each do |path|
+    [*paths].each do |path|
       Dir[File.join(main_path, path, '*.rb')].each { |file| require file }
     end
   end

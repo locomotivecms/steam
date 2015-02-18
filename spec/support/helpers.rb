@@ -22,12 +22,15 @@ module Spec
       output = ENV['STEAM_VERBOSE'] ? nil : File.join(default_fixture_site_path, 'log/steam.log')
       setup_common(output)
 
+      Locomotive::Steam.configure do |config|
+        config.mode           = :test
+        config.site_path      = default_fixture_site_path
+        config.serve_assets   = true
+        config.minify_assets  = true
+      end
+
       Locomotive::Common::Logger.info 'Server started...'
-      Locomotive::Steam::Server.new({
-        path:           default_fixture_site_path,
-        serve_assets:   true,
-        minify_assets:  true
-      }).to_app
+      Locomotive::Steam::Server.new.to_app
     end
 
     def default_fixture_site_path
