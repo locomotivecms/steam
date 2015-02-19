@@ -38,7 +38,7 @@ module Locomotive
             else
               [_segment]
             end
-          end.flatten.sort
+          end.flatten
         end
 
       end
