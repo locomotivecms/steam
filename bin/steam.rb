@@ -24,16 +24,16 @@ Locomotive::Common.configure do |config|
   config.notifier = Locomotive::Common::Logger.setup(File.join(path, 'log/steam.log'))
 end
 
-server = Locomotive::Steam::Server.new
+app = Locomotive::Steam::Server.to_app
 
 # Note: alt thin settings (Threaded)
-server = Thin::Server.new('localhost', '8080', server.to_app)
+server = Thin::Server.new('localhost', '8080', app)
 server.threaded = true
 server.start
-# FIXME: Rack::Handler::Thin.run server.to_app (not threaded)
+# FIXME: Rack::Handler::Thin.run app (not threaded)
 
 # WEBRick rack handler
-# Rack::Handler::WEBrick.run server.to_app
+# Rack::Handler::WEBrick.run app
 
 Locomotive::Common::Logger.info 'Server started...'
 

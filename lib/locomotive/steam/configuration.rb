@@ -1,4 +1,4 @@
-require_relative 'middlewares/proxy_stack'
+require_relative 'middlewares/stack_proxy'
 
 module Locomotive
   module Steam
@@ -32,7 +32,9 @@ module Locomotive
       #   end
       #
       attr_accessor :middleware
-      def middleware; @middleware ||= Middlewares::ProxyStack.new; end
+      def middleware
+        @middleware ||= Middlewares::StackProxy.new(&Locomotive::Steam::Server.default_middlewares)
+      end
 
       # Add the checksum of a theme asset at the end of its path to allow public caching.
       #

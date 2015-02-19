@@ -30,7 +30,7 @@ module Spec
       end
 
       Locomotive::Common::Logger.info 'Server started...'
-      Locomotive::Steam::Server.new.to_app
+      Locomotive::Steam::Server.to_app
     end
 
     def default_fixture_site_path
