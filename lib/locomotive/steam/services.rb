@@ -7,7 +7,11 @@ module Locomotive
     module Services
 
       def self.build_instance(request = nil)
-        Instance.new(request)
+        Instance.new(request).tap do |service|
+          if Locomotive::Steam.configuration.services_hook
+            Locomotive::Steam.configuration.services_hook.call(service)
+          end
+        end
       end
 
       class Instance < Struct.new(:request)

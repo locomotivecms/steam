@@ -16,7 +16,7 @@ describe Locomotive::Steam::Middlewares::StackProxy do
 
     it 'adds it to the list' do
       expect(subject.list.size).to eq 1
-      expect(subject.list.first).to eq [DefaultMiddleware]
+      expect(subject.list.first).to eq [[DefaultMiddleware], nil]
     end
 
   end
@@ -28,7 +28,7 @@ describe Locomotive::Steam::Middlewares::StackProxy do
 
     it 'adds it to the operations' do
       expect(proxy.list.size).to eq 1
-      expect(proxy.list.first).to eq [DefaultMiddleware]
+      expect(proxy.list.first).to eq [[DefaultMiddleware], nil]
     end
 
   end
@@ -49,10 +49,10 @@ describe Locomotive::Steam::Middlewares::StackProxy do
 
     it do
       is_expected.to eq([
-        [DefaultMiddleware],
-        [FooMiddleware],
-        [FancyMiddleware],
-        [BarMiddleware, { answer: 42 }]
+        [[DefaultMiddleware], nil],
+        [[FooMiddleware], nil],
+        [[FancyMiddleware], nil],
+        [[BarMiddleware, { answer: 42 }], nil]
       ])
     end
 

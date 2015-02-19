@@ -1,3 +1,5 @@
+require_relative 'i18n_decorator'
+
 module Locomotive
   module Steam
     module Decorators

@@ -9,16 +9,16 @@ module Locomotive::Steam::Middlewares
       instance_eval(&block) if block_given?
     end
 
-    def use(*args)
-      @list << args
+    def use(*args, &block)
+      @list << [args, block]
     end
 
-    def insert_before(index, *args)
-      @list.insert(index_of(index), args)
+    def insert_before(index, *args, &block)
+      @list.insert(index_of(index), [args, block])
     end
 
-    def insert_after(index, *args)
-      @list.insert(index_of(index) + 1, args)
+    def insert_after(index, *args, &block)
+      @list.insert(index_of(index) + 1, [args, block])
     end
 
     def delete(index)
@@ -29,7 +29,7 @@ module Locomotive::Steam::Middlewares
 
     def inject(builder)
       @list.each do |args|
-        builder.use(*args)
+        builder.use(*(args[0]), &args[1])
       end
     end
 
@@ -37,7 +37,7 @@ module Locomotive::Steam::Middlewares
       if index.is_a?(Integer)
         index
       else
-        @list.index { |args| args[0] == index }
+        @list.index { |args| args[0][0] == index }
       end
     end
 

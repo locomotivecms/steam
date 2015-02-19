@@ -22,7 +22,8 @@ module Locomotive
 
       # Manage the list of middlewares used by the rack stack.
       #
-      # Examples:
+      # Example:
+      #
       #   Locomotive::Steam.configure do |config|
       #     ...
       #     config.middleware.remove Rack::Lint
@@ -97,6 +98,24 @@ module Locomotive
       #
       attr_accessor :moneta
       def moneta; @moneta.nil? ? { store: Moneta.new(:Memory, expires: true) } : @moneta; end
+
+      # Lambda called once a Services instance has been built.
+      # It is used when we want to change one of the services
+      #
+      # Example:
+      #
+      # Locomotive::Steam.configure do |config|
+      #
+      #   config.services_hook = -> (services) {
+      #     require 'my_repositories'
+      #     services.repositories = MyRepositories.new
+      #   }
+      #
+      # end
+      #
+      # default: nil
+      #
+      attr_accessor :services_hook
 
     end
 

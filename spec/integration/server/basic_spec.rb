@@ -60,6 +60,18 @@ describe Locomotive::Steam::Server do
 
   end
 
+  describe 'seo trailing slash' do
+
+    let(:url) { '/events/' }
+    subject { get url; last_response }
+
+    it 'redirects to the url without the trailing slash' do
+      expect(subject.status).to eq(301)
+      expect(subject.location).to eq('/events')
+    end
+
+  end
+
   describe 'snippets' do
 
     it 'includes a basic snippet' do

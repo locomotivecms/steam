@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'httparty',               '~> 0.13.3'
   spec.add_dependency 'chronic',                '~> 0.10.2'
 
+  spec.add_dependency 'rack-rewrite',           '~> 1.5.1'
   spec.add_dependency 'rack-cache',             '~> 1.2'
   spec.add_dependency 'dragonfly',              '~> 1.0.7'
   spec.add_dependency 'moneta',                 '~> 0.8.0'
