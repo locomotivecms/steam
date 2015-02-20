@@ -120,9 +120,7 @@ module Locomotive::Steam
       #
       #
       def create_entry(slug)
-        attributes = HashConverter.to_sym(params[:entry] || params[:content] || {})
-
-        if entry = services.entry_submission.submit(slug, attributes)
+        if entry = services.entry_submission.submit(slug, entry_attributes)
           entry
         else
           raise %{Unknown content type "#{slug}"}
@@ -148,6 +146,10 @@ module Locomotive::Steam
       def json_response(entry, status = 200)
         json = services.entry_submission.to_json(entry)
         render_response(json, status, 'application/json')
+      end
+
+      def entry_attributes
+        HashConverter.to_sym(params[:entry] || params[:content] || {})
       end
 
     end

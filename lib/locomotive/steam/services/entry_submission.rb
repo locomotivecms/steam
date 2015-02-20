@@ -1,3 +1,5 @@
+require 'sanitize'
+
 module Locomotive
   module Steam
     module Services
@@ -10,6 +12,8 @@ module Locomotive
           type = get_type(slug)
 
           return nil if type.nil?
+
+          clean_attributes(attributes)
 
           build_entry(type, attributes) do |entry|
             if validate(entry)
@@ -72,6 +76,13 @@ module Locomotive
           end
 
           entry.errors.empty?
+        end
+
+        def clean_attributes(attributes)
+          attributes.each do |key, value|
+            next unless value.is_a?(String)
+            attributes[key] = Sanitize.clean(value, Sanitize::Config::BASIC)
+          end
         end
 
       end
