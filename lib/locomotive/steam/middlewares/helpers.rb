@@ -22,6 +22,18 @@ module Locomotive::Steam
         @next_response = [type, { 'Content-Type' => 'text/html', 'Location' => location }, []]
       end
 
+      def modify_path(path = nil, &block)
+        path ||= request.path
+
+        segments = path.split('/')
+        yield(segments)
+        path = segments.join('/')
+
+        path = '/' if path.blank?
+        path += "?#{request.query_string}" unless request.query_string.empty?
+        path
+      end
+
       def log(msg, offset = 2)
         Locomotive::Common::Logger.info (' ' * offset) + msg
       end

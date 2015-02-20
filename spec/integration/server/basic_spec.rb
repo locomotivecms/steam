@@ -111,7 +111,7 @@ describe Locomotive::Steam::Server do
   describe 'translations' do
 
     it 'translates strings' do
-      get '/en'
+      get '/'
       expect(last_response.body).to include 'Powered by'
       get '/fr'
       expect(last_response.body).to include 'Propulsé par'

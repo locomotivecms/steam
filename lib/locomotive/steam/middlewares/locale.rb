@@ -2,10 +2,14 @@ module Locomotive::Steam
   module Middlewares
 
     # Set the locale from the path if possible or use the default one
+    #
     # Examples:
+    #
     #   /fr/index   => locale = :fr
     #   /fr/        => locale = :fr
     #   /index      => locale = :en (default one)
+    #
+    # The
     #
     class Locale < ThreadSafe
 
@@ -30,7 +34,10 @@ module Locomotive::Steam
         if _path =~ /^\/(#{site.locales.join('|')})+(\/|$)/
           _locale  = $1
           _path    = _path.gsub($1 + $2, '')
-          # _path    = 'index' if _path.blank? # TODO
+
+          # let the other middlewares that the locale was
+          # extracted from the path.
+          env['steam.locale_in_path'] = true
         end
 
         env['steam.path']   = _path

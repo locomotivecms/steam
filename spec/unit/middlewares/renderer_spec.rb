@@ -26,7 +26,4 @@ describe Locomotive::Steam::Middlewares::Renderer do
 
   end
 
-  def env_for(url, opts={})
-    Rack::MockRequest.env_for(url, opts)
-  end
 end

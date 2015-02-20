@@ -11,7 +11,10 @@ module Locomotive
             attr_accessor :root_path
 
             def initialize(attributes = {})
-              super({ timezone: 'UTC' }.merge(attributes))
+              super({
+                timezone: 'UTC',
+                prefix_default_locale: false
+              }.merge(attributes))
             end
 
             def default_locale

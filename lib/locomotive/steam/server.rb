@@ -51,6 +51,7 @@ module Locomotive::Steam
           Middlewares::Timezone,
           Middlewares::EntrySubmission,
           Middlewares::Locale,
+          Middlewares::LocaleRedirection,
           Middlewares::Path,
           Middlewares::Page,
           Middlewares::TemplatizedPage
