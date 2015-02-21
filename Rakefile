@@ -24,4 +24,8 @@ RSpec::Core::RakeTask.new('spec:unit') do |spec|
   spec.pattern = 'spec/unit/**/*_spec.rb'
 end
 
+RSpec::Core::RakeTask.new('spec:adapters') do |spec|
+  spec.pattern = 'spec/unit/adapters/**/*_spec.rb'
+end
+
 task default: :spec

@@ -11,6 +11,8 @@ require_relative_all  'steam/monkey_patches'
 require_relative_all  'steam/decorators'
 require_relative      'steam/liquid'
 
+require_relative      'steam/entities'
+require_relative      'steam/mapper'
 require_relative      'steam/repositories'
 require_relative      'steam/services'
 
