@@ -36,12 +36,8 @@ module Locomotive::Steam
           self
         end
 
-        def order_by(order_string)
-          unless order_string.blank?
-            pattern = order_string.include?('.') ? '.' : ' '
-            @sorting = order_string.downcase.split(pattern).map(&:to_sym)
-          end
-          self
+        def order_by(*args)
+          @sorting = Order.new(*args)
         end
 
         def limit(num)
@@ -67,14 +63,9 @@ module Locomotive::Steam
         end
 
         def sorted(entries)
-          return entries if @sorting.nil?
+          return entries if @sorting.empty?
 
-          name, direction  = @sorting.first, (@sorting.last || :asc)
-          if direction == :asc
-            entries.sort { |a, b| a.send(name) <=> b.send(name) }
-          else
-            entries.sort { |a, b| b.send(name) <=> a.send(name) }
-          end
+          entries.sort_by { |entry| @sorting.apply_to(entry, @locale) }
         end
 
         def limited(entries)

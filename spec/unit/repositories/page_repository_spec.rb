@@ -4,23 +4,16 @@ require_relative '../../../lib/locomotive/steam/adapters/filesystem.rb'
 
 describe Locomotive::Steam::PageRepository do
 
+  let(:pages)       { [{ title: { en: 'Home' }, handle: 'home', slug: { en: 'index' }, _fullpath: 'index', template_path: { en: 'index.liquid' } }] }
+
   let(:locale)      { :en }
-  let(:site)        { instance_double('Site', _id: 1, default_locale: :en, locales: %i(en fr)) }
+  let(:site)        { instance_double('Site', id: 1, default_locale: :en, locales: %i(en fr)) }
   let(:adapter)     { Locomotive::Steam::FilesystemAdapter.new(nil) }
   let(:repository)  { Locomotive::Steam::PageRepository.new(adapter, site, locale) }
 
-  # describe '#collection' do
-
-  #   subject { repository.send(:collection).first }
-
-  #   it { expect(subject.class).to eq Locomotive::Steam::Repositories::Filesystem::Models::Page }
-
-  #   it 'applies the sanitizer' do
-  #     expect(subject[:fullpath]).to eq({ en: 'index' })
-  #     expect(subject.depth).to eq 0
-  #   end
-
-  # end
+  before do
+    allow(adapter).to receive(:collection).and_return(pages)
+  end
 
   describe '#all' do
 

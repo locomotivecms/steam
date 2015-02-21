@@ -4,19 +4,19 @@ module Locomotive
       module Filesystem
         module YAMLLoaders
 
-          # class Page < Struct.new(:root_path, :default_locale, :cache)
-          class Page < Struct.new(:site_path, :default_locale, :cache)
+          class Page
 
             include Adapters::Filesystem::YAMLLoader
 
-            def load
+            def load(scope)
+              super
               fetch('app/views/pages') { load_tree }
             end
 
             private
 
             def path
-              @path ||= File.join(root_path, 'app', 'views', 'pages')
+              @path ||= File.join(site_path, 'app', 'views', 'pages')
             end
 
             def load_tree

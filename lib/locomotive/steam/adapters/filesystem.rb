@@ -1,4 +1,5 @@
 require_relative 'filesystem/dataset'
+require_relative 'filesystem/order'
 require_relative 'filesystem/condition'
 require_relative 'filesystem/query'
 
@@ -10,7 +11,7 @@ require_relative 'filesystem/yaml_loaders/page'
 
 module Locomotive::Steam
 
-  class FilesystemAdapter
+  class FilesystemAdapter < Struct.new(:site_path)
 
     include Morphine
 
@@ -18,53 +19,64 @@ module Locomotive::Steam
       Locomotive::Steam::Adapters::Filesystem::SimpleCacheStore.new
     end
 
-    def initialize(site_path)
-      @site_path  = site_path
-      @datasets   = {}
+    register :yaml_loaders do
+      build_yaml_loaders(cache)
     end
 
-    def all(mapper)
-      memoized_dataset(mapper)
+    def initialize(site_path)
+      super
+      @datasets = {}
+    end
+
+    def all(mapper, scope)
+      memoized_dataset(mapper, scope)
     end
 
     def query(mapper, scope, &block)
-      _query(mapper, scope.locale, &block).tap do |default|
+      _query(mapper, scope, &block).tap do |default|
         if scope.site
-          default + _query(mapper) { where(site_id: scope.site.id) }
+          default.where(site_id: scope.site.id)
         end
       end
     end
 
     private
 
-    def _query(mapper, locale = nil, &block)
-      Locomotive::Steam::Adapters::Filesystem::Query.new(all(mapper), locale, &block)
+    def _query(mapper, scope, &block)
+      Locomotive::Steam::Adapters::Filesystem::Query.new(all(mapper, scope), scope.locale, &block)
     end
 
-    def memoized_dataset(mapper)
+    def memoized_dataset(mapper, scope)
       return @datasets[mapper.name] if @datasets[mapper.name]
-      dataset(mapper)
+      dataset(mapper, scope)
     end
 
-    def dataset(mapper)
+    def dataset(mapper, scope)
       Locomotive::Steam::Adapters::Filesystem::Dataset.new(mapper.name).tap do |dataset|
         @datasets[mapper.name] = dataset
 
-        collection(mapper).each do |attributes|
+        collection(mapper, scope).each do |attributes|
           entity = mapper.to_entity(attributes)
+
+          # assign the site_id to the entity + sanitize attributes
+          # specific to the Filesystem adapter
+          entity[:site_id] = scope.site.id if scope.site
+
           dataset.insert(entity)
         end
       end
     end
 
-    def collection(mapper)
-      yaml_loader(mapper.name).load
+    def collection(mapper, scope)
+      yaml_loaders[mapper.name].load(scope)
     end
 
-    def yaml_loader(name)
-      _name = name.to_s.singularize.camelize
-      klass = "Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::#{_name}".constantize
-      klass.new(@site_path, cache)
+    def build_yaml_loaders(cache)
+      %i(site page).inject({}) do |memo, name|
+        _name = name.to_s.singularize.camelize
+        klass = "Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::#{_name}".constantize
+        memo[name] = klass.new(site_path, cache)
+      end
     end
 
   end

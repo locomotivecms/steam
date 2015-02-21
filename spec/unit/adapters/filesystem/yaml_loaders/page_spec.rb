@@ -1,21 +1,25 @@
-# require 'spec_helper'
+require 'spec_helper'
 
-# describe Locomotive::Steam::Repositories::Filesystem::YAMLLoaders::Page do
+require_relative '../../../../../lib/locomotive/steam/adapters/filesystem/yaml_loader.rb'
+require_relative '../../../../../lib/locomotive/steam/adapters/filesystem/yaml_loaders/page.rb'
 
-#   let(:root_path)       { default_fixture_site_path }
-#   let(:default_locale)  { :en }
-#   let(:cache)           { NoCacheStore.new }
-#   let(:loader)          { Locomotive::Steam::Repositories::Filesystem::YAMLLoaders::Page.new(root_path, default_locale, cache) }
+describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Page do
 
-#   describe '#list_of_attributes' do
+  let(:site_path) { default_fixture_site_path }
+  let(:cache)     { NoCacheStore.new }
+  let(:loader)    { Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Page.new(site_path, cache) }
 
-#     subject { loader.list_of_attributes.sort { |a, b| a[:_fullpath] <=> b[:_fullpath] } }
+  describe '#load' do
 
-#     it 'tests various stuff' do
-#       expect(subject.size).to eq 21
-#       expect(subject.first[:title]).to eq({ en: 'Page not found' })
-#     end
+    let(:scope) { instance_double('Scope', locale: :en) }
 
-#   end
+    subject { loader.load(scope).sort { |a, b| a[:_fullpath] <=> b[:_fullpath] } }
 
-# end
+    it 'tests various stuff' do
+      expect(subject.size).to eq 21
+      expect(subject.first[:title]).to eq({ en: 'Page not found' })
+    end
+
+  end
+
+end

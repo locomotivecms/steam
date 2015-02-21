@@ -9,10 +9,12 @@ module Locomotive
         set_localized_attributes :title, :slug, :permalink, :editable_elements, :template, :template_path, :redirect_url, :fullpath, :seo_title, :meta_description, :meta_keywords
       end
 
-      # Engine: site.pages.ordered_pages(conditions)
+      # Engine: site.pages.ordered_pages(conditions) [WIP]
       def all(conditions = {})
-        default_order = 'depth_and_position asc'
-        query { where(conditions || {}).order_by(default_order) }.all
+        query do
+          where(conditions || {}).
+            order_by('depth.asc', 'position.asc')
+        end.all
       end
 
       # Engine: site.pages.where(handle: handle).first

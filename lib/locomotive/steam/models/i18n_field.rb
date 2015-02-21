@@ -19,6 +19,10 @@ module Locomotive::Steam
         @translations[locale]
       end
 
+      def values
+        @translations.values
+      end
+
     end
 
   end

@@ -4,11 +4,11 @@ module Locomotive
       module Filesystem
         module YAMLLoaders
 
-          class Site < Struct.new(:site_path, :cache)
+          class Site
 
             include Adapters::Filesystem::YAMLLoader
 
-            def load
+            def load(scope)
               fetch('config/site') do
                 [_load(File.join(site_path, 'config', 'site.yml'))]
               end

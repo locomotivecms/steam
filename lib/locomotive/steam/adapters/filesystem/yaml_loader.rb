@@ -4,6 +4,20 @@ module Locomotive::Steam
 
       module YAMLLoader
 
+        attr_reader :site_path, :cache
+
+        def initialize(site_path, cache)
+          @site_path, @cache = site_path, cache
+        end
+
+        def load(scope = nil)
+          @scope = scope
+        end
+
+        def default_locale
+          @scope.locale
+        end
+
         def fetch(key, &block)
           cache.nil? ? yield : cache.fetch(key, &block)
         end
