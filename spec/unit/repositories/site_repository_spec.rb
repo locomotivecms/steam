@@ -4,24 +4,34 @@ require_relative '../../../lib/locomotive/steam/adapters/filesystem.rb'
 
 describe Locomotive::Steam::SiteRepository do
 
-  let(:adapter)     { Locomotive::Steam::FilesystemAdapter.new(default_fixture_site_path) }
+  let(:adapter)     { Locomotive::Steam::FilesystemAdapter.new(nil) }
   let(:repository)  { Locomotive::Steam::SiteRepository.new(adapter) }
 
-  describe '#all' do
+  before { allow(adapter).to receive(:collection).and_return([{ name: 'Acme', handle: 'acme', domains: ['example.org'] }]) }
 
-    subject { repository.all }
+  describe '#by_handle_or_domain' do
 
-    it { expect(subject.size).to eq 1 }
+    let(:handle)  { nil }
+    let(:domains) { nil }
 
-  end
+    subject { repository.by_handle_or_domain(handle, domains) }
 
-  describe '#query' do
+    it { expect(subject).to eq nil }
 
-    subject do
-      repository.query { where(subdomain: 'sample') }.first
+    context 'handle' do
+
+      let(:handle) { 'acme' }
+      it { expect(subject.class).to eq Locomotive::Steam::Site }
+      it { expect(subject.name).to eq 'Acme' }
+
     end
 
-    it { expect(subject.name).to eq 'Sample website' }
+    context 'domain' do
+
+      let(:domains) { 'example.org' }
+      it { expect(subject.name).to eq 'Acme' }
+
+    end
 
   end
 

@@ -1,5 +1,5 @@
-module Locomotive
-  module Steam
+module Locomotive::Steam
+  module Models
 
     class Mapper
 
@@ -17,7 +17,14 @@ module Locomotive
       end
 
       def to_entity(attributes)
-        entity_klass.new(attributes)
+        entity_klass.new(serialize(attributes))
+      end
+
+      def serialize(attributes)
+        localized_attributes.each do |name|
+          attributes[name] = I18nField.new(name, attributes[name])
+        end
+        attributes
       end
 
       def entity_klass

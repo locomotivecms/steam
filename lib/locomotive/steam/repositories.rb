@@ -1,75 +1,82 @@
-module Locomotive
-  module Steam
-    module Repository
+raise 'NOT GOOD'
 
-      extend ActiveSupport::Concern
+# module Locomotive
+#   module Steam
+#     module Repository
 
-      class RecordNotFound < StandardError; end
+#       extend ActiveSupport::Concern
 
-      attr_reader :adapter
+#       class RecordNotFound < StandardError; end
 
-      attr_accessor :current_locale
+#       attr_accessor :adapter, :current_site, :current_locale
 
-      def initialize(adapter)
-        @adapter = adapter
-      end
+#       def initialize(adapter, current_site = nil, current_locale = nil)
+#         @adapter        = adapter
+#         @current_site   = current_site
+#         @current_locale = current_locale
+#       end
 
-      def all
-        adapter.all(mapper)
-      end
+#       def all
+#         adapter.all(mapper)
+#       end
 
-      # def find(id)
-      #   adapter.find(mapper, id)
-      # end
+#       # def find(id)
+#       #   adapter.find(mapper, id)
+#       # end
 
-      def query(&block)
-        adapter.query(mapper, current_locale, &block)
-      end
+#       def query(&block)
+#         adapter.query(mapper, current_locale, &block)
+#       end
 
-      # def create(entity)
-      #   entity.id = adapter.create(collection_name, entity)
-      # end
+#       # def create(entity)
+#       #   entity.id = adapter.create(collection_name, entity)
+#       # end
 
-      # def persisted?(entity)
-      #   !!entity.id && adapter.persisted?(collection_name, entity)
-      # end
+#       # def persisted?(entity)
+#       #   !!entity.id && adapter.persisted?(collection_name, entity)
+#       # end
 
-      # def update(entity)
-      #   adapter.update(collection_name, entity)
-      # end
+#       # def update(entity)
+#       #   adapter.update(collection_name, entity)
+#       # end
 
-      # def destroy(entity)
-      #   adapter.destroy(collection_name, entity)
-      # end
+#       # def destroy(entity)
+#       #   adapter.destroy(collection_name, entity)
+#       # end
 
-      def mapper
-        name, options, block = mapper_options
-        @mapper ||= Steam::Mapper.new(name, options, &block)
-      end
+#       def mapper
+#         name, options, block = mapper_options
+#         @mapper ||= Steam::Mapper.new(name, options, &block)
+#       end
 
-      # def collection_name
-      #   mapper.name
-      # end
+#       def scope
+#         Steam::
+#       end
 
-      module ClassMethods
+#       # def collection_name
+#       #   mapper.name
+#       # end
 
-        def mapping(name, options = {}, &block)
-          class_eval do
-            define_method(:mapper_options) { [name, options, block] }
-          end
-        end
+#       module ClassMethods
 
-      end
+#         def mapping(name, options = {}, &block)
+#           class_eval do
+#             define_method(:mapper_options) { [name, options, block] }
+#           end
+#         end
 
-    end
-  end
-end
+#       end
 
-module Locomotive
-  module Steam
-    module Repositories
-    end
-  end
-end
+#     end
+#   end
+# end
 
-require_relative 'repositories/site_repository'
+# module Locomotive
+#   module Steam
+#     module Repositories
+#     end
+#   end
+# end
+
+# require_relative 'repositories/site_repository'
+# require_relative 'repositories/page_repository'

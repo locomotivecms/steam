@@ -19,6 +19,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler',    '~> 1.7'
   spec.add_development_dependency 'rake',       '~> 10.4.2'
 
+  spec.add_development_dependency 'moped',      '~> 2.0.4'
+  spec.add_development_dependency 'origin',     '~> 1.0.4'
+
   spec.add_dependency 'activesupport',          '~> 4.2.0'
   spec.add_dependency 'stringex',               '~> 2.5.2'
   spec.add_dependency 'sanitize',               '~> 3.1.0'

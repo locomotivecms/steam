@@ -1,32 +1,39 @@
-module Locomotive
-  module Steam
-    module Entities
+module Locomotive::Steam
 
-      class Site
+  class Site
 
-        include Steam::Entity
+    include Locomotive::Steam::Models::Entity
 
-        def initialize(attributes = {})
-          super({
-            timezone: 'UTC',
-            prefix_default_locale: false
-          }.merge(attributes))
-        end
-
-        def default_locale
-          self.locales.try(:first) || :en
-        end
-
-        def locales
-          attributes[:locales].map(&:to_sym)
-        end
-
-        def to_liquid
-          Steam::Liquid::Drops::Site.new(self)
-        end
-
-      end
-
+    def initialize(attributes = {})
+      super({
+        prefix_default_locale: false
+      }.merge(attributes))
     end
+
+    def handle
+      self[:handle] || self[:subdomain]
+    end
+
+    def default_locale
+      locales.try(:first) || :en
+    end
+
+    def locales
+      self[:locales].map(&:to_sym)
+    end
+
+    def timezone_name
+      self[:timezone] || self[:timezone_name] || 'UTC'
+    end
+
+    def timezone
+      @timezone ||= ActiveSupport::TimeZone.new(timezone_name)
+    end
+
+    def to_liquid
+      Steam::Liquid::Drops::Site.new(self)
+    end
+
   end
+
 end

@@ -2,7 +2,7 @@ require 'forwardable'
 
 module Locomotive
   module Steam
-    module Entities
+    module Models
       module Concerns
 
         module Validation

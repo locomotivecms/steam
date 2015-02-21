@@ -1,4 +1,3 @@
-# require_relative_all 'yaml_loaders'
 require_relative 'filesystem/dataset'
 require_relative 'filesystem/condition'
 require_relative 'filesystem/query'
@@ -7,6 +6,7 @@ require_relative 'filesystem/simple_cache_store'
 
 require_relative 'filesystem/yaml_loader'
 require_relative 'filesystem/yaml_loaders/site'
+require_relative 'filesystem/yaml_loaders/page'
 
 module Locomotive::Steam
 
@@ -27,11 +27,19 @@ module Locomotive::Steam
       memoized_dataset(mapper)
     end
 
-    def query(mapper, locale, &block)
-      Locomotive::Steam::Adapters::Filesystem::Query.new(all(mapper), locale, &block)
+    def query(mapper, scope, &block)
+      _query(mapper, scope.locale, &block).tap do |default|
+        if scope.site
+          default + _query(mapper) { where(site_id: scope.site.id) }
+        end
+      end
     end
 
     private
+
+    def _query(mapper, locale = nil, &block)
+      Locomotive::Steam::Adapters::Filesystem::Query.new(all(mapper), locale, &block)
+    end
 
     def memoized_dataset(mapper)
       return @datasets[mapper.name] if @datasets[mapper.name]

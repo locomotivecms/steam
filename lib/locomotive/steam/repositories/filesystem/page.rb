@@ -47,6 +47,7 @@ module Locomotive
           def parent_of(page)
             return nil if page.nil? || page.index?
 
+            # TODO: parent_id property
             segments = localized_attribute(page, :fullpath).split('/')
             path = segments[0..-2].join('/')
             path = 'index' if path.blank?

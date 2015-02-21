@@ -14,9 +14,9 @@ SimpleCov.start do
   add_filter 'spec/'
 
   add_group "Middlewares",    "lib/locomotive/steam/middlewares"
-  add_group "Liquid Filters", "lib/locomotive/steam/liquid/filters"
-  add_group "Liquid Tags",    "lib/locomotive/steam/liquid/tags"
-  add_group "Liquid Drops",   "lib/locomotive/steam/liquid/drops"
+  add_group "Liquid",         "lib/locomotive/steam/liquid"
+  add_group "Adapters",       "lib/locomotive/steam/adapters"
+  add_group "Entities",       "lib/locomotive/steam/entities"
   add_group "Repositories",   "lib/locomotive/steam/repositories"
   add_group "Services",       "lib/locomotive/steam/services"
 end
@@ -27,7 +27,8 @@ require 'bundler/setup'
 require 'i18n-spec'
 
 require_relative '../lib/locomotive/steam'
-require_relative '../lib/locomotive/steam/repositories/filesystem'
+# TODO
+# require_relative '../lib/locomotive/steam/repositories/filesystem'
 require_relative 'support'
 
 Locomotive::Steam.configure do |config|
