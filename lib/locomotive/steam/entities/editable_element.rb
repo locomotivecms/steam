@@ -4,7 +4,7 @@ module Locomotive::Steam
 
     include Locomotive::Steam::Models::Entity
 
-    attr_accessor :_parent
+    attr_accessor :page
 
     # TODO
 

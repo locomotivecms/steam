@@ -4,15 +4,17 @@ module Locomotive::Steam
     module Repository
 
       extend ActiveSupport::Concern
+      extend Forwardable
 
       class RecordNotFound < StandardError; end
 
-      attr_accessor :adapter, :current_site, :current_locale
+      attr_accessor :adapter, :scope
 
-      def initialize(adapter, current_site = nil, current_locale = nil)
-        @adapter        = adapter
-        @current_site   = current_site
-        @current_locale = current_locale
+      def_delegators :@scope, :site, :site=, :locale, :locale=
+
+      def initialize(adapter, site = nil, locale = nil)
+        @adapter  = adapter
+        @scope    = Scope.new(site, locale)
       end
 
       def find(id)
@@ -21,6 +23,10 @@ module Locomotive::Steam
 
       def query(&block)
         adapter.query(mapper, scope, &block)
+      end
+
+      def first(&block)
+        adapter.query(mapper, scope, &block).first
       end
 
       alias :all :query
@@ -46,9 +52,22 @@ module Locomotive::Steam
         @mapper ||= Mapper.new(name, options, self, &block)
       end
 
-      def scope
-        @scope ||= Scope.new(current_site, current_locale)
-      end
+      # def scope
+      #   @scope ||= Scope.new(current_site, current_locale)
+      # end
+
+      # def scope=(scope)
+      #   @scope = scope
+      #   @current_locale = scope.locale
+      #   @current_site   = scope.site
+      # end
+
+      # def current_locale; scope.locale; end
+      # def current_locale=(locale); scope.locale = locale; end
+
+      # def current_site=(site); scope.site; end
+      #   @current_site = scope.site = site
+      # end
 
       # def collection_name
       #   mapper.name

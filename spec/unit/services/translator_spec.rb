@@ -1,65 +1,65 @@
-require 'spec_helper'
+# require 'spec_helper'
 
-describe Locomotive::Steam::Services::Translator do
+# describe Locomotive::Steam::Services::Translator do
 
-  let(:default_locale)  { 'en' }
-  let(:repository)      { Locomotive::Steam::Repositories::Filesystem::Translation.new(nil) }
-  let(:service)         { Locomotive::Steam::Services::Translator.new(repository, default_locale) }
+#   let(:default_locale)  { 'en' }
+#   let(:repository)      { Locomotive::Steam::Repositories::Filesystem::Translation.new(nil) }
+#   let(:service)         { Locomotive::Steam::Services::Translator.new(repository, default_locale) }
 
-  describe '#translate' do
+#   describe '#translate' do
 
-    let(:input)   { 'example_test' }
-    let(:locale)  { nil }
-    let(:scope)   { nil }
+#     let(:input)   { 'example_test' }
+#     let(:locale)  { nil }
+#     let(:scope)   { nil }
 
-    subject { service.translate(input, locale, scope) }
+#     subject { service.translate(input, locale, scope) }
 
-    describe 'existing translation' do
+#     describe 'existing translation' do
 
-      let(:translation) { instance_double('Translation', values: { 'en' => 'Example text', 'es' => 'Texto de ejemplo' }) }
+#       let(:translation) { instance_double('Translation', values: { 'en' => 'Example text', 'es' => 'Texto de ejemplo' }) }
 
-      before do
-        allow(repository).to receive(:find).with('example_test').and_return(translation)
-      end
+#       before do
+#         allow(repository).to receive(:find).with('example_test').and_return(translation)
+#       end
 
-      it { is_expected.to eq 'Example text' }
+#       it { is_expected.to eq 'Example text' }
 
-      context 'no translation found' do
+#       context 'no translation found' do
 
-        let(:translation) { nil }
-        it { is_expected.to eq 'example_test' }
+#         let(:translation) { nil }
+#         it { is_expected.to eq 'example_test' }
 
-      end
+#       end
 
-      context 'specifying a locale' do
+#       context 'specifying a locale' do
 
-        let(:locale) { 'es' }
-        it { is_expected.to eq 'Texto de ejemplo' }
+#         let(:locale) { 'es' }
+#         it { is_expected.to eq 'Texto de ejemplo' }
 
-      end
+#       end
 
-      context "specifying a locale that doesn't exist" do
+#       context "specifying a locale that doesn't exist" do
 
-        let(:locale) { 'nl' }
+#         let(:locale) { 'nl' }
 
-        it 'reverts to default locale' do
-          is_expected.to eq "example_test"
-        end
+#         it 'reverts to default locale' do
+#           is_expected.to eq "example_test"
+#         end
 
-      end
+#       end
 
-      context "specifying a scope" do
+#       context "specifying a scope" do
 
-        let(:input)   { 'fr' }
-        let(:locale)  { 'en' }
-        let(:scope)   { 'locomotive.locales' }
+#         let(:input)   { 'fr' }
+#         let(:locale)  { 'en' }
+#         let(:scope)   { 'locomotive.locales' }
 
-        it { is_expected.to eq 'French' }
+#         it { is_expected.to eq 'French' }
 
-      end
+#       end
 
-    end
+#     end
 
-  end
+#   end
 
-end
+# end

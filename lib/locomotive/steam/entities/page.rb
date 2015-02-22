@@ -4,7 +4,7 @@ module Locomotive::Steam
 
     include Locomotive::Steam::Models::Entity
 
-    attr_accessor :depth, :_fullpath, :content_entry
+    attr_accessor :parent_id, :parent_ids, :depth, :_fullpath, :content_entry
 
     def initialize(attributes)
       super({

@@ -16,9 +16,9 @@ module Locomotive::Steam
 
           def setup(scope)
             super.tap do
-              @ids = {}
-              @content_types  = {}
-              @localized      = Hash.new { {} }
+              @ids, @parent_ids = {}, {}
+              @content_types    = {}
+              @localized        = Hash.new { {} }
             end
           end
 
@@ -26,7 +26,7 @@ module Locomotive::Steam
             entity[:site_id] = scope.site.id if scope.site
 
             # required to get the parent_id
-            @ids[entity._fullpath] = entity._id
+            @ids[entity[:_fullpath]] = entity._id
 
             locales.each do |locale|
               set_default_redirect_type(entity, locale)
@@ -34,10 +34,12 @@ module Locomotive::Steam
           end
 
           def apply_to_dataset(dataset)
-            sorted_collection(dataset.records).each do |page|
+            sorted_collection(dataset.records.values).each do |page|
               locales.each do |locale|
-                set_parent_id(page)
+                # the following method needs to be called first
                 set_fullpath_for(page, locale)
+
+                set_parent_id(page)
                 modify_if_templatized(page, locale)
                 use_default_locale_template_path(page, locale)
               end
@@ -46,7 +48,12 @@ module Locomotive::Steam
 
           # when this is called, the @ids hash has been populated completely
           def set_parent_id(page)
-            page.parent_id = @ids[parent_fullpath(page)]
+            parent_key = parent_fullpath(page)
+
+            page.parent_ids = @parent_ids[parent_key] || []
+            page.parent_id  = @ids[parent_key]
+
+            @parent_ids[page._fullpath] = page.parent_ids + [page._id]
           end
 
           # If the page does not have a template in a locale
@@ -106,21 +113,15 @@ module Locomotive::Steam
 
             page.depth = page[:_fullpath].split('/').size
 
-            slug = get_slug(page)
-
-            if page.depth == 1 && %w(index 404).include?(slug)
+            if page.depth == 1 && system_pages?(page)
               page.depth = 0
             end
 
             page.depth
           end
 
-          def get_slug(page)
-            if page.slug.is_a?(Hash)
-              page.slug.values.compact.first
-            else
-              page.slug
-            end
+          def system_pages?(page)
+            %w(index 404).include?(page.slug.values.compact.first)
           end
 
           def sorted_collection(collection)
@@ -128,7 +129,9 @@ module Locomotive::Steam
           end
 
           def parent_fullpath(page)
-            page._fullpath.split('/')[0..-2].join('/')
+            return nil if page._fullpath == 'index'
+            path = page._fullpath.split('/')[0..-2].join('/')
+            path.blank? ? 'index' : path
           end
 
           def fetch_content_type(fullpath)

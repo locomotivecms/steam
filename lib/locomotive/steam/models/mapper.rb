@@ -59,13 +59,13 @@ module Locomotive::Steam
       # build the embedded associations
       def serialize_associations(attributes)
         @associations.each do |name, repository_klass|
-          attributes[name] = Association.new(repository_klass, attributes[name])
+          attributes[name] = Association.new(repository_klass, attributes[name], @repository.scope)
         end
       end
 
       def attach_entity_to_associations(entity)
         @associations.each do |(name, _)|
-          key = name.to_s.singularize.to_sym
+          key = self.name.to_s.singularize.to_sym
           entity[name].attach(key, entity)
         end
       end

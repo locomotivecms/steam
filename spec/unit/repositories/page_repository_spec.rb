@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 require_relative '../../../lib/locomotive/steam/adapters/filesystem.rb'
+require_relative '../../../lib/locomotive/steam/repositories/editable_element_repository.rb'
 
 describe Locomotive::Steam::PageRepository do
 
@@ -60,7 +61,7 @@ describe Locomotive::Steam::PageRepository do
     context 'existing page' do
 
       let(:path) { 'index' }
-      it { expect(subject.title).to eq({ en: 'Home' }) }
+      it { expect(subject.title[:en]).to eq 'Home' }
 
     end
 
@@ -76,7 +77,7 @@ describe Locomotive::Steam::PageRepository do
     context 'existing page' do
 
       let(:handle) { 'home' }
-      it { expect(subject.title).to eq({ en: 'Home' }) }
+      it { expect(subject.title[:en]).to eq 'Home' }
 
     end
 
@@ -92,7 +93,7 @@ describe Locomotive::Steam::PageRepository do
     context 'existing page' do
 
       let(:paths) { ['index', '404']  }
-      it { expect(subject.first.title).to eq({ en: 'Home' }) }
+      it { expect(subject.first.title[:en]).to eq 'Home' }
 
     end
 
@@ -104,7 +105,7 @@ describe Locomotive::Steam::PageRepository do
         [{ title: { en: 'Templatized article' }, slug: { en: 'template' }, content_type: 'articles', _fullpath: 'articles/template', template_path: { en: 'articles/template.liquid' } }]
       end
 
-      it { expect(subject.first.title).to eq({ en: 'Templatized article' }) }
+      it { expect(subject.first.title[:en]).to eq('Templatized article') }
 
     end
 
@@ -129,13 +130,13 @@ describe Locomotive::Steam::PageRepository do
     context 'both existing entry and page' do
 
       let(:entry) { instance_double('Article', content_type_slug: 'articles', _slug: { en: 'hello-world' }) }
-      it { expect(subject.title).to eq({ en: 'Article template' }) }
+      it { expect(subject.title[:en]).to eq 'Article template' }
       it { expect(subject.content_entry).to eq entry }
 
       context 'with a handle' do
 
         let(:handle) { 'archive' }
-        it { expect(subject.title).to eq({ en: 'Archived article template' }) }
+        it { expect(subject.title[:en]).to eq 'Archived article template' }
         it { expect(subject.content_entry).to eq entry }
 
       end
@@ -154,7 +155,7 @@ describe Locomotive::Steam::PageRepository do
   describe '#root' do
 
     subject { repository.root }
-    it { expect(subject.title).to eq({ en: 'Home' }) }
+    it { expect(subject.title[:en]).to eq 'Home' }
 
   end
 
@@ -174,8 +175,8 @@ describe Locomotive::Steam::PageRepository do
 
     context 'page not nil' do
 
-      let(:page) { instance_double('Page', index?: false, fullpath: { en: 'about-us' }) }
-      it { expect(subject.title).to eq({ en: 'Home' }) }
+      let(:page) { instance_double('Page', parent_id: 1, index?: false, fullpath: { en: 'about-us' }) }
+      it { expect(subject.title[:en]).to eq 'Home' }
 
     end
 
@@ -187,9 +188,9 @@ describe Locomotive::Steam::PageRepository do
           { title: { en: 'Home' }, slug: { en: 'index' }, _fullpath: 'index', template_path: { en: 'index.liquid' } }
         ]
       end
-      let(:page) { instance_double('Page', index?: false, fullpath: { en: 'somewhere/hello-world' }) }
+      let(:page) { instance_double('Page', parent_id: 1, index?: false, fullpath: { en: 'somewhere/hello-world' }) }
 
-      it { expect(subject.title).to eq({ en: 'Somewhere' }) }
+      it { expect(subject.title[:en]).to eq 'Somewhere' }
 
     end
 
@@ -204,8 +205,9 @@ describe Locomotive::Steam::PageRepository do
 
     context 'index' do
 
-      let(:page) { instance_double('Page', fullpath: 'index') }
-      it { expect(subject.map(&:title)).to eq([{ en: 'Home' }]) }
+      let(:page) { instance_double('Page', _id: 1, parent_ids: [], fullpath: 'index') }
+      it { expect(subject.size).to eq 1 }
+      it { expect(subject.first.title[:en]).to eq 'Home' }
 
     end
 
@@ -218,9 +220,9 @@ describe Locomotive::Steam::PageRepository do
           { title: { en: 'Home' }, slug: { en: 'index' }, _fullpath: 'index', template_path: { en: 'index.liquid' } }
         ]
       end
-      let(:page) { instance_double('Page', title: { en: 'Foo' }, index?: false, fullpath: { en: 'bar/foo' }) }
+      let(:page) { instance_double('Page', _id: 1, parent_ids: [3, 2], title: { en: 'Foo' }, index?: false, fullpath: { en: 'bar/foo' }) }
 
-      it { expect(subject.map { |p| p.title.values.first }).to eq ['Home', 'Bar', 'Foo'] }
+      it { expect(subject.map { |p| p.title[:en] }).to eq ['Home', 'Bar', 'Foo'] }
 
     end
 
@@ -242,56 +244,75 @@ describe Locomotive::Steam::PageRepository do
           { title: { en: 'Home' }, slug: { en: 'index' }, _fullpath: 'index', template_path: { en: 'index.liquid' } }
         ]
       end
-      let(:page) { instance_double('Page', title: { en: 'Home' }, depth: 0, index?: true, fullpath: { en: 'index' }) }
+      let(:page) { instance_double('Page', _id: 3, title: { en: 'Home' }, depth: 0, index?: true, fullpath: { en: 'index' }) }
 
-      it { expect(subject.map { |p| p.title.values.first }).to eq ['Bar'] }
+      it { expect(subject.map { |p| p.title[:en] }).to eq ['Bar'] }
 
       context 'from a nested page' do
 
-        let(:page) { instance_double('Page', title: { en: 'Bar' }, index?: false, depth: 1, fullpath: { en: 'bar' }) }
-        it { expect(subject.map { |p| p.title.values.first }).to eq ['Foo'] }
+        let(:page) { instance_double('Page', _id: 2, title: { en: 'Bar' }, index?: false, depth: 1, fullpath: { en: 'bar' }) }
+        it { expect(subject.map { |p| p.title[:en] }).to eq ['Foo'] }
 
       end
 
     end
 
-    describe '#editable_elements_of' do
+  end
 
-      let(:page) { nil }
-      subject { repository.editable_elements_of(page) }
+  describe '#editable_elements_of' do
 
-      it { is_expected.to eq nil }
+    let(:page) { nil }
+    subject { repository.editable_elements_of(page) }
 
-      context 'page with editable elements' do
+    it { is_expected.to eq nil }
 
-        let(:elements) { { 'title' => instance_double('Element', content: 'Stuff here') } }
-        let(:page) { instance_double('Page', editable_elements: { en: elements }) }
+    context 'page with editable elements' do
 
-        it { expect(subject.map(&:content)).to eq ['Stuff here'] }
+      let(:elements) { [{ block: nil, slug: 'title', content: { en: 'Stuff here' } }] }
+      let(:pages) do
+        [
+          { title: { en: 'Home' }, slug: { en: 'index' }, _fullpath: 'index', editable_elements: elements, template_path: { en: 'index.liquid' } }
+        ]
+      end
+      let(:page) { repository.all.first }
+
+      it { expect(subject.all.size).to eq 1 }
+      it { expect(subject.first.content[:en]).to eq 'Stuff here' }
+
+      context 'changing the locale' do
+
+        before { subject; repository.locale = :fr }
+
+        it { expect(subject.locale).to eq :fr }
 
       end
 
     end
 
-    describe '#editable_element_for' do
+  end
 
-      let(:page)  { nil }
+  describe '#editable_element_for' do
+
+    let(:page)  { nil }
+    let(:block) { nil }
+    let(:slug)  { nil }
+    subject { repository.editable_element_for(page, block, slug) }
+
+    it { is_expected.to eq nil }
+
+    context 'page with editable elements' do
+
+      let(:elements) { [{ block: nil, slug: 'title', content: { en: 'Stuff here', fr: 'Truc ici' } }] }
+      let(:pages) do
+        [
+          { title: { en: 'Home' }, slug: { en: 'index' }, _fullpath: 'index', editable_elements: elements, template_path: { en: 'index.liquid' } }
+        ]
+      end
+      let(:page)  { repository.all.first }
       let(:block) { nil }
-      let(:slug)  { nil }
-      subject { repository.editable_element_for(page, block, slug) }
+      let(:slug)  { 'title' }
 
-      it { is_expected.to eq nil }
-
-      context 'page with editable elements' do
-
-        let(:elements)  { { 'title' => instance_double('Element', content: 'Stuff here') } }
-        let(:page)      { instance_double('Page', editable_elements: { en: elements }) }
-        let(:block)     { nil }
-        let(:slug)      { 'title' }
-
-        it { expect(subject.content).to eq 'Stuff here' }
-
-      end
+      it { expect(subject.content[:en]).to eq 'Stuff here' }
 
     end
 

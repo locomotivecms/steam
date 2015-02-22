@@ -33,6 +33,7 @@ describe Locomotive::Steam::Models::Mapper do
 
     describe 'association' do
 
+      let(:repository)  { instance_double('Repository', scope: 42) }
       let(:attributes) { { parents: [instance_double('Page', title: 'Hello world')] } }
       let(:klass) { instance_double('RepositoryKlass')}
       let(:block) { ->(_) { association(:parents, BlankRepository) } }
@@ -68,7 +69,7 @@ describe Locomotive::Steam::Models::Mapper do
   end
 
   class BlankRepository < Struct.new(:adapter)
-    attr_accessor :parent
+    attr_accessor :page, :scope
   end
 
 end
