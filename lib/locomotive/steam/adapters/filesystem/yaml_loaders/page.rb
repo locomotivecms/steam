@@ -41,9 +41,9 @@ module Locomotive
               {
                 title:              { locale => attributes.delete(:title) || (default_locale == locale ? slug.humanize : nil) },
                 slug:               { locale => attributes.delete(:slug) || slug },
-                editable_elements:  { locale => attributes.delete(:editable_elements) },
                 template_path:      { locale => template_path(filepath, attributes, locale) },
                 redirect_url:       { locale => attributes.delete(:redirect_url) },
+                editable_elements:  build_editable_elements(attributes.delete(:editable_elements), locale),
                 _fullpath:          fullpath
               }.merge(attributes)
             end
@@ -54,9 +54,10 @@ module Locomotive
 
               leaf[:title][locale]              = attributes.delete(:title) || slug.humanize
               leaf[:slug][locale]               = attributes.delete(:slug) || slug
-              leaf[:editable_elements][locale]  = attributes.delete(:editable_elements)
               leaf[:template_path][locale]      = template_path(filepath, attributes, locale)
               leaf[:redirect_url][locale]       = attributes.delete(:redirect_url)
+
+              update_editable_elements(leaf, attributes.delete(:editable_elements), locale)
 
               leaf.merge!(attributes)
             end
@@ -98,6 +99,40 @@ module Locomotive
 
             def get_relative_path(filepath)
               filepath.gsub(path, '').gsub(/^\//, '')
+            end
+
+            def build_editable_elements(list, locale)
+              return [] if list.blank?
+
+              list.map do |name, content|
+                build_editable_element(name, content, locale)
+              end
+            end
+
+            def update_editable_elements(leaf, list, locale)
+              return if list.blank?
+
+              list.each do |name, content|
+                if el = find_editable_element(leaf, name)
+                  el[:content][locale] = content
+                else
+                  leaf[:editable_elements] << build_editable_element(name, content, locale)
+                end
+              end
+            end
+
+            def find_editable_element(leaf, name)
+              leaf[:editable_elements].find do |el|
+                [el[:block], el[:slug]].join('/') == name
+              end
+            end
+
+            def build_editable_element(name, content, locale)
+              segments    = name.to_s.split('/')
+              block, slug = segments[0..-2].join('/'), segments.last
+              block       = nil if block.blank?
+
+              { block: block, slug: slug, content: { locale => content } }
             end
 
           end

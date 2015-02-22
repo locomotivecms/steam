@@ -1,13 +1,14 @@
-require_relative 'filesystem/dataset'
-require_relative 'filesystem/order'
-require_relative 'filesystem/condition'
-require_relative 'filesystem/query'
+require_relative 'memory'
 
 require_relative 'filesystem/simple_cache_store'
 
 require_relative 'filesystem/yaml_loader'
 require_relative 'filesystem/yaml_loaders/site'
 require_relative 'filesystem/yaml_loaders/page'
+
+require_relative 'filesystem/sanitizer'
+require_relative 'filesystem/sanitizers/simple'
+require_relative 'filesystem/sanitizers/page'
 
 module Locomotive::Steam
 
@@ -21,6 +22,10 @@ module Locomotive::Steam
 
     register :yaml_loaders do
       build_yaml_loaders(cache)
+    end
+
+    register :sanitizers do
+      build_sanitizers
     end
 
     def initialize(site_path)
@@ -43,7 +48,7 @@ module Locomotive::Steam
     private
 
     def _query(mapper, scope, &block)
-      Locomotive::Steam::Adapters::Filesystem::Query.new(all(mapper, scope), scope.locale, &block)
+      Locomotive::Steam::Adapters::Memory::Query.new(all(mapper, scope), scope.locale, &block)
     end
 
     def memoized_dataset(mapper, scope)
@@ -52,18 +57,22 @@ module Locomotive::Steam
     end
 
     def dataset(mapper, scope)
-      Locomotive::Steam::Adapters::Filesystem::Dataset.new(mapper.name).tap do |dataset|
+      Locomotive::Steam::Adapters::Memory::Dataset.new(mapper.name).tap do |dataset|
         @datasets[mapper.name] = dataset
+        populate_dataset(dataset, mapper, scope)
+      end
+    end
 
+    def populate_dataset(dataset, mapper, scope)
+      sanitizers[mapper.name].with(scope) do |sanitizer|
         collection(mapper, scope).each do |attributes|
           entity = mapper.to_entity(attributes)
-
-          # assign the site_id to the entity + sanitize attributes
-          # specific to the Filesystem adapter
-          entity[:site_id] = scope.site.id if scope.site
-
           dataset.insert(entity)
+
+          sanitizer.apply_to(entity)
         end
+
+        sanitizer.apply_to(dataset)
       end
     end
 
@@ -73,10 +82,22 @@ module Locomotive::Steam
 
     def build_yaml_loaders(cache)
       %i(site page).inject({}) do |memo, name|
-        _name = name.to_s.singularize.camelize
-        klass = "Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::#{_name}".constantize
-        memo[name] = klass.new(site_path, cache)
+        memo[name] = build_klass('YAMLLoaders', name).new(site_path, cache)
+        memo
       end
+    end
+
+    def build_sanitizers
+      hash = Hash.new { build_klass('Sanitizers', :simple).new }
+      %i(pages).inject(hash) do |memo, name|
+        memo[name] = build_klass('Sanitizers', name).new
+        memo
+      end
+    end
+
+    def build_klass(type, name)
+      _name = name.to_s.singularize.camelize
+      "Locomotive::Steam::Adapters::Filesystem::#{type}::#{_name}".constantize
     end
 
   end

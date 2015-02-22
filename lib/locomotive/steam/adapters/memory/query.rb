@@ -2,7 +2,7 @@ require 'forwardable'
 
 module Locomotive::Steam
   module Adapters
-    module Filesystem
+    module Memory
 
       class Query
 
@@ -63,7 +63,7 @@ module Locomotive::Steam
         end
 
         def sorted(entries)
-          return entries if @sorting.empty?
+          return entries if @sorting.blank?
 
           entries.sort_by { |entry| @sorting.apply_to(entry, @locale) }
         end

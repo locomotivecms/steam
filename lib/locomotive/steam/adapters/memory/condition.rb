@@ -1,6 +1,6 @@
 module Locomotive::Steam
   module Adapters
-    module Filesystem
+    module Memory
 
       class Condition
 

@@ -1,17 +1,18 @@
 require 'spec_helper'
 
-require_relative '../../../../lib/locomotive/steam/adapters/filesystem/condition.rb'
+require_relative '../../../../lib/locomotive/steam/adapters/memory/condition.rb'
 
-describe Locomotive::Steam::Adapters::Filesystem::Condition do
+describe Locomotive::Steam::Adapters::Memory::Condition do
 
-  let(:entry)    { instance_double('Site', { title: { en: 'Awesome Site' }, content: 'foo' }) }
-  let(:locale)   { :en }
-  let(:field)    { :title }
-  let(:operator) { :eq }
-  let(:name)     { "#{field}.#{operator}"}
-  let(:value)    { 'Awesome Site' }
+  let(:title)     { instance_double('Title', translations: { en: 'Awesome Site' }, :[] => 'Awesome Site') }
+  let(:entry)     { instance_double('Site', { title: title, content: 'foo' }) }
+  let(:locale)    { :en }
+  let(:field)     { :title }
+  let(:operator)  { :eq }
+  let(:name)      { "#{field}.#{operator}"}
+  let(:value)     { 'Awesome Site' }
 
-  subject { Locomotive::Steam::Adapters::Filesystem::Condition.new(name, value, locale) }
+  subject { Locomotive::Steam::Adapters::Memory::Condition.new(name, value, locale) }
 
   describe '#entry_value' do
     context 'i18n' do
@@ -19,7 +20,7 @@ describe Locomotive::Steam::Adapters::Filesystem::Condition do
       let(:value) { 'Awesome Site' }
 
       context 'single entry' do
-        specify('should be match') do
+        specify('match') do
           expect(subject.matches?(entry)).to eq true
         end
 
@@ -65,7 +66,7 @@ describe Locomotive::Steam::Adapters::Filesystem::Condition do
       specify('should be throw Exception') do
         expect do
           subject.send(:decode_operator_and_field!)
-        end.to raise_error Locomotive::Steam::Adapters::Filesystem::Condition::UnsupportedOperator
+        end.to raise_error Locomotive::Steam::Adapters::Memory::Condition::UnsupportedOperator
       end
     end
   end

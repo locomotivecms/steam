@@ -6,7 +6,7 @@ module Locomotive
       include Models::Repository
 
       mapping :sites, entity: Site do
-        set_localized_attributes :seo_title, :meta_description, :meta_keywords
+        localized_attributes :seo_title, :meta_description, :meta_keywords
       end
 
       def by_handle_or_domain(handle, domain)

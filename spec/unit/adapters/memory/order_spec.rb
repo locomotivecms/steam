@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-require_relative '../../../../lib/locomotive/steam/adapters/filesystem/order.rb'
+require_relative '../../../../lib/locomotive/steam/adapters/memory/order.rb'
 
-describe Locomotive::Steam::Adapters::Filesystem::Order do
+describe Locomotive::Steam::Adapters::Memory::Order do
 
-  let(:order) { Locomotive::Steam::Adapters::Filesystem::Order.new(*input) }
+  let(:order) { Locomotive::Steam::Adapters::Memory::Order.new(*input) }
 
   describe '#list' do
 
@@ -42,7 +42,7 @@ describe Locomotive::Steam::Adapters::Filesystem::Order do
 
     let(:input) { 'title, date desc' }
     let(:entry) { instance_double('Entry', title: 'foo', date: Time.now) }
-    it { expect(subject.map(&:class)).to eq([Locomotive::Steam::Adapters::Filesystem::Order::Asc, Locomotive::Steam::Adapters::Filesystem::Order::Desc]) }
+    it { expect(subject.map(&:class)).to eq([Locomotive::Steam::Adapters::Memory::Order::Asc, Locomotive::Steam::Adapters::Memory::Order::Desc]) }
 
   end
 

@@ -1,145 +1,155 @@
-# module Locomotive
-#   module Steam
-#     module Repositories
-#       module Filesystem
-#         module Sanitizers
+module Locomotive::Steam
+  module Adapters
+    module Filesystem
+      module Sanitizers
 
-#           class Page < Struct.new(:default_locale, :locales)
+        class Page # < Struct.new(:default_locale, :locales)
 
-#             def initialize(default_locale, locales)
-#               super
-#               @content_types  = {}
-#               @localized      = {}
-#               locales.each { |locale| @localized[locale] = {} }
-#             end
+          include Adapters::Filesystem::Sanitizer
 
-#             def apply_to(collection)
-#               sorted_collection(collection).each do |page|
-#                 locales.each do |locale|
-#                   set_fullpath_for(page, locale)
-#                   modify_if_templatized(page, locale)
-#                   build_editable_elements(page, locale)
-#                   use_default_locale_template_path(page, locale)
-#                   set_default_redirect_type(page, locale)
-#                 end
-#               end
-#             end
+          # def initialize(default_locale, locales)
+          #   super
+          #   @content_types  = {}
+          #   @localized      = {}
+          #   locales.each { |locale| @localized[locale] = {} }
+          # end
 
-#             # If the page does not have a template in a locale
-#             # then use the template of the default locale
-#             #
-#             def use_default_locale_template_path(page, locale)
-#               paths = page.template_path
+          def setup(scope)
+            super.tap do
+              @ids = {}
+              @content_types  = {}
+              @localized      = Hash.new { {} }
+            end
+          end
 
-#               if paths[locale] == false
-#                 paths[locale] = paths[default_locale]
-#               end
-#             end
+          def apply_to_entity(entity)
+            entity[:site_id] = scope.site.id if scope.site
 
-#             def set_default_redirect_type(page, locale)
-#               if page.redirect_url[locale]
-#                 page.attributes[:redirect_type] ||= 301
-#               end
-#             end
+            # required to get the parent_id
+            @ids[entity._fullpath] = entity._id
 
-#             def build_editable_elements(page, locale)
-#               elements = page.editable_elements[locale] || {}
-#               elements.stringify_keys!
+            locales.each do |locale|
+              set_default_redirect_type(entity, locale)
+            end
+          end
 
-#               elements.each do |name, content|
-#                 segments    = name.split('/')
-#                 block, slug = segments[0..-2].join('/'), segments.last
-#                 block       = nil if block.blank?
+          def apply_to_dataset(dataset)
+            sorted_collection(dataset.records).each do |page|
+              locales.each do |locale|
+                set_parent_id(page)
+                set_fullpath_for(page, locale)
+                modify_if_templatized(page, locale)
+                use_default_locale_template_path(page, locale)
+              end
+            end
+          end
 
-#                 elements[name] = Filesystem::Models::EditableElement.new(block, slug, content)
-#               end
-#             end
+          # when this is called, the @ids hash has been populated completely
+          def set_parent_id(page)
+            page.parent_id = @ids[parent_fullpath(page)]
+          end
 
-#             def modify_if_templatized(page, locale)
-#               if page.templatized?
-#                 # change the slug of a templatized page
-#                 page[:slug][locale] = 'content-type-template'
+          # If the page does not have a template in a locale
+          # then use the template of the default locale
+          #
+          def use_default_locale_template_path(page, locale)
+            paths = page.template_path
 
-#                 # this also means to change the fullpath
-#                 if page[:fullpath][locale]
-#                   page[:fullpath][locale].gsub!(/[^\/]+$/, 'content-type-template')
-#                 end
+            if paths[locale] == false
+              paths[locale] = paths[default_locale]
+            end
+          end
 
-#                 # make sure its children will have its content type
-#                 set_content_type(page._fullpath, page.content_type)
-#               elsif content_type = fetch_content_type(parent_fullpath(page))
-#                 # not a templatized page but it becomes one because
-#                 # its parent is one of them
-#                 page[:content_type] = content_type
-#               end
-#             end
+          def set_default_redirect_type(page, locale)
+            if page.redirect_url[locale]
+              page.attributes[:redirect_type] ||= 301
+            end
+          end
 
-#             def set_fullpath_for(page, locale)
-#               page._fullpath ||= page.attributes.delete(:_fullpath)
+          def modify_if_templatized(page, locale)
+            if page.templatized?
+              # change the slug of a templatized page
+              page[:slug][locale] = 'content-type-template'
 
-#               slug = fullpath = page.slug[locale].try(:dasherize)
+              # this also means to change the fullpath
+              if page[:fullpath][locale]
+                page[:fullpath][locale].gsub!(/[^\/]+$/, 'content-type-template')
+              end
 
-#               return if slug.blank?
+              # make sure its children will have its content type
+              set_content_type(page._fullpath, page.content_type)
+            elsif content_type = fetch_content_type(parent_fullpath(page))
+              # not a templatized page but it becomes one because
+              # its parent is one of them
+              page[:content_type] = content_type
+            end
+          end
 
-#               if page.depth > 1
-#                 base = parent_fullpath(page)
-#                 fullpath = (fetch_localized_fullpath(base, locale) || base) + '/' + slug
-#               end
+          def set_fullpath_for(page, locale)
+            page._fullpath ||= page.attributes.delete(:_fullpath)
 
-#               set_localized_fullpath(page._fullpath, fullpath, locale)
-#               page[:fullpath][locale] = fullpath
-#             end
+            slug = fullpath = page.slug[locale].try(:dasherize)
 
-#             def depth(page)
-#               return page.depth if page.depth
+            return if slug.blank?
 
-#               page.depth = page[:_fullpath].split('/').size
+            if page.depth > 1
+              base = parent_fullpath(page)
+              fullpath = (fetch_localized_fullpath(base, locale) || base) + '/' + slug
+            end
 
-#               slug = get_slug(page)
+            set_localized_fullpath(page._fullpath, fullpath, locale)
+            page[:fullpath][locale] = fullpath
+          end
 
-#               if page.depth == 1 && %w(index 404).include?(slug)
-#                 page.depth = 0
-#               end
+          def depth(page)
+            return page.depth if page.depth
 
-#               page.depth
-#             end
+            page.depth = page[:_fullpath].split('/').size
 
-#             def get_slug(page)
-#               if page.slug.is_a?(Hash)
-#                 page.slug.values.compact.first
-#               else
-#                 page.slug
-#               end
-#             end
+            slug = get_slug(page)
 
-#             def sorted_collection(collection)
-#               collection.sort_by { |page| depth(page) }
-#             end
+            if page.depth == 1 && %w(index 404).include?(slug)
+              page.depth = 0
+            end
 
-#             def parent_fullpath(page)
-#               page._fullpath.split('/')[0..-2].join('/')
-#             end
+            page.depth
+          end
 
-#             def fetch_content_type(fullpath)
-#               @content_types[fullpath]
-#             end
+          def get_slug(page)
+            if page.slug.is_a?(Hash)
+              page.slug.values.compact.first
+            else
+              page.slug
+            end
+          end
 
-#             def set_content_type(fullpath, value)
-#               @content_types[fullpath] = value
-#             end
+          def sorted_collection(collection)
+            collection.sort_by { |page| depth(page) }
+          end
 
-#             def fetch_localized_fullpath(fullpath, locale)
-#               @localized[locale][fullpath]
-#             end
+          def parent_fullpath(page)
+            page._fullpath.split('/')[0..-2].join('/')
+          end
 
-#             def set_localized_fullpath(fullpath, value, locale)
-#               @localized[locale][fullpath] = value
-#             end
+          def fetch_content_type(fullpath)
+            @content_types[fullpath]
+          end
 
-#           end
+          def set_content_type(fullpath, value)
+            @content_types[fullpath] = value
+          end
 
-#         end
-#       end
-#     end
-#   end
-# end
+          def fetch_localized_fullpath(fullpath, locale)
+            @localized[locale][fullpath]
+          end
+
+          def set_localized_fullpath(fullpath, value, locale)
+            @localized[locale][fullpath] = value
+          end
+
+        end
+
+      end
+    end
+  end
+end

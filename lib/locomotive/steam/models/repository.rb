@@ -43,7 +43,7 @@ module Locomotive::Steam
 
       def mapper
         name, options, block = mapper_options
-        @mapper ||= Mapper.new(name, options, &block)
+        @mapper ||= Mapper.new(name, options, self, &block)
       end
 
       def scope

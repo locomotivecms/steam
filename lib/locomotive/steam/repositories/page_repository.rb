@@ -5,8 +5,12 @@ module Locomotive
 
       include Models::Repository
 
+      # Entity mapping
       mapping :pages, entity: Page do
-        set_localized_attributes :title, :slug, :permalink, :editable_elements, :template, :template_path, :redirect_url, :fullpath, :seo_title, :meta_description, :meta_keywords
+        localized_attributes :title, :slug, :permalink, :editable_elements, :template, :template_path, :redirect_url, :fullpath, :seo_title, :meta_description, :meta_keywords
+
+        # embedded association
+        association :editable_elements, EditableElementRepository
       end
 
       # Engine: site.pages.ordered_pages(conditions) [WIP]
@@ -17,20 +21,22 @@ module Locomotive
         end.all
       end
 
-      # Engine: site.pages.where(handle: handle).first
+      # Engine: site.pages.where(handle: handle).first [TODO]
       def by_handle(handle)
         query { where(handle: handle) }.first
       end
 
+      # [TODO]
       def by_fullpath(path)
         query { where(fullpath: path) }.first
       end
 
+      # [TODO]
       def matching_fullpath(list)
         all('fullpath.in' => list)
       end
 
-      # Engine: ???
+      # Engine: ??? [TODO]
       def template_for(entry, handle = nil)
         conditions = { templatized?: true, content_type: entry.try(:content_type_slug) }
 
@@ -41,11 +47,12 @@ module Locomotive
         end
       end
 
+      # [TODO]
       def root
         query { where(fullpath: 'index') }.first
       end
 
-      # Engine: page.parent
+      # Engine: page.parent [TODO]
       def parent_of(page)
         return nil if page.nil? || page.index?
 
@@ -57,7 +64,7 @@ module Locomotive
         by_fullpath(path)
       end
 
-      # Engine: page.ancestors_and_self
+      # Engine: page.ancestors_and_self [TODO]
       def ancestors_of(page)
         return [] if page.nil?
 
@@ -69,7 +76,7 @@ module Locomotive
         all('fullpath.in' => ['index'] + paths)
       end
 
-      # Engine: page.children
+      # Engine: page.children [TODO]
       def children_of(page)
         return [] if page.nil?
 
@@ -82,7 +89,7 @@ module Locomotive
         all(conditions)
       end
 
-      # Engine: page.editable_elements
+      # Engine: page.editable_elements [TODO]
       def editable_elements_of(page)
         return nil if page.nil?
         localized_attribute(page, :editable_elements).values

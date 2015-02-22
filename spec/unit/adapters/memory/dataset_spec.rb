@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-require_relative '../../../../lib/locomotive/steam/adapters/filesystem/dataset.rb'
+require_relative '../../../../lib/locomotive/steam/adapters/memory/dataset.rb'
 
-describe Locomotive::Steam::Adapters::Filesystem::Dataset do
+describe Locomotive::Steam::Adapters::Memory::Dataset do
 
   let(:john) do
     {
@@ -31,7 +31,7 @@ describe Locomotive::Steam::Adapters::Filesystem::Dataset do
     }
   end
 
-  subject { Locomotive::Steam::Adapters::Filesystem::Dataset.new(:foo) } #(loader) }
+  subject { Locomotive::Steam::Adapters::Memory::Dataset.new(:foo) } #(loader) }
 
   before do
     [john.to_hash, jane.to_hash, alex.to_hash].each do |record|
@@ -60,7 +60,7 @@ describe Locomotive::Steam::Adapters::Filesystem::Dataset do
   end
 
   describe '#exists?' do
-    let(:dataset) { Locomotive::Steam::Adapters::Filesystem::Dataset.new(:dummy) }
+    let(:dataset) { Locomotive::Steam::Adapters::Memory::Dataset.new(:dummy) }
     before do
       dataset.instance_variable_set('@records', { 1 => 'Record 1', 2 => 'Record 2' })
     end
