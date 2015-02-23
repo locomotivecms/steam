@@ -6,8 +6,7 @@ require_relative '../../../../../lib/locomotive/steam/adapters/filesystem/yaml_l
 describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Site do
 
   let(:site_path) { default_fixture_site_path }
-  let(:cache)     { NoCacheStore.new }
-  let(:loader)    { Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Site.new(site_path, cache) }
+  let(:loader)    { Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Site.new(site_path) }
 
   describe '#load' do
 

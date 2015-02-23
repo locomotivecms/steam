@@ -9,9 +9,7 @@ module Locomotive
             include Adapters::Filesystem::YAMLLoader
 
             def load(scope)
-              fetch('config/site') do
-                [_load(File.join(site_path, 'config', 'site.yml'))]
-              end
+              [_load(File.join(site_path, 'config', 'site.yml'))]
             end
 
           end

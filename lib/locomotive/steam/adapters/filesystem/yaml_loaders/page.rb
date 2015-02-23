@@ -10,7 +10,7 @@ module Locomotive
 
             def load(scope)
               super
-              fetch('app/views/pages') { load_tree }
+              load_tree
             end
 
             private

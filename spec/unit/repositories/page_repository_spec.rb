@@ -13,6 +13,7 @@ describe Locomotive::Steam::PageRepository do
 
   before do
     allow(adapter).to receive(:collection).and_return(pages)
+    adapter.cache = NoCacheStore.new
   end
 
   describe '#all' do

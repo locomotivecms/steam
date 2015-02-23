@@ -7,7 +7,10 @@ describe Locomotive::Steam::SiteRepository do
   let(:adapter)     { Locomotive::Steam::FilesystemAdapter.new(nil) }
   let(:repository)  { Locomotive::Steam::SiteRepository.new(adapter) }
 
-  before { allow(adapter).to receive(:collection).and_return([{ name: 'Acme', handle: 'acme', domains: ['example.org'] }]) }
+  before do
+    allow(adapter).to receive(:collection).and_return([{ name: 'Acme', handle: 'acme', domains: ['example.org'] }])
+    adapter.cache = NoCacheStore.new
+  end
 
   describe '#by_handle_or_domain' do
 

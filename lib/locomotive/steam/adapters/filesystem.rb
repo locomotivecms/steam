@@ -20,18 +20,8 @@ module Locomotive::Steam
       Locomotive::Steam::Adapters::Filesystem::SimpleCacheStore.new
     end
 
-    register :yaml_loaders do
-      build_yaml_loaders(cache)
-    end
-
-    register :sanitizers do
-      build_sanitizers
-    end
-
-    def initialize(site_path)
-      super
-      @datasets = {}
-    end
+    register(:yaml_loaders)  { build_yaml_loaders }
+    register(:sanitizers)    { build_sanitizers }
 
     def all(mapper, scope)
       memoized_dataset(mapper, scope)
@@ -56,13 +46,13 @@ module Locomotive::Steam
     end
 
     def memoized_dataset(mapper, scope)
-      return @datasets[mapper.name] if @datasets[mapper.name]
-      dataset(mapper, scope)
+      cache.fetch(mapper.name) do
+        dataset(mapper, scope)
+      end
     end
 
     def dataset(mapper, scope)
       Locomotive::Steam::Adapters::Memory::Dataset.new(mapper.name).tap do |dataset|
-        @datasets[mapper.name] = dataset
         populate_dataset(dataset, mapper, scope)
       end
     end
@@ -84,9 +74,9 @@ module Locomotive::Steam
       yaml_loaders[mapper.name].load(scope)
     end
 
-    def build_yaml_loaders(cache)
+    def build_yaml_loaders
       %i(sites pages).inject({}) do |memo, name|
-        memo[name] = build_klass('YAMLLoaders', name).new(site_path, cache)
+        memo[name] = build_klass('YAMLLoaders', name).new(site_path)
         memo
       end
     end
