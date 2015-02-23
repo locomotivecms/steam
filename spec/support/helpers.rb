@@ -20,8 +20,8 @@ module Spec
 
     def restore_mongodb
       path = File.join(File.expand_path(File.dirname(__FILE__)), '..', 'fixtures', 'mongodb')
-      # `mongo steam_test --eval "db.dropDatabase()"`
-      # `mongorestore -d steam_test #{path}`
+      `mongo steam_test --eval "db.dropDatabase()"`
+      `mongorestore -d steam_test #{path}`
     end
 
     def run_server

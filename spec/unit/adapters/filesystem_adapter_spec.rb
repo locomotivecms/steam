@@ -28,12 +28,12 @@ describe Locomotive::Steam::FilesystemAdapter do
 
     context 'scoped by a site' do
 
-      let(:site) { instance_double('Site', id: 42) }
+      let(:site) { instance_double('Site', _id: 42) }
       it { expect(subject.first.name).to eq 'Hello world' }
 
       context 'unknown site id' do
 
-        let(:site) { instance_double('Site', id: 1) }
+        let(:site) { instance_double('Site', _id: 1) }
         it { expect(subject.first).to eq nil }
 
       end

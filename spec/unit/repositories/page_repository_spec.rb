@@ -6,9 +6,8 @@ require_relative '../../../lib/locomotive/steam/repositories/editable_element_re
 describe Locomotive::Steam::PageRepository do
 
   let(:pages)       { [{ title: { en: 'Home' }, handle: 'home', slug: { en: 'index' }, _fullpath: 'index', template_path: { en: 'index.liquid' } }] }
-
   let(:locale)      { :en }
-  let(:site)        { instance_double('Site', id: 1, default_locale: :en, locales: %i(en fr)) }
+  let(:site)        { instance_double('Site', _id: 1, default_locale: :en, locales: %i(en fr)) }
   let(:adapter)     { Locomotive::Steam::FilesystemAdapter.new(nil) }
   let(:repository)  { Locomotive::Steam::PageRepository.new(adapter, site, locale) }
 
@@ -46,6 +45,34 @@ describe Locomotive::Steam::PageRepository do
 
       let(:conditions) { { slug: /-doe$/ } }
       it { expect(subject.size).to eq 2 }
+
+    end
+
+  end
+
+  describe 'templatized pages' do
+
+    let(:pages) do
+      [
+        { title: { en: 'Comments' }, slug: { en: 'comments' }, _fullpath: 'articles/template/comments' },
+        { title: { en: 'Template Article' }, slug: { en: 'template' }, content_type: :articles, _fullpath: 'articles/template' },
+        { title: { en: 'Articles' }, slug: { en: 'articles' }, _fullpath: 'articles' },
+        { title: { en: 'Home' }, slug: { en: 'index' }, _fullpath: 'index', template_path: { en: 'index.liquid' } }
+      ]
+    end
+
+    it { expect(repository.all.size).to eq 4 }
+    it { expect(repository.find(2).templatized?).to eq true }
+
+    describe 'nested templatized page' do
+
+      subject { repository.find(1) }
+
+      it { expect(subject.templatized?).to eq true }
+      it { expect(subject.content_type).to eq :articles }
+      it { expect(subject.slug[:en]).to eq 'comments' }
+      it { expect(subject.slug[:fr]).to eq nil }
+      it { expect(subject.fullpath[:en]).to eq 'articles/content-type-template/comments' }
 
     end
 

@@ -11,25 +11,25 @@ module Locomotive::Steam
           #   super
           #   @content_types  = {}
           #   @localized      = {}
-          #   locales.each { |locale| @localized[locale] = {} }
+          #
           # end
 
           def setup(scope)
             super.tap do
               @ids, @parent_ids = {}, {}
               @content_types    = {}
-              @localized        = Hash.new { {} }
+              @localized = locales.inject({}) { |m, l| m[l] = {}; m }
             end
           end
 
           def apply_to_entity(entity)
-            entity[:site_id] = scope.site.id if scope.site
+            entity[:site_id] = scope.site._id if scope.site
 
-            # required to get the parent_id
-            @ids[entity[:_fullpath]] = entity._id
+            record_id(entity) # required to get the parent_id
 
             locales.each do |locale|
               set_default_redirect_type(entity, locale)
+              modify_if_templatized(entity, locale)
             end
           end
 
@@ -40,9 +40,10 @@ module Locomotive::Steam
                 set_fullpath_for(page, locale)
 
                 set_parent_id(page)
-                modify_if_templatized(page, locale)
                 use_default_locale_template_path(page, locale)
               end
+
+              modify_if_nested_templatized(page)
             end
           end
 
@@ -73,23 +74,31 @@ module Locomotive::Steam
             end
           end
 
-          def modify_if_templatized(page, locale)
-            if page.templatized?
-              # change the slug of a templatized page
-              page[:slug][locale] = 'content-type-template'
-
-              # this also means to change the fullpath
-              if page[:fullpath][locale]
-                page[:fullpath][locale].gsub!(/[^\/]+$/, 'content-type-template')
-              end
-
-              # make sure its children will have its content type
-              set_content_type(page._fullpath, page.content_type)
-            elsif content_type = fetch_content_type(parent_fullpath(page))
+          def modify_if_nested_templatized(page)
+            if content_type = fetch_content_type(parent_fullpath(page))
               # not a templatized page but it becomes one because
               # its parent is one of them
               page[:content_type] = content_type
             end
+
+            # end
+
+            # if page.templatized?
+            #   # change the slug of a templatized page
+            #   page[:slug][locale] = 'content-type-template'
+
+            #   # this also means to change the fullpath
+            #   if page[:fullpath][locale]
+            #     page[:fullpath][locale].gsub!(/[^\/]+$/, 'content-type-template')
+            #   end
+
+            #   # make sure its children will have its content type
+            #   set_content_type(page._fullpath, page.content_type)
+            # elsif content_type = fetch_content_type(parent_fullpath(page))
+            #   # not a templatized page but it becomes one because
+            #   # its parent is one of them
+            #   page[:content_type] = content_type
+            # end
           end
 
           def set_fullpath_for(page, locale)
@@ -148,6 +157,17 @@ module Locomotive::Steam
 
           def set_localized_fullpath(fullpath, value, locale)
             @localized[locale][fullpath] = value
+          end
+
+          def record_id(entity)
+            @ids[entity[:_fullpath]] = entity._id
+          end
+
+          def modify_if_templatized(page, locale)
+            if page.templatized?
+              page[:slug][locale] = 'content-type-template'
+              set_content_type(page[:_fullpath], page.content_type)
+            end
           end
 
         end

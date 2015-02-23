@@ -21,5 +21,5 @@ fields:
     type: tags
     label: List of tags
 - price:
-    type: Float
+    type: float
     label: Price of the event

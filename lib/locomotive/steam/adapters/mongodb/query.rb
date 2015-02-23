@@ -25,7 +25,7 @@ module Locomotive::Steam
         private
 
         def apply_default_scope
-          where(site_id: @scope.site.id) if @scope.site
+          where(site_id: @scope.site._id) if @scope.site
         end
 
       end

@@ -17,6 +17,7 @@ require_relative_all  'steam/entities'
 # TODO
 require_relative      'steam/repositories/site_repository'
 require_relative      'steam/repositories/page_repository'
+require_relative      'steam/repositories/editable_element_repository'
 
 require_relative      'steam/services'
 

@@ -40,9 +40,13 @@ module Locomotive::Steam
     def query(mapper, scope, &block)
       _query(mapper, scope, &block).tap do |default|
         if scope.site
-          default.where(site_id: scope.site.id)
+          default.where(site_id: scope.site._id)
         end
       end
+    end
+
+    def find(mapper, scope, id)
+      _query(mapper, scope) { where(_id: id) }.first
     end
 
     private
@@ -81,7 +85,7 @@ module Locomotive::Steam
     end
 
     def build_yaml_loaders(cache)
-      %i(site page).inject({}) do |memo, name|
+      %i(sites pages).inject({}) do |memo, name|
         memo[name] = build_klass('YAMLLoaders', name).new(site_path, cache)
         memo
       end

@@ -17,8 +17,8 @@ describe Locomotive::Steam::SiteRepository do
     end
 
     describe '#query' do
-      subject { repository.query { where(handle: 'acme') }.first }
-      it { expect(subject.name).to eq 'My portfolio' }
+      subject { repository.query { where(subdomain: 'sample') }.first }
+      it { expect(subject.name).to eq 'Sample website' }
     end
 
   end

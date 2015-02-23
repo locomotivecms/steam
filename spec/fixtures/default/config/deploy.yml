@@ -1,7 +1,7 @@
 development:
-  host: development.example.com
+  host: sample.lvh.me:3000
   email: john@doe.net
-  password: easyone
+  api_key: a9ac1e08c2c22c1b6f3da6db77a70cac4a615bd7
 staging:
   host: staging.example.com
   email: john@doe.net
