@@ -13,7 +13,7 @@ describe Locomotive::Steam::PageRepository do
 
     describe '#all' do
       subject { repository.all }
-      it { expect(subject.size).to eq 21 }
+      it { expect(subject.size).to eq 24 }
     end
 
     describe '#query' do
@@ -21,40 +21,40 @@ describe Locomotive::Steam::PageRepository do
       it { expect(subject.title[:en]).to eq 'Home page' }
     end
 
-    describe '#by_handle' do
-      subject { repository.by_handle('our-music') }
-      it { expect(subject.title[:en]).to eq 'Music' }
-    end
+    # describe '#by_handle' do
+    #   subject { repository.by_handle('our-music') }
+    #   it { expect(subject.title[:en]).to eq 'Music' }
+    # end
 
-    describe '#by_fullpath' do
-      subject { repository.by_fullpath('archives/news') }
-      it { expect(subject.title[:en]).to eq 'News archive' }
+    # describe '#by_fullpath' do
+    #   subject { repository.by_fullpath('archives/news') }
+    #   it { expect(subject.title[:en]).to eq 'News archive' }
+    # end
+
+  end
+
+  context 'MongoDB' do
+
+    it_should_behave_like 'page repository' do
+
+      let(:site_id) { BSON::ObjectId.from_string('54eb49c12475804b2b000002') }
+      let(:adapter) { Locomotive::Steam::MongoDBAdapter.new('steam_test', ['127.0.0.1:27017']) }
+
     end
 
   end
 
-  # context 'MongoDB' do
+  # context 'Filesystem' do
 
   #   it_should_behave_like 'page repository' do
 
-  #     let(:site_id) { BSON::ObjectId.from_string('54eb49c12475804b2b000002') }
-  #     let(:adapter) { Locomotive::Steam::MongoDBAdapter.new('steam_test', ['127.0.0.1:27017']) }
+  #     let(:site_id) { 1 }
+  #     let(:adapter) { Locomotive::Steam::FilesystemAdapter.new(default_fixture_site_path) }
+
+  #     after(:all) { Locomotive::Steam::Adapters::Filesystem::SimpleCacheStore.new.clear }
 
   #   end
 
   # end
-
-  context 'Filesystem' do
-
-    it_should_behave_like 'page repository' do
-
-      let(:site_id) { 1 }
-      let(:adapter) { Locomotive::Steam::FilesystemAdapter.new(default_fixture_site_path) }
-
-      after(:all) { Locomotive::Steam::Adapters::Filesystem::SimpleCacheStore.new.clear }
-
-    end
-
-  end
 
 end

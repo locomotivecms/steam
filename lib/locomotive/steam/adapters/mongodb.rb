@@ -3,18 +3,19 @@ require 'origin'
 
 require_relative 'mongodb/origin'
 require_relative 'mongodb/query'
+require_relative 'mongodb/dataset'
 
 module Locomotive::Steam
 
   class MongoDBAdapter < Struct.new(:database, :hosts)
 
-    def all(mapper, selector = nil)
-      dataset(mapper, selector)
+    def all(mapper, selector = nil, options)
+      dataset(mapper, selector, options)
     end
 
     def query(mapper, scope, &block)
       query = query_klass.new(scope, mapper.localized_attributes, &block)
-      all(mapper, query.selector)
+      all(mapper, query.selector, query.options)
     end
 
     private
@@ -23,9 +24,11 @@ module Locomotive::Steam
       Locomotive::Steam::Adapters::MongoDB::Query
     end
 
-    def dataset(mapper, selector = nil)
-      collection(mapper).find(selector).map do |attributes|
-        entity = mapper.to_entity(attributes)
+    def dataset(mapper, selector = nil, options = {})
+      Locomotive::Steam::Adapters::MongoDB::Dataset.new do
+        collection(mapper).find(selector).sort(options[:sort]).map do |attributes|
+          entity = mapper.to_entity(attributes)
+        end
       end
     end
 

@@ -28,6 +28,10 @@ module Locomotive::Steam
           @query.selector
         end
 
+        def options
+          @query.options
+        end
+
         private
 
         def apply_default_scope

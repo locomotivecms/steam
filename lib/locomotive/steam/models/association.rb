@@ -5,7 +5,7 @@ module Locomotive::Steam
   module Models
 
     # Note: represents an embedded collection
-    class Association < SimpleDelegator
+    class Association
 
       include Morphine
 
@@ -22,14 +22,16 @@ module Locomotive::Steam
 
         @repository = repository_klass.new(adapter)
         @repository.scope = scope
-
-        super(@repository)
       end
 
       # In order to keep track of the entity which owns
       # the association.
       def attach(name, entity)
         @repository.send(:"#{name}=", entity)
+      end
+
+      def method_missing(name, *args, &block)
+        @repository.send(name, *args, &block)
       end
 
     end
