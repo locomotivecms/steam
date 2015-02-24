@@ -16,7 +16,7 @@ module Locomotive
       def all(conditions = {})
         query do
           where(conditions || {}).
-            order_by('depth.asc', 'position.asc')
+            order_by(depth: :asc, position: :asc)
         end.all
       end
 

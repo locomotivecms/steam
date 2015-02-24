@@ -33,16 +33,16 @@ describe Locomotive::Steam::PageRepository do
 
   end
 
-  context 'MongoDB' do
+  # context 'MongoDB' do
 
-    it_should_behave_like 'page repository' do
+  #   it_should_behave_like 'page repository' do
 
-      let(:site_id) { Moped::BSON::ObjectId.from_string('54eb49c12475804b2b000002') }
-      let(:adapter) { Locomotive::Steam::MongoDBAdapter.new('steam_test', ['127.0.0.1:27017']) }
+  #     let(:site_id) { BSON::ObjectId.from_string('54eb49c12475804b2b000002') }
+  #     let(:adapter) { Locomotive::Steam::MongoDBAdapter.new('steam_test', ['127.0.0.1:27017']) }
 
-    end
+  #   end
 
-  end
+  # end
 
   context 'Filesystem' do
 

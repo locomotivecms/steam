@@ -13,24 +13,24 @@ describe Locomotive::Steam::Adapters::Memory::Order do
     let(:input) { nil }
     it { is_expected.to eq [] }
 
-    context 'a string' do
+    context 'via a string' do
 
-      let(:input) { 'name' }
-      it { is_expected.to eq [[:name]] }
-
-    end
-
-    context 'two strings' do
-
-      let(:input) { ['name', 'date.desc'] }
-      it { is_expected.to eq [[:name], [:date, :desc]] }
+      let(:input) { 'name DESC' }
+      it { is_expected.to eq [[:name, :desc]] }
 
     end
 
-    context 'a string with a comma' do
+    context 'via a hash with symbol directions' do
 
-      let(:input) { 'name, date desc' }
-      it { is_expected.to eq [[:name], [:date, :desc]] }
+      let(:input) { [{ name: :asc, date: :desc }] }
+      it { is_expected.to eq [[:name, :asc], [:date, :desc]] }
+
+    end
+
+    context 'via a string' do
+
+      let(:input) { 'name ASC, date DESC' }
+      it { is_expected.to eq [[:name, :asc], [:date, :desc]] }
 
     end
 
@@ -40,7 +40,7 @@ describe Locomotive::Steam::Adapters::Memory::Order do
 
     subject { order.apply_to(entry, :en) }
 
-    let(:input) { 'title, date desc' }
+    let(:input) { 'title asc, date desc' }
     let(:entry) { instance_double('Entry', title: 'foo', date: Time.now) }
     it { expect(subject.map(&:class)).to eq([Locomotive::Steam::Adapters::Memory::Order::Asc, Locomotive::Steam::Adapters::Memory::Order::Desc]) }
 
@@ -56,7 +56,7 @@ describe Locomotive::Steam::Adapters::Memory::Order do
         instance_double('Entry3', id: 4, title: 'c', position: 1)
       ]
     }
-    let(:input) { 'title, position desc' }
+    let(:input) { 'title asc, position desc' }
 
     subject { array.sort_by { |entry| order.apply_to(entry, :en) } }
 

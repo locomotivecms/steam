@@ -16,6 +16,12 @@ module Locomotive::Steam
 
         def where(criterion = nil)
           @query = @query.where(criterion)
+          self
+        end
+
+        def order_by(*args)
+          @query = @query.order_by(*args)
+          self
         end
 
         def selector

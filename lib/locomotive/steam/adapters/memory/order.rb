@@ -6,15 +6,16 @@ module Locomotive::Steam
 
         attr_reader :list
 
-        def initialize(*args)
-          strings = args.compact
-
-          @list = (case args.size
-          when 0 then []
-          when 1 then args.first.split(',').collect { |s| build(s.strip) }
-          else
-            args.collect { |s| build(s) }
-          end)
+        def initialize(*spec)
+          @list = []
+          spec.compact.each do |criterion|
+            @list += (case criterion
+            when Array  then criterion
+            when Hash   then criterion.to_a
+            when String then criterion.split(',').collect { |s| build(s.strip) }
+            else []
+            end)
+          end
         end
 
         def empty?
@@ -29,7 +30,7 @@ module Locomotive::Steam
         end
 
         def asc?(direction)
-          direction.nil? || direction == :asc
+          direction.nil? || direction.to_sym == :asc
         end
 
         private
