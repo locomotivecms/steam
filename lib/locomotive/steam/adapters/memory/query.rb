@@ -94,6 +94,16 @@ module Locomotive::Steam
           end
         end # filtered
 
+        def self.key(name, operator)
+          "#{name}.#{operator}"
+        end
+
+        def key(name, operator)
+          self.class.key(name, operator)
+        end
+
+        alias :k :key
+
       end
     end
   end

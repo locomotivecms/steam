@@ -29,7 +29,9 @@ module Locomotive
       end
 
       def matching_fullpath(list)
-        all('fullpath.in' => list)
+        # all(:fullpath.in => list)
+        # all('fullpath.in' => list) # MongoDB => fullpath.in
+        all(k(:fullpath, :in) => list)
       end
 
       # Engine: ??? [TODO]
@@ -55,7 +57,7 @@ module Locomotive
       # Note: Ancestors and self
       def ancestors_of(page)
         return [] if page.nil?
-        all('_id.in' => page.parent_ids + [page._id])
+        all(k(:_id, :in) => page.parent_ids + [page._id])
       end
 
       def children_of(page)

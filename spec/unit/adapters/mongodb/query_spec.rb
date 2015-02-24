@@ -5,9 +5,6 @@ require 'origin'
 require_relative '../../../../lib/locomotive/steam/adapters/mongodb/origin.rb'
 require_relative '../../../../lib/locomotive/steam/adapters/mongodb/query.rb'
 
-# require_relative '../../../../lib/locomotive/steam/adapters/memory/order.rb'
-# require_relative '../../../../lib/locomotive/steam/adapters/memory/query.rb'
-
 describe Locomotive::Steam::Adapters::MongoDB::Query do
 
   let(:site)  { instance_double('Site', _id: 42) }
@@ -58,11 +55,11 @@ describe Locomotive::Steam::Adapters::MongoDB::Query do
 
   describe '#to_origin' do
 
-    before { query.where(title: 'index').order_by(title: :asc) }
+    before { query.where(:title.in => %w(index)).order_by(title: :asc) }
 
     subject { query.to_origin }
 
-    it { expect(subject.selector).to eq({ 'site_id' => 42, 'title.en' => 'index' }) }
+    it { expect(subject.selector).to eq({ 'site_id' => 42, 'title.en' => { '$in' => %w(index) } }) }
     it { expect(subject.options[:sort]).to eq({ 'title.en' => 1 }) }
 
   end

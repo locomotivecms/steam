@@ -29,6 +29,10 @@ module Locomotive::Steam
         adapter.query(mapper, scope, &block).first
       end
 
+      def k(name, operator)
+        adapter.key(name, operator)
+      end
+
       alias :all :query
 
       # def create(entity)

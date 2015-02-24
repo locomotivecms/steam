@@ -1,3 +1,4 @@
+require_relative 'concerns/key'
 require_relative 'memory/order'
 require_relative 'memory/condition'
 require_relative 'memory/query'
@@ -6,6 +7,8 @@ require_relative 'memory/dataset'
 module Locomotive::Steam
 
   class MemoryAdapter < Struct.new(:collection)
+
+    include Locomotive::Steam::Adapters::Concerns::Key
 
     def all(mapper, scope)
       memoized_dataset(mapper, scope)

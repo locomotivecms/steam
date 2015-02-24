@@ -15,6 +15,7 @@ module Locomotive::Steam
   class FilesystemAdapter < Struct.new(:site_path)
 
     include Morphine
+    include Locomotive::Steam::Adapters::Concerns::Key
 
     register :cache do
       Locomotive::Steam::Adapters::Filesystem::SimpleCacheStore.new

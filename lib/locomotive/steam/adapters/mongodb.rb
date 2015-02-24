@@ -18,6 +18,10 @@ module Locomotive::Steam
       all(mapper, query)
     end
 
+    def key(name, operator)
+      name.__send__(operator)
+    end
+
     private
 
     def query_klass

@@ -20,8 +20,16 @@ describe Locomotive::Steam::MemoryAdapter do
 
   describe '#query' do
 
-    subject { adapter.query(mapper, scope) { where(name: 'Hello world') } }
+    let(:block) { -> (_) { where(name: 'Hello world') } }
+    subject { adapter.query(mapper, scope, &block) }
     it { expect(subject.size).to eq 1 }
+
+    context 'another syntax' do
+
+      let(:block) { -> (_) { where(k(:name, :in) => ['Hello world']) } }
+      it { expect(subject.size).to eq 1 }
+
+    end
 
   end
 

@@ -8,6 +8,14 @@ describe Locomotive::Steam::FilesystemAdapter do
   let(:scope)   { instance_double('Scope', site: site, locale: nil) }
   let(:adapter) { Locomotive::Steam::FilesystemAdapter.new(nil) }
 
+  describe '#key' do
+
+    subject { adapter.key(:title, :in) }
+
+    it { is_expected.to eq 'title.in' }
+
+  end
+
   describe '#query' do
 
     let(:collection) { [OpenStruct.new(site_id: 42, name: 'Hello world')] }
