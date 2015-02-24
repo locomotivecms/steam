@@ -9,13 +9,13 @@ module Locomotive::Steam
 
   class MongoDBAdapter < Struct.new(:database, :hosts)
 
-    def all(mapper, selector = nil, options)
-      dataset(mapper, selector, options)
+    def all(mapper, query)
+      dataset(mapper, query)
     end
 
     def query(mapper, scope, &block)
       query = query_klass.new(scope, mapper.localized_attributes, &block)
-      all(mapper, query.selector, query.options)
+      all(mapper, query)
     end
 
     private
@@ -24,9 +24,9 @@ module Locomotive::Steam
       Locomotive::Steam::Adapters::MongoDB::Query
     end
 
-    def dataset(mapper, selector = nil, options = {})
+    def dataset(mapper, query)
       Locomotive::Steam::Adapters::MongoDB::Dataset.new do
-        collection(mapper).find(selector).sort(options[:sort]).map do |attributes|
+        query.against(collection(mapper)).map do |attributes|
           entity = mapper.to_entity(attributes)
         end
       end

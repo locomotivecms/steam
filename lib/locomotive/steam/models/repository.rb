@@ -52,23 +52,8 @@ module Locomotive::Steam
         @mapper ||= Mapper.new(name, options, self, &block)
       end
 
-      # def scope
-      #   @scope ||= Scope.new(current_site, current_locale)
-      # end
 
-      # def scope=(scope)
-      #   @scope = scope
-      #   @current_locale = scope.locale
-      #   @current_site   = scope.site
-      # end
-
-      # def current_locale; scope.locale; end
-      # def current_locale=(locale); scope.locale = locale; end
-
-      # def current_site=(site); scope.site; end
-      #   @current_site = scope.site = site
-      # end
-
+      # TODO: not sure about that. could it be used further in the dev
       # def collection_name
       #   mapper.name
       # end

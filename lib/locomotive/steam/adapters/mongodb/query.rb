@@ -4,10 +4,11 @@ module Locomotive::Steam
 
       class Query
 
+        attr_reader :criteria, :sort
+
         def initialize(scope, localized_attributes, &block)
-          @query = ::Origin::Query.new
-          @scope = scope
-          @localized_attributes = localized_attributes
+          @criteria, @sort = {}, nil
+          @scope, @localized_attributes = scope, localized_attributes
 
           apply_default_scope
 
@@ -15,24 +16,43 @@ module Locomotive::Steam
         end
 
         def where(criterion = nil)
-          @query = @query.where(criterion)
-          self
+          self.tap do
+            @criteria.merge!(criterion) unless criterion.nil?
+          end
         end
 
         def order_by(*args)
-          @query = @query.order_by(*args)
-          self
+          @sort = [*args]
         end
 
-        def selector
-          @query.selector
+        def against(collection)
+          _query = to_origin
+          selector, sort = _query.selector, _query.options[:sort]
+
+          if sort
+            collection.find(selector).sort(sort)
+          else
+            collection.find(selector)
+          end
         end
 
-        def options
-          @query.options
+        def to_origin
+          build_origin_query.where(@criteria).order_by(*@sort)
         end
 
         private
+
+        def build_origin_query
+          ::Origin::Query.new(build_aliases(@localized_attributes, @scope.locale))
+        end
+
+        def build_aliases(localized_attributes, locale)
+          localized_attributes.inject({}) do |aliases, name|
+            aliases.tap do
+              aliases[name.to_s] = "#{name}.#{locale}"
+            end
+          end
+        end
 
         def apply_default_scope
           where(site_id: @scope.site._id) if @scope.site

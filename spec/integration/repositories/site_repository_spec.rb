@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.join(File.dirname(__FILE__), '..', 'mongodb_helper')
 
 require_relative '../../../lib/locomotive/steam/adapters/filesystem.rb'
 require_relative '../../../lib/locomotive/steam/adapters/mongodb.rb'

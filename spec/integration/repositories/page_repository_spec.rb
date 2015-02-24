@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.join(File.dirname(__FILE__), '..', 'mongodb_helper')
 
 require_relative '../../../lib/locomotive/steam/adapters/filesystem.rb'
 require_relative '../../../lib/locomotive/steam/adapters/mongodb.rb'
@@ -21,15 +21,15 @@ describe Locomotive::Steam::PageRepository do
       it { expect(subject.title[:en]).to eq 'Home page' }
     end
 
-    # describe '#by_handle' do
-    #   subject { repository.by_handle('our-music') }
-    #   it { expect(subject.title[:en]).to eq 'Music' }
-    # end
+    describe '#by_handle' do
+      subject { repository.by_handle('our-music') }
+      it { expect(subject.title[:en]).to eq 'Music' }
+    end
 
-    # describe '#by_fullpath' do
-    #   subject { repository.by_fullpath('archives/news') }
-    #   it { expect(subject.title[:en]).to eq 'News archive' }
-    # end
+    describe '#by_fullpath' do
+      subject { repository.by_fullpath('archives/news') }
+      it { expect(subject.title[:en]).to eq 'News archive' }
+    end
 
   end
 
@@ -44,17 +44,17 @@ describe Locomotive::Steam::PageRepository do
 
   end
 
-  # context 'Filesystem' do
+  context 'Filesystem' do
 
-  #   it_should_behave_like 'page repository' do
+    it_should_behave_like 'page repository' do
 
-  #     let(:site_id) { 1 }
-  #     let(:adapter) { Locomotive::Steam::FilesystemAdapter.new(default_fixture_site_path) }
+      let(:site_id) { 1 }
+      let(:adapter) { Locomotive::Steam::FilesystemAdapter.new(default_fixture_site_path) }
 
-  #     after(:all) { Locomotive::Steam::Adapters::Filesystem::SimpleCacheStore.new.clear }
+      after(:all) { Locomotive::Steam::Adapters::Filesystem::SimpleCacheStore.new.clear }
 
-  #   end
+    end
 
-  # end
+  end
 
 end
