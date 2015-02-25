@@ -15,7 +15,7 @@ module Locomotive::Steam
 
       def set_content_entry!
         # extract the slug of the content entry
-        %r(^#{page.fullpath.gsub('content-type-template', '([^\/]+)')}$) =~ path
+        %r(^#{page.fullpath.gsub(Locomotive::Steam::WILDCARD, '([^\/]+)')}$) =~ path
 
         if entry = fetch_content_entry($1)
           # the entry will be available in the template under different keys

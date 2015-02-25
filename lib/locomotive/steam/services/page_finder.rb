@@ -6,8 +6,6 @@ module Locomotive
 
         include Locomotive::Steam::Services::Concerns::Decorator
 
-        WILDCARD = 'content-type-template'.freeze
-
         def find(path)
           decorate do
             repository.by_fullpath(path)

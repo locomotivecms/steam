@@ -26,6 +26,8 @@ module Locomotive
 
     FRONTMATTER_REGEXP = /^(?<yaml>(---\s*\n.*?\n?)^(---\s*$\n?))?(?<template>.*)/mo
 
+    WILDCARD = 'content_type_template'.freeze
+
     class << self
       attr_writer :configuration
     end

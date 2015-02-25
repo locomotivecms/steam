@@ -31,10 +31,10 @@ describe Locomotive::Steam::PageRepository do
       it { expect(subject.title[:en]).to eq 'News archive' }
     end
 
-    # describe '#matching_fullpath' do
-    #   subject { repository.matching_fullpath(['songs/content_type_template', 'content_type_template/songs', 'songs/song-number-1']) }
-    #   it { expect(subject.size).to eq 2 }
-    # end
+    describe '#matching_fullpath' do
+      subject { repository.matching_fullpath(['songs/content_type_template', 'content_type_template/songs', 'songs/song-number-1']) }
+      it { expect(subject.size).to eq 2 }
+    end
 
   end
 

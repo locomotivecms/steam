@@ -73,7 +73,7 @@ describe Locomotive::Steam::PageRepository do
       it { expect(subject.content_type).to eq :articles }
       it { expect(subject.slug[:en]).to eq 'comments' }
       it { expect(subject.slug[:fr]).to eq nil }
-      it { expect(subject.fullpath[:en]).to eq 'articles/content-type-template/comments' }
+      it { expect(subject.fullpath[:en]).to eq 'articles/content_type_template/comments' }
 
     end
 
@@ -127,7 +127,7 @@ describe Locomotive::Steam::PageRepository do
 
     context 'templatized page' do
 
-      let(:paths) { ['articles/content-type-template', 'content-type-template/hello-world', 'articles/hello-world']  }
+      let(:paths) { ['articles/content_type_template', 'content_type_template/hello-world', 'articles/hello-world']  }
 
       let(:pages) do
         [{ title: { en: 'Templatized article' }, slug: { en: 'template' }, content_type: 'articles', _fullpath: 'articles/template', template_path: { en: 'articles/template.liquid' } }]

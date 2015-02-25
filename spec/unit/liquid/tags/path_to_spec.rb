@@ -78,7 +78,7 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
     let(:entry_drop)  { Locomotive::Steam::Liquid::Drops::ContentEntry.new(entry, [:_slug]) }
     let(:entry)       { liquid_instance_double('Article', attributes: { _slug: { en: 'hello-world', fr: 'bonjour-monde' } }) }
     let(:drop)        { Locomotive::Steam::Liquid::Drops::Page.new(page, [:fullpath]) }
-    let(:page)        { liquid_instance_double('ArticleTemplate', title: 'Template of an article', handle: 'article', attributes: { fullpath: { en: 'my-articles/content-type-template', fr: 'mes-articles/content-type-template' } }, localized_attributes: [:fullpath], content_entry: entry_drop.send(:_source), templatized?: true) }
+    let(:page)        { liquid_instance_double('ArticleTemplate', title: 'Template of an article', handle: 'article', attributes: { fullpath: { en: 'my-articles/content_type_template', fr: 'mes-articles/content_type_template' } }, localized_attributes: [:fullpath], content_entry: entry_drop.send(:_source), templatized?: true) }
     let(:source)      { '{% path_to article %}' }
 
     before do

@@ -3,16 +3,9 @@ module Locomotive::Steam
     module Filesystem
       module Sanitizers
 
-        class Page # < Struct.new(:default_locale, :locales)
+        class Page
 
           include Adapters::Filesystem::Sanitizer
-
-          # def initialize(default_locale, locales)
-          #   super
-          #   @content_types  = {}
-          #   @localized      = {}
-          #
-          # end
 
           def setup(scope)
             super.tap do
@@ -80,31 +73,12 @@ module Locomotive::Steam
               # its parent is one of them
               page[:content_type] = content_type
             end
-
-            # end
-
-            # if page.templatized?
-            #   # change the slug of a templatized page
-            #   page[:slug][locale] = 'content-type-template'
-
-            #   # this also means to change the fullpath
-            #   if page[:fullpath][locale]
-            #     page[:fullpath][locale].gsub!(/[^\/]+$/, 'content-type-template')
-            #   end
-
-            #   # make sure its children will have its content type
-            #   set_content_type(page._fullpath, page.content_type)
-            # elsif content_type = fetch_content_type(parent_fullpath(page))
-            #   # not a templatized page but it becomes one because
-            #   # its parent is one of them
-            #   page[:content_type] = content_type
-            # end
           end
 
           def set_fullpath_for(page, locale)
             page._fullpath ||= page.attributes.delete(:_fullpath)
 
-            slug = fullpath = page.slug[locale].try(:dasherize)
+            slug = fullpath = page.slug[locale].try(page.templatized? ? :to_s : :dasherize)
 
             return if slug.blank?
 
@@ -165,7 +139,7 @@ module Locomotive::Steam
 
           def modify_if_templatized(page, locale)
             if page.templatized?
-              page[:slug][locale] = 'content-type-template'
+              page[:slug][locale] = Locomotive::Steam::WILDCARD
               set_content_type(page[:_fullpath], page.content_type)
             end
           end

@@ -27,7 +27,7 @@ module Locomotive
           path = page.fullpath
 
           if page.templatized? && page.content_entry
-            path.gsub('content-type-template', page.content_entry._slug)
+            path.gsub(Locomotive::Steam::WILDCARD, page.content_entry._slug)
           elsif path == 'index'
             same_locale ? '' : nil
           else
