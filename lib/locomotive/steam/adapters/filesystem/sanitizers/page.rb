@@ -44,8 +44,8 @@ module Locomotive::Steam
           def set_parent_id(page)
             parent_key = parent_fullpath(page)
 
-            page.parent_ids = @parent_ids[parent_key] || []
-            page.parent_id  = @ids[parent_key]
+            page[:parent_ids] = @parent_ids[parent_key] || []
+            page[:parent_id]  = @ids[parent_key]
 
             @parent_ids[page._fullpath] = page.parent_ids + [page._id]
           end

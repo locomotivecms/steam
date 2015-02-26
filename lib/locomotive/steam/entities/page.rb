@@ -4,7 +4,7 @@ module Locomotive::Steam
 
     include Locomotive::Steam::Models::Entity
 
-    attr_accessor :parent_id, :parent_ids, :depth, :_fullpath, :content_entry
+    attr_accessor :depth, :_fullpath, :content_entry
 
     def initialize(attributes)
       super({
@@ -16,7 +16,9 @@ module Locomotive::Steam
         position:           99,
         template:           {},
         editable_elements:  {},
-        redirect_url:       {}
+        redirect_url:       {},
+        parent_id:          nil,
+        parent_ids:         nil
       }.merge(attributes))
     end
 

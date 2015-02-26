@@ -36,6 +36,18 @@ describe Locomotive::Steam::PageRepository do
       it { expect(subject.size).to eq 2 }
     end
 
+    describe '#root' do
+      subject { repository.root }
+      it { expect(subject.title[:en]).to eq 'Home page' }
+      it { expect(subject.title[:fr]).to eq "Page d'accueil" }
+    end
+
+    describe '#parent_of' do
+      let(:page) { repository.by_handle('about-us') }
+      subject { repository.parent_of(page) }
+      it { expect(subject.title[:en]).to eq 'Home page' }
+    end
+
   end
 
   context 'MongoDB' do
