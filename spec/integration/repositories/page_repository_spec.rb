@@ -48,6 +48,25 @@ describe Locomotive::Steam::PageRepository do
       it { expect(subject.title[:en]).to eq 'Home page' }
     end
 
+    describe '#ancestors_of' do
+      let(:page) { repository.by_handle('about-us') }
+      subject { repository.ancestors_of(page) }
+      it { expect(subject.size).to eq 2 }
+      it { expect(subject.first.title[:en]).to eq 'Home page' }
+    end
+
+    describe '#children_of' do
+      let(:page) { repository.root }
+      subject { repository.children_of(page) }
+      it { expect(subject.size).to eq 14 }
+    end
+
+    describe '#editable_element_for' do
+      let(:page) { repository.by_handle('about-us') }
+      subject { repository.editable_element_for(page, 'banner', 'pitch') }
+      it { expect(subject.content[:en]).to eq '<h2>About us</h2><p>Lorem ipsum...</p>' }
+    end
+
   end
 
   context 'MongoDB' do

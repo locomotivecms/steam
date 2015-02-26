@@ -123,7 +123,7 @@ module Locomotive
 
             def find_editable_element(leaf, name)
               leaf[:editable_elements].find do |el|
-                [el[:block], el[:slug]].join('/') == name
+                [el[:block], el[:slug]].join('/') == name.to_s
               end
             end
 

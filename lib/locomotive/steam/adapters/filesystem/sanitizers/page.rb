@@ -42,6 +42,8 @@ module Locomotive::Steam
 
           # when this is called, the @ids hash has been populated completely
           def set_parent_id(page)
+            return if page.not_found?
+
             parent_key = parent_fullpath(page)
 
             page[:parent_ids] = @parent_ids[parent_key] || []
