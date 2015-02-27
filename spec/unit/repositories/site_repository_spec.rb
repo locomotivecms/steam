@@ -5,7 +5,7 @@ require_relative '../../../lib/locomotive/steam/adapters/filesystem.rb'
 describe Locomotive::Steam::SiteRepository do
 
   let(:adapter)     { Locomotive::Steam::FilesystemAdapter.new(nil) }
-  let(:repository)  { Locomotive::Steam::SiteRepository.new(adapter) }
+  let(:repository)  { described_class.new(adapter) }
 
   before do
     allow(adapter).to receive(:collection).and_return([{ name: 'Acme', handle: 'acme', domains: ['example.org'] }])

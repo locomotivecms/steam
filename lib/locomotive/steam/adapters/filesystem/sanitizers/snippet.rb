@@ -1,28 +1,32 @@
-# module Locomotive
-#   module Steam
-#     module Repositories
-#       module Filesystem
-#         module Sanitizers
+module Locomotive::Steam
+  module Adapters
+    module Filesystem
+      module Sanitizers
 
-#           class Snippet < Struct.new(:default_locale, :locales)
+        class Snippet
 
-#             def apply_to(collection)
-#               collection.each do |snippet|
-#                 # if there a missing template in one of the locales,
-#                 # then use the one from the default locale
-#                 default = snippet.template_path[default_locale]
+          include Adapters::Filesystem::Sanitizer
 
-#                 locales.each do |locale|
-#                   next if locale == default_locale
-#                   snippet.template_path[locale] ||= default
-#                 end
-#               end
-#             end
+          def apply_to_entity(entity)
+            attach_site_to(entity)
+            use_default_template_if_missing_locale(entity)
+          end
 
-#           end
+          private
 
-#         end
-#       end
-#     end
-#   end
-# end
+          def use_default_template_if_missing_locale(entity)
+            # if there a missing template in one of the locales,
+            # then use the one from the default locale
+            default = entity.template_path[default_locale]
+            locales.each do |locale|
+              next if locale == default_locale
+              entity.template_path[locale] ||= default
+            end
+          end
+
+        end
+
+      end
+    end
+  end
+end

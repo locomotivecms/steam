@@ -9,7 +9,7 @@ describe Locomotive::Steam::PageRepository do
   let(:locale)      { :en }
   let(:site)        { instance_double('Site', _id: 1, default_locale: :en, locales: %i(en fr)) }
   let(:adapter)     { Locomotive::Steam::FilesystemAdapter.new(nil) }
-  let(:repository)  { Locomotive::Steam::PageRepository.new(adapter, site, locale) }
+  let(:repository)  { described_class.new(adapter, site, locale) }
 
   before do
     allow(adapter).to receive(:collection).and_return(pages)

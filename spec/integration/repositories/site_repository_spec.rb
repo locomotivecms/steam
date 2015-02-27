@@ -5,7 +5,7 @@ require_relative '../../../lib/locomotive/steam/adapters/mongodb.rb'
 
 describe Locomotive::Steam::SiteRepository do
 
-  let(:repository) { Locomotive::Steam::SiteRepository.new(adapter) }
+  let(:repository) { described_class.new(adapter) }
 
   shared_examples_for 'site repository' do
 

@@ -36,6 +36,10 @@ module Locomotive::Steam
           entity
         end
 
+        def attach_site_to(entity)
+          entity[:site_id] = scope.site._id if scope.site
+        end
+
         alias :current_locale :locale
 
       end

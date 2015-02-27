@@ -9,7 +9,7 @@ describe Locomotive::Steam::PageRepository do
 
     let(:site)        { Locomotive::Steam::Site.new(_id: site_id, locales: %w(en fr nb)) }
     let(:locale)      { :en }
-    let(:repository)  { Locomotive::Steam::PageRepository.new(adapter, site, locale) }
+    let(:repository)  { described_class.new(adapter, site, locale) }
 
     describe '#all' do
       subject { repository.all }

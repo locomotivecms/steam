@@ -16,7 +16,7 @@ module Locomotive::Steam
           end
 
           def apply_to_entity(entity)
-            entity[:site_id] = scope.site._id if scope.site
+            attach_site_to(entity)
 
             record_id(entity) # required to get the parent_id
 

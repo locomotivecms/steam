@@ -5,10 +5,12 @@ require_relative 'filesystem/simple_cache_store'
 require_relative 'filesystem/yaml_loader'
 require_relative 'filesystem/yaml_loaders/site'
 require_relative 'filesystem/yaml_loaders/page'
+require_relative 'filesystem/yaml_loaders/snippet'
 
 require_relative 'filesystem/sanitizer'
 require_relative 'filesystem/sanitizers/simple'
 require_relative 'filesystem/sanitizers/page'
+require_relative 'filesystem/sanitizers/snippet'
 
 module Locomotive::Steam
 
@@ -76,7 +78,7 @@ module Locomotive::Steam
     end
 
     def build_yaml_loaders
-      %i(sites pages).inject({}) do |memo, name|
+      %i(sites pages snippets).inject({}) do |memo, name|
         memo[name] = build_klass('YAMLLoaders', name).new(site_path)
         memo
       end
@@ -84,7 +86,7 @@ module Locomotive::Steam
 
     def build_sanitizers
       hash = Hash.new { build_klass('Sanitizers', :simple).new }
-      %i(pages).inject(hash) do |memo, name|
+      %i(pages snippets).inject(hash) do |memo, name|
         memo[name] = build_klass('Sanitizers', name).new
         memo
       end

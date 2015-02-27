@@ -1,6 +1,24 @@
+module Locomotive::Steam
+
+  class Snippet
+
+    include Locomotive::Steam::Models::Entity
+
+    def initialize(attributes = {})
+      super({
+        template: {}
+      }.merge(attributes))
+    end
+
+  end
+
+end
+
+
 # module Locomotive
 #   module Steam
-#     module Repositories
+
+#     class SnippetRepository
 #       module Filesystem
 #         module Models
 
@@ -17,5 +35,6 @@
 #         end
 #       end
 #     end
+
 #   end
 # end
