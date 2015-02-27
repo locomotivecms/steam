@@ -7,7 +7,7 @@ describe Locomotive::Steam::SiteRepository do
 
   let(:repository) { described_class.new(adapter) }
 
-  shared_examples_for 'site repository' do
+  shared_examples_for 'a repository' do
 
     describe '#all' do
       subject { repository.all }
@@ -25,7 +25,7 @@ describe Locomotive::Steam::SiteRepository do
 
     let(:adapter) { Locomotive::Steam::MongoDBAdapter.new('steam_test', ['127.0.0.1:27017']) }
 
-    it_behaves_like 'site repository'
+    it_behaves_like 'a repository'
 
   end
 
@@ -33,7 +33,7 @@ describe Locomotive::Steam::SiteRepository do
 
     let(:adapter) { Locomotive::Steam::FilesystemAdapter.new(default_fixture_site_path) }
 
-    it_behaves_like 'site repository'
+    it_behaves_like 'a repository'
 
   end
 

@@ -8,7 +8,8 @@ module Locomotive::Steam
           include Adapters::Filesystem::Sanitizer
 
           def apply_to_entity(entity)
-            attach_site_to(entity)
+            super
+
             use_default_template_if_missing_locale(entity)
           end
 

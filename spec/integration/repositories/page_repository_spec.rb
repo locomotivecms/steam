@@ -5,7 +5,7 @@ require_relative '../../../lib/locomotive/steam/adapters/mongodb.rb'
 
 describe Locomotive::Steam::PageRepository do
 
-  shared_examples_for 'page repository' do
+  shared_examples_for 'a repository' do
 
     let(:site)        { Locomotive::Steam::Site.new(_id: site_id, locales: %w(en fr nb)) }
     let(:locale)      { :en }
@@ -71,7 +71,7 @@ describe Locomotive::Steam::PageRepository do
 
   context 'MongoDB' do
 
-    it_should_behave_like 'page repository' do
+    it_should_behave_like 'a repository' do
 
       let(:site_id) { BSON::ObjectId.from_string('54eb49c12475804b2b000002') }
       let(:adapter) { Locomotive::Steam::MongoDBAdapter.new('steam_test', ['127.0.0.1:27017']) }
@@ -82,7 +82,7 @@ describe Locomotive::Steam::PageRepository do
 
   context 'Filesystem' do
 
-    it_should_behave_like 'page repository' do
+    it_should_behave_like 'a repository' do
 
       let(:site_id) { 1 }
       let(:adapter) { Locomotive::Steam::FilesystemAdapter.new(default_fixture_site_path) }

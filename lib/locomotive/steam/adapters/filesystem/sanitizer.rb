@@ -33,6 +33,7 @@ module Locomotive::Steam
         end
 
         def apply_to_entity(entity)
+          attach_site_to(entity)
           entity
         end
 

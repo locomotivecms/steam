@@ -16,7 +16,7 @@ module Locomotive::Steam
           end
 
           def apply_to_entity(entity)
-            attach_site_to(entity)
+            super
 
             record_id(entity) # required to get the parent_id
 

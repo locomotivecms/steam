@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), '..', 'mongodb_helper')
 require_relative '../../../lib/locomotive/steam/adapters/filesystem.rb'
 require_relative '../../../lib/locomotive/steam/adapters/mongodb.rb'
 
-describe Locomotive::Steam::SnippetRepository do
+describe Locomotive::Steam::TranslationRepository do
 
   shared_examples_for 'a repository' do
 
@@ -13,12 +13,12 @@ describe Locomotive::Steam::SnippetRepository do
 
     describe '#all' do
       subject { repository.all }
-      it { expect(subject.size).to eq 4 }
+      it { expect(subject.size).to eq 1 }
     end
 
-    describe '#by_slug' do
-      subject { repository.by_slug('a_complicated-one') }
-      it { expect(subject).not_to eq nil }
+    describe '#by_key' do
+      subject { repository.by_key('powered_by') }
+      it { expect(subject.values).to eq({ 'en' => 'Powered by', 'fr' => 'Propulsé par' }) }
     end
 
   end

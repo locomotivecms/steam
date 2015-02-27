@@ -1,12 +1,12 @@
 module Locomotive::Steam
 
-  class Snippet
+  class Translation
 
     include Locomotive::Steam::Models::Entity
 
     def initialize(attributes = {})
       super({
-        template: {}
+        values: {}
       }.merge(attributes))
     end
 
