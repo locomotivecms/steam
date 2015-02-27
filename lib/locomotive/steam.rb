@@ -20,6 +20,7 @@ require_relative      'steam/repositories/page_repository'
 require_relative      'steam/repositories/editable_element_repository'
 require_relative      'steam/repositories/snippet_repository'
 require_relative      'steam/repositories/translation_repository'
+require_relative      'steam/repositories/theme_asset_repository'
 
 require_relative      'steam/services'
 

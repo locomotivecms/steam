@@ -7,9 +7,9 @@ require_relative '../../../../lib/locomotive/steam/adapters/memory/query.rb'
 
 describe Locomotive::Steam::Adapters::Memory::Query do
 
-  let(:entry_1) { OpenStruct.new(name: 'foo', id: 1) }
-  let(:entry_2) { OpenStruct.new(name: 'bar', id: 2) }
-  let(:entry_3) { OpenStruct.new(name: 'zone', id: 3) }
+  let(:entry_1) { OpenStruct.new(name: 'foo', id: 1, attributes: { name: 'foo', id: 1 }) }
+  let(:entry_2) { OpenStruct.new(name: 'bar', id: 2, attributes: { name: 'bar', id: 2 }) }
+  let(:entry_3) { OpenStruct.new(name: 'zone', id: 3, attributes: { name: 'zone', id: 3 }) }
   let(:records) { { 1 => entry_1, 2 => entry_2, 3 => entry_3 } }
   let(:dataset) { Locomotive::Steam::Adapters::Memory::Dataset.new(:test) }
   let(:locale)  { :en }
@@ -17,6 +17,16 @@ describe Locomotive::Steam::Adapters::Memory::Query do
   let(:query)   { Locomotive::Steam::Adapters::Memory::Query }
 
   before { allow(dataset).to receive(:records).and_return(records) }
+
+  describe '#only' do
+    specify do
+      expect(
+        query.new(dataset, locale) do
+          only(:name)
+        end.all.map(&:name)
+      ).to eq(['foo', 'bar', 'zone'])
+    end
+  end
 
   describe '#limited' do
     specify do

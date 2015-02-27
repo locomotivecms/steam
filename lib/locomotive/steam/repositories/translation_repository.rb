@@ -5,9 +5,7 @@ module Locomotive
 
       include Models::Repository
 
-      mapping :translations, entity: Translation do
-        localized_attributes :template_path, :template
-      end
+      mapping :translations, entity: Translation
 
       def by_key(key)
         query { where(key: key) }.first

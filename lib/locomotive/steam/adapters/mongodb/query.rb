@@ -7,7 +7,7 @@ module Locomotive::Steam
         attr_reader :criteria, :sort
 
         def initialize(scope, localized_attributes, &block)
-          @criteria, @sort = {}, nil
+          @criteria, @sort, @fields = {}, nil, nil
           @scope, @localized_attributes = scope, localized_attributes
 
           apply_default_scope
@@ -22,22 +22,29 @@ module Locomotive::Steam
         end
 
         def order_by(*args)
-          @sort = [*args]
+          self.tap do
+            @sort = [*args]
+          end
+        end
+
+        def only(*args)
+          self.tap do
+            @fields = [*args]
+          end
         end
 
         def against(collection)
           _query = to_origin
-          selector, sort = _query.selector, _query.options[:sort]
+          selector, fields, sort = _query.selector, _query.options[:fields], _query.options[:sort]
 
-          if sort
-            collection.find(selector).sort(sort)
-          else
-            collection.find(selector)
+          collection.find(selector).tap do |results|
+            results.sort(sort) if sort
+            results.select(fields) if fields
           end
         end
 
         def to_origin
-          build_origin_query.where(@criteria).order_by(*@sort)
+          build_origin_query.only(@fields).where(@criteria).order_by(*@sort)
         end
 
         private

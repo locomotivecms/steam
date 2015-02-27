@@ -50,6 +50,10 @@ module Locomotive::Steam
           self
         end
 
+        def only(*fields)
+          self
+        end
+
         def ==(other)
           if other.kind_of? Array
             all == other

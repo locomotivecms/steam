@@ -55,12 +55,13 @@ describe Locomotive::Steam::Adapters::MongoDB::Query do
 
   describe '#to_origin' do
 
-    before { query.where(:title.in => %w(index)).order_by(title: :asc) }
+    before { query.where(:title.in => %w(index)).only(:title, :published).order_by(title: :asc) }
 
     subject { query.to_origin }
 
     it { expect(subject.selector).to eq({ 'site_id' => 42, 'title.en' => { '$in' => %w(index) } }) }
     it { expect(subject.options[:sort]).to eq({ 'title.en' => 1 }) }
+    it { expect(subject.options[:fields]).to eq({ 'title.en' => 1, 'published' => 1}) }
 
   end
 

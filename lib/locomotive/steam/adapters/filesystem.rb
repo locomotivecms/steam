@@ -7,6 +7,7 @@ require_relative 'filesystem/yaml_loaders/site'
 require_relative 'filesystem/yaml_loaders/page'
 require_relative 'filesystem/yaml_loaders/snippet'
 require_relative 'filesystem/yaml_loaders/translation'
+require_relative 'filesystem/yaml_loaders/theme_asset'
 
 require_relative 'filesystem/sanitizer'
 require_relative 'filesystem/sanitizers/simple'
@@ -41,6 +42,10 @@ module Locomotive::Steam
 
     def find(mapper, scope, id)
       _query(mapper, scope) { where(_id: id) }.first
+    end
+
+    def theme_assets_base_url(scope)
+      ''
     end
 
     private
@@ -79,7 +84,7 @@ module Locomotive::Steam
     end
 
     def build_yaml_loaders
-      %i(sites pages snippets translations).inject({}) do |memo, name|
+      %i(sites pages snippets translations theme_assets).inject({}) do |memo, name|
         memo[name] = build_klass('YAMLLoaders', name).new(site_path)
         memo
       end
