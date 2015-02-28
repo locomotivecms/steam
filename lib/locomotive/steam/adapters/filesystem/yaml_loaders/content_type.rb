@@ -1,42 +1,96 @@
-# module Locomotive
-#   module Steam
-#     module Repositories
-#       module Filesystem
-#         module YAMLLoaders
+module Locomotive
+  module Steam
+    module Adapters
+      module Filesystem
+        module YAMLLoaders
 
-#           class ContentType < Struct.new(:root_path, :cache)
+          class ContentType
 
-#             include YAMLLoaders::Concerns::Common
+            include Adapters::Filesystem::YAMLLoader
 
-#             def list_of_attributes
-#               cache.fetch('app/content_types') { load_list }
-#             end
+            def load(scope)
+              super
+              load_list
+            end
 
-#             private
+            private
 
-#             def load_list
-#               [].tap do |array|
-#                 each_file do |filepath, slug|
-#                   array << { slug: slug }.merge(load(filepath))
-#                 end
-#               end
-#             end
+            def load_list
+              [].tap do |array|
+                each_file do |filepath, slug|
+                  attributes = _load(filepath)
+                  attributes[:entries_custom_fields] = build_fields(attributes.delete(:fields))
+                  array << { slug: slug }.merge(attributes)
+                end
+              end
+            end
 
-#             def each_file(&block)
-#               Dir.glob(File.join(path, "*.yml")).each do |filepath|
-#                 slug = File.basename(filepath, '.yml')
-#                 yield(filepath, slug)
-#               end
-#             end
+            def build_fields(list)
+              list.map do |attributes|
+                build_field(attributes.keys.first, attributes.values.first)
+              end
+            end
 
-#             def path
-#               File.join(root_path, 'app', 'content_types')
-#             end
+            def build_field(name, attributes)
+              attributes.tap do |attributes|
+                attributes[:name] = name.to_s
+                attributes[:type] = attributes[:type].try(:to_s)
 
-#           end
+                if attributes[:label].blank?
+                  attributes[:label] = name.to_s.humanize
+                end
 
-#         end
-#       end
-#     end
-#   end
-# end
+                if select_options = attributes.delete(:select_options)
+                  attributes[:select_options] = build_select_options(select_options)
+                end
+              end
+            end
+
+            def build_select_options(options)
+              if options.is_a?(Hash)
+                build_select_options_from_hash(options)
+              else
+                build_select_options_from_array(options)
+              end
+            end
+
+            def build_select_options_from_hash(options)
+              [].tap do |list|
+                options.each do |locale, values|
+                  values.each_with_index do |name, position|
+                    if (option = list.at(position)).nil?
+                      list << { name: { locale => name }, position: position }
+                    else
+                      option[name][locale] = name
+                    end
+                  end
+                end
+              end
+            end
+
+            def build_select_options_from_array(options)
+              [].tap do |list|
+                options.each_with_index do |name, position|
+                  list << { name: name, position: position }
+                end
+              end
+            end
+
+            def each_file(&block)
+              Dir.glob(File.join(path, "*.yml")).each do |filepath|
+                slug = File.basename(filepath, '.yml')
+                yield(filepath, slug)
+              end
+            end
+
+            def path
+              File.join(site_path, 'app', 'content_types')
+            end
+
+          end
+
+        end
+      end
+    end
+  end
+end

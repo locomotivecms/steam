@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 require_relative '../../../lib/locomotive/steam/adapters/filesystem.rb'
-require_relative '../../../lib/locomotive/steam/repositories/editable_element_repository.rb'
+# require_relative '../../../lib/locomotive/steam/repositories/editable_element_repository.rb'
 
 describe Locomotive::Steam::PageRepository do
 

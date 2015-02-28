@@ -1,21 +1,25 @@
-# require 'spec_helper'
+require 'spec_helper'
 
-# describe Locomotive::Steam::Repositories::Filesystem::YAMLLoaders::Translation do
+require_relative '../../../../../lib/locomotive/steam/adapters/filesystem/yaml_loader.rb'
+require_relative '../../../../../lib/locomotive/steam/adapters/filesystem/yaml_loaders/translation.rb'
 
-#   let(:root_path)       { default_fixture_site_path }
-#   let(:cache)           { NoCacheStore.new }
-#   let(:loader)          { Locomotive::Steam::Repositories::Filesystem::YAMLLoaders::Translation.new(root_path, cache) }
+describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Translation do
 
-#   describe '#list_of_attributes' do
+  let(:site_path) { default_fixture_site_path }
+  let(:loader)    { described_class.new(site_path) }
 
-#     subject { loader.list_of_attributes }
+  describe '#load' do
 
-#     it 'tests various stuff' do
-#       expect(subject.size).to eq 1
-#       expect(subject.first[:key]).to eq('powered_by')
-#       expect(subject.first[:values]).to eq({ 'en' => 'Powered by', 'fr' => 'Propulsé par' })
-#     end
+    let(:scope) { instance_double('Scope', locale: :en) }
 
-#   end
+    subject { loader.load(scope) }
 
-# end
+    it 'tests various stuff' do
+      expect(subject.size).to eq 1
+      expect(subject.first[:key]).to eq('powered_by')
+      expect(subject.first[:values]).to eq({ 'en' => 'Powered by', 'fr' => 'Propulsé par' })
+    end
+
+  end
+
+end

@@ -5,6 +5,7 @@ module Locomotive
 
       include Models::Repository
 
+      # Entity mapping
       mapping :translations, entity: Translation
 
       def by_key(key)

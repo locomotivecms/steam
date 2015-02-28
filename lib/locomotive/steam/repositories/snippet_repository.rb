@@ -5,6 +5,7 @@ module Locomotive
 
       include Models::Repository
 
+      # Entity mapping
       mapping :snippets, entity: Snippet do
         localized_attributes :template_path, :template
       end

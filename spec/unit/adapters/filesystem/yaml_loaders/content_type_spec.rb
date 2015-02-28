@@ -1,20 +1,25 @@
-# require 'spec_helper'
+require 'spec_helper'
 
-# describe Locomotive::Steam::Repositories::Filesystem::YAMLLoaders::ContentType do
+require_relative '../../../../../lib/locomotive/steam/adapters/filesystem/yaml_loader.rb'
+require_relative '../../../../../lib/locomotive/steam/adapters/filesystem/yaml_loaders/content_type.rb'
 
-#   let(:root_path)       { default_fixture_site_path }
-#   let(:cache)           { NoCacheStore.new }
-#   let(:loader)          { Locomotive::Steam::Repositories::Filesystem::YAMLLoaders::ContentType.new(root_path, cache) }
+describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::ContentType do
 
-#   describe '#list_of_attributes' do
+  let(:site_path) { default_fixture_site_path }
+  let(:loader)    { described_class.new(site_path) }
 
-#     subject { loader.list_of_attributes.sort { |a, b| a[:slug] <=> b[:slug] } }
+  describe '#load' do
 
-#     it 'tests various stuff' do
-#       expect(subject.size).to eq 5
-#       expect(subject.first[:slug]).to eq('bands')
-#     end
+    let(:scope) { instance_double('Scope', locale: :en) }
 
-#   end
+    subject { loader.load(scope).sort { |a, b| a[:slug] <=> b[:slug] } }
 
-# end
+    it 'tests various stuff' do
+      expect(subject.size).to eq 5
+      expect(subject.first[:slug]).to eq('bands')
+      expect(subject.first[:entries_custom_fields].size).to eq 5
+    end
+
+  end
+
+end

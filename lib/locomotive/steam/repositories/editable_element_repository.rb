@@ -7,6 +7,7 @@ module Locomotive
 
       attr_accessor :page
 
+      # Entity mapping
       mapping :editable_elements, entity: EditableElement do
         localized_attributes :content, :source, :default_content, :default_source_url
 

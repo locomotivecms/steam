@@ -21,6 +21,9 @@ require_relative      'steam/repositories/editable_element_repository'
 require_relative      'steam/repositories/snippet_repository'
 require_relative      'steam/repositories/translation_repository'
 require_relative      'steam/repositories/theme_asset_repository'
+require_relative      'steam/repositories/content_type_repository'
+require_relative      'steam/repositories/content_type_field_repository'
+require_relative      'steam/repositories/content_type_field_select_option_repository'
 
 require_relative      'steam/services'
 

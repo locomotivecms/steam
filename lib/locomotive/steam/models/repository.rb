@@ -35,22 +35,6 @@ module Locomotive::Steam
 
       alias :all :query
 
-      # def create(entity)
-      #   entity.id = adapter.create(collection_name, entity)
-      # end
-
-      # def persisted?(entity)
-      #   !!entity.id && adapter.persisted?(collection_name, entity)
-      # end
-
-      # def update(entity)
-      #   adapter.update(collection_name, entity)
-      # end
-
-      # def destroy(entity)
-      #   adapter.destroy(collection_name, entity)
-      # end
-
       def mapper
         name, options, block = mapper_options
         @mapper ||= Mapper.new(name, options, self, &block)

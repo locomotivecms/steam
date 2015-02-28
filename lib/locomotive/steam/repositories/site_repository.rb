@@ -5,6 +5,7 @@ module Locomotive
 
       include Models::Repository
 
+      # Entity mapping
       mapping :sites, entity: Site do
         localized_attributes :seo_title, :meta_description, :meta_keywords
       end

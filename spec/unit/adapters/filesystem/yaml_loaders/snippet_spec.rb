@@ -1,23 +1,26 @@
-# require 'spec_helper'
+require 'spec_helper'
 
-# describe Locomotive::Steam::Repositories::Filesystem::YAMLLoaders::Snippet do
+require_relative '../../../../../lib/locomotive/steam/adapters/filesystem/yaml_loader.rb'
+require_relative '../../../../../lib/locomotive/steam/adapters/filesystem/yaml_loaders/snippet.rb'
 
-#   let(:root_path)       { default_fixture_site_path }
-#   let(:default_locale)  { :en }
-#   let(:cache)           { NoCacheStore.new }
-#   let(:loader)          { Locomotive::Steam::Repositories::Filesystem::YAMLLoaders::Snippet.new(root_path, default_locale, cache) }
+describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Snippet do
 
-#   describe '#list_of_attributes' do
+  let(:site_path) { default_fixture_site_path }
+  let(:loader)    { described_class.new(site_path) }
 
-#     subject { loader.list_of_attributes.sort { |a, b| a[:name] <=> b[:name] } }
+  describe '#load' do
 
-#     it 'tests various stuff' do
-#       expect(subject.size).to eq 4
-#       expect(subject.first[:slug]).to eq('a_complicated-one')
-#       expect(subject[1][:name]).to eq('Footer')
-#       expect(subject[1][:slug]).to eq('footer')
-#     end
+    let(:scope) { instance_double('Scope', locale: :en) }
 
-#   end
+    subject { loader.load(scope).sort { |a, b| a[:name] <=> b[:name] } }
 
-# end
+    it 'tests various stuff' do
+      expect(subject.size).to eq 4
+      expect(subject.first[:slug]).to eq('a_complicated-one')
+      expect(subject[1][:name]).to eq('Footer')
+      expect(subject[1][:slug]).to eq('footer')
+    end
+
+  end
+
+end

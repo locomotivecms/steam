@@ -32,7 +32,9 @@ module Locomotive::Steam
     def dataset(mapper, scope)
       Locomotive::Steam::Adapters::Memory::Dataset.new(mapper.name).tap do |dataset|
         collection.each do |attributes|
-          entity = mapper.to_entity(attributes)
+          # Note: very important to not manipulate the original attributes
+          # since the attributes might be modified further by the to_entity method
+          entity = mapper.to_entity(attributes.dup)
           dataset.insert(entity)
         end
       end
