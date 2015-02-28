@@ -20,11 +20,11 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake',       '~> 10.4.2'
 
   spec.add_development_dependency 'moped',      '~> 2.0.4'
-  spec.add_development_dependency 'origin',     '~> 1.0.4'
+  spec.add_development_dependency 'origin',     '~> 2.1.1'
 
   spec.add_dependency 'activesupport',          '~> 4.2.0'
   spec.add_dependency 'stringex',               '~> 2.5.2'
-  spec.add_dependency 'sanitize',               '~> 3.1.0'
+  spec.add_dependency 'sanitize',               '~> 3.1.2'
   spec.add_dependency 'morphine',               '~> 0.1.1'
   spec.add_dependency 'httparty',               '~> 0.13.3'
   spec.add_dependency 'chronic',                '~> 0.10.2'
