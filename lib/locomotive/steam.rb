@@ -13,17 +13,7 @@ require_relative      'steam/liquid'
 
 require_relative      'steam/models'
 require_relative_all  'steam/entities'
-
-# TODO
-require_relative      'steam/repositories/site_repository'
-require_relative      'steam/repositories/page_repository'
-require_relative      'steam/repositories/editable_element_repository'
-require_relative      'steam/repositories/snippet_repository'
-require_relative      'steam/repositories/translation_repository'
-require_relative      'steam/repositories/theme_asset_repository'
-require_relative      'steam/repositories/content_type_repository'
-require_relative      'steam/repositories/content_type_field_repository'
-require_relative      'steam/repositories/content_type_field_select_option_repository'
+require_relative_all  'steam/repositories'
 
 require_relative      'steam/services'
 

@@ -14,8 +14,6 @@ module Locomotive
         default_attribute :page, -> (repository) { repository.page }
       end
 
-      # TODO
-
     end
 
   end

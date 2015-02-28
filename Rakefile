@@ -13,6 +13,17 @@ Bundler::GemHelper.install_tasks
 
 require_relative 'lib/locomotive/steam'
 
+namespace :mongodb do
+  namespace :test do
+    desc 'Seed the MongoDB database with the dump of the Sample website'
+    task :seed do
+      path = File.join(File.expand_path(File.dirname(__FILE__)), 'spec', 'fixtures', 'mongodb')
+      `mongo steam_test --eval "db.dropDatabase()"`
+      `mongorestore -d steam_test #{path}`
+    end
+  end
+end
+
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new('spec') do |spec|
   spec.exclude_pattern = 'spec/unit/liquid/**/*_spec.rb,spec/integration/server/**/*_spec.rb'
@@ -26,7 +37,6 @@ end
 RSpec::Core::RakeTask.new('spec:unit') do |spec|
   # spec.pattern = 'spec/unit/**/*_spec.rb'
   spec.pattern = 'spec/unit/{services,core_ext,middlewares,decorators,adapters,entities,models,repositories}/**/*_spec.rb'
-  # spec.pattern = 'spec/unit/{adapters,entities,models,repositories}/**/*_spec.rb'
 end
 
-task default: :spec
+task default: ['mongodb:test:seed', :spec]

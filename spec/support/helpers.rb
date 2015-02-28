@@ -18,12 +18,6 @@ module Spec
       end
     end
 
-    def restore_mongodb
-      path = File.join(File.expand_path(File.dirname(__FILE__)), '..', 'fixtures', 'mongodb')
-      `mongo steam_test --eval "db.dropDatabase()"`
-      `mongorestore -d steam_test #{path}`
-    end
-
     def run_server
       output = ENV['STEAM_VERBOSE'] ? nil : File.join(default_fixture_site_path, 'log/steam.log')
       setup_common(output)
