@@ -49,9 +49,13 @@ module Locomotive::Steam
     end
 
     def memoized_dataset(mapper, scope)
-      cache.fetch(mapper.name) do
+      cache.fetch(cache_key(mapper, scope)) do
         dataset(mapper, scope)
       end
+    end
+
+    def cache_key(mapper, scope)
+      "#{scope.to_key}_#{mapper.name}"
     end
 
     def dataset(mapper, scope)
@@ -78,7 +82,7 @@ module Locomotive::Steam
     end
 
     def build_yaml_loaders
-      %i(sites pages content_types snippets translations theme_assets).inject({}) do |memo, name|
+      %i(sites pages content_types content_entries snippets translations theme_assets).inject({}) do |memo, name|
         memo[name] = build_klass('YAMLLoaders', name).new(site_path)
         memo
       end
@@ -86,7 +90,7 @@ module Locomotive::Steam
 
     def build_sanitizers
       hash = Hash.new { build_klass('Sanitizers', :simple).new }
-      %i(pages content_types snippets).inject(hash) do |memo, name|
+      %i(pages content_types content_entries snippets).inject(hash) do |memo, name|
         memo[name] = build_klass('Sanitizers', name).new
         memo
       end

@@ -72,7 +72,6 @@ module Locomotive::Steam
 
       def set_default_attributes(entity)
         @default_attributes.each do |(name, value)|
-          # _value = value.respond_to?(:call) ? @repository.instance_eval(&value) : value
           _value = value.respond_to?(:call) ? value.call(@repository) : value
           entity.send(:"#{name}=", _value)
         end

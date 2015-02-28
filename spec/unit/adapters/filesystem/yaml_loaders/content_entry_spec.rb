@@ -1,22 +1,25 @@
-# require 'spec_helper'
+require 'spec_helper'
 
-# describe Locomotive::Steam::Repositories::Filesystem::YAMLLoaders::ContentEntry do
+require_relative '../../../../../lib/locomotive/steam/adapters/filesystem/yaml_loader.rb'
+require_relative '../../../../../lib/locomotive/steam/adapters/filesystem/yaml_loaders/content_entry.rb'
 
-#   let(:root_path)       { default_fixture_site_path }
-#   let(:cache)           { NoCacheStore.new }
-#   let(:content_type)    { instance_double('Articles', slug: 'bands') }
-#   let(:loader)          { Locomotive::Steam::Repositories::Filesystem::YAMLLoaders::ContentEntry.new(root_path, cache) }
+describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::ContentEntry do
 
-#   describe '#list_of_attributes' do
+  let(:site_path)     { default_fixture_site_path }
+  let(:content_type)  { instance_double('Articles', slug: 'bands') }
+  let(:scope)         { instance_double('Scope', locale: :en, context: { content_type: content_type }) }
+  let(:loader)        { described_class.new(site_path) }
 
-#     subject { loader.list_of_attributes(content_type).sort { |a, b| a[:_label] <=> b[:_label] } }
+  describe '#load' do
 
-#     it 'tests various stuff' do
-#       expect(subject.size).to eq 3
-#       expect(subject.first[:_label]).to eq 'Alice in Chains'
-#       expect(subject.first[:content_type]).to eq content_type
-#     end
+    subject { loader.load(scope).sort { |a, b| a[:_label] <=> b[:_label] } }
 
-#   end
+    it 'tests various stuff' do
+      expect(subject.size).to eq 3
+      expect(subject.first[:_label]).to eq 'Alice in Chains'
+      expect(subject.first[:content_type]).to eq nil
+    end
 
-# end
+  end
+
+end

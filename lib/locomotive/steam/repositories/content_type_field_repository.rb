@@ -22,6 +22,10 @@ module Locomotive
         end
       end
 
+      def required
+        query { where(required: true) }.all
+      end
+
       def localized_names
         query { where(localized: true) }.all.map(&:name)
       end

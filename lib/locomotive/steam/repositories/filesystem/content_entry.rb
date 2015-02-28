@@ -56,7 +56,7 @@
 #             query(type) { where(_slug: slug) }.first
 #           end
 
-#           # Engine: entry.name :-)
+#           # Engine: entry.send(:name) :-)
 #           def value_for(name, entry, conditions = {})
 #             value = entry.send(name)
 

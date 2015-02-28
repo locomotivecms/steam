@@ -55,9 +55,9 @@ module Locomotive::Steam
           !!id && records.has_key?(id)
         end
 
-        # def query
-        #   Query.new(self)
-        # end
+        def query(locale = nil, &block)
+          Query.new(self, locale, &block)
+        end
 
         def clear!
           @records = {}

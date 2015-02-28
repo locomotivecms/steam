@@ -27,6 +27,10 @@ module Locomotive::Steam
         @translations.values
       end
 
+      def each(&block)
+        @translations.each(&block)
+      end
+
     end
 
   end

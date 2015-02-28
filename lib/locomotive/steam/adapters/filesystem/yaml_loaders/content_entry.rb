@@ -1,51 +1,50 @@
-# module Locomotive
-#   module Steam
-#     module Repositories
-#       module Filesystem
-#         module YAMLLoaders
+module Locomotive
+  module Steam
+    module Adapters
+      module Filesystem
+        module YAMLLoaders
 
-#           class ContentEntry < Struct.new(:root_path, :cache)
+          class ContentEntry
 
-#             include YAMLLoaders::Concerns::Common
+            include Adapters::Filesystem::YAMLLoader
 
-#             def list_of_attributes(content_type)
-#               cache.fetch("data/#{content_type.slug}") { load_list(content_type) }
-#             end
+            def load(scope)
+              super
+              load_list
+            end
 
-#             def write(content_type, attributes)
-#               list = cache.read("data/#{content_type.slug}")
+            private
 
-#               list << attributes.merge(content_type: content_type)
-#             end
+            def load_list
+              [].tap do |list|
+                each(content_type_slug) do |label, attributes, position|
+                  default = { _position: position, _label: label.to_s }
+                  list << default.merge(attributes)
+                end
+              end
+            end
 
-#             private
+            def each(slug, &block)
+              position = 0
+              _load(File.join(path, "#{slug}.yml")).each do |element|
+                label, attributes = element.keys.first, element.values.first
+                yield(label, attributes, position)
+                position += 1
+              end
+            end
 
-#             def load_list(content_type)
-#               [].tap do |list|
-#                 each(content_type.slug) do |label, attributes, position|
-#                   default = { content_type: content_type, _position: position, _label: label.to_s }
-#                   list << default.merge(attributes)
-#                 end
-#               end
-#             end
+            def path
+              File.join(site_path, 'data')
+            end
 
-#             def each(slug, &block)
-#               position = 0
-#               load(File.join(path, "#{slug}.yml")).each do |element|
-#                 label, attributes = element.keys.first, element.values.first
-#                 yield(label, attributes, position)
-#                 position += 1
-#               end
-#             end
+            def content_type_slug
+              @scope.context[:content_type].slug
+            end
 
-#             def path
-#               File.join(root_path, 'data')
-#             end
+          end
 
-#           end
-
-#         end
-#       end
-#     end
-#   end
-# end
+        end
+      end
+    end
+  end
+end

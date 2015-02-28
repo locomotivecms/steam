@@ -16,6 +16,17 @@ module Locomotive::Steam
       self.entries_custom_fields
     end
 
+    def fields_by_name
+      @fields_by_name ||= (fields.all.inject({}) do |memo, field|
+        memo[field.name] = field
+        memo
+      end)
+    end
+
+    def localized_fields_names
+      self.fields.localized_fields_names
+    end
+
     def label_field_name
       (self[:label_field_name] || fields.first.name).to_sym
     end

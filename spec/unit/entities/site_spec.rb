@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Locomotive::Steam::Site do
 
   let(:attributes) { {} }
-  let(:site) { Locomotive::Steam::Site.new(attributes) }
+  let(:site) { described_class.new(attributes) }
 
   describe '#handle' do
 

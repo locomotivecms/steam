@@ -6,7 +6,7 @@ describe Locomotive::Steam::Models::Mapper do
   let(:name)        { 'pages' }
   let(:options)     { { entity: MyPage } }
   let(:block)       { nil }
-  let(:mapper)      { Locomotive::Steam::Models::Mapper.new(name, options, repository, &block) }
+  let(:mapper)      { described_class.new(name, options, repository, &block) }
 
   describe '#localized attributes' do
 

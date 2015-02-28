@@ -35,11 +35,13 @@ module Locomotive::Steam
 
       alias :all :query
 
-      def mapper
+      def mapper(memoized = true)
         name, options, block = mapper_options
-        @mapper ||= Mapper.new(name, options, self, &block)
-      end
 
+        return @mapper if @mapper && memoized
+
+        @mapper = Mapper.new(name, options, self, &block)
+      end
 
       # TODO: not sure about that. could it be used further in the dev
       # def collection_name

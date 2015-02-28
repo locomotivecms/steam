@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Locomotive::Steam::Page do
 
   let(:attributes) { {} }
-  let(:page) { Locomotive::Steam::Page.new(attributes) }
+  let(:page) { described_class.new(attributes) }
 
   describe '#index?' do
 

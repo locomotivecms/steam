@@ -3,9 +3,10 @@ require 'spec_helper'
 describe Locomotive::Steam::ContentType do
 
   let(:fields) { [instance_double('Field1', label: 'Title', name: :title, localized: false), instance_double('Field2', label: 'Author', name: :author, localized: true)] }
+  let(:repository) { instance_double('FieldRepository', all: fields, first: fields.first) }
   let(:content_type) { described_class.new(name: 'Articles') }
 
-  before { allow(content_type).to receive(:fields).and_return(fields) }
+  before { allow(content_type).to receive(:fields).and_return(repository) }
 
   describe '#label_field_name' do
 
@@ -18,6 +19,13 @@ describe Locomotive::Steam::ContentType do
       it { is_expected.to eq :author }
 
     end
+
+  end
+
+  describe '#fields_by_name' do
+
+    subject { content_type.fields_by_name }
+    it { expect(subject.keys).to eq [:title, :author] }
 
   end
 
