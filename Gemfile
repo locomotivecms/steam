@@ -24,5 +24,5 @@ group :test do
 end
 
 platform :ruby do
-  ruby '2.1.3'
+  ruby '2.2.0'
 end
