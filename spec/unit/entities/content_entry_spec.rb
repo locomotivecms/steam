@@ -12,7 +12,7 @@ describe Locomotive::Steam::ContentEntry do
 
   describe '#valid?' do
 
-    let(:fields) { [instance_double('Field', name: :title, type: 'string', required: true)] }
+    let(:fields) { [instance_double('Field', name: :title, type: :string, required: true)] }
 
     before do
       allow(repository).to receive(:required).and_return(fields)
@@ -150,32 +150,32 @@ describe Locomotive::Steam::ContentEntry do
       end
     end
 
-    context 'a belongs_to relationship' do
-      let(:field_type)  { :belongs_to }
-      let(:value)       { 'john-doe' }
-      it { expect(subject.type).to eq :belongs_to }
-      it { expect(subject.target_slugs).to eq ['john-doe'] }
-      it { expect(subject.source).to eq content_entry }
-      it { expect(subject.field).to eq field }
-    end
+    # context 'a belongs_to relationship' do
+    #   let(:field_type)  { :belongs_to }
+    #   let(:value)       { 'john-doe' }
+    #   it { expect(subject.type).to eq :belongs_to }
+    #   it { expect(subject.target_slugs).to eq ['john-doe'] }
+    #   it { expect(subject.source).to eq content_entry }
+    #   it { expect(subject.field).to eq field }
+    # end
 
-    context 'a has_many relationship' do
-      let(:field_type)  { :has_many }
-      let(:value)       { nil }
-      it { expect(subject.type).to eq :has_many }
-      it { expect(subject.target_slugs).to eq [] }
-      it { expect(subject.source).to eq content_entry }
-      it { expect(subject.field).to eq field }
-    end
+    # context 'a has_many relationship' do
+    #   let(:field_type)  { :has_many }
+    #   let(:value)       { nil }
+    #   it { expect(subject.type).to eq :has_many }
+    #   it { expect(subject.target_slugs).to eq [] }
+    #   it { expect(subject.source).to eq content_entry }
+    #   it { expect(subject.field).to eq field }
+    # end
 
-    context 'a many_to_many relationship' do
-      let(:field_type)  { :many_to_many }
-      let(:value)       { ['john-doe', 'jane-doe'] }
-      it { expect(subject.type).to eq :many_to_many }
-      it { expect(subject.target_slugs).to eq ['john-doe', 'jane-doe'] }
-      it { expect(subject.source).to eq content_entry }
-      it { expect(subject.field).to eq field }
-    end
+    # context 'a many_to_many relationship' do
+    #   let(:field_type)  { :many_to_many }
+    #   let(:value)       { ['john-doe', 'jane-doe'] }
+    #   it { expect(subject.type).to eq :many_to_many }
+    #   it { expect(subject.target_slugs).to eq ['john-doe', 'jane-doe'] }
+    #   it { expect(subject.source).to eq content_entry }
+    #   it { expect(subject.field).to eq field }
+    # end
 
   end
 

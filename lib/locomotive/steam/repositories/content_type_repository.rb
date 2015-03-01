@@ -7,8 +7,7 @@ module Locomotive
 
       # Entity mapping
       mapping :content_types, entity: ContentType do
-        # embedded association
-        association :entries_custom_fields, ContentTypeFieldRepository
+        embedded_association :entries_custom_fields, ContentTypeFieldRepository
       end
 
       def by_slug(slug_or_content_type)

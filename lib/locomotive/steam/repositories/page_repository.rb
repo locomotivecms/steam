@@ -9,8 +9,7 @@ module Locomotive
       mapping :pages, entity: Page do
         localized_attributes :title, :slug, :permalink, :template, :template_path, :redirect_url, :fullpath, :seo_title, :meta_description, :meta_keywords
 
-        # embedded association
-        association :editable_elements, EditableElementRepository
+        embedded_association :editable_elements, EditableElementRepository
       end
 
       def all(conditions = {})
@@ -29,8 +28,6 @@ module Locomotive
       end
 
       def matching_fullpath(list)
-        # all(:fullpath.in => list)
-        # all('fullpath.in' => list) # MongoDB => fullpath.in
         all(k(:fullpath, :in) => list)
       end
 

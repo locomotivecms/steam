@@ -105,7 +105,7 @@ describe Locomotive::Steam::ContentTypeRepository do
       let(:fields) do
         [
           { name: 'title', hint: 'Title of the article', type: 'string' },
-          { name: 'category', type: 'select', select_options: [{ name: { en: 'cooking', fr: 'cuisine' }, position: 0 }, { name: { en: 'bread', fr: 'pain' }, position: 1 }] }
+          { name: 'category', type: :select, select_options: [{ name: { en: 'cooking', fr: 'cuisine' }, position: 0 }, { name: { en: 'bread', fr: 'pain' }, position: 1 }] }
         ]
       end
       let(:name) { :category }

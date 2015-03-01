@@ -36,7 +36,7 @@ describe Locomotive::Steam::Models::Mapper do
       let(:repository)  { instance_double('Repository', scope: 42) }
       let(:attributes) { { parents: [instance_double('Page', title: 'Hello world')] } }
       let(:klass) { instance_double('RepositoryKlass')}
-      let(:block) { ->(_) { association(:parents, BlankRepository) } }
+      let(:block) { ->(_) { embedded_association(:parents, BlankRepository) } }
 
       it { expect(subject.parents).not_to eq nil }
 

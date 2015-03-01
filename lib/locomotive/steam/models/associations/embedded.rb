@@ -5,7 +5,7 @@ module Locomotive::Steam
   module Models
 
     # Note: represents an embedded collection
-    class Association
+    class EmbeddedAssociation
 
       include Morphine
 

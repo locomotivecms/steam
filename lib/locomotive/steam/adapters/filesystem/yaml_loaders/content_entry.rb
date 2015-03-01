@@ -18,9 +18,22 @@ module Locomotive
             def load_list
               [].tap do |list|
                 each(content_type_slug) do |label, attributes, position|
-                  default = { _position: position, _label: label.to_s }
-                  list << default.merge(attributes)
+                  _attributes = { _position: position, _label: label.to_s }.merge(attributes)
+
+                  setup_belongs_to_associations(_attributes)
+
+                  list << _attributes
                 end
+              end
+            end
+
+            def setup_belongs_to_associations(attributes)
+              content_type.belongs_to_fields.each do |field|
+                # <name>_id
+                attributes[:"#{field.name}_id"] = attributes.delete(field.name.to_sym)
+
+                # _position_in_<name>
+                attributes[:"_position_in_#{field.name}"] = attributes[:_position]
               end
             end
 
@@ -37,8 +50,12 @@ module Locomotive
               File.join(site_path, 'data')
             end
 
+            def content_type
+              @scope.context[:content_type]
+            end
+
             def content_type_slug
-              @scope.context[:content_type].slug
+              content_type.slug
             end
 
           end

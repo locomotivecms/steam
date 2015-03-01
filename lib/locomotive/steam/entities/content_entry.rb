@@ -4,7 +4,7 @@ module Locomotive::Steam
 
   class ContentEntry
 
-    ASSOCIATION_NAMES = [:belongs_to, :has_many, :many_to_many].freeze
+    # ASSOCIATION_NAMES = [:belongs_to, :has_many, :many_to_many].freeze
 
     include Locomotive::Steam::Models::Entity
 
@@ -55,10 +55,6 @@ module Locomotive::Steam
       self[content_type.label_field_name]
     end
 
-    # def localized_attributes
-    #   self.class.localized_attributes + content_type.localized_fields_names
-    # end
-
     def to_liquid
       Locomotive::Steam::Liquid::Drops::ContentEntry.new(self)
     end
@@ -81,9 +77,9 @@ module Locomotive::Steam
     end
 
     def _cast_value(field)
-      if ASSOCIATION_NAMES.include?(field.type)
-        AssociationMetadata.new(field.type, self, field, [*attributes[field.name]])
-      elsif private_methods.include?(:"_cast_#{field.type}")
+      # if ASSOCIATION_NAMES.include?(field.type)
+      #   AssociationMetadata.new(field.type, self, field, [*attributes[field.name]])
+      if private_methods.include?(:"_cast_#{field.type}")
         send(:"_cast_#{field.type}", field.name)
       else
         attributes[field.name]
@@ -127,12 +123,12 @@ module Locomotive::Steam
       end
     end
 
-    class AssociationMetadata < Struct.new(:type, :source, :field, :target_slugs)
-      def association; true; end
-      def inverse_of; field.inverse_of; end
-      def target_class_slug; field.class_name; end
-      def order_by; field[:order_by]; end
-    end
+    # class AssociationMetadata < Struct.new(:type, :source, :field, :target_slugs)
+    #   def association; true; end
+    #   def inverse_of; field.inverse_of; end
+    #   def target_class_slug; field.class_name; end
+    #   def order_by; field[:order_by]; end
+    # end
 
   end
 

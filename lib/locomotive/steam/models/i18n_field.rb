@@ -8,11 +8,11 @@ module Locomotive::Steam
       def initialize(name, translations)
         @name = name
 
-        if translations.respond_to?(:fetch)
-          @translations = translations.with_indifferent_access
+        @translations = (if translations.respond_to?(:fetch)
+          translations
         else
-          @translations = Hash.new { translations }
-        end
+          Hash.new { translations }
+        end).with_indifferent_access
       end
 
       def [](locale)

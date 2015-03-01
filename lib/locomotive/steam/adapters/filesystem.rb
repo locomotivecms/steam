@@ -35,7 +35,8 @@ module Locomotive::Steam
     end
 
     def find(mapper, scope, id)
-      _query(mapper, scope) { where(_id: id) }.first
+      name = identifier_name(mapper)
+      _query(mapper, scope) { where(name => id) }.first
     end
 
     def theme_assets_base_url(scope)
@@ -43,6 +44,15 @@ module Locomotive::Steam
     end
 
     private
+
+    def identifier_name(mapper)
+      case mapper.name
+      when :content_types   then :slug
+      when :content_entries then :_slug
+      else
+        :_id
+      end
+    end
 
     def _query(mapper, scope, &block)
       Locomotive::Steam::Adapters::Memory::Query.new(all(mapper, scope), scope.locale, &block)

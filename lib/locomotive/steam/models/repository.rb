@@ -17,6 +17,14 @@ module Locomotive::Steam
         @scope    = Scope.new(site, locale)
       end
 
+      def build(attributes, &block)
+        mapper.to_entity(attributes)
+      end
+
+      def create(entity)
+        adapter.create(entity)
+      end
+
       def find(id)
         adapter.find(mapper, scope, id)
       end
@@ -41,6 +49,10 @@ module Locomotive::Steam
         return @mapper if @mapper && memoized
 
         @mapper = Mapper.new(name, options, self, &block)
+      end
+
+      def i18n_value_of(entity, name)
+        mapper.i18n_value_of(entity, name, locale)
       end
 
       # TODO: not sure about that. could it be used further in the dev
