@@ -23,8 +23,8 @@ module Locomotive::Steam
         @default_attributes += [[name.to_sym, value]]
       end
 
-      def belongs_to_association(name, repository_klass, options = {})
-        @associations[:belongs_to] += [[name.to_sym, repository_klass, options]]
+      def belongs_to_association(name, repository_klass, &block)
+        @associations[:belongs_to] += [[name.to_sym, repository_klass, block]]
       end
 
       def embedded_association(name, repository_klass)
@@ -68,15 +68,15 @@ module Locomotive::Steam
 
       # build the embedded associations
       def serialize_embedded_associations(attributes)
-        @associations[:embedded].each do |name, repository_klass|
+        @associations[:embedded].each do |(name, repository_klass)|
           attributes[name] = EmbeddedAssociation.new(repository_klass, attributes[name], @repository.scope)
         end
       end
 
       # build the belongs_to associations
       def serialize_belongs_to_associations(attributes)
-        @associations[:belongs_to].each do |name, repository_klass, options|
-          attributes[name] = BelongsToAssociation.new(repository_klass, @repository.scope, @repository.adapter)
+        @associations[:belongs_to].each do |(name, repository_klass, block)|
+          attributes[name] = BelongsToAssociation.new(repository_klass, @repository.scope, @repository.adapter, &block)
         end
       end
 
@@ -89,7 +89,7 @@ module Locomotive::Steam
 
       def attach_entity_to_belongs_to_associations(entity)
         @associations[:belongs_to].each do |(name, _)|
-          entity[name].attach(name, entity) # Note: entity[name] is a proxy class
+          entity[name].attach(name, entity)
         end
       end
 

@@ -26,14 +26,6 @@ module Locomotive::Steam
       end)
     end
 
-    # def belongs_to_fields
-    #   self.fields.belongs_to
-    # end
-
-    # def localized_fields_names
-    #   self.fields.localized_fields_names
-    # end
-
     def label_field_name
       (self[:label_field_name] || fields.first.name).to_sym
     end

@@ -25,6 +25,16 @@ module Locomotive::Steam
 
     alias :target :class_name
 
+    def target_id
+      return @target_id if @target_id
+
+      @target_id = if self.target =~ /^Locomotive::ContentEntry(.*)$/o
+        $1
+      else
+        self.target
+      end
+    end
+
     def required?; self[:required]; end
     def localized?; self[:localized]; end
 

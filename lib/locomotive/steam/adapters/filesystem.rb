@@ -43,8 +43,6 @@ module Locomotive::Steam
       ''
     end
 
-    private
-
     def identifier_name(mapper)
       case mapper.name
       when :content_types   then :slug
@@ -53,6 +51,8 @@ module Locomotive::Steam
         :_id
       end
     end
+
+    private
 
     def _query(mapper, scope, &block)
       Locomotive::Steam::Adapters::Memory::Query.new(all(mapper, scope), scope.locale, &block)

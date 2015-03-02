@@ -20,21 +20,28 @@ describe Locomotive::Steam::ContentEntryRepository do
 
   describe 'belongs_to' do
 
-    let(:field)       { instance_double('Field', name: :author, type: :belongs_to, association_options: { class_name: 'authors' }) }
-    let(:type)        { instance_double('Articles', _id: 1, slug: 'articles', order_by: nil, label_field_name: :title, belongs_to_fields: [field], fields_by_name: { title: instance_double('Field', name: :title, type: :string), author: field }, localized_fields_names: []) }
-    let(:other_type)  { instance_double('Authors', _id: 2, slug: 'authors', order_by: nil, label_field_name: :name, fields_by_name: { name: instance_double('Field', name: :name, type: :string) }, localized_fields_names: []) }
-    let(:entries)     { [{ content_type_id: 1, title: 'Hello world', author_id: 'john-doe' }] }
+    let(:field)   { instance_double('Field', name: :author, type: :belongs_to, target_id: 2) }
+    let(:type)    { instance_double('Articles', _id: 1, slug: 'articles', order_by: nil, label_field_name: :title, belongs_to_fields: [field], fields_by_name: { title: instance_double('Field', name: :title, type: :string), author: field }, localized_fields_names: []) }
+    let(:entries) { [{ content_type_id: 1, title: 'Hello world', author_id: 'john-doe' }] }
+    let(:other_type)    { instance_double('Authors', _id: 2, slug: 'authors', order_by: nil, label_field_name: :name, belongs_to_fields: [], fields_by_name: { name: instance_double('Field', name: :name, type: :string) }, localized_fields_names: []) }
+    let(:other_entries) { [{ content_type_id: 2, _slug: 'john-doe', name: 'John Doe' }] }
 
     let(:type_repository) { instance_double('ContentTypeRepository', belongs_to: [field]) }
 
     before do
       allow(type).to receive(:fields).and_return(type_repository)
+      allow(content_type_repository).to receive(:find).with(2).and_return(other_type)
     end
 
     subject { repository.with(type).by_slug('hello-world') }
 
     it { expect(subject.author.class).to eq Locomotive::Steam::Models::BelongsToAssociation }
-    # it { expect(subject.author.name).to eq 'John Doe' }
+
+    it 'calls the new repository to fetch the target entity' do
+      author = subject.author
+      allow(adapter).to receive(:collection).and_return(other_entries)
+      expect(author.name).to eq 'John Doe'
+    end
 
   end
 

@@ -34,26 +34,26 @@ module Locomotive::Steam
           def set_slug(entry, dataset)
             if entry._label.respond_to?(:translations) # localized?
               entry._label.each do |locale, label|
-                entry[:_slug][locale] ||= slugify(label, dataset, locale)
+                entry[:_slug][locale] ||= slugify(entry._id, label, dataset, locale)
               end
             else
-              entry[:_slug][locale] = slugify(entry._label, dataset)
+              entry[:_slug][locale] = slugify(entry._id, entry._label, dataset)
             end
           end
 
-          def slugify(label, dataset, locale = nil)
+          def slugify(id, label, dataset, locale = nil)
             base, index = label.permalink(false), nil
             _slugify = -> (i) { [base, i].compact.join('-') }
 
-            while !is_slug_unique?(_slugify.call(index), dataset, locale)
+            while !is_slug_unique?(id, _slugify.call(index), dataset, locale)
               index = index ? index + 1 : 1
             end
 
             _slugify.call(index)
           end
 
-          def is_slug_unique?(slug, dataset, locale)
-            dataset.query(locale) { where(_slug: slug) }.first.nil?
+          def is_slug_unique?(id, slug, dataset, locale)
+            dataset.query(locale) { where(_slug: slug, k(:_id, :ne) => id) }.first.nil?
           end
 
         end

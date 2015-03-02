@@ -5,8 +5,7 @@ module Locomotive
 
       include Models::Repository
 
-      attr_reader   :content_type_repository
-      attr_accessor :content_type, :local_conditions
+      attr_accessor :content_type_repository, :content_type, :local_conditions
 
       def initialize(adapter, site = nil, locale = nil, content_type_repository = nil)
         @local_conditions = {}
@@ -41,6 +40,12 @@ module Locomotive
         order_by = conditions.delete(:order_by)|| conditions.delete('order_by') || content_type.order_by
 
         query { where(conditions).order_by(order_by) }.all
+      end
+
+      def find(id)
+        name = adapter.identifier_name(mapper)
+        conditions = prepare_conditions(name => id)
+        first { where(conditions) }
       end
 
       def exists?(conditions = {})
@@ -82,15 +87,30 @@ module Locomotive
 
       def mapper(memoized = false)
         super(memoized).tap do |mapper|
-          unless self.content_type.localized_fields_names.blank?
-            mapper.localized_attributes(*self.content_type.localized_fields_names)
-          end
+          add_localized_fields_to_mapper(mapper)
+          add_belongs_to_fields_to_mapper(mapper)
+        end
+      end
 
-          self.content_type.belongs_to_fields.each do |field|
-            mapper.belongs_to_association(field.name, self.class, {}) do |repository|
-              # TODO: load the content type (adapter.id_names[:content_types])
-              repository.content_type
-            end # field.association_options)
+      def add_localized_fields_to_mapper(mapper)
+        unless self.content_type.localized_fields_names.blank?
+          mapper.localized_attributes(*self.content_type.localized_fields_names)
+        end
+      end
+
+      def add_belongs_to_fields_to_mapper(mapper)
+        self.content_type.belongs_to_fields.each do |field|
+          mapper.belongs_to_association(field.name, self.class) do |repository|
+            # Note: this code will be executed only when the attribute will be called
+
+            # load the target content type
+            _content_type = content_type_repository.find(field.target_id)
+
+            # the target repository uses this content type for all the other inner calls
+            repository.with(_content_type)
+
+            # the content type repository is also need by the target repository
+            repository.content_type_repository = content_type_repository
           end
         end
       end
