@@ -65,16 +65,6 @@ module Locomotive::Steam
           where(site_id: @scope.site._id) if @scope.site
         end
 
-        # def resolve_key(key)
-        #   return key unless key.respond_to?(:include?)
-        #   if key.include?('.')
-        #     name, operator = key.split('.')
-        #     name.to_sym.send(operator.to_sym)
-        #   else
-        #     key
-        #   end
-        # end
-
       end
 
     end

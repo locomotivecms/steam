@@ -89,6 +89,7 @@ module Locomotive
         super(memoized).tap do |mapper|
           add_localized_fields_to_mapper(mapper)
           add_belongs_to_fields_to_mapper(mapper)
+          add_has_many_fields_to_mapper(mapper)
         end
       end
 
@@ -101,6 +102,23 @@ module Locomotive
       def add_belongs_to_fields_to_mapper(mapper)
         self.content_type.belongs_to_fields.each do |field|
           mapper.belongs_to_association(field.name, self.class) do |repository|
+            # Note: this code will be executed only when the attribute will be called
+
+            # load the target content type
+            _content_type = content_type_repository.find(field.target_id)
+
+            # the target repository uses this content type for all the other inner calls
+            repository.with(_content_type)
+
+            # the content type repository is also need by the target repository
+            repository.content_type_repository = content_type_repository
+          end
+        end
+      end
+
+      def add_has_many_fields_to_mapper(mapper)
+        self.content_type.has_many_fields.each do |field|
+          mapper.has_many_association(field.name, self.class, inverse_of: field.inverse_of) do |repository|
             # Note: this code will be executed only when the attribute will be called
 
             # load the target content type

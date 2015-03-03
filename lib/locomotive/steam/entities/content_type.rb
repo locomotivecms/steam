@@ -5,7 +5,7 @@ module Locomotive::Steam
     include Locomotive::Steam::Models::Entity
     extend Forwardable
 
-    def_delegators :fields, :localized_fields_names, :belongs_to_fields
+    def_delegators :fields, :localized_fields_names, :belongs_to_fields, :has_many_fields
 
     def initialize(attributes = {})
       super({

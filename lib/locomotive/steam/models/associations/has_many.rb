@@ -9,42 +9,39 @@ module Locomotive::Steam
 
       attr_reader :repository
 
-      def initialize(repository_klass, scope, adapter)
+      def initialize(repository_klass, scope, adapter, options = {}, &block)
+        # build a new instance of the target repository
         @repository = repository_klass.new(adapter)
 
         # Note: if we change the locale of the parent repository, that won't
         # reflect in that repository
         @repository.scope = scope.dup
+
+        # the block will executed when a method of the target will be called
+        @block = block_given? ? block : nil
+
+        @options = options
       end
 
-      def set_condition
-        @repository.association_condition = { }
+      def attach(name, entity)
+        @name, @entity = name, entity
+      end
+
+      def target_key
+        :"#{@options[:inverse_of]}_id"
+      end
+
+      def entity_id
+        @repository.i18n_value_of(@entity, @repository.identifier_name)
       end
 
       def method_missing(name, *args, &block)
+        @block.call(@repository) if @block
+
+        @repository.local_conditions[target_key] = entity_id
+
         @repository.send(name, *args, &block)
       end
-
-      # include Morphine
-
-      # # use the scope from the parent repository
-      # # one of the benefits is that if we change the current_locale
-      # # of the parent repository, that will change the local repository
-      # # as well.
-      # def initialize(repository_klass, collection, scope)
-      #   adapter.collection = collection
-
-      #   @repository = repository_klass.new(adapter)
-      #   @repository.scope = scope
-      # end
-
-      # # In order to keep track of the entity which owns
-      # # the association.
-      # def attach(name, entity)
-      #   @repository.send(:"#{name}=", entity)
-      # end
-
-
 
     end
 

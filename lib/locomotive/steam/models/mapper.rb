@@ -10,7 +10,7 @@ module Locomotive::Steam
 
         @localized_attributes = []
         @default_attributes   = []
-        @associations         = { embedded: [], belongs_to: [] }
+        @associations         = { embedded: [], belongs_to: [], has_many: [] }
 
         instance_eval(&block) if block_given?
       end
@@ -27,6 +27,10 @@ module Locomotive::Steam
         @associations[:belongs_to] += [[name.to_sym, repository_klass, block]]
       end
 
+      def has_many_association(name, repository_klass, options = {}, &block)
+        @associations[:has_many] += [[name.to_sym, repository_klass, options, block]]
+      end
+
       def embedded_association(name, repository_klass)
         @associations[:embedded] += [[name.to_sym, repository_klass]]
       end
@@ -35,6 +39,7 @@ module Locomotive::Steam
         entity_klass.new(serialize(attributes)).tap do |entity|
           attach_entity_to_embedded_associations(entity)
           attach_entity_to_belongs_to_associations(entity)
+          attach_entity_to_has_many_associations(entity)
           set_default_attributes(entity)
         end
       end
@@ -44,6 +49,7 @@ module Locomotive::Steam
 
         serialize_embedded_associations(attributes)
         serialize_belongs_to_associations(attributes)
+        serialize_has_many_associations(attributes)
 
         attributes
       end
@@ -80,6 +86,13 @@ module Locomotive::Steam
         end
       end
 
+      # build the has_many associations
+      def serialize_has_many_associations(attributes)
+        @associations[:has_many].each do |(name, repository_klass, options, block)|
+          attributes[name] = HasManyAssociation.new(repository_klass, @repository.scope, @repository.adapter, options, &block)
+        end
+      end
+
       def attach_entity_to_embedded_associations(entity)
         @associations[:embedded].each do |(name, _)|
           key = self.name.to_s.singularize.to_sym
@@ -89,6 +102,12 @@ module Locomotive::Steam
 
       def attach_entity_to_belongs_to_associations(entity)
         @associations[:belongs_to].each do |(name, _)|
+          entity[name].attach(name, entity)
+        end
+      end
+
+      def attach_entity_to_has_many_associations(entity)
+        @associations[:has_many].each do |(name, _)|
           entity[name].attach(name, entity)
         end
       end

@@ -29,6 +29,10 @@ module Locomotive
         query { where(type: :belongs_to) }.all
       end
 
+      def has_many
+        query { where(type: :has_many) }.all
+      end
+
       def localized_names
         query { where(localized: true) }.all.map(&:name)
       end

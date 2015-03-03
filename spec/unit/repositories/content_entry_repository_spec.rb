@@ -4,7 +4,7 @@ require_relative '../../../lib/locomotive/steam/adapters/filesystem.rb'
 
 describe Locomotive::Steam::ContentEntryRepository do
 
-  let(:type)    { instance_double('Articles', _id: 1, slug: 'articles', order_by: nil, label_field_name: :title, localized_fields_names: [:title], belongs_to_fields: [], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
+  let(:type)    { build_content_type('Articles', label_field_name: :title, localized_fields_names: [:title], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
   let(:entries) { [{ content_type_id: 1, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' }] }
   let(:locale)  { :en }
   let(:site)    { instance_double('Site', _id: 1, default_locale: :en, locales: %i(en fr)) }
@@ -21,9 +21,9 @@ describe Locomotive::Steam::ContentEntryRepository do
   describe 'belongs_to' do
 
     let(:field)   { instance_double('Field', name: :author, type: :belongs_to, target_id: 2) }
-    let(:type)    { instance_double('Articles', _id: 1, slug: 'articles', order_by: nil, label_field_name: :title, belongs_to_fields: [field], fields_by_name: { title: instance_double('Field', name: :title, type: :string), author: field }, localized_fields_names: []) }
+    let(:type)    { build_content_type('Articles', label_field_name: :title, belongs_to_fields: [field]) }
     let(:entries) { [{ content_type_id: 1, title: 'Hello world', author_id: 'john-doe' }] }
-    let(:other_type)    { instance_double('Authors', _id: 2, slug: 'authors', order_by: nil, label_field_name: :name, belongs_to_fields: [], fields_by_name: { name: instance_double('Field', name: :name, type: :string) }, localized_fields_names: []) }
+    let(:other_type)    { build_content_type('Authors', _id: 2, label_field_name: :name, fields_by_name: { name: instance_double('Field', name: :name, type: :string) }) }
     let(:other_entries) { [{ content_type_id: 2, _slug: 'john-doe', name: 'John Doe' }] }
 
     let(:type_repository) { instance_double('ContentTypeRepository', belongs_to: [field]) }
@@ -41,6 +41,39 @@ describe Locomotive::Steam::ContentEntryRepository do
       author = subject.author
       allow(adapter).to receive(:collection).and_return(other_entries)
       expect(author.name).to eq 'John Doe'
+    end
+
+  end
+
+  describe 'has_many' do
+
+    let(:field)   { instance_double('Field', name: :articles, type: :has_many, target_id: 2, inverse_of: :author) }
+    let(:type)    { build_content_type('Authors', label_field_name: :name, has_many_fields: [field]) }
+    let(:entries) { [{ content_type_id: 1, _id: 1, name: 'John Doe' }] }
+    let(:other_type)    { build_content_type('Articles', _id: 2, label_field_name: :title, fields_by_name: { name: instance_double('Field', name: :title, type: :string) }) }
+    let(:other_entries) {
+        [
+          { content_type_id: 2, _slug: 'hello-world', title: 'Hello world', author_id: 'john-doe' },
+          { content_type_id: 2, _slug: 'lorem-ipsum', title: 'Lorem ipsum', author_id: 'john-doe' },
+          { content_type_id: 2, _slug: 'lost', title: 'Lost', author_id: 'jane-doe' },
+        ]
+      }
+
+    let(:type_repository) { instance_double('ContentTypeRepository', has_many: [field]) }
+
+    before do
+      allow(type).to receive(:fields).and_return(type_repository)
+      allow(content_type_repository).to receive(:find).with(2).and_return(other_type)
+    end
+
+    subject { repository.with(type).by_slug('john-doe') }
+
+    it { expect(subject.articles.class).to eq Locomotive::Steam::Models::HasManyAssociation }
+
+    it 'calls the new repository to fetch the target entities' do
+      articles = subject.articles
+      allow(adapter).to receive(:collection).and_return(other_entries)
+      expect(articles.all.map(&:title)).to eq ['Hello world', 'Lorem ipsum']
     end
 
   end
@@ -76,21 +109,6 @@ describe Locomotive::Steam::ContentEntryRepository do
     it { expect(subject.content_type).to eq type }
 
   end
-
-  # describe '#persist' do
-
-  #   # let(:entry) { instance_double('NewEntry', _visible: true, content_type: type, _label: 'Hello world', attributes: { title: 'Hello world' }) }
-  #   # subject { repository.persist(entry) }
-
-  #   # before do
-  #   #   expect(entry).to receive(:[]).with(:_slug).and_return(nil)
-  #   #   expect(entry).to receive(:[]=).with(:_slug, 'hello-world')
-  #   #   expect(loader).to receive(:write).with(type, { title: 'Hello world' })
-  #   # end
-
-  #   # it { expect { subject }.to change { repository.all(type).size }.by(1) }
-
-  # end
 
   describe '#exists?' do
 
@@ -129,71 +147,9 @@ describe Locomotive::Steam::ContentEntryRepository do
 
   end
 
-  # describe '#value_for' do
-
-  #   let(:name)    { :title }
-  #   let(:entry)   { instance_double('Article', title: 'Hello world') }
-
-  #   subject { repository.value_for(name, entry) }
-
-  #   it { is_expected.to eq 'Hello world' }
-
-  #   describe 'association do' do
-
-  #     let(:author_type) { instance_double('AuthorType') }
-  #     let(:entry) { instance_double('Article', _slug: 'hello-world', author: association, authors: association) }
-
-  #     before do
-  #       allow(content_type_repository).to receive(:by_slug).with(:authors).and_return(:author_type)
-  #     end
-
-  #     context 'belongs_to association' do
-
-  #       let(:association) { instance_double('Association', type: :belongs_to, association: true, target_class_slug: :authors, target_slugs: ['john-doe'], order_by: nil) }
-  #       let(:name) { :author }
-
-  #       before do
-  #         expect(repository).to receive(:by_slug).with(:author_type, 'john-doe').and_return('John Doe')
-  #       end
-
-  #       it { expect(subject).to eq 'John Doe' }
-
-  #     end
-
-  #     # context 'has_many association' do
-
-  #     #   let(:association) { instance_double('Association', type: :has_many, association: true, target_class_slug: :authors, target_field: :article, order_by: 'created_at') }
-  #     #   let(:name) { :authors }
-
-  #     #   before do
-  #     #     allow(association).to receive(:source).and_return(entry)
-  #     #     expect(repository).to receive(:all).with(:author_type, { article: 'hello-world', order_by: 'created_at' }).and_return(%w(jane john))
-  #     #   end
-
-  #     #   it { expect(subject).to eq %w(jane john) }
-
-  #     # end
-
-  #     # context 'many_to_many association' do
-
-  #     #   let(:association) { instance_double('Association', type: :many_to_many, association: true, target_class_slug: :authors, target_slugs: %w(jane john), order_by: nil) }
-  #     #   let(:name) { :authors }
-
-  #     #   before do
-  #     #     expect(repository).to receive(:all).with(:author_type, { '_slug.in' => %w(jane john) }).and_return(%w(jane john))
-  #     #   end
-
-  #     #   it { expect(subject).to eq %w(jane john) }
-
-  #     # end
-
-  #   end
-
-  # end
-
   describe '#next' do
 
-    let(:type) { instance_double('Articles', _id: 1, slug: 'articles', order_by: '_position asc', label_field_name: :title, localized_fields_names: [:title], belongs_to_fields: [], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
+    let(:type) { build_content_type('Articles', order_by: '_position asc', label_field_name: :title, localized_fields_names: [:title], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
     let(:entries) do
       [
         { content_type_id: 1, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' },
@@ -225,7 +181,7 @@ describe Locomotive::Steam::ContentEntryRepository do
 
   describe '#previous' do
 
-    let(:type) { instance_double('Articles', _id: 1, slug: 'articles', order_by: '_position asc', label_field_name: :title, localized_fields_names: [:title], belongs_to_fields: [], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
+    let(:type) { build_content_type('Articles', order_by: '_position asc', label_field_name: :title, localized_fields_names: [:title], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
     let(:entries) do
       [
         { content_type_id: 1, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' },
@@ -272,7 +228,7 @@ describe Locomotive::Steam::ContentEntryRepository do
           category: instance_double('SelectField', name: :category, type: :select, select_options: { en: ['cooking', 'bread'], fr: ['cuisine', 'pain'] })
         }
       end
-      let(:type) { instance_double('Articles', _id: 1, slug: 'articles', order_by: '_position asc', label_field_name: :title, localized_fields_names: [:title, :category], belongs_to_fields: [], fields_by_name: fields) }
+      let(:type) { build_content_type('Articles', order_by: '_position asc', label_field_name: :title, localized_fields_names: [:title, :category], fields_by_name: fields) }
       let(:name) { :category }
 
       let(:entries) do
@@ -292,6 +248,19 @@ describe Locomotive::Steam::ContentEntryRepository do
 
     end
 
+  end
+
+  def build_content_type(name, attributes = {})
+    instance_double(name,
+      {
+        _id:                    1,
+        slug:                   name.to_s.downcase,
+        order_by:               nil,
+        localized_fields_names: [],
+        belongs_to_fields:      [],
+        has_many_fields:        [],
+        fields_by_name:         {}
+      }.merge(attributes))
   end
 
 end

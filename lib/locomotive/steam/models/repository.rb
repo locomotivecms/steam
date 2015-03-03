@@ -41,6 +41,14 @@ module Locomotive::Steam
         adapter.key(name, operator)
       end
 
+      def identifier_name
+        if adapter.respond_to?(:identifier_name)
+          adapter.identifier_name(mapper)
+        else
+          :_id
+        end
+      end
+
       alias :all :query
 
       def mapper(memoized = true)
