@@ -129,39 +129,6 @@ module Locomotive
         first { where(conditions) }
       end
 
-      # def association(metadata, conditions = {})
-      #   case metadata.type
-      #   when :belongs_to    then belongs_to_association(metadata)
-      #   when :has_many      then has_many_association(metadata, conditions)
-      #   when :many_to_many  then many_to_many_association(metadata, conditions)
-      #   end
-      # end
-
-      # def belongs_to_association(metadata)
-      #   type = type_from(metadata.target_class_slug)
-      #   by_slug(type, metadata.target_slugs.first)
-      # end
-
-      # def has_many_association(metadata, conditions)
-      #   many_association(metadata,
-      #     { metadata.target_field => localized_slug(metadata.source) }.merge(conditions))
-      # end
-
-      # def many_to_many_association(metadata, conditions)
-      #   many_association(metadata,
-      #     { '_slug.in' => metadata.target_slugs }.merge(conditions))
-      # end
-
-      # def many_association(metadata, conditions)
-      #   type = type_from(metadata.target_class_slug)
-
-      #   if order_by = metadata.order_by
-      #     conditions = { order_by: order_by }.merge(conditions)
-      #   end
-
-      #   all(type, conditions)
-      # end
-
     end
 
   end

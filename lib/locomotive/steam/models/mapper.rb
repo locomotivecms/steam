@@ -6,7 +6,8 @@ module Locomotive::Steam
       ASSOCIATION_CLASSES = {
         embedded:     EmbeddedAssociation,
         belongs_to:   BelongsToAssociation,
-        has_many:     HasManyAssociation
+        has_many:     HasManyAssociation,
+        many_to_many: ManyToManyAssociation
       }.freeze
 
       attr_reader :name, :options, :default_attributes, :localized_attributes, :associations

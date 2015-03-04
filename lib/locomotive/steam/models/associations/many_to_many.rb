@@ -2,17 +2,16 @@ module Locomotive::Steam
   module Models
 
     # Note: represents an embedded collection
-    class HasManyAssociation < ReferencedAssociation
+    class ManyToManyAssociation < ReferencedAssociation
 
       def __load__
         # Note: in adapters like the FileSystem one, we use slugs
         # to reference other entities in associations,
         # that is why we call identifier_name.
-        id  = @repository.i18n_value_of(@entity, @repository.identifier_name)
-        key = :"#{@options[:inverse_of]}_id"
+        source_key = :"#{@options[:association_name].to_s.singularize}_ids"
+        key = @repository.k(@repository.identifier_name, :in)
 
-        # all the further queries will be scoped by the "foreign_key"
-        @repository.local_conditions[key] = id
+        @repository.local_conditions[key] = @entity[source_key]
 
         # use order_by from options as the default one for further queries
         @repository.local_conditions[:order_by] = @options[:order_by] unless @options[:order_by].blank?

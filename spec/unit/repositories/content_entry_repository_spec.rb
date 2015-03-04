@@ -198,7 +198,7 @@ describe Locomotive::Steam::ContentEntryRepository do
     let(:other_type)    { build_content_type('Authors', _id: 2, label_field_name: :name, fields_by_name: { name: instance_double('Field', name: :name, type: :string) }) }
     let(:other_entries) { [{ content_type_id: 2, _slug: 'john-doe', name: 'John Doe' }] }
 
-    let(:type_repository) { instance_double('ContentTypeRepository', belongs_to: [field]) }
+    let(:type_repository) { instance_double('ContentTypeRepository') }
 
     before do
       allow(type).to receive(:fields).and_return(type_repository)
@@ -231,7 +231,7 @@ describe Locomotive::Steam::ContentEntryRepository do
         ]
       }
 
-    let(:type_repository) { instance_double('ContentTypeRepository', has_many: [field]) }
+    let(:type_repository) { instance_double('ContentTypeRepository') }
 
     before do
       allow(type).to receive(:fields).and_return(type_repository)
@@ -246,6 +246,39 @@ describe Locomotive::Steam::ContentEntryRepository do
       articles = subject.articles
       allow(adapter).to receive(:collection).and_return(other_entries)
       expect(articles.all.map(&:title)).to eq ['Lorem ipsum', 'Hello world']
+    end
+
+  end
+
+  describe 'many_to_many' do
+
+    let(:field)   { instance_double('Field', name: :articles, type: :many_to_many, association_options: { target_id: 2, inverse_of: :authors }) }
+    let(:type)    { build_content_type('Authors', label_field_name: :name, association_fields: [field]) }
+    let(:entries) { [{ content_type_id: 1, _id: 1, name: 'John Doe', article_ids: ['hello-world', 'lorem-ipsum'] }] }
+    let(:other_type)    { build_content_type('Articles', _id: 2, label_field_name: :title, fields_by_name: { name: instance_double('Field', name: :title, type: :string) }) }
+    let(:other_entries) {
+        [
+          { content_type_id: 2, _slug: 'hello-world', title: 'Hello world', author_id: 'john-doe', position_in_author: 2 },
+          { content_type_id: 2, _slug: 'lorem-ipsum', title: 'Lorem ipsum', author_id: 'john-doe', position_in_author: 1 },
+          { content_type_id: 2, _slug: 'lost', title: 'Lost', author_id: 'jane-doe' },
+        ]
+      }
+
+    let(:type_repository) { instance_double('ContentTypeRepository') }
+
+    before do
+      allow(type).to receive(:fields).and_return(type_repository)
+      allow(content_type_repository).to receive(:find).with(2).and_return(other_type)
+    end
+
+    subject { repository.with(type).by_slug('john-doe') }
+
+    it { expect(subject.articles.class).to eq Locomotive::Steam::Models::ManyToManyAssociation }
+
+    it 'calls the new repository to fetch the target entities' do
+      articles = subject.articles
+      allow(adapter).to receive(:collection).and_return(other_entries)
+      expect(articles.all.map(&:title)).to eq ['Hello world', 'Lorem ipsum']
     end
 
   end
