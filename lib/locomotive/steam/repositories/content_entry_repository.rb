@@ -5,13 +5,13 @@ module Locomotive
 
       include Models::Repository
 
-      attr_accessor :content_type_repository, :content_type, :local_conditions
+      attr_accessor :content_type_repository, :content_type
 
       def initialize(adapter, site = nil, locale = nil, content_type_repository = nil)
-        @local_conditions = {}
         @adapter  = adapter
         @scope    = Locomotive::Steam::Models::Scope.new(site, locale)
         @content_type_repository = content_type_repository
+        @local_conditions = {}
       end
 
       # Entity mapping
@@ -21,7 +21,7 @@ module Locomotive
         default_attribute :content_type, -> (repository) { repository.content_type }
       end
 
-      # this is the starting point of all the next actions
+      # this is the starting point of all the next methods
       def with(type)
         self.content_type = type # used for creating the scope
         self.scope.context[:content_type] = type
@@ -88,8 +88,7 @@ module Locomotive
       def mapper(memoized = false)
         super(memoized).tap do |mapper|
           add_localized_fields_to_mapper(mapper)
-          add_belongs_to_fields_to_mapper(mapper)
-          add_has_many_fields_to_mapper(mapper)
+          add_associations_to_mapper(mapper)
         end
       end
 
@@ -99,56 +98,36 @@ module Locomotive
         end
       end
 
-      def add_belongs_to_fields_to_mapper(mapper)
-        self.content_type.belongs_to_fields.each do |field|
-          mapper.belongs_to_association(field.name, self.class) do |repository|
-            # Note: this code will be executed only when the attribute will be called
-
-            # load the target content type
-            _content_type = content_type_repository.find(field.target_id)
-
-            # the target repository uses this content type for all the other inner calls
-            repository.with(_content_type)
-
-            # the content type repository is also need by the target repository
-            repository.content_type_repository = content_type_repository
-          end
+      def add_associations_to_mapper(mapper)
+        self.content_type.association_fields.each do |field|
+          mapper.association(field.type, field.name, self.class, field.association_options, &method(:prepare_repository_for_association))
         end
       end
 
-      def add_has_many_fields_to_mapper(mapper)
-        self.content_type.has_many_fields.each do |field|
-          mapper.has_many_association(field.name, self.class, inverse_of: field.inverse_of) do |repository|
-            # Note: this code will be executed only when the attribute will be called
+      # This code is executed once when the association proxy object receives a call to any method
+      def prepare_repository_for_association(repository, options)
+        # load the target content type
+        _content_type = content_type_repository.find(options[:target_id])
 
-            # load the target content type
-            _content_type = content_type_repository.find(field.target_id)
+        # the target repository uses this content type for all the other inner calls
+        repository.with(_content_type)
 
-            # the target repository uses this content type for all the other inner calls
-            repository.with(_content_type)
-
-            # the content type repository is also need by the target repository
-            repository.content_type_repository = content_type_repository
-          end
-        end
+        # the content type repository is also need by the target repository
+        repository.content_type_repository = content_type_repository
       end
 
-      # TODO: move to the repository + handle order_by
-      def prepare_conditions(*conditions)
-        [*conditions].inject({}) do |memo, hash|
-          memo.merge!(hash) unless hash.blank?
-          memo
-        end.merge(@local_conditions)
+      def next_or_previous(entry, asc_op, desc_op)
+        return nil if entry.nil?
+
+        with(entry.content_type)
+
+        name, direction = self.content_type.order_by.split
+        op = direction == 'asc' ? asc_op : desc_op
+
+        conditions = prepare_conditions({ k(name, op) => i18n_value_of(entry, name) })
+
+        first { where(conditions) }
       end
-
-      # def type_from(slug)
-      #   content_type_repository.by_slug(slug)
-      # end
-
-      # def localized_slug(entry)
-      #   raise 'SHOULD NOT BE USED'
-      #   localized_attribute(entry, :_slug)
-      # end
 
       # def association(metadata, conditions = {})
       #   case metadata.type
@@ -182,19 +161,6 @@ module Locomotive
 
       #   all(type, conditions)
       # end
-
-      def next_or_previous(entry, asc_op, desc_op)
-        return nil if entry.nil?
-
-        with(entry.content_type)
-
-        name, direction = self.content_type.order_by.split
-        op = direction == 'asc' ? asc_op : desc_op
-
-        conditions = prepare_conditions({ k(name, op) => i18n_value_of(entry, name) })
-
-        first { where(conditions) }
-      end
 
     end
 

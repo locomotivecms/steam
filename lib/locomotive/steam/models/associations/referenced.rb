@@ -27,8 +27,17 @@ module Locomotive::Steam
         # needs implementation
       end
 
+      def __call_block_once__
+        # setup the repository if custom configuration from the
+        # repository for instance.
+        if @block
+          @block.call(@repository, @options)
+          @block = nil # trick to call it only once
+        end
+      end
+
       def method_missing(name, *args, &block)
-        @block.call(@repository) if @block
+        __call_block_once__
 
         __load__.try(:send, name, *args, &block)
       end

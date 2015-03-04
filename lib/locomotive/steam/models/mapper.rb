@@ -30,9 +30,13 @@ module Locomotive::Steam
       end
 
       ASSOCIATION_CLASSES.each do |type, _|
-        define_method("#{type}_association") do |name, repository_klass, options = {}, &block|
-          @associations << [type, name.to_sym, repository_klass, options || {}, block]
+        define_method("#{type}_association") do |name, repository_klass, options = nil, &block|
+          association(type, name, repository_klass, options, &block)
         end
+      end
+
+      def association(type, name, repository_klass, options = nil, &block)
+        @associations << [type, name.to_sym, repository_klass, options || {}, block]
       end
 
       def to_entity(attributes)

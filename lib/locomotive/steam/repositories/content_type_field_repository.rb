@@ -14,6 +14,10 @@ module Locomotive
         embedded_association :select_options, ContentTypeFieldSelectOptionRepository
       end
 
+      def associations
+        query { where(k(:type, :in) => %i(belongs_to has_many many_to_many)) }.all
+      end
+
       def unique
         query { where(unique: true) }.all.inject({}) do |memo, field|
           memo[field.name] = field
@@ -25,13 +29,13 @@ module Locomotive
         query { where(required: true) }.all
       end
 
-      def belongs_to
-        query { where(type: :belongs_to) }.all
-      end
+      # def belongs_to
+      #   query { where(type: :belongs_to) }.all
+      # end
 
-      def has_many
-        query { where(type: :has_many) }.all
-      end
+      # def has_many
+      #   query { where(type: :has_many) }.all
+      # end
 
       def localized_names
         query { where(localized: true) }.all.map(&:name)

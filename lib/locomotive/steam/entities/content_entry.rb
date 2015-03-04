@@ -4,8 +4,6 @@ module Locomotive::Steam
 
   class ContentEntry
 
-    # ASSOCIATION_NAMES = [:belongs_to, :has_many, :many_to_many].freeze
-
     include Locomotive::Steam::Models::Entity
 
     attr_accessor :content_type
@@ -77,8 +75,6 @@ module Locomotive::Steam
     end
 
     def _cast_value(field)
-      # if ASSOCIATION_NAMES.include?(field.type)
-      #   AssociationMetadata.new(field.type, self, field, [*attributes[field.name]])
       if private_methods.include?(:"_cast_#{field.type}")
         send(:"_cast_#{field.type}", field.name)
       else
@@ -122,13 +118,6 @@ module Locomotive::Steam
         yield(value)
       end
     end
-
-    # class AssociationMetadata < Struct.new(:type, :source, :field, :target_slugs)
-    #   def association; true; end
-    #   def inverse_of; field.inverse_of; end
-    #   def target_class_slug; field.class_name; end
-    #   def order_by; field[:order_by]; end
-    # end
 
   end
 

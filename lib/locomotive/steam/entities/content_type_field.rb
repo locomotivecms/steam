@@ -23,6 +23,12 @@ module Locomotive::Steam
       self[:class_name] || self[:target]
     end
 
+    def order_by
+      return self[:order_by] if self[:order_by]
+
+      type == :has_many ? "position_in_#{self[:inverse_of]}" : nil
+    end
+
     alias :target :class_name
 
     def target_id
@@ -39,7 +45,11 @@ module Locomotive::Steam
     def localized?; self[:localized]; end
 
     def association_options
-      @attributes.slice(:inverse_of, :order_by).merge(class_name: class_name)
+      {
+        target_id:  target_id,
+        inverse_of: self[:inverse_of],
+        order_by:   order_by
+      }
     end
 
     class SelectOption

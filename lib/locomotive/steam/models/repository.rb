@@ -8,13 +8,14 @@ module Locomotive::Steam
 
       class RecordNotFound < StandardError; end
 
-      attr_accessor :adapter, :scope
+      attr_accessor :adapter, :scope, :local_conditions
 
       def_delegators :@scope, :site, :site=, :locale, :locale=
 
       def initialize(adapter, site = nil, locale = nil)
         @adapter  = adapter
         @scope    = Scope.new(site, locale)
+        @local_conditions = {}
       end
 
       def build(attributes, &block)
@@ -61,6 +62,15 @@ module Locomotive::Steam
 
       def i18n_value_of(entity, name)
         mapper.i18n_value_of(entity, name, locale)
+      end
+
+      def prepare_conditions(*conditions)
+        first = { order_by: @local_conditions.delete(:order_by) }.delete_if { |_, v| v.blank? }
+
+        [first, *conditions].inject({}) do |memo, hash|
+          memo.merge!(hash) unless hash.blank?
+          memo
+        end.merge(@local_conditions)
       end
 
       # TODO: not sure about that. could it be used further in the dev

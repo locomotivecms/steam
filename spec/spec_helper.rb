@@ -27,8 +27,6 @@ require 'bundler/setup'
 require 'i18n-spec'
 
 require_relative '../lib/locomotive/steam'
-# TODO
-# require_relative '../lib/locomotive/steam/repositories/filesystem'
 require_relative 'support'
 
 Locomotive::Steam.configure do |config|

@@ -18,66 +18,6 @@ describe Locomotive::Steam::ContentEntryRepository do
     adapter.cache = NoCacheStore.new
   end
 
-  describe 'belongs_to' do
-
-    let(:field)   { instance_double('Field', name: :author, type: :belongs_to, target_id: 2) }
-    let(:type)    { build_content_type('Articles', label_field_name: :title, belongs_to_fields: [field]) }
-    let(:entries) { [{ content_type_id: 1, title: 'Hello world', author_id: 'john-doe' }] }
-    let(:other_type)    { build_content_type('Authors', _id: 2, label_field_name: :name, fields_by_name: { name: instance_double('Field', name: :name, type: :string) }) }
-    let(:other_entries) { [{ content_type_id: 2, _slug: 'john-doe', name: 'John Doe' }] }
-
-    let(:type_repository) { instance_double('ContentTypeRepository', belongs_to: [field]) }
-
-    before do
-      allow(type).to receive(:fields).and_return(type_repository)
-      allow(content_type_repository).to receive(:find).with(2).and_return(other_type)
-    end
-
-    subject { repository.with(type).by_slug('hello-world') }
-
-    it { expect(subject.author.class).to eq Locomotive::Steam::Models::BelongsToAssociation }
-
-    it 'calls the new repository to fetch the target entity' do
-      author = subject.author
-      allow(adapter).to receive(:collection).and_return(other_entries)
-      expect(author.name).to eq 'John Doe'
-    end
-
-  end
-
-  describe 'has_many' do
-
-    let(:field)   { instance_double('Field', name: :articles, type: :has_many, target_id: 2, inverse_of: :author) }
-    let(:type)    { build_content_type('Authors', label_field_name: :name, has_many_fields: [field]) }
-    let(:entries) { [{ content_type_id: 1, _id: 1, name: 'John Doe' }] }
-    let(:other_type)    { build_content_type('Articles', _id: 2, label_field_name: :title, fields_by_name: { name: instance_double('Field', name: :title, type: :string) }) }
-    let(:other_entries) {
-        [
-          { content_type_id: 2, _slug: 'hello-world', title: 'Hello world', author_id: 'john-doe' },
-          { content_type_id: 2, _slug: 'lorem-ipsum', title: 'Lorem ipsum', author_id: 'john-doe' },
-          { content_type_id: 2, _slug: 'lost', title: 'Lost', author_id: 'jane-doe' },
-        ]
-      }
-
-    let(:type_repository) { instance_double('ContentTypeRepository', has_many: [field]) }
-
-    before do
-      allow(type).to receive(:fields).and_return(type_repository)
-      allow(content_type_repository).to receive(:find).with(2).and_return(other_type)
-    end
-
-    subject { repository.with(type).by_slug('john-doe') }
-
-    it { expect(subject.articles.class).to eq Locomotive::Steam::Models::HasManyAssociation }
-
-    it 'calls the new repository to fetch the target entities' do
-      articles = subject.articles
-      allow(adapter).to receive(:collection).and_return(other_entries)
-      expect(articles.all.map(&:title)).to eq ['Hello world', 'Lorem ipsum']
-    end
-
-  end
-
   describe '#all' do
 
     let(:conditions) { nil }
@@ -250,6 +190,66 @@ describe Locomotive::Steam::ContentEntryRepository do
 
   end
 
+  describe 'belongs_to' do
+
+    let(:field)   { instance_double('Field', name: :author, type: :belongs_to, association_options: { target_id: 2 }) }
+    let(:type)    { build_content_type('Articles', label_field_name: :title, association_fields: [field]) }
+    let(:entries) { [{ content_type_id: 1, title: 'Hello world', author_id: 'john-doe' }] }
+    let(:other_type)    { build_content_type('Authors', _id: 2, label_field_name: :name, fields_by_name: { name: instance_double('Field', name: :name, type: :string) }) }
+    let(:other_entries) { [{ content_type_id: 2, _slug: 'john-doe', name: 'John Doe' }] }
+
+    let(:type_repository) { instance_double('ContentTypeRepository', belongs_to: [field]) }
+
+    before do
+      allow(type).to receive(:fields).and_return(type_repository)
+      allow(content_type_repository).to receive(:find).with(2).and_return(other_type)
+    end
+
+    subject { repository.with(type).by_slug('hello-world') }
+
+    it { expect(subject.author.class).to eq Locomotive::Steam::Models::BelongsToAssociation }
+
+    it 'calls the new repository to fetch the target entity' do
+      author = subject.author
+      allow(adapter).to receive(:collection).and_return(other_entries)
+      expect(author.name).to eq 'John Doe'
+    end
+
+  end
+
+  describe 'has_many' do
+
+    let(:field)   { instance_double('Field', name: :articles, type: :has_many, association_options: { target_id: 2, inverse_of: :author, order_by: 'position_in_author' }) }
+    let(:type)    { build_content_type('Authors', label_field_name: :name, association_fields: [field]) }
+    let(:entries) { [{ content_type_id: 1, _id: 1, name: 'John Doe' }] }
+    let(:other_type)    { build_content_type('Articles', _id: 2, label_field_name: :title, fields_by_name: { name: instance_double('Field', name: :title, type: :string) }) }
+    let(:other_entries) {
+        [
+          { content_type_id: 2, _slug: 'hello-world', title: 'Hello world', author_id: 'john-doe', position_in_author: 2 },
+          { content_type_id: 2, _slug: 'lorem-ipsum', title: 'Lorem ipsum', author_id: 'john-doe', position_in_author: 1 },
+          { content_type_id: 2, _slug: 'lost', title: 'Lost', author_id: 'jane-doe' },
+        ]
+      }
+
+    let(:type_repository) { instance_double('ContentTypeRepository', has_many: [field]) }
+
+    before do
+      allow(type).to receive(:fields).and_return(type_repository)
+      allow(content_type_repository).to receive(:find).with(2).and_return(other_type)
+    end
+
+    subject { repository.with(type).by_slug('john-doe') }
+
+    it { expect(subject.articles.class).to eq Locomotive::Steam::Models::HasManyAssociation }
+
+    it 'calls the new repository to fetch the target entities' do
+      articles = subject.articles
+      allow(adapter).to receive(:collection).and_return(other_entries)
+      expect(articles.all.map(&:title)).to eq ['Lorem ipsum', 'Hello world']
+    end
+
+  end
+
   def build_content_type(name, attributes = {})
     instance_double(name,
       {
@@ -257,8 +257,7 @@ describe Locomotive::Steam::ContentEntryRepository do
         slug:                   name.to_s.downcase,
         order_by:               nil,
         localized_fields_names: [],
-        belongs_to_fields:      [],
-        has_many_fields:        [],
+        association_fields:     [],
         fields_by_name:         {}
       }.merge(attributes))
   end
