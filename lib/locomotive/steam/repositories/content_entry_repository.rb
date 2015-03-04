@@ -133,6 +133,7 @@ module Locomotive
         end
       end
 
+      # TODO: move to the repository + handle order_by
       def prepare_conditions(*conditions)
         [*conditions].inject({}) do |memo, hash|
           memo.merge!(hash) unless hash.blank?

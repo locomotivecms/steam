@@ -1,46 +1,21 @@
-require 'locomotive/steam/adapters/memory'
-require 'morphine'
-
 module Locomotive::Steam
   module Models
 
     # Note: represents an embedded collection
-    class HasManyAssociation
+    class HasManyAssociation < ReferencedAssociation
 
-      attr_reader :repository
+      # TODO: use order_by from options (if specified, "position_in_<@name>" by default
+      def __load__
+        # Note: in adapters like the FileSystem one, we use slugs
+        # to reference other entities in associations.
+        id  = @repository.i18n_value_of(@entity, @repository.identifier_name)
+        key = :"#{@options[:inverse_of]}_id"
 
-      def initialize(repository_klass, scope, adapter, options = {}, &block)
-        # build a new instance of the target repository
-        @repository = repository_klass.new(adapter)
+        # all the further queries will be scoped by the "foreign_key"
+        @repository.local_conditions[key] = id
 
-        # Note: if we change the locale of the parent repository, that won't
-        # reflect in that repository
-        @repository.scope = scope.dup
-
-        # the block will executed when a method of the target will be called
-        @block = block_given? ? block : nil
-
-        @options = options
-      end
-
-      def attach(name, entity)
-        @name, @entity = name, entity
-      end
-
-      def target_key
-        :"#{@options[:inverse_of]}_id"
-      end
-
-      def entity_id
-        @repository.i18n_value_of(@entity, @repository.identifier_name)
-      end
-
-      def method_missing(name, *args, &block)
-        @block.call(@repository) if @block
-
-        @repository.local_conditions[target_key] = entity_id
-
-        @repository.send(name, *args, &block)
+        # all the further methods will be delegated to @repository
+        @repository
       end
 
     end

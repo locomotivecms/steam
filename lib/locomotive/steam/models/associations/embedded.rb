@@ -17,16 +17,19 @@ module Locomotive::Steam
       # one of the benefits is that if we change the current_locale
       # of the parent repository, that will change the local repository
       # as well.
-      def initialize(repository_klass, collection, scope)
+      def initialize(repository_klass, collection, scope, options = {})
         adapter.collection = collection
 
         @repository = repository_klass.new(adapter)
         @repository.scope = scope
+
+        @options = options
       end
 
       # In order to keep track of the entity which owns
       # the association.
-      def attach(name, entity)
+      def __attach__(entity)
+        name = @options[:mapper_name].to_s.singularize.to_sym
         @repository.send(:"#{name}=", entity)
       end
 

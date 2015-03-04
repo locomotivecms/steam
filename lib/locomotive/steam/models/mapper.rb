@@ -3,6 +3,12 @@ module Locomotive::Steam
 
     class Mapper
 
+      ASSOCIATION_CLASSES = {
+        embedded:     EmbeddedAssociation,
+        belongs_to:   BelongsToAssociation,
+        has_many:     HasManyAssociation
+      }.freeze
+
       attr_reader :name, :options, :default_attributes, :localized_attributes, :associations
 
       def initialize(name, options, repository, &block)
@@ -10,7 +16,7 @@ module Locomotive::Steam
 
         @localized_attributes = []
         @default_attributes   = []
-        @associations         = { embedded: [], belongs_to: [], has_many: [] }
+        @associations         = []
 
         instance_eval(&block) if block_given?
       end
@@ -23,34 +29,22 @@ module Locomotive::Steam
         @default_attributes += [[name.to_sym, value]]
       end
 
-      def belongs_to_association(name, repository_klass, &block)
-        @associations[:belongs_to] += [[name.to_sym, repository_klass, block]]
-      end
-
-      def has_many_association(name, repository_klass, options = {}, &block)
-        @associations[:has_many] += [[name.to_sym, repository_klass, options, block]]
-      end
-
-      def embedded_association(name, repository_klass)
-        @associations[:embedded] += [[name.to_sym, repository_klass]]
+      ASSOCIATION_CLASSES.each do |type, _|
+        define_method("#{type}_association") do |name, repository_klass, options = {}, &block|
+          @associations << [type, name.to_sym, repository_klass, options || {}, block]
+        end
       end
 
       def to_entity(attributes)
-        entity_klass.new(serialize(attributes)).tap do |entity|
-          attach_entity_to_embedded_associations(entity)
-          attach_entity_to_belongs_to_associations(entity)
-          attach_entity_to_has_many_associations(entity)
+        entity_klass.new(deserialize(attributes)).tap do |entity|
+          attach_entity_to_associations(entity)
           set_default_attributes(entity)
         end
       end
 
-      def serialize(attributes)
-        serialize_localized_attributes(attributes)
-
-        serialize_embedded_associations(attributes)
-        serialize_belongs_to_associations(attributes)
-        serialize_has_many_associations(attributes)
-
+      def deserialize(attributes)
+        build_localized_attributes(attributes)
+        build_associations(attributes)
         attributes
       end
 
@@ -66,49 +60,33 @@ module Locomotive::Steam
       private
 
       # create a proxy class for each localized attribute
-      def serialize_localized_attributes(attributes)
+      def build_localized_attributes(attributes)
         @localized_attributes.each do |name|
           attributes[name] = I18nField.new(name, attributes[name])
         end
       end
 
-      # build the embedded associations
-      def serialize_embedded_associations(attributes)
-        @associations[:embedded].each do |(name, repository_klass)|
-          attributes[name] = EmbeddedAssociation.new(repository_klass, attributes[name], @repository.scope)
+      # create a proxy class for each association
+      def build_associations(attributes)
+        @associations.each do |(type, name, repository_klass, options, block)|
+          klass = ASSOCIATION_CLASSES[type]
+
+          _options = options.merge({
+            association_name: name,
+            mapper_name:      self.name
+          })
+
+          attributes[name] = (if type == :embedded
+            klass.new(repository_klass, attributes[name], @repository.scope, _options)
+          else
+            klass.new(repository_klass, @repository.scope, @repository.adapter, _options, &block)
+          end)
         end
       end
 
-      # build the belongs_to associations
-      def serialize_belongs_to_associations(attributes)
-        @associations[:belongs_to].each do |(name, repository_klass, block)|
-          attributes[name] = BelongsToAssociation.new(repository_klass, @repository.scope, @repository.adapter, &block)
-        end
-      end
-
-      # build the has_many associations
-      def serialize_has_many_associations(attributes)
-        @associations[:has_many].each do |(name, repository_klass, options, block)|
-          attributes[name] = HasManyAssociation.new(repository_klass, @repository.scope, @repository.adapter, options, &block)
-        end
-      end
-
-      def attach_entity_to_embedded_associations(entity)
-        @associations[:embedded].each do |(name, _)|
-          key = self.name.to_s.singularize.to_sym
-          entity[name].attach(key, entity) # Note: entity[name] is a proxy class
-        end
-      end
-
-      def attach_entity_to_belongs_to_associations(entity)
-        @associations[:belongs_to].each do |(name, _)|
-          entity[name].attach(name, entity)
-        end
-      end
-
-      def attach_entity_to_has_many_associations(entity)
-        @associations[:has_many].each do |(name, _)|
-          entity[name].attach(name, entity)
+      def attach_entity_to_associations(entity)
+        @associations.each do |(type, name, _)|
+          entity[name].__attach__(entity)
         end
       end
 
