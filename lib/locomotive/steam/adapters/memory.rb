@@ -18,6 +18,10 @@ module Locomotive::Steam
       _query(mapper, scope, &block)
     end
 
+    def find(mapper, scope, id)
+      _query(mapper, scope) { where(_id: id) }.first
+    end
+
     private
 
     def _query(mapper, scope, &block)

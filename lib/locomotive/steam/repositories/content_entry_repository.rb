@@ -93,13 +93,13 @@ module Locomotive
       end
 
       def add_localized_fields_to_mapper(mapper)
-        unless self.content_type.localized_fields_names.blank?
-          mapper.localized_attributes(*self.content_type.localized_fields_names)
+        unless self.content_type.localized_names.blank?
+          mapper.localized_attributes(*self.content_type.localized_names)
         end
       end
 
       def add_associations_to_mapper(mapper)
-        self.content_type.association_fields.each do |field|
+        self.content_type.associations.each do |field|
           mapper.association(field.type, field.name, self.class, field.association_options, &method(:prepare_repository_for_association))
         end
       end

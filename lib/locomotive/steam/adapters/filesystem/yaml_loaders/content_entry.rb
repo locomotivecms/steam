@@ -28,7 +28,7 @@ module Locomotive
             end
 
             def setup_associations(attributes)
-              content_type.association_fields.each do |field|
+              content_type.associations.each do |field|
                 case field.type
                 when :belongs_to
                   setup_belongs_to_association(field, attributes)

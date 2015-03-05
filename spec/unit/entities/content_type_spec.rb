@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Locomotive::Steam::ContentType do
 
   let(:fields) { [instance_double('Field1', label: 'Title', name: :title, localized: false), instance_double('Field2', label: 'Author', name: :author, localized: true)] }
-  let(:repository) { instance_double('FieldRepository', all: fields, first: fields.first) }
+  let(:repository) { instance_double('FieldRepository', all: fields, first: fields.first, find: nil) }
   let(:content_type) { described_class.new(name: 'Articles') }
 
   before { allow(content_type).to receive(:fields).and_return(repository) }
@@ -29,17 +29,10 @@ describe Locomotive::Steam::ContentType do
 
   end
 
-  # describe '#localized_fields_names' do
-
-  #   subject { content_type.localized_fields_names }
-  #   it { is_expected.to eq [:author] }
-
-  # end
-
   describe '#order_by' do
 
     subject { content_type.order_by }
-    it { is_expected.to eq ['_position', 'asc'] }
+    it { is_expected.to eq(_position: 'asc') }
 
     context 'specifying manually' do
 
@@ -47,7 +40,16 @@ describe Locomotive::Steam::ContentType do
         content_type.attributes[:order_by] = 'manually'
         content_type.attributes[:order_direction] = 'desc'
       end
-      it { is_expected.to eq ['_position', 'desc'] }
+      it { is_expected.to eq(_position: 'desc') }
+
+    end
+
+    context 'order_by references an id of a field' do
+
+      let(:field) { instance_double('Field', name: 'title') }
+      let(:repository) { instance_double('FieldRepository', all: fields, first: fields.first, find: field) }
+
+      it { is_expected.to eq(title: 'asc') }
 
     end
 

@@ -45,6 +45,10 @@ module Locomotive::Steam
       @content_type || attributes[:content_type]
     end
 
+    def content_type_id
+      @content_type.try(&:_id) || attributes[:content_type_id]
+    end
+
     def content_type_slug
       content_type.slug
     end

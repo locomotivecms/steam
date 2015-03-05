@@ -19,6 +19,10 @@ module Locomotive::Steam
         end
       end
 
+      def _id
+        self[:_id]
+      end
+
       def []=(name, value)
         attributes[name.to_sym] = value
       end

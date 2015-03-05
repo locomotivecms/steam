@@ -5,7 +5,7 @@ module Locomotive::Steam
     include Locomotive::Steam::Models::Entity
     extend Forwardable
 
-    def_delegators :fields, :localized_fields_names, :association_fields
+    def_delegators :fields, :localized_names, :associations
 
     def initialize(attributes = {})
       super({
@@ -32,7 +32,13 @@ module Locomotive::Steam
 
     def order_by
       name = self[:order_by] == 'manually' ? '_position' : self[:order_by]
-      [name, self.order_direction]
+
+      # check if name is an id of field
+      if field = fields.find(name)
+        name = field.name
+      end
+
+      { name.to_sym => self.order_direction }
     end
 
   end

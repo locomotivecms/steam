@@ -24,8 +24,10 @@ module Locomotive::Steam
 
         def insert(record)
           @primary_key.increment! do |id|
-            record[identity] = id
-            records[id] = record
+            # if there is already an id, use it
+            _id = record[identity] || id
+            record[identity] = _id
+            records[_id] = record
           end
         end
 
