@@ -171,16 +171,30 @@ describe Locomotive::Steam::ContentEntryRepository do
       let(:type) { build_content_type('Articles', order_by: '_position asc', label_field_name: :title, localized_names: [:title, :category], fields_by_name: fields) }
       let(:name) { :category }
 
+      let(:options) {
+        [
+          instance_double('SelectOption1', name: 'cooking'),
+          instance_double('SelectOption2', name: 'wine'),
+          instance_double('SelectOption3', name: 'bread')
+        ]
+      }
+
       let(:entries) do
         [
-          { content_type_id: 1, _position: 0, _label: 'Recipe #1', category: 'cooking' },
-          { content_type_id: 1, _position: 1, _label: 'Recipe #2', category: 'bread' },
-          { content_type_id: 1, _position: 2, _label: 'Recipe #3', category: 'bread' },
-          { content_type_id: 1, _position: 3, _label: 'Recipe #4', category: 'unknown' }
+          { content_type_id: 1, _position: 0, _label: 'Recipe #1', category_id: 'cooking' },
+          { content_type_id: 1, _position: 1, _label: 'Recipe #2', category_id: 'bread' },
+          { content_type_id: 1, _position: 2, _label: 'Recipe #3', category_id: 'bread' },
+          { content_type_id: 1, _position: 3, _label: 'Recipe #4', category_id: 'unknown' }
         ]
       end
 
-      before { allow(content_type_repository).to receive(:select_options).and_return(%w(cooking wine bread)) }
+      before {
+        allow(content_type_repository).to receive(:select_options).and_return(options)
+        %w(cooking wine bread).each_with_index do |name, i|
+          allow(fields[:category].select_options).to receive(:find).with(name).and_return(options.at(i))
+        end
+        allow(fields[:category].select_options).to receive(:find).with('unknown').and_return(nil)
+      }
 
       it { expect(subject.size).to eq 4 }
       it { expect(subject.map { |h| h[:name] }).to eq ['cooking', 'wine', 'bread', nil] }

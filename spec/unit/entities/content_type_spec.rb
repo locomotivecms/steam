@@ -25,7 +25,8 @@ describe Locomotive::Steam::ContentType do
   describe '#fields_by_name' do
 
     subject { content_type.fields_by_name }
-    it { expect(subject.keys).to eq [:title, :author] }
+    it { expect(subject.keys).to eq ['title', 'author'] }
+    it { expect(subject[:title]).to eq(subject['title']) }
 
   end
 

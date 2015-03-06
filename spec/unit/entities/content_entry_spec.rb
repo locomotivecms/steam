@@ -144,9 +144,9 @@ describe Locomotive::Steam::ContentEntry do
     context 'a select' do
       let(:option)      { instance_double('SelectOption', name: { en: 'Category #1', fr: 'Categorie #1' }) }
       let(:field)       { instance_double('Field', name: :my_field, type: :select, select_options: instance_double('SelectOptions')) }
-      let(:value)       { 42 }
+      let(:attributes)  { { my_field_id: 42 } }
       before { expect(field.select_options).to receive(:find).with(42).and_return(option) }
-      it { is_expected.to eq(option) }
+      it { is_expected.to eq({ en: 'Category #1', fr: 'Categorie #1' }) }
     end
 
   end

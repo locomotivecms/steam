@@ -69,18 +69,15 @@ module Locomotive
       def group_by_select_option(name)
         return {} if name.nil? || content_type.nil? || content_type.fields_by_name[name].type != :select
 
+        # a big one request to get them grouped by the field
         _groups = all.group_by { |entry| i18n_value_of(entry, name) }
 
-        groups = content_type_repository.select_options(content_type, name).map do |option|
-          { name: i18n_value_of(option, :name), entries: _groups.delete(option) || [] }
+        groups_to_array(name, _groups).tap do |groups|
+          # entries with a not existing select_option value?
+          unless _groups.blank?
+            groups << { name: nil, entries: _groups.values.flatten }
+          end
         end
-
-        unless _groups.blank?
-          groups << (empty = { name: nil, entries: [] })
-          _groups.values.each { |list| empty[:entries] += list }
-        end
-
-        groups
       end
 
       private
@@ -127,6 +124,13 @@ module Locomotive
         conditions = prepare_conditions({ k(name, op) => i18n_value_of(entry, name) })
 
         first { where(conditions) }
+      end
+
+      def groups_to_array(name, groups)
+        content_type_repository.select_options(content_type, name).map do |option|
+          option_name = i18n_value_of(option, :name)
+          { name: option_name, entries: groups.delete(option_name) || [] }
+        end
       end
 
     end

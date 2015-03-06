@@ -58,6 +58,10 @@ module Locomotive::Steam
 
       attr_accessor :field
 
+      def name
+        self[:name]
+      end
+
     end
 
   end

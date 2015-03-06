@@ -101,11 +101,11 @@ module Locomotive::Steam
     end
 
     def _cast_date(field)
-      _cast_time(field.name, :to_date)
+      _cast_time(field, :to_date)
     end
 
     def _cast_date_time(field)
-      _cast_time(field.name, :to_date)
+      _cast_time(field, :to_date)
     end
 
     def _cast_time(field, end_method)
@@ -116,7 +116,7 @@ module Locomotive::Steam
 
     def _cast_select(field)
       _cast_convertor(:"#{field.name}_id") do |value|
-        field.select_options.find(value).name
+        field.select_options.find(value).try(:name)
       end
     end
 
