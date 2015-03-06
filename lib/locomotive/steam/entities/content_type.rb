@@ -5,7 +5,7 @@ module Locomotive::Steam
     include Locomotive::Steam::Models::Entity
     extend Forwardable
 
-    def_delegators :fields, :localized_names, :associations
+    def_delegators :fields, :localized_names, :associations, :selects
 
     def initialize(attributes = {})
       super({
@@ -23,7 +23,7 @@ module Locomotive::Steam
       @fields_by_name ||= (fields.all.inject({}) do |memo, field|
         memo[field.name] = field
         memo
-      end)
+      end).with_indifferent_access
     end
 
     def label_field_name

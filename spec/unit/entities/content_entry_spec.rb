@@ -55,15 +55,6 @@ describe Locomotive::Steam::ContentEntry do
 
   end
 
-  # describe '#localized_attributes' do
-
-  #   subject { content_entry.localized_attributes }
-  #   it { is_expected.to include :seo_title }
-  #   it { is_expected.to include :title }
-  #   it { is_expected.to include :_slug }
-
-  # end
-
   describe 'dynamic attributes' do
 
     let(:field_type)  { :string }
@@ -150,32 +141,13 @@ describe Locomotive::Steam::ContentEntry do
       end
     end
 
-    # context 'a belongs_to relationship' do
-    #   let(:field_type)  { :belongs_to }
-    #   let(:value)       { 'john-doe' }
-    #   it { expect(subject.type).to eq :belongs_to }
-    #   it { expect(subject.target_slugs).to eq ['john-doe'] }
-    #   it { expect(subject.source).to eq content_entry }
-    #   it { expect(subject.field).to eq field }
-    # end
-
-    # context 'a has_many relationship' do
-    #   let(:field_type)  { :has_many }
-    #   let(:value)       { nil }
-    #   it { expect(subject.type).to eq :has_many }
-    #   it { expect(subject.target_slugs).to eq [] }
-    #   it { expect(subject.source).to eq content_entry }
-    #   it { expect(subject.field).to eq field }
-    # end
-
-    # context 'a many_to_many relationship' do
-    #   let(:field_type)  { :many_to_many }
-    #   let(:value)       { ['john-doe', 'jane-doe'] }
-    #   it { expect(subject.type).to eq :many_to_many }
-    #   it { expect(subject.target_slugs).to eq ['john-doe', 'jane-doe'] }
-    #   it { expect(subject.source).to eq content_entry }
-    #   it { expect(subject.field).to eq field }
-    # end
+    context 'a select' do
+      let(:option)      { instance_double('SelectOption', name: { en: 'Category #1', fr: 'Categorie #1' }) }
+      let(:field)       { instance_double('Field', name: :my_field, type: :select, select_options: instance_double('SelectOptions')) }
+      let(:value)       { 42 }
+      before { expect(field.select_options).to receive(:find).with(42).and_return(option) }
+      it { is_expected.to eq(option) }
+    end
 
   end
 

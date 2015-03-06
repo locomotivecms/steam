@@ -59,7 +59,7 @@ module Locomotive
                 options.each do |locale, values|
                   values.each_with_index do |name, position|
                     if (option = list.at(position)).nil?
-                      list << { name: { locale => name }, position: position }
+                      list << { _id: name, name: { locale => name }, position: position }
                     else
                       option[name][locale] = name
                     end
@@ -71,7 +71,7 @@ module Locomotive
             def build_select_options_from_array(options)
               [].tap do |list|
                 options.each_with_index do |name, position|
-                  list << { name: name, position: position }
+                  list << { _id: name, name: name, position: position }
                 end
               end
             end

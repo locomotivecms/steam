@@ -20,25 +20,32 @@ module Locomotive
                 each(content_type_slug) do |label, attributes, position|
                   _attributes = { _position: position, _label: label.to_s }.merge(attributes)
 
-                  setup_associations(_attributes)
+                  modify_for_selects(_attributes)
+                  modify_for_associations(_attributes)
 
                   list << _attributes
                 end
               end
             end
 
-            def setup_associations(attributes)
+            def modify_for_selects(attributes)
+              content_type.selects.each do |field|
+                attributes[:"#{field.name}_id"] = attributes.delete(field.name.to_sym)
+              end
+            end
+
+            def modify_for_associations(attributes)
               content_type.associations.each do |field|
                 case field.type
                 when :belongs_to
-                  setup_belongs_to_association(field, attributes)
+                  modify_belongs_to_association(field, attributes)
                 when :many_to_many
-                  setup_many_to_many_association(field, attributes)
+                  modify_many_to_many_association(field, attributes)
                 end
               end
             end
 
-            def setup_belongs_to_association(field, attributes)
+            def modify_belongs_to_association(field, attributes)
               # <name>_id
               attributes[:"#{field.name}_id"] = attributes.delete(field.name.to_sym)
 
@@ -46,7 +53,7 @@ module Locomotive
               attributes[:"_position_in_#{field.name}"] = attributes[:_position]
             end
 
-            def setup_many_to_many_association(field, attributes)
+            def modify_many_to_many_association(field, attributes)
               attributes[:"#{field.name.to_s.singularize}_ids"] = attributes.delete(field.name.to_sym)
             end
 

@@ -72,7 +72,7 @@ module Locomotive
         _groups = all.group_by { |entry| i18n_value_of(entry, name) }
 
         groups = content_type_repository.select_options(content_type, name).map do |option|
-          { name: option, entries: _groups.delete(option) || [] }
+          { name: i18n_value_of(option, :name), entries: _groups.delete(option) || [] }
         end
 
         unless _groups.blank?
@@ -121,7 +121,7 @@ module Locomotive
 
         with(entry.content_type)
 
-        name, direction = self.content_type.order_by.split
+        name, direction = self.content_type.order_by.first
         op = direction == 'asc' ? asc_op : desc_op
 
         conditions = prepare_conditions({ k(name, op) => i18n_value_of(entry, name) })

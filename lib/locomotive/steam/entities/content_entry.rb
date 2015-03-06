@@ -80,37 +80,43 @@ module Locomotive::Steam
 
     def _cast_value(field)
       if private_methods.include?(:"_cast_#{field.type}")
-        send(:"_cast_#{field.type}", field.name)
+        send(:"_cast_#{field.type}", field)
       else
         attributes[field.name]
       end
     end
 
-    def _cast_integer(name)
-      _cast_convertor(name, &:to_i)
+    def _cast_integer(field)
+      _cast_convertor(field.name, &:to_i)
     end
 
-    def _cast_float(name)
-      _cast_convertor(name, &:to_f)
+    def _cast_float(field)
+      _cast_convertor(field.name, &:to_f)
     end
 
-    def _cast_file(name)
-      _cast_convertor(name) do |value|
+    def _cast_file(field)
+      _cast_convertor(field.name) do |value|
         value.present? ? { 'url' => value } : nil
       end
     end
 
-    def _cast_date(name)
-      _cast_time(name, :to_date)
+    def _cast_date(field)
+      _cast_time(field.name, :to_date)
     end
 
-    def _cast_date_time(name)
-      _cast_time(name, :to_date)
+    def _cast_date_time(field)
+      _cast_time(field.name, :to_date)
     end
 
-    def _cast_time(name, end_method)
-      _cast_convertor(name) do |value|
+    def _cast_time(field, end_method)
+      _cast_convertor(field.name) do |value|
         value.is_a?(String) ? Chronic.parse(value).send(end_method) : value
+      end
+    end
+
+    def _cast_select(field)
+      _cast_convertor(:"#{field.name}_id") do |value|
+        field.select_options.find(value).name
       end
     end
 
