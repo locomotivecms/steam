@@ -38,7 +38,7 @@ module Locomotive::Steam
         name = field.name
       end
 
-      { name.to_sym => self.order_direction }
+      { name.to_sym => self.order_direction.to_s }
     end
 
   end

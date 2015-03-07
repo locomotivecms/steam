@@ -89,7 +89,7 @@ describe Locomotive::Steam::ContentEntryRepository do
 
   describe '#next' do
 
-    let(:type) { build_content_type('Articles', order_by: '_position asc', label_field_name: :title, localized_names: [:title], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
+    let(:type) { build_content_type('Articles', order_by: { _position: 'asc' }, label_field_name: :title, localized_names: [:title], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
     let(:entries) do
       [
         { content_type_id: 1, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' },
@@ -121,7 +121,7 @@ describe Locomotive::Steam::ContentEntryRepository do
 
   describe '#previous' do
 
-    let(:type) { build_content_type('Articles', order_by: '_position asc', label_field_name: :title, localized_names: [:title], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
+    let(:type) { build_content_type('Articles', order_by: { _position: 'asc' }, label_field_name: :title, localized_names: [:title], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
     let(:entries) do
       [
         { content_type_id: 1, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' },
