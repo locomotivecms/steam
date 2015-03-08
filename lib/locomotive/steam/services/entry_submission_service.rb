@@ -57,7 +57,7 @@ module Locomotive
       end
 
       def build_entry(type, attributes, &block)
-        i18n_decorate { repository.build(type, attributes) }.tap do |entry|
+        i18n_decorate { repository.with(type).build(attributes) }.tap do |entry|
           yield(entry)
         end
       end
@@ -68,8 +68,8 @@ module Locomotive
 
         # check if the entry has unique values for its
         # fields marked as unique are really
-        content_type_repository.look_for_unique_fields(entry.content_type).each do |name, field|
-          if repository.exists?(entry.content_type, name, entry.send(name))
+        content_type_repository.look_for_unique_fields(entry.content_type).each do |name, _|
+          if repository.with(entry.content_type).exists?(name => entry.send(name))
             entry.errors.add(name, :unique)
           end
         end

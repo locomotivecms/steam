@@ -210,7 +210,7 @@ describe Locomotive::Steam::ContentEntryRepository do
     let(:type)    { build_content_type('Articles', label_field_name: :title, associations: [field]) }
     let(:entries) { [{ content_type_id: 1, title: 'Hello world', author_id: 'john-doe' }] }
     let(:other_type)    { build_content_type('Authors', _id: 2, label_field_name: :name, fields_by_name: { name: instance_double('Field', name: :name, type: :string) }) }
-    let(:other_entries) { [{ content_type_id: 2, _slug: 'john-doe', name: 'John Doe' }] }
+    let(:other_entries) { [{ content_type_id: 2, _id: 'john-doe', name: 'John Doe' }] }
 
     let(:type_repository) { instance_double('ContentTypeRepository') }
 
@@ -235,13 +235,13 @@ describe Locomotive::Steam::ContentEntryRepository do
 
     let(:field)   { instance_double('Field', name: :articles, type: :has_many, association_options: { target_id: 2, inverse_of: :author, order_by: 'position_in_author' }) }
     let(:type)    { build_content_type('Authors', label_field_name: :name, associations: [field]) }
-    let(:entries) { [{ content_type_id: 1, _id: 1, name: 'John Doe' }] }
-    let(:other_type)    { build_content_type('Articles', _id: 2, label_field_name: :title, fields_by_name: { name: instance_double('Field', name: :title, type: :string) }) }
+    let(:entries) { [{ content_type_id: 1, _id: 'john-doe', name: 'John Doe' }] }
+    let(:other_type) { build_content_type('Articles', _id: 2, label_field_name: :title, fields_by_name: { name: instance_double('Field', name: :title, type: :string) }) }
     let(:other_entries) {
         [
-          { content_type_id: 2, _slug: 'hello-world', title: 'Hello world', author_id: 'john-doe', position_in_author: 2 },
-          { content_type_id: 2, _slug: 'lorem-ipsum', title: 'Lorem ipsum', author_id: 'john-doe', position_in_author: 1 },
-          { content_type_id: 2, _slug: 'lost', title: 'Lost', author_id: 'jane-doe' },
+          { content_type_id: 2, _id: 'hello-world', title: 'Hello world', author_id: 'john-doe', position_in_author: 2 },
+          { content_type_id: 2, _id: 'lorem-ipsum', title: 'Lorem ipsum', author_id: 'john-doe', position_in_author: 1 },
+          { content_type_id: 2, _id: 'lost', title: 'Lost', author_id: 'jane-doe' },
         ]
       }
 
@@ -272,9 +272,9 @@ describe Locomotive::Steam::ContentEntryRepository do
     let(:other_type)    { build_content_type('Articles', _id: 2, label_field_name: :title, fields_by_name: { name: instance_double('Field', name: :title, type: :string) }) }
     let(:other_entries) {
         [
-          { content_type_id: 2, _slug: 'hello-world', title: 'Hello world', author_id: 'john-doe', position_in_author: 2 },
-          { content_type_id: 2, _slug: 'lorem-ipsum', title: 'Lorem ipsum', author_id: 'john-doe', position_in_author: 1 },
-          { content_type_id: 2, _slug: 'lost', title: 'Lost', author_id: 'jane-doe' },
+          { content_type_id: 2, _id: 'hello-world', title: 'Hello world', author_id: 'john-doe', position_in_author: 2 },
+          { content_type_id: 2, _id: 'lorem-ipsum', title: 'Lorem ipsum', author_id: 'john-doe', position_in_author: 1 },
+          { content_type_id: 2, _id: 'lost', title: 'Lost', author_id: 'jane-doe' },
         ]
       }
 

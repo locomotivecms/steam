@@ -43,8 +43,7 @@ module Locomotive
       end
 
       def find(id)
-        name = adapter.identifier_name(mapper)
-        conditions = prepare_conditions(name => id)
+        conditions = prepare_conditions(_id: id)
         first { where(conditions) }
       end
 

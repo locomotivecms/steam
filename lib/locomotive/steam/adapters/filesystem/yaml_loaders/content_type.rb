@@ -20,7 +20,7 @@ module Locomotive
                 each_file do |filepath, slug|
                   attributes = _load(filepath)
                   attributes[:entries_custom_fields] = build_fields(attributes.delete(:fields))
-                  array << { slug: slug }.merge(attributes)
+                  array << { _id: slug.to_s, slug: slug }.merge(attributes)
                 end
               end
             end

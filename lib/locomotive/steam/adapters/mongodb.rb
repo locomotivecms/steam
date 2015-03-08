@@ -22,10 +22,6 @@ module Locomotive::Steam
       name.__send__(operator)
     end
 
-    def identifier_name(mapper)
-      :_id
-    end
-
     def theme_assets_base_url(scope)
       ['', 'sites', scope.site._id.to_s, 'theme'].join('/')
     end

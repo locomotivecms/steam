@@ -101,7 +101,7 @@ module Locomotive
         end
 
         def current_site
-          repositories.site
+          repositories.current_site
         end
 
       end

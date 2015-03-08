@@ -3,7 +3,7 @@ require_relative_all 'repositories'
 module Locomotive
   module Steam
 
-    class Repositories < Struct.new(:site, :locale, :configuration)
+    class Repositories < Struct.new(:current_site, :locale, :configuration)
 
       include Morphine
 
@@ -17,27 +17,27 @@ module Locomotive
       end
 
       register :page do
-        PageRepository.new(adapter, site, locale)
+        PageRepository.new(adapter, current_site, locale)
       end
 
       register :snippet do
-        SnippetRepository.new(adapter, site, locale)
+        SnippetRepository.new(adapter, current_site, locale)
       end
 
       register :content_type do
-        ContentTypeRepository.new(adapter, site, locale)
+        ContentTypeRepository.new(adapter, current_site, locale)
       end
 
       register :content_entry do
-        ContentEntryRepository.new(adapter, site, locale, content_type)
+        ContentEntryRepository.new(adapter, current_site, locale, content_type)
       end
 
       register :theme_asset do
-        ThemeAssetRepository.new(adapter, site, locale)
+        ThemeAssetRepository.new(adapter, current_site, locale)
       end
 
       register :translation do
-        TranslationRepository.new(adapter, site, locale)
+        TranslationRepository.new(adapter, current_site, locale)
       end
 
     end

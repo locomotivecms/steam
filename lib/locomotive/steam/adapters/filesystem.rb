@@ -35,21 +35,11 @@ module Locomotive::Steam
     end
 
     def find(mapper, scope, id)
-      name = identifier_name(mapper)
-      _query(mapper, scope) { where(name => id) }.first
+      _query(mapper, scope) { where(_id: id) }.first
     end
 
     def theme_assets_base_url(scope)
       ''
-    end
-
-    def identifier_name(mapper)
-      case mapper.name
-      when :content_types   then :slug
-      when :content_entries then :_slug
-      else
-        :_id
-      end
     end
 
     private

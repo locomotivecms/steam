@@ -15,6 +15,7 @@ module Locomotive::Steam
           def apply_to_dataset(dataset)
             dataset.all.each do |entry|
               set_slug(entry, dataset)
+              set_id(entry)
             end
           end
 
@@ -29,6 +30,10 @@ module Locomotive::Steam
             else
               entry.attributes[name] ||= value
             end
+          end
+
+          def set_id(entry)
+            entry[:_id] = entry[:_slug][locale]
           end
 
           def set_slug(entry, dataset)

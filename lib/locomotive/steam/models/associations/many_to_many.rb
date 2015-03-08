@@ -5,11 +5,8 @@ module Locomotive::Steam
     class ManyToManyAssociation < ReferencedAssociation
 
       def __load__
-        # Note: in adapters like the FileSystem one, we use slugs
-        # to reference other entities in associations,
-        # that is why we call identifier_name.
         source_key = :"#{@options[:association_name].to_s.singularize}_ids"
-        key = @repository.k(@repository.identifier_name, :in)
+        key = @repository.k(:_id, :in)
 
         @repository.local_conditions[key] = @entity[source_key]
 
