@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Locomotive::Steam::Services::ImageResizer do
+describe Locomotive::Steam::ImageResizerService do
 
   let(:resizer) { nil }
   let(:path)    { nil }
-  let(:service) { Locomotive::Steam::Services::ImageResizer.new(resizer, path) }
+  let(:service) { described_class.new(resizer, path) }
 
   describe '#resize' do
 

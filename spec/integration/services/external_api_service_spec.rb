@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Locomotive::Steam::Services::ExternalAPI do
+describe Locomotive::Steam::ExternalAPIService do
 
   pending 'API rate limit exceeded'
 
-  let(:service) { Locomotive::Steam::Services::ExternalAPI.new }
+  let(:service) { described_class.new }
 
   describe '#consume' do
 

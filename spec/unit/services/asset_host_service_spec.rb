@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe Locomotive::Steam::Services::AssetHost do
+describe Locomotive::Steam::AssetHostService do
 
   let(:request)     { nil }
   let(:site)        { nil }
   let(:host)        { nil }
   let(:timestamp)   { nil }
-  let(:asset_host)  { Locomotive::Steam::Services::AssetHost.new(request, site, host) }
+  let(:asset_host)  { described_class.new(request, site, host) }
   let(:source)      { '/sites/42/assets/1/banner.png' }
 
   subject { asset_host.compute(source, timestamp) }

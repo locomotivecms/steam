@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Locomotive::Steam::Services::UrlBuilder do
+describe Locomotive::Steam::UrlBuilderService do
 
   let(:site)    { instance_double('Site', default_locale: 'en') }
   let(:locale)  { 'en' }
-  let(:service) { Locomotive::Steam::Services::UrlBuilder.new(site, locale) }
+  let(:service) { described_class.new(site, locale) }
 
   describe '#url_for' do
 

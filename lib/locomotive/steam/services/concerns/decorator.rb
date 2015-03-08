@@ -20,7 +20,7 @@ module Locomotive
           end
 
           def locale
-            repository.current_locale
+            repository.locale
           end
 
           def default_locale

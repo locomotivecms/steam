@@ -1,17 +1,15 @@
 require 'spec_helper'
 
-describe Locomotive::Steam::Services::Markdown do
+describe Locomotive::Steam::TextileService do
 
-  let(:service) { Locomotive::Steam::Services::Markdown.new }
+  let(:service) { described_class.new }
 
   describe '#to_html' do
 
     let(:text) { <<-EOF
-First level header
-==================
+h1. Give RedCloth a try!
 
-Second level header
--------------------
+A *simple* paragraph
     EOF
     }
 
@@ -19,10 +17,10 @@ Second level header
 
     it do
       is_expected.to eq <<-EOF
-<h1>First level header</h1>
-
-<h2>Second level header</h2>
-      EOF
+<h1>Give RedCloth a try!</h1>
+<p>A <strong>simple</strong> paragraph</p>
+EOF
+      .strip
     end
 
     describe 'no text' do

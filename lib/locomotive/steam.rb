@@ -13,8 +13,7 @@ require_relative      'steam/liquid'
 
 require_relative      'steam/models'
 require_relative_all  'steam/entities'
-require_relative_all  'steam/repositories'
-
+require_relative      'steam/repositories'
 require_relative      'steam/services'
 
 module Locomotive

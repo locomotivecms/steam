@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Locomotive::Steam::Services::ParentFinder do
+describe Locomotive::Steam::ParentFinderService do
 
   let(:site)        { instance_double('Site', default_locale: :en) }
-  let(:repository)  { instance_double('PageRepository', site: site, current_locale: :en)}
-  let(:service)     { Locomotive::Steam::Services::ParentFinder.new(repository) }
+  let(:repository)  { instance_double('PageRepository', site: site, locale: :en)}
+  let(:service)     { described_class.new(repository) }
 
   describe '#find' do
 
