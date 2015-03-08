@@ -75,6 +75,13 @@ describe Locomotive::Steam::ContentEntryRepository do
 
       after(:all) { Locomotive::Steam::Adapters::Filesystem::SimpleCacheStore.new.clear }
 
+      describe '#create' do
+        let(:messages)  { type_repository.by_slug('messages') }
+        let(:message)   { repository.with(messages).build(name: 'John', email: 'john@doe.net', message: 'Hello world!') }
+        subject { repository.create(message) }
+        it { expect { subject }.to change { repository.all.size } }
+      end
+
     end
 
   end

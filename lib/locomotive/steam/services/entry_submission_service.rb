@@ -16,7 +16,7 @@ module Locomotive
 
         build_entry(type, attributes) do |entry|
           if validate(entry)
-            repository.persist(entry)
+            repository.create(entry)
           end
         end
       end

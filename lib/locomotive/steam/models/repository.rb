@@ -23,7 +23,7 @@ module Locomotive::Steam
       end
 
       def create(entity)
-        adapter.create(entity)
+        adapter.create(mapper, scope, entity)
       end
 
       def find(id)

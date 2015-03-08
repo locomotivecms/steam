@@ -34,6 +34,12 @@ module Locomotive::Steam
       end
     end
 
+    def create(mapper, scope, entity)
+      sanitizers[mapper.name].with(scope) do |sanitizer|
+        insert_to_dataset(entity, memoized_dataset(mapper, scope), sanitizer)
+      end
+    end
+
     def find(mapper, scope, id)
       _query(mapper, scope) { where(_id: id) }.first
     end
@@ -68,13 +74,17 @@ module Locomotive::Steam
       sanitizers[mapper.name].with(scope) do |sanitizer|
         collection(mapper, scope).each do |attributes|
           entity = mapper.to_entity(attributes.dup)
-          dataset.insert(entity)
 
-          sanitizer.apply_to(entity)
+          insert_to_dataset(entity, dataset, sanitizer)
         end
 
         sanitizer.apply_to(dataset)
       end
+    end
+
+    def insert_to_dataset(entity, dataset, sanitizer)
+      dataset.insert(entity)
+      sanitizer.apply_to(entity)
     end
 
     def collection(mapper, scope)

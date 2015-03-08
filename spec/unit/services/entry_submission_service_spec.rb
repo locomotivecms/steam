@@ -1,141 +1,143 @@
-# require 'spec_helper'
+require 'spec_helper'
 
-# describe Locomotive::Steam::EntrySubmissionService do
+describe Locomotive::Steam::EntrySubmissionService do
 
-#   let(:site)              { instance_double('Site', default_locale: 'en') }
-#   let(:locale)            { 'en' }
-#   let(:type_repository)   { instance_double('ContentTypeRepository') }
-#   let(:entry_repository)  { instance_double('Repository', site: site, locale: locale) }
-#   let(:service)           { described_class.new(type_repository, entry_repository, locale) }
+  let(:site)              { instance_double('Site', default_locale: 'en') }
+  let(:locale)            { 'en' }
+  let(:type_repository)   { instance_double('ContentTypeRepository') }
+  let(:entry_repository)  { instance_double('Repository', site: site, locale: locale, content_type_repository: type_repository) }
+  let(:service)           { described_class.new(type_repository, entry_repository, locale) }
 
-#   describe '#find' do
+  before { allow(entry_repository).to receive(:with).and_return(entry_repository) }
 
-#     let(:type_slug) { 'articles' }
-#     let(:slug)      { 'hello-world' }
-#     subject { service.find(type_slug, slug) }
+  describe '#find' do
 
-#     context 'unknown content type' do
+    let(:type_slug) { 'articles' }
+    let(:slug)      { 'hello-world' }
+    subject { service.find(type_slug, slug) }
 
-#       before { allow(type_repository).to receive(:by_slug).and_return(nil) }
-#       it { is_expected.to eq nil }
+    context 'unknown content type' do
 
-#     end
+      before { allow(type_repository).to receive(:by_slug).and_return(nil) }
+      it { is_expected.to eq nil }
 
-#     context 'existing content type' do
+    end
 
-#       let(:type) { instance_double('Articles') }
-#       let(:entry) { instance_double('Entry', title: 'Hello world', content_type: type, attributes: { title: 'Hello world' }, localized_attributes: []) }
+    context 'existing content type' do
 
-#       before do
-#         allow(type_repository).to receive(:by_slug).and_return(type)
-#         allow(entry_repository).to receive(:by_slug).with(type, 'hello-world').and_return(entry)
-#       end
+      let(:type) { instance_double('Articles') }
+      let(:entry) { instance_double('Entry', title: 'Hello world', content_type: type, attributes: { title: 'Hello world' }, localized_attributes: []) }
 
-#       it { is_expected.to eq entry }
+      before do
+        allow(type_repository).to receive(:by_slug).and_return(type)
+        allow(entry_repository).to receive(:by_slug).with(type, 'hello-world').and_return(entry)
+      end
 
-#     end
+      it { is_expected.to eq entry }
 
-#   end
+    end
 
-#   describe '#to_json' do
+  end
 
-#     let(:entry) { nil }
-#     subject { service.to_json(entry) }
+  describe '#to_json' do
 
-#     it { is_expected.to eq nil }
+    let(:entry) { nil }
+    subject { service.to_json(entry) }
 
-#     context 'existing content entry' do
+    it { is_expected.to eq nil }
 
-#       let(:errors)  { {} }
-#       let(:fields)  { [instance_double('TitleField', name: :title, type: :string)] }
-#       let(:type)    { instance_double('Articles') }
-#       let(:entry)   { instance_double('DecoratedEntry', _slug: 'hello-world', title: 'Hello world', content_type: type, content_type_slug: :articles, errors: errors) }
+    context 'existing content entry' do
 
-#       before { allow(type_repository).to receive(:fields_for).with(type).and_return(fields) }
+      let(:errors)  { {} }
+      let(:fields)  { [instance_double('TitleField', name: :title, type: :string)] }
+      let(:type)    { instance_double('Articles') }
+      let(:entry)   { instance_double('DecoratedEntry', _slug: 'hello-world', title: 'Hello world', content_type: type, content_type_slug: :articles, errors: errors) }
 
-#       it { is_expected.to eq '{"_slug":"hello-world","content_type_slug":"articles","title":"Hello world"}' }
+      before { allow(type_repository).to receive(:fields_for).with(type).and_return(fields) }
 
-#       context 'with errors' do
+      it { is_expected.to eq '{"_slug":"hello-world","content_type_slug":"articles","title":"Hello world"}' }
 
-#         let(:errors) { instance_double('Errors', empty?: false, messages: { title: ["can't be blank"] }) }
-#         it { is_expected.to eq '{"_slug":"hello-world","content_type_slug":"articles","title":"Hello world","errors":{"title":["can\'t be blank"]}}' }
+      context 'with errors' do
 
-#       end
+        let(:errors) { instance_double('Errors', empty?: false, messages: { title: ["can't be blank"] }) }
+        it { is_expected.to eq '{"_slug":"hello-world","content_type_slug":"articles","title":"Hello world","errors":{"title":["can\'t be blank"]}}' }
 
-#     end
+      end
 
-#   end
+    end
 
-#   describe '#submit' do
+  end
 
-#     let(:slug)        { nil }
-#     let(:attributes)  { { title: 'Hello world' } }
-#     subject { service.submit(slug, attributes) }
+  describe '#submit' do
 
-#     it { is_expected.to eq nil }
+    let(:slug)        { nil }
+    let(:attributes)  { { title: 'Hello world' } }
+    subject { service.submit(slug, attributes) }
 
-#     context 'unknown content type' do
+    it { is_expected.to eq nil }
 
-#       let(:slug) { 'articles' }
+    context 'unknown content type' do
 
-#       before { allow(type_repository).to receive(:by_slug).with('articles').and_return nil }
+      let(:slug) { 'articles' }
 
-#       it { is_expected.to eq nil }
+      before { allow(type_repository).to receive(:by_slug).with('articles').and_return nil }
 
-#     end
+      it { is_expected.to eq nil }
 
-#     context 'existing content type' do
+    end
 
-#       let(:unique_fields)     { {} }
-#       let(:first_validation)  { false }
-#       let(:errors)            { [:title] }
-#       let(:type)  { instance_double('Comments') }
-#       let(:entry) { instance_double('Entry', title: 'Hello world', content_type: type, valid?: first_validation, errors: errors, attributes: { title: 'Hello world' }, localized_attributes: []) }
-#       let(:slug)  { 'comments' }
+    context 'existing content type' do
 
-#       before do
-#         allow(type_repository).to receive(:by_slug).and_return(type)
-#         allow(type_repository).to receive(:look_for_unique_fields).and_return(unique_fields)
-#         allow(entry_repository).to receive(:build).with(type, attributes).and_return(entry)
-#       end
+      let(:unique_fields)     { {} }
+      let(:first_validation)  { false }
+      let(:errors)            { [:title] }
+      let(:type)  { instance_double('Comments') }
+      let(:entry) { instance_double('Entry', title: 'Hello world', content_type: type, valid?: first_validation, errors: errors, attributes: { title: 'Hello world' }, localized_attributes: []) }
+      let(:slug)  { 'comments' }
 
-#       context 'valid' do
+      before do
+        allow(type_repository).to receive(:by_slug).and_return(type)
+        allow(type_repository).to receive(:look_for_unique_fields).and_return(unique_fields)
+        allow(entry_repository).to receive(:build).with(attributes).and_return(entry)
+      end
 
-#         before { expect(entry_repository).to receive(:persist) }
+      context 'valid' do
 
-#         let(:first_validation) { true }
-#         let(:errors) { {} }
+        before { expect(entry_repository).to receive(:create) }
 
-#         it { is_expected.to eq entry }
-#         it { expect(subject.errors.empty?).to eq true }
+        let(:first_validation) { true }
+        let(:errors) { {} }
 
-#       end
+        it { is_expected.to eq entry }
+        it { expect(subject.errors.empty?).to eq true }
 
-#       context 'not valid' do
+      end
 
-#         before { expect(entry_repository).not_to receive(:persist) }
+      context 'not valid' do
 
-#         it { is_expected.to eq entry }
-#         it { expect(subject.errors).to eq([:title]) }
+        before { expect(entry_repository).not_to receive(:create) }
 
-#         context 'with unique fields' do
+        it { is_expected.to eq entry }
+        it { expect(subject.errors).to eq([:title]) }
 
-#           let(:unique_fields) { { title: instance_double('Field', name: 'title') } }
+        context 'with unique fields' do
 
-#           before do
-#             allow(entry_repository).to receive(:exists?).with(type, :title, 'Hello world').and_return(true)
-#             expect(entry.errors).to receive(:add).with(:title, :unique).and_return(true)
-#           end
+          let(:unique_fields) { { title: instance_double('Field', name: 'title') } }
 
-#           it { is_expected.to eq entry }
-#           it { expect(subject.errors).to eq([:title]) }
+          before do
+            allow(entry_repository).to receive(:exists?).with(title: 'Hello world').and_return(true)
+            expect(entry.errors).to receive(:add).with(:title, :unique).and_return(true)
+          end
 
-#         end
+          it { is_expected.to eq entry }
+          it { expect(subject.errors).to eq([:title]) }
 
-#       end
+        end
 
-#     end
+      end
 
-#   end
+    end
 
-# end
+  end
+
+end
