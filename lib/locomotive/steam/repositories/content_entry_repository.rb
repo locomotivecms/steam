@@ -67,7 +67,7 @@ module Locomotive
             # a safe copy of the proxy repository is needed here
             value = value.dup
             # like this, we do not modify the original local conditions
-            value.local_conditions.merge!(conditions)
+            value.local_conditions.merge!(conditions) if conditions
           end
 
           value

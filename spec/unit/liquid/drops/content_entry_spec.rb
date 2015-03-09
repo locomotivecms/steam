@@ -30,18 +30,13 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
     describe 'relationship field' do
 
-      let(:authors) { instance_double(Locomotive::Steam::ContentEntryRepository, all: ['john', 'jane']) }
+      let(:authors) { instance_double('AuthorsRepository', first: 'john', local_conditions: {}) }
       let(:type)    { instance_double('Type', fields_by_name: { authors: instance_double('Field', type: :has_many ) }) }
       let(:entry)   { instance_double('Article', content_type: type, authors: authors) }
 
-      # before do
-      #   allow(services.repositories.content_entry).to receive(:association).and_return(authors.all)
-      # end
+      before { allow(authors).to receive(:dup).and_return(authors) }
 
-      it do
-        allow(subject.before_method(:authors)).to receive(:local_conditions).and_return({})
-        expect(subject.before_method(:authors).first).to eq 'john'
-      end
+      it { expect(subject.before_method(:authors).first).to eq 'john' }
 
     end
 
@@ -85,8 +80,8 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
   describe 'i18n' do
 
-    let(:entry) { instance_double('Article', attributes: { title: { en: 'Hello world', fr: 'Bonjour monde' } }) }
-    let(:drop)  { Locomotive::Steam::Liquid::Drops::ContentEntry.new(entry, [:title]).tap { |d| d.context = context } }
+    let(:entry) { instance_double('Article', content_type: type, attributes: { title: { en: 'Hello world', fr: 'Bonjour monde' } }) }
+    let(:drop)  { described_class.new(entry, [:title]).tap { |d| d.context = context } }
 
     subject { drop.before_method(:title) }
 
