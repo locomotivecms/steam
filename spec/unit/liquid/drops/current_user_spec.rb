@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Drops::CurrentUser do
 
-  let(:drop) { Locomotive::Steam::Liquid::Drops::CurrentUser.new(user) }
+  let(:drop) { described_class.new(user) }
 
   subject { drop }
 

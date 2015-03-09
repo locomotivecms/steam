@@ -57,6 +57,23 @@ module Locomotive
         first { where(conditions) }
       end
 
+      def value_for(entry, name, conditions = {})
+        return nil if entry.nil?
+
+        if field = content_type.fields_by_name[name]
+          value = entry.send(name)
+
+          if %i(has_many many_to_many).include?(field.type)
+            # a safe copy of the proxy repository is needed here
+            value = value.dup
+            # like this, we do not modify the original local conditions
+            value.local_conditions.merge!(conditions)
+          end
+
+          value
+        end
+      end
+
       def next(entry)
         next_or_previous(entry, 'gt', 'lt')
       end

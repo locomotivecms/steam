@@ -83,6 +83,10 @@ module Locomotive
           Steam::TextileService.new
         end
 
+        register :cache do
+          Steam::NoCacheService.new
+        end
+
         register :configuration do
           Locomotive::Steam.configuration
         end

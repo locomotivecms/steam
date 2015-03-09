@@ -3,11 +3,12 @@ require 'spec_helper'
 describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
   let(:site)      { instance_double('Site', default_locale: 'en') }
-  let(:entry)     { instance_double('Article', _id: 42, title: 'Hello world', _label: 'Hello world', _slug: 'hello-world', _translated: false, seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description') }
+  let(:type)      { instance_double('Type', fields_by_name: { title: instance_double('Field', type: :string ) }) }
+  let(:entry)     { instance_double('Article', _id: 42, content_type: type, title: 'Hello world', _label: 'Hello world', _slug: 'hello-world', _translated: false, seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description') }
   let(:assigns)   { {} }
   let(:services)  { Locomotive::Steam::Services.build_instance }
   let(:context)   { ::Liquid::Context.new(assigns, {}, { services: services, site: site, locale: 'en' }) }
-  let(:drop)      { Locomotive::Steam::Liquid::Drops::ContentEntry.new(entry).tap { |d| d.context = context } }
+  let(:drop)      { described_class.new(entry).tap { |d| d.context = context } }
 
   subject { drop }
 
@@ -29,14 +30,18 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
     describe 'relationship field' do
 
-      let(:authors) { instance_double('Authors', all: ['john', 'jane'], association: true) }
-      let(:entry)   { instance_double('Article', authors: authors) }
+      let(:authors) { instance_double('AuthorsRepository', all: ['john', 'jane']) }
+      let(:type)    { instance_double('Type', fields_by_name: { authors: instance_double('Field', type: :has_many ) }) }
+      let(:entry)   { instance_double('Article', content_type: type, authors: authors) }
 
-      before do
-        allow(services.repositories.content_entry).to receive(:association).and_return(authors.all)
+      # before do
+      #   allow(services.repositories.content_entry).to receive(:association).and_return(authors.all)
+      # end
+
+      it do
+        allow(subject.before_method(:authors)).to receive(:local_conditions).and_return({})
+        expect(subject.before_method(:authors).first).to eq 'john'
       end
-
-      it { expect(subject.before_method(:authors).first).to eq 'john' }
 
     end
 

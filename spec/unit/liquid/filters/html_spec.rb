@@ -12,7 +12,7 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   let(:theme_asset_url)         { services.theme_asset_url }
   let(:theme_asset_repository)  { services.repositories.theme_asset }
 
-  before { services.repositories.theme_asset = EngineThemeAsset.new(site) }
+  before { services.repositories.theme_asset = EngineThemeAsset.new(nil, site) }
 
   before { @context = context }
 
@@ -254,7 +254,7 @@ describe Locomotive::Steam::Liquid::Filters::Html do
     }.strip)
   end
 
-  class EngineThemeAsset < Locomotive::Steam::Repositories::Filesystem::ThemeAsset
+  class EngineThemeAsset < Locomotive::Steam::ThemeAssetRepository
     def url_for(path)
       ['', 'sites', site._id.to_s, 'theme', path].join('/')
     end

@@ -18,6 +18,11 @@ module Locomotive::Steam
         @local_conditions = {}
       end
 
+      def initialize_copy(source)
+        super
+        @local_conditions = source.local_conditions.dup
+      end
+
       def build(attributes, &block)
         mapper.to_entity(attributes)
       end

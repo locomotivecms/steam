@@ -50,7 +50,7 @@ module Locomotive
             return '' if @_source.nil?
 
             if not @@forbidden_attributes.include?(meth.to_s)
-              repository.value_for(meth, @_source, @context['with_scope'])
+              repository.with(@_source.content_type).value_for(@_source, meth, @context['with_scope'])
             else
               nil
             end

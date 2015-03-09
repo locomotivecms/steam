@@ -4,7 +4,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentTypes do
 
   let(:services)  { Locomotive::Steam::Services.build_instance }
   let(:context)   { ::Liquid::Context.new({}, {}, { services: services }) }
-  let(:drop)      { Locomotive::Steam::Liquid::Drops::ContentTypes.new.tap { |d| d.context = context } }
+  let(:drop)      { described_class.new.tap { |d| d.context = context } }
 
   before do
     allow(services.repositories.content_type).to receive(:by_slug).with('articles').and_return(true)

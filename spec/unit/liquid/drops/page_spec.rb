@@ -7,7 +7,7 @@ describe Locomotive::Steam::Liquid::Drops::Page do
   let(:site)      { instance_double('Site', default_locale: 'en') }
   let(:context)   { ::Liquid::Context.new(assigns, {}, { locale: 'en', services: services, site: site }) }
   let(:page)      { instance_double('Page', id: 42, localized_attributes: [], title: 'Index', slug: 'index', fullpath: 'index', content_type: nil, depth: 1, templatized?: false, listed?: true, published?: true, is_layout?: true, redirect?: false, seo_title: 'seo title', redirect_url: '/', handle: 'index', meta_keywords: 'keywords', meta_description: 'description') }
-  let(:drop)      { Locomotive::Steam::Liquid::Drops::Page.new(page).tap { |d| d.context = context } }
+  let(:drop)      { described_class.new(page).tap { |d| d.context = context } }
 
   subject { drop }
 

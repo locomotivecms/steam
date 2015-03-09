@@ -6,7 +6,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentTypeProxyCollection do
   let(:content_type)  { instance_double('ContentType', slug: 'articles') }
   let(:services)      { Locomotive::Steam::Services.build_instance }
   let(:context)       { ::Liquid::Context.new(assigns, {}, { services: services }) }
-  let(:drop)          { Locomotive::Steam::Liquid::Drops::ContentTypeProxyCollection.new(content_type).tap { |d| d.context = context } }
+  let(:drop)          { described_class.new(content_type).tap { |d| d.context = context } }
 
   describe '#public_submission_url' do
     it { expect(drop.public_submission_url).to eq '/entry_submissions/articles' }

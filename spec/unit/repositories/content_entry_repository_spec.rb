@@ -87,6 +87,41 @@ describe Locomotive::Steam::ContentEntryRepository do
 
   end
 
+  describe '#value_for' do
+
+    let(:entry)       { nil }
+    let(:conditions)  { {} }
+    let(:name)        { :title }
+    subject { repository.with(type).value_for(entry, name, conditions) }
+
+    it { is_expected.to eq nil }
+
+    context 'existing entry' do
+      let(:entry) { instance_double('Entry', title: 'Hello world') }
+      it { is_expected.to eq 'Hello world' }
+
+      context 'unknown field' do
+        let(:name) { :authors }
+        it { is_expected.to eq nil }
+      end
+    end
+
+    context 'with a has_many field' do
+      let(:type) { build_content_type('Articles', label_field_name: :title, localized_names: [:title], fields_by_name: { articles: instance_double('Field', type: :has_many) }) }
+      let(:proxy_repository) { repository.dup }
+      let(:entry) { instance_double('Entry', articles: proxy_repository) }
+      let(:name) { :articles }
+      let(:conditions) { { published: true } }
+
+      it 'does not modify the local conditions of the initial proxy repository' do
+        expect(subject.local_conditions).to eq(content_type_id: 1, published: true)
+        expect(proxy_repository.local_conditions).to eq(content_type_id: 1)
+      end
+
+    end
+
+  end
+
   describe '#next' do
 
     let(:type) { build_content_type('Articles', order_by: { _position: 'asc' }, label_field_name: :title, localized_names: [:title], fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
