@@ -30,7 +30,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
     describe 'relationship field' do
 
-      let(:authors) { instance_double('AuthorsRepository', all: ['john', 'jane']) }
+      let(:authors) { instance_double(Locomotive::Steam::ContentEntryRepository, all: ['john', 'jane']) }
       let(:type)    { instance_double('Type', fields_by_name: { authors: instance_double('Field', type: :has_many ) }) }
       let(:entry)   { instance_double('Article', content_type: type, authors: authors) }
 
