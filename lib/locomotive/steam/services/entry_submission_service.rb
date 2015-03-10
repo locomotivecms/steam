@@ -3,7 +3,7 @@ require 'sanitize'
 module Locomotive
   module Steam
 
-    class EntrySubmissionService < Struct.new(:content_type_repository, :repository, :current_locale)
+    class EntrySubmissionService < Struct.new(:content_type_repository, :repository, :locale)
 
       include Locomotive::Steam::Services::Concerns::Decorator
 

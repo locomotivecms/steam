@@ -12,7 +12,7 @@ module Locomotive
       # @return [ String ] the translated text or nil if not found
       #
       def translate(input, locale, scope = nil)
-        locale ||= current_locale
+        locale ||= self.current_locale
 
         if scope.blank?
           values = repository.find(input).try(:values) || {}

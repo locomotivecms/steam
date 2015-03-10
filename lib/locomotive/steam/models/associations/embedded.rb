@@ -14,7 +14,7 @@ module Locomotive::Steam
       end
 
       # use the scope from the parent repository
-      # one of the benefits is that if we change the current_locale
+      # one of the benefits is that if we change the current locale
       # of the parent repository, that will change the local repository
       # as well.
       def initialize(repository_klass, collection, scope, options = {})

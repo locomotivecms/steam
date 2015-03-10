@@ -41,7 +41,7 @@ module Locomotive::Steam
         end
 
         env['steam.path']   = _path
-        env['steam.locale'] = services.current_locale = _locale
+        env['steam.locale'] = services.locale = _locale
       end
 
     end

@@ -83,7 +83,7 @@ module Locomotive::Steam
           locale = $1
         end
 
-        services.current_locale = locale
+        services.locale = locale
 
         I18n.with_locale(locale, &block)
       end
