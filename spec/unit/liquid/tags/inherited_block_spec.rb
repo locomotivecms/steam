@@ -9,7 +9,7 @@ describe Locomotive::Steam::Liquid::Tags::InheritedBlock do
 
   let(:listener)      { Liquid::SimpleEventsListener.new }
   let(:finder)        { instance_double('Finder', find: parent) }
-  let(:options)       { { page: page, events_listener: listener, parent_finder: finder, parser: Locomotive::Steam::Services::LiquidParser.new } }
+  let(:options)       { { page: page, events_listener: listener, parent_finder: finder, parser: Locomotive::Steam::LiquidParserService.new } }
 
   let!(:template)     { parse_template(source, options) }
 

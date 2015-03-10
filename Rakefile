@@ -36,7 +36,6 @@ end
 
 RSpec::Core::RakeTask.new('spec:unit') do |spec|
   spec.pattern = 'spec/unit/**/*_spec.rb'
-  # spec.pattern = 'spec/unit/{services,core_ext,middlewares,decorators,adapters,entities,models,repositories}/**/*_spec.rb'
 end
 
 task default: ['mongodb:test:seed', :spec]
