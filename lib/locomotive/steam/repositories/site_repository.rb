@@ -10,11 +10,15 @@ module Locomotive
         localized_attributes :seo_title, :meta_description, :meta_keywords
       end
 
+      def by_domain(domain)
+        first { where('domains.in' => domain) }
+      end
+
       def by_handle_or_domain(handle, domain)
         if handle.nil?
-          query { where('domains.in' => domain) }.first
+          by_domain(domain)
         else
-          query { where(handle: handle) }.first
+          first { where(handle: handle) }
         end
       end
 

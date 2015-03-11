@@ -17,6 +17,7 @@ module Locomotive::Steam
         template:           {},
         editable_elements:  {},
         redirect_url:       {},
+        redirect_type:      nil,
         parent_id:          nil,
         parent_ids:         nil
       }.merge(attributes))

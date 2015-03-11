@@ -42,7 +42,7 @@ module Locomotive::Steam
 
       def decorate(entry)
         return nil if entry.nil?
-        Locomotive::Steam::Decorators::I18nDecorator.new(entry, nil, default_locale)
+        Locomotive::Steam::Decorators::I18nDecorator.new(entry, default_locale)
       end
 
       def content_type_repository

@@ -2,11 +2,12 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Decorators::I18nDecorator do
 
-  let(:page)            { instance_double('Page', published?: true, attributes: { title: { en: 'Hello world!', fr: 'Bonjour monde' }, slug: 'hello-world' }) }
-  let(:localized)       { [:title, :slug] }
+  let(:field)           { i18n_field(:title, { en: 'Hello world!', fr: 'Bonjour monde' }) }
+  let(:other_field)     { i18n_field(:slug, 'hello-world') }
+  let(:page)            { instance_double('Page', published?: true, title: field, slug: other_field) }
   let(:locale)          { 'fr' }
   let(:default_locale)  { nil }
-  let(:decorated)       { Locomotive::Steam::Decorators::I18nDecorator.new(page, localized, locale, default_locale) }
+  let(:decorated)       { described_class.new(page, locale, default_locale) }
 
   it 'uses the localized version of the title attribute' do
     expect(decorated.title).to eq 'Bonjour monde'
@@ -57,6 +58,10 @@ describe Locomotive::Steam::Decorators::I18nDecorator do
       expect(decorated.title).to eq 'Hello world!'
     end
     expect(decorated.__locale__).to eq :fr
+  end
+
+  def i18n_field(name, translations)
+    Locomotive::Steam::Models::I18nField.new(name, translations)
   end
 
   # describe 'with a model' do

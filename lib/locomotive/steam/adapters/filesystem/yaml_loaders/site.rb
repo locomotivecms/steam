@@ -9,7 +9,11 @@ module Locomotive
             include Adapters::Filesystem::YAMLLoader
 
             def load(scope)
-              [_load(File.join(site_path, 'config', 'site.yml'))]
+              attributes = _load(File.join(site_path, 'config', 'site.yml'))
+
+              (attributes[:domains] ||= []) << 'localhost'
+
+              [attributes]
             end
 
           end

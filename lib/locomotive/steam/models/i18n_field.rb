@@ -31,6 +31,8 @@ module Locomotive::Steam
         @translations.each(&block)
       end
 
+      alias :__translations__ :translations
+
     end
 
   end

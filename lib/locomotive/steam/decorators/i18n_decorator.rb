@@ -4,15 +4,15 @@ module Locomotive
 
       class I18nDecorator < SimpleDelegator
 
-        attr_accessor :__localized_attributes__
+        # attr_accessor :__localized_attributes__
         attr_accessor :__frozen_locale__
         attr_reader   :__locale__
         attr_reader   :__default_locale__
 
-        def initialize(object, attributes, locale = nil, default_locale = nil)
+        def initialize(object, locale = nil, default_locale = nil)
           # ::Object.send(:puts, "Decorating #{object.class.name} with #{self.class.name}")
 
-          self.__localized_attributes__ = attributes || (object.respond_to?(:localized_attributes) ? object.localized_attributes : [])
+          # self.__localized_attributes__ = attributes || (object.respond_to?(:localized_attributes) ? object.localized_attributes : [])
           self.__frozen_locale__        = false
           self.__locale__               = locale
           self.__default_locale__       = default_locale
@@ -60,50 +60,72 @@ module Locomotive
         end
 
         def __is_localized_attribute__(name)
-          __localized_attributes__.include?(name.to_sym)
+          # __localized_attributes__.include?(name.to_sym)
+          field = __getobj__.public_send(name.to_sym)
+          field.respond_to?(:__translations__)
         end
 
         def __get_localized_value__(name)
-          # first get all the values in all the locales
-          field = __getobj__.public_send(:attributes)[name.to_sym]
+          field = __getobj__.public_send(name.to_sym)
+          field[__locale__] || field[__default_locale__]
 
-          # same value (can be nil) for all the locale?
-          if field.is_a?(Hash)
-            # if so, look first for the value in the the current locale.
-            # if no value, then in the default locale
-            field[__locale__] || field[__default_locale__]
-          else
-            field
-          end
+          # # first get all the values in all the locales
+          # field = __getobj__.public_send(name.to_sym)
+
+          # # same value (can be nil) for all the locale?
+          # if field.respond_to?(:__translations__)
+          #   # if so, look first for the value in the the current locale.
+          #   # if no value, then in the default locale
+          #   field[__locale__] || field[__default_locale__]
+          # else
+          #   field
+          # end
         end
 
         def __set_localized_value__(name, value)
-          field = __getobj__.public_send(:attributes)[name.to_sym] || {}
+          field = __getobj__.public_send(name.to_sym)
+          field[__locale__] || field[__default_locale__]
 
-          if field.is_a?(Hash)
-            field[__locale__] = value
-          else
-            field = { __locale__ => value }
-          end
+          # field = __getobj__.public_send(name.to_sym)
+
+          # if field.respond_to?(:__translations__)
+          #   field[__locale__] = value
+          # else
+          #   field = value }
+          # end
         end
 
         def method_missing(name, *args, &block)
-          # ::Object.send(:puts, "[#{name}][#{__locale__.inspect}][#{__default_locale__.inspect}] with #{args.inspect}") # DEBUG:
-          if __is_localized_attribute__(name)
-            __get_localized_value__(name)
-          elsif name.to_s.end_with?('=') && __is_localized_attribute__(name.to_s.chop)
+          ::Object.send(:puts, "YOUPI (1) #{name.inspect} #{args.inspect}")
+          # # ::Object.send(:puts, "[#{name}][#{__locale__.inspect}][#{__default_locale__.inspect}] with #{args.inspect}") # DEBUG:
+
+          if name.to_s.end_with?('=') && __is_localized_attribute__(name.to_s.chop)
+            ::Object.send(:puts, "YOUPI (2)")
             __set_localized_value__(name.to_s.chop, args.first)
+          elsif __is_localized_attribute__(name)
+            __get_localized_value__(name)
           else
             # Note: we want to hit the method_missing of the target object
             __getobj__.send(name, *args, &block)
           end
+
+
+          # if __is_localized_attribute__(name)
+          #   __get_localized_value__(name)
+          # elsif name.to_s.end_with?('=') && __is_localized_attribute__(name.to_s.chop)
+          #   ::Object.send(:puts, "YOUPI (2)")
+          #   __set_localized_value__(name.to_s.chop, args.first)
+          # else
+          #   # Note: we want to hit the method_missing of the target object
+          #   __getobj__.send(name, *args, &block)
+          # end
         end
 
         #:nocov:
         def inspect
           "[Decorated #{__getobj__.class.name}][I18n] attributes exist? " +
           __getobj__.respond_to?(:attributes).inspect +
-          ', localized attributes: ' + @__localized_attributes__.inspect +
+          # ', localized attributes: ' + @__localized_attributes__.inspect +
           ', locale: ' + @__locale__.inspect
         end
 

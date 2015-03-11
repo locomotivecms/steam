@@ -8,9 +8,9 @@ module Locomotive::Steam
       include Helpers
 
       def _call
-        timezone = site.try(:timezone) || 'UTC'
+        timezone = site.try(:timezone)
 
-        log "Timezone: #{timezone.inspect}"
+        log "Timezone: #{timezone.name}"
 
         Time.use_zone(timezone) do
           self.next

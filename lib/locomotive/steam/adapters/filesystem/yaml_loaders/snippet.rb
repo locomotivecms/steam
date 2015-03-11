@@ -64,28 +64,3 @@ module Locomotive
     end
   end
 end
-
-
-# module Locomotive
-#   module Steam
-#     module Repositories
-#       module Filesystem
-#         module YAMLLoaders
-
-#           class Snippet < Struct.new(:root_path, :default_locale, :cache)
-
-#             include YAMLLoaders::Concerns::Common
-
-#             def list_of_attributes
-#               cache.fetch('app/views/snippets') { load_list }
-#             end
-
-
-
-#           end
-
-#         end
-#       end
-#     end
-#   end
-# end

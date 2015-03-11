@@ -7,7 +7,7 @@ module Locomotive
           def initialize(source, localized_attributes = nil)
             # puts "creating #{self.class.name} drop for #{source.class.name}(#{source.object_id.inspect})"
             decorated = source if source.respond_to?(:__locale__)
-            decorated ||= Locomotive::Steam::Decorators::I18nDecorator.new(source, localized_attributes)
+            decorated ||= Locomotive::Steam::Decorators::I18nDecorator.new(source)
             super(decorated)
           end
 
