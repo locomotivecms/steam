@@ -84,6 +84,7 @@ module Locomotive
 
         def __set_localized_value__(name, value)
           field = __getobj__.public_send(name.to_sym)
+          binding.pry
           field[__locale__] || field[__default_locale__]
 
           # field = __getobj__.public_send(name.to_sym)
