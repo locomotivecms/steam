@@ -10,13 +10,14 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Page do
 
   describe '#load' do
 
-    let(:scope) { instance_double('Scope', locale: :en) }
+    let(:scope) { instance_double('Scope', locale: :fr, default_locale: :en) }
 
     subject { loader.load(scope).sort { |a, b| a[:_fullpath] <=> b[:_fullpath] } }
 
     it 'tests various stuff' do
       expect(subject.size).to eq 24
-      expect(subject.first[:title]).to eq({ en: 'Page not found' })
+      expect(subject.first[:title]).to eq(en: 'Page not found')
+      expect(subject[14][:slug]).to eq(en: 'music', fr: 'notre-musique')
     end
 
   end

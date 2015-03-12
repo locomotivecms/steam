@@ -11,7 +11,7 @@ module Locomotive
             if (object = yield).blank?
               object
             else
-              klass.decorate(object, nil, locale, default_locale)
+              klass.decorate(object, locale, default_locale)
             end
           end
 

@@ -63,6 +63,8 @@ module Locomotive::Steam
         end
 
         def all
+          # TODO: instrumentation here
+          # Locomotive::Common::Logger.debug "[dataset][#{@dataset.name}] conditions = #{@conditions.map(&:inspect).join(' AND ')}"
           limited sorted(filtered)
         end
 

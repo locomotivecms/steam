@@ -9,7 +9,7 @@ module Locomotive
       mapping :translations, entity: Translation
 
       def by_key(key)
-        query { where(key: key) }.first
+        first { where(key: key) }
       end
 
     end

@@ -10,6 +10,10 @@ module Locomotive::Steam
       }.merge(attributes))
     end
 
+    def values
+      self[:values]
+    end
+
   end
 
 end

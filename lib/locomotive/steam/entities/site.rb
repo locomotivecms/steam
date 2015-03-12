@@ -31,7 +31,7 @@ module Locomotive::Steam
     end
 
     def to_liquid
-      Steam::Liquid::Drops::Site.new(self)
+      Locomotive::Steam::Liquid::Drops::Site.new(self)
     end
 
   end

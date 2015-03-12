@@ -15,7 +15,7 @@ module Locomotive::Steam
         end
 
         def default_locale
-          @scope.locale
+          @scope.default_locale
         end
 
         def _load(path, frontmatter = false, &block)

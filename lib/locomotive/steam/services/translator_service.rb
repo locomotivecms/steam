@@ -15,7 +15,7 @@ module Locomotive
         locale ||= self.current_locale
 
         if scope.blank?
-          values = repository.find(input).try(:values) || {}
+          values = repository.by_key(input).try(:values) || {}
 
           if translation = values[locale.to_s]
             translation

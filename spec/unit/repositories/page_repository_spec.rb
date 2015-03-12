@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 require_relative '../../../lib/locomotive/steam/adapters/filesystem.rb'
-# require_relative '../../../lib/locomotive/steam/repositories/editable_element_repository.rb'
 
 describe Locomotive::Steam::PageRepository do
 
@@ -76,6 +75,23 @@ describe Locomotive::Steam::PageRepository do
       it { expect(subject.fullpath[:en]).to eq 'articles/content_type_template/comments' }
 
     end
+
+  end
+
+  describe '#find' do
+
+    let(:id) { 15 }
+    let(:pages) do
+      [
+        { _id: 15, parent_id: 1, title: { en: 'Somewhere' }, slug: { en: 'music', fr: 'notre-musique' }, _fullpath: 'music', template_path: { en: 'somewhere.liquid' } },
+        { _id: 1, title: { en: 'Home' }, slug: { en: 'index' }, _fullpath: 'index', template_path: { en: 'index.liquid' } }
+      ]
+    end
+
+    subject { repository.find(id) }
+
+    it { expect(subject.slug.translations).to eq('en' => 'music', 'fr' => 'notre-musique') }
+    it { expect(subject.fullpath.translations).to eq('en' => 'music', 'fr' => 'notre-musique') }
 
   end
 

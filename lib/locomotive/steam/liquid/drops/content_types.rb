@@ -58,8 +58,7 @@ module Locomotive
           end
 
           def collection
-            # TODO: repository.with(@content_type).all(....)
-            @collection ||= repository.all(@content_type, @context['with_scope'])
+            @collection ||= repository.with(@content_type).all(@context['with_scope'])
           end
 
         end

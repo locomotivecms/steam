@@ -20,18 +20,17 @@ module Locomotive
       end
 
       def by_handle(handle)
-        query { where(handle: handle) }.first
+        first { where(handle: handle) }
       end
 
       def by_fullpath(path)
-        query { where(fullpath: path) }.first
+        first { where(fullpath: path) }
       end
 
       def matching_fullpath(list)
         all(k(:fullpath, :in) => list)
       end
 
-      # Engine: ??? [TODO]
       def template_for(entry, handle = nil)
         conditions = { templatized?: true, content_type: entry.try(:content_type_slug) }
 
@@ -43,12 +42,12 @@ module Locomotive
       end
 
       def root
-        query { where(fullpath: 'index') }.first
+        first { where(fullpath: 'index') }
       end
 
       def parent_of(page)
         return nil if page.nil? || page.index?
-        query { where(_id: page.parent_id) }.first
+        first { where(_id: page.parent_id) }
       end
 
       # Note: Ancestors and self

@@ -22,9 +22,9 @@ module Locomotive
 
         class << self
 
-          def decorate(object_or_list, attributes = nil, locale = nil, default_locale = nil)
+          def decorate(object_or_list, locale = nil, default_locale = nil)
             decorated = [[object_or_list]].flatten.map do |object|
-              new(object, attributes, locale, default_locale)
+              new(object, locale, default_locale)
             end
 
             object_or_list.respond_to?(:attributes) ? decorated.first : decorated
@@ -60,6 +60,7 @@ module Locomotive
         end
 
         def __is_localized_attribute__(name)
+          return false if name == :try
           # __localized_attributes__.include?(name.to_sym)
           field = __getobj__.public_send(name.to_sym)
           field.respond_to?(:__translations__)
@@ -84,9 +85,7 @@ module Locomotive
 
         def __set_localized_value__(name, value)
           field = __getobj__.public_send(name.to_sym)
-          binding.pry
-          field[__locale__] || field[__default_locale__]
-
+          field[__locale__] = value
           # field = __getobj__.public_send(name.to_sym)
 
           # if field.respond_to?(:__translations__)
@@ -97,19 +96,16 @@ module Locomotive
         end
 
         def method_missing(name, *args, &block)
-          ::Object.send(:puts, "YOUPI (1) #{name.inspect} #{args.inspect}")
-          # # ::Object.send(:puts, "[#{name}][#{__locale__.inspect}][#{__default_locale__.inspect}] with #{args.inspect}") # DEBUG:
+          # ::Object.send(:puts, "[#{name}][#{__locale__.inspect}][#{__default_locale__.inspect}] with #{args.inspect}") # DEBUG:
 
           if name.to_s.end_with?('=') && __is_localized_attribute__(name.to_s.chop)
-            ::Object.send(:puts, "YOUPI (2)")
             __set_localized_value__(name.to_s.chop, args.first)
-          elsif __is_localized_attribute__(name)
+          elsif !name.to_s.end_with?('=') && __is_localized_attribute__(name)
             __get_localized_value__(name)
           else
             # Note: we want to hit the method_missing of the target object
             __getobj__.send(name, *args, &block)
           end
-
 
           # if __is_localized_attribute__(name)
           #   __get_localized_value__(name)

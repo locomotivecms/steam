@@ -40,8 +40,8 @@ module Locomotive::Steam
           end
         end
 
-        def to_s
-          "#{field} #{operator} #{@value.to_s}"
+        def inspect
+          "#{field}.#{operator} #{value}"
         end
 
         protected

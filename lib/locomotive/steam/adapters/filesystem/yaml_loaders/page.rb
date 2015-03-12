@@ -78,8 +78,9 @@ module Locomotive
 
                 relative_path = get_relative_path(filepath)
 
-                fullpath, locale = relative_path.split('.')[0..1]
-                locale = default_locale if template_extensions.include?(locale)
+                fullpath, extension_or_locale = relative_path.split('.')[0..1]
+
+                locale = template_extensions.include?(extension_or_locale) ? default_locale : extension_or_locale
 
                 yield(filepath, relative_path, fullpath, locale.to_sym)
               end

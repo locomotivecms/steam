@@ -278,7 +278,7 @@ module Locomotive
 
           def decorate_page(page)
             klass = Locomotive::Steam::Decorators::I18nDecorator
-            klass.new(page, page.localized_attributes, current_locale, current_site.default_locale)
+            klass.new(page, current_locale, current_site.default_locale)
           end
 
           def bootstrap?
