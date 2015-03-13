@@ -4,7 +4,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
   let(:site)      { instance_double('Site', default_locale: 'en') }
   let(:type)      { instance_double('Type', fields_by_name: { title: instance_double('Field', type: :string ) }) }
-  let(:entry)     { instance_double('Article', _id: 42, content_type: type, title: 'Hello world', _label: 'Hello world', _slug: 'hello-world', _translated: false, seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description') }
+  let(:entry)     { instance_double('Article', _id: 42, localized_attributes: {}, content_type: type, title: 'Hello world', _label: 'Hello world', _slug: 'hello-world', _translated: false, seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description') }
   let(:assigns)   { {} }
   let(:services)  { Locomotive::Steam::Services.build_instance }
   let(:context)   { ::Liquid::Context.new(assigns, {}, { services: services, site: site, locale: 'en' }) }
@@ -32,7 +32,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
       let(:authors) { instance_double('AuthorsRepository', first: 'john', local_conditions: {}) }
       let(:type)    { instance_double('Type', fields_by_name: { authors: instance_double('Field', type: :has_many ) }) }
-      let(:entry)   { instance_double('Article', content_type: type, authors: authors) }
+      let(:entry)   { instance_double('Article', content_type: type, authors: authors, localized_attributes: {}) }
 
       before { allow(authors).to receive(:dup).and_return(authors) }
 
@@ -80,8 +80,8 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
   describe 'i18n' do
 
-    let(:entry) { instance_double('Article', content_type: type, attributes: { title: { en: 'Hello world', fr: 'Bonjour monde' } }) }
-    let(:drop)  { described_class.new(entry, [:title]).tap { |d| d.context = context } }
+    let(:entry) { instance_double('Article', content_type: type, localized_attributes: { title: true }, title: { en: 'Hello world', fr: 'Bonjour monde' }) }
+    let(:drop)  { described_class.new(entry).tap { |d| d.context = context } }
 
     subject { drop.before_method(:title) }
 

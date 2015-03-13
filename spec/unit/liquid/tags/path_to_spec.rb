@@ -32,8 +32,8 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
 
   describe 'from a handle of a page' do
 
-    let(:drop)      { Locomotive::Steam::Liquid::Drops::Page.new(page, [:fullpath]) }
-    let(:page)      { liquid_instance_double('Index', title: 'Index', handle: 'index', attributes: { fullpath: fullpath }, templatized?: false) }
+    let(:drop)      { Locomotive::Steam::Liquid::Drops::Page.new(page) }
+    let(:page)      { liquid_instance_double('Index', title: 'Index', handle: 'index', fullpath: fullpath, localized_attributes: { fullpath: true }, templatized?: false) }
     let(:fullpath)  { { en: 'index', fr: 'index' } }
     let(:source)    { '{% path_to index %}' }
 
@@ -56,8 +56,8 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
   describe 'from a page (drop) itself' do
 
     let(:assigns)   { { 'about_us' => drop } }
-    let(:drop)      { Locomotive::Steam::Liquid::Drops::Page.new(page, [:fullpath]) }
-    let(:page)      { liquid_instance_double('AboutUs', title: 'About us', handle: 'index', attributes: { fullpath: fullpath }, localized_attributes: [:fullpath], templatized?: false) }
+    let(:drop)      { Locomotive::Steam::Liquid::Drops::Page.new(page) }
+    let(:page)      { liquid_instance_double('AboutUs', title: 'About us', handle: 'index', localized_attributes: { fullpath: true }, fullpath: fullpath, localized_attributes: [:fullpath], templatized?: false) }
     let(:fullpath)  { { en: 'about-us', fr: 'a-notre-sujet' } }
     let(:source)    { '{% path_to about_us %}' }
 
@@ -75,10 +75,10 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
   describe 'from a content entry (drop)' do
 
     let(:assigns)     { { 'article' => entry_drop } }
-    let(:entry_drop)  { Locomotive::Steam::Liquid::Drops::ContentEntry.new(entry, [:_slug]) }
-    let(:entry)       { liquid_instance_double('Article', attributes: { _slug: { en: 'hello-world', fr: 'bonjour-monde' } }) }
-    let(:drop)        { Locomotive::Steam::Liquid::Drops::Page.new(page, [:fullpath]) }
-    let(:page)        { liquid_instance_double('ArticleTemplate', title: 'Template of an article', handle: 'article', attributes: { fullpath: { en: 'my-articles/content_type_template', fr: 'mes-articles/content_type_template' } }, localized_attributes: [:fullpath], content_entry: entry_drop.send(:_source), templatized?: true) }
+    let(:entry_drop)  { Locomotive::Steam::Liquid::Drops::ContentEntry.new(entry) }
+    let(:entry)       { liquid_instance_double('Article', localized_attributes: { _slug: true }, _slug: { en: 'hello-world', fr: 'bonjour-monde' }) }
+    let(:drop)        { Locomotive::Steam::Liquid::Drops::Page.new(page) }
+    let(:page)        { liquid_instance_double('ArticleTemplate', title: 'Template of an article', handle: 'article', localized_attributes: { fullpath: true }, fullpath: { en: 'my-articles/content_type_template', fr: 'mes-articles/content_type_template' }, content_entry: entry_drop.send(:_source), templatized?: true) }
     let(:source)      { '{% path_to article %}' }
 
     before do

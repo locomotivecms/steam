@@ -39,8 +39,8 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
 
   describe '#render' do
 
-    let(:drop)      { Locomotive::Steam::Liquid::Drops::Page.new(page, [:title, :fullpath]) }
-    let(:page)      { liquid_instance_double('Index', handle: 'index', attributes: { title: { en: 'Home', fr: 'Accueil' }, fullpath: fullpath }, templatized?: false) }
+    let(:drop)      { Locomotive::Steam::Liquid::Drops::Page.new(page) }
+    let(:page)      { liquid_instance_double('Index', handle: 'index', localized_attributes: { title: true, fullpath: true }, title: { en: 'Home', fr: 'Accueil' }, fullpath: fullpath, templatized?: false) }
     let(:fullpath)  { { en: 'index', fr: 'index' } }
 
     before do
@@ -86,10 +86,10 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
     describe 'link to a content entry (drop)' do
 
       let(:assigns)     { { 'article' => entry_drop } }
-      let(:entry_drop)  { Locomotive::Steam::Liquid::Drops::ContentEntry.new(entry, [:_label, :_slug]) }
-      let(:entry)       { liquid_instance_double('Article', attributes: { _label: { en: 'Hello world', fr: 'Bonjour monde' }, _slug: { en: 'hello-world', fr: 'bonjour-monde' } }) }
-      let(:drop)        { Locomotive::Steam::Liquid::Drops::Page.new(page, [:fullpath]) }
-      let(:page)        { liquid_instance_double('ArticleTemplate', title: 'Template of an article', handle: 'article', attributes: { fullpath: { en: 'my-articles/content_type_template', fr: 'mes-articles/content_type_template' } }, localized_attributes: [:fullpath], content_entry: entry_drop.send(:_source), templatized?: true) }
+      let(:entry_drop)  { Locomotive::Steam::Liquid::Drops::ContentEntry.new(entry) }
+      let(:entry)       { liquid_instance_double('Article', localized_attributes: { _label: true, _slug: true }, _label: { en: 'Hello world', fr: 'Bonjour monde' }, _slug: { en: 'hello-world', fr: 'bonjour-monde' }) }
+      let(:drop)        { Locomotive::Steam::Liquid::Drops::Page.new(page) }
+      let(:page)        { liquid_instance_double('ArticleTemplate', title: 'Template of an article', handle: 'article', fullpath: { en: 'my-articles/content_type_template', fr: 'mes-articles/content_type_template' }, localized_attributes: { fullpath: true }, content_entry: entry_drop.send(:_source), templatized?: true) }
       let(:source)      { '{% link_to article %}' }
 
       before do

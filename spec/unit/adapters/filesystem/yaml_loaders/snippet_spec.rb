@@ -10,7 +10,7 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Snippet do
 
   describe '#load' do
 
-    let(:scope) { instance_double('Scope', locale: :en) }
+    let(:scope) { instance_double('Scope', locale: :fr, default_locale: :en) }
 
     subject { loader.load(scope).sort { |a, b| a[:name] <=> b[:name] } }
 

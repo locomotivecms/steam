@@ -6,9 +6,8 @@ describe Locomotive::Steam::Liquid::Tags::LocaleSwitcher do
   let(:assigns)     { { 'page' => drop } }
   let(:services)    { Locomotive::Steam::Services.build_instance }
   let(:site)        { instance_double('Site', locales: %w(en fr), default_locale: 'en') }
-  let(:drop)        { Locomotive::Steam::Liquid::Drops::Page.new(page, [:title, :fullpath]) }
-  let(:attributes)  { { title: { en: 'Home', fr: 'Accueil' }, fullpath: { en: 'index', fr: 'index' } } }
-  let(:page)        { liquid_instance_double('Index', attributes: attributes, templatized?: false) }
+  let(:drop)        { Locomotive::Steam::Liquid::Drops::Page.new(page) }
+  let(:page)        { liquid_instance_double('Index', localized_attributes: { title: true, fullpath: true }, title: { en: 'Home', fr: 'Accueil' }, fullpath: { en: 'index', fr: 'index' }, templatized?: false) }
   let(:context)     { ::Liquid::Context.new(assigns, {}, { services: services, site: site, locale: locale }) }
 
   subject { render_template(source, context) }
@@ -46,11 +45,10 @@ describe Locomotive::Steam::Liquid::Tags::LocaleSwitcher do
   describe 'the page is templatized' do
 
     let(:assigns)     { { 'article' => entry_drop, 'page' => drop } }
-    let(:entry_drop)  { Locomotive::Steam::Liquid::Drops::ContentEntry.new(entry, [:_label, :_slug]) }
-    let(:entry)       { liquid_instance_double('Article', attributes: { _label: { en: 'Hello world', fr: 'Bonjour monde' }, _slug: { en: 'hello-world', fr: 'bonjour-monde' } }) }
-    let(:drop)        { Locomotive::Steam::Liquid::Drops::Page.new(page, [:fullpath]) }
-    let(:attributes)  { { fullpath: { en: 'my-articles/content_type_template', fr: 'mes-articles/content_type_template' } } }
-    let(:page)        { liquid_instance_double('ArticleTemplate', title: 'Article template', attributes: attributes, content_entry: entry_drop.send(:_source), templatized?: true) }
+    let(:entry_drop)  { Locomotive::Steam::Liquid::Drops::ContentEntry.new(entry) }
+    let(:entry)       { liquid_instance_double('Article', _label: { en: 'Hello world', fr: 'Bonjour monde' }, _slug: { en: 'hello-world', fr: 'bonjour-monde' }, localized_attributes: { _label: true, _slug: true }) }
+    let(:drop)        { Locomotive::Steam::Liquid::Drops::Page.new(page) }
+    let(:page)        { liquid_instance_double('ArticleTemplate', title: 'Article template', fullpath: { en: 'my-articles/content_type_template', fr: 'mes-articles/content_type_template' }, content_entry: entry_drop.send(:_source), templatized?: true, localized_attributes: { fullpath: true }) }
 
     let(:source) { '{% locale_switcher label: "title" %}' }
     it { is_expected.to eq '<div id="locale-switcher"><a href="/my-articles/hello-world" class="en current">Hello world</a> | <a href="/fr/mes-articles/bonjour-monde" class="fr">Bonjour monde</a></div>' }

@@ -4,7 +4,7 @@ module Locomotive
 
       class I18nDecorator < SimpleDelegator
 
-        # attr_accessor :__localized_attributes__
+        attr_accessor :__localized_attributes__
         attr_accessor :__frozen_locale__
         attr_reader   :__locale__
         attr_reader   :__default_locale__
@@ -12,7 +12,7 @@ module Locomotive
         def initialize(object, locale = nil, default_locale = nil)
           # ::Object.send(:puts, "Decorating #{object.class.name} with #{self.class.name}")
 
-          # self.__localized_attributes__ = attributes || (object.respond_to?(:localized_attributes) ? object.localized_attributes : [])
+          self.__localized_attributes__ = object.localized_attributes
           self.__frozen_locale__        = false
           self.__locale__               = locale
           self.__default_locale__       = default_locale
@@ -27,7 +27,7 @@ module Locomotive
               new(object, locale, default_locale)
             end
 
-            object_or_list.respond_to?(:attributes) ? decorated.first : decorated
+            object_or_list.respond_to?(:localized_attributes) ? decorated.first : decorated
           end
 
         end
@@ -60,10 +60,13 @@ module Locomotive
         end
 
         def __is_localized_attribute__(name)
-          return false if name == :try
-          # __localized_attributes__.include?(name.to_sym)
-          field = __getobj__.public_send(name.to_sym)
-          field.respond_to?(:__translations__)
+          __localized_attributes__.include?(name.to_sym)
+
+          # OLD VERSION
+          # return false if name == :try
+          # # __localized_attributes__.include?(name.to_sym)
+          # field = __getobj__.public_send(name.to_sym)
+          # field.respond_to?(:__translations__)
         end
 
         def __get_localized_value__(name)
@@ -98,24 +101,23 @@ module Locomotive
         def method_missing(name, *args, &block)
           # ::Object.send(:puts, "[#{name}][#{__locale__.inspect}][#{__default_locale__.inspect}] with #{args.inspect}") # DEBUG:
 
-          if name.to_s.end_with?('=') && __is_localized_attribute__(name.to_s.chop)
-            __set_localized_value__(name.to_s.chop, args.first)
-          elsif !name.to_s.end_with?('=') && __is_localized_attribute__(name)
-            __get_localized_value__(name)
-          else
-            # Note: we want to hit the method_missing of the target object
-            __getobj__.send(name, *args, &block)
-          end
-
-          # if __is_localized_attribute__(name)
-          #   __get_localized_value__(name)
-          # elsif name.to_s.end_with?('=') && __is_localized_attribute__(name.to_s.chop)
-          #   ::Object.send(:puts, "YOUPI (2)")
+          # if name.to_s.end_with?('=') && __is_localized_attribute__(name.to_s.chop)
           #   __set_localized_value__(name.to_s.chop, args.first)
+          # elsif !name.to_s.end_with?('=') && __is_localized_attribute__(name)
+          #   __get_localized_value__(name)
           # else
           #   # Note: we want to hit the method_missing of the target object
           #   __getobj__.send(name, *args, &block)
           # end
+
+          if __is_localized_attribute__(name)
+            __get_localized_value__(name)
+          elsif name.to_s.end_with?('=') && __is_localized_attribute__(name.to_s.chop)
+            __set_localized_value__(name.to_s.chop, args.first)
+          else
+            # Note: we want to hit the method_missing of the target object
+            __getobj__.send(name, *args, &block)
+          end
         end
 
         #:nocov:

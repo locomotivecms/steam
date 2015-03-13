@@ -4,7 +4,7 @@ describe Locomotive::Steam::Decorators::I18nDecorator do
 
   let(:field)           { i18n_field(:title, { en: 'Hello world!', fr: 'Bonjour monde' }) }
   let(:other_field)     { i18n_field(:slug, 'hello-world') }
-  let(:page)            { instance_double('Page', published?: true, title: field, slug: other_field) }
+  let(:page)            { instance_double('Page', published?: true, title: field, slug: other_field, localized_attributes: { title: true, slug: true }) }
   let(:locale)          { 'fr' }
   let(:default_locale)  { nil }
   let(:decorated)       { described_class.new(page, locale, default_locale) }

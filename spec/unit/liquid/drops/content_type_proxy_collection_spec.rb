@@ -19,7 +19,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentTypeProxyCollection do
   describe 'acts as a collection' do
 
     before do
-      allow(services.repositories.content_entry).to receive(:all).with(content_type, nil).and_return(['a', 'b'])
+      allow(services.repositories.content_entry).to receive(:all).with(nil).and_return(['a', 'b'])
     end
 
     describe '#first' do
@@ -39,7 +39,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentTypeProxyCollection do
       let(:assigns) { { 'with_scope' => { 'visible' => true } } }
 
       before do
-        expect(services.repositories.content_entry).to receive(:all).with(content_type, { 'visible' => true }).and_return(['a', 'b'])
+        expect(services.repositories.content_entry).to receive(:all).with({ 'visible' => true }).and_return(['a', 'b'])
       end
 
       describe '#first' do

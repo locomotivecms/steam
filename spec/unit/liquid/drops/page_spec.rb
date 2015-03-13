@@ -103,8 +103,8 @@ describe Locomotive::Steam::Liquid::Drops::Page do
 
   describe 'i18n' do
 
-    let(:page) { instance_double('Page', attributes: { title: { en: 'About us', fr: 'A notre sujet' } }, templatized?: false) }
-    let(:drop) { Locomotive::Steam::Liquid::Drops::Page.new(page, [:title]).tap { |d| d.context = context } }
+    let(:page) { instance_double('Page', title: { en: 'About us', fr: 'A notre sujet' }, templatized?: false, localized_attributes: { title: true }) }
+    let(:drop) { described_class.new(page).tap { |d| d.context = context } }
 
     it { expect(subject.title).to eq 'About us' }
 

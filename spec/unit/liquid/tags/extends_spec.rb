@@ -27,26 +27,11 @@ describe Locomotive::Steam::Liquid::Tags::Extends do
 
     let!(:template) { parse_template(source, options) }
 
-    describe 'parent template already parsed' do
+    let(:parent) { instance_double('Index', localized_attributes: { source: true, template: true }, source: { en: 'Hello world!' }, template: { en: nil }) }
 
-      let(:parent_template) { parse_template('Hello world') }
-      let(:parent)          { instance_double('Index', attributes: { template: { en: parent_template } }, localized_attributes: [:template]) }
-
-      it { expect(listener.event_names.first).to eq :extends }
-      it { expect(template.render).to eq 'Hello world' }
-      it { expect(options[:page]).to eq page }
-
-    end
-
-    describe 'parent template not parsed yet' do
-
-      let(:parent) { instance_double('Index', attributes: { source: { en: 'Hello world!' }, template: { en: nil } }, localized_attributes: [:template, :source]) }
-
-      it { expect(listener.event_names.first).to eq :extends }
-      it { expect(template.render).to eq 'Hello world!' }
-      it { expect(options[:page]).to eq page }
-
-    end
+    it { expect(listener.event_names.first).to eq :extends }
+    it { expect(template.render).to eq 'Hello world!' }
+    it { expect(options[:page]).to eq page }
 
   end
 

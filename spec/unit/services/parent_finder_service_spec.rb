@@ -9,7 +9,7 @@ describe Locomotive::Steam::ParentFinderService do
   describe '#find' do
 
     let(:name)          { '' }
-    let(:another_page)  { instance_double('Index', title: 'Index', attributes: {}) }
+    let(:another_page)  { instance_double('Index', title: 'Index', attributes: {}, localized_attributes: {}) }
     let(:page)          { instance_double('AboutUs', title: 'About us') }
 
     subject { service.find(page, name).try(:title) }

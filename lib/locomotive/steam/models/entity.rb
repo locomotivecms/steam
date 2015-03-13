@@ -5,7 +5,7 @@ module Locomotive::Steam
 
       include Locomotive::Steam::Models::Concerns::Validation
 
-      attr_accessor :attributes
+      attr_accessor :attributes, :localized_attributes
 
       def initialize(attributes)
         @attributes = attributes.with_indifferent_access

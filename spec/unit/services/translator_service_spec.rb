@@ -19,7 +19,7 @@ describe Locomotive::Steam::TranslatorService do
       let(:translation) { instance_double('Translation', values: { 'en' => 'Example text', 'es' => 'Texto de ejemplo' }) }
 
       before do
-        allow(repository).to receive(:find).with('example_test').and_return(translation)
+        allow(repository).to receive(:by_key).with('example_test').and_return(translation)
       end
 
       it { is_expected.to eq 'Example text' }

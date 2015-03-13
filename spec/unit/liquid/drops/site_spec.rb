@@ -4,7 +4,7 @@ describe Locomotive::Steam::Liquid::Drops::Site do
 
   let(:services)  { Locomotive::Steam::Services.build_instance }
   let(:context)   { ::Liquid::Context.new({}, {}, { services: services }) }
-  let(:site)      { instance_double('Site', name: 'Locomotive', domains: ['acme.org'], seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description') }
+  let(:site)      { instance_double('Site', name: 'Locomotive', domains: ['acme.org'], seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description', localized_attributes: {}) }
   let(:drop)      { described_class.new(site).tap { |d| d.context = context } }
 
   subject { drop }

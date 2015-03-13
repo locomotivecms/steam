@@ -44,6 +44,10 @@ module Locomotive::Steam
         entity_klass.new(deserialize(attributes)).tap do |entity|
           attach_entity_to_associations(entity)
           set_default_attributes(entity)
+
+          entity.localized_attributes = localized_attributes.inject({}) do |hash, attribute|
+            hash[attribute] = true; hash
+          end
         end
       end
 
