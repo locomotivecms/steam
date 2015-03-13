@@ -13,8 +13,8 @@ module Locomotive
       end
 
       def _parse(object, options = {})
-        # Note: check if the template has already been parsed (caching?)
-        object.template ||= ::Liquid::Template.parse(object.liquid_source, options)
+        # Note: the template must not be parsed here
+        ::Liquid::Template.parse(object.liquid_source, options)
       end
 
     end

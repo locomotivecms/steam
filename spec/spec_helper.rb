@@ -42,5 +42,5 @@ RSpec.configure do |config|
   config.before(:all) { remove_logs; setup_common }
   config.before { reset! }
   config.after  { reset! }
-  config.order = 'random'
+  config.order = :random
 end

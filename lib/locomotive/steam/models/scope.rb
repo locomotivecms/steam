@@ -18,7 +18,7 @@ module Locomotive::Steam
       end
 
       def to_key
-        ['site', @site.try(:_id)].tap do |base|
+        (@site ? ['site', @site._id] : []).tap do |base|
           @context.each do |name, object|
             base << [name, object.try(:_id)]
           end
