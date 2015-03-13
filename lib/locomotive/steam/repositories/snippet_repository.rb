@@ -7,11 +7,11 @@ module Locomotive
 
       # Entity mapping
       mapping :snippets, entity: Snippet do
-        localized_attributes :template_path, :template
+        localized_attributes :template_path, :template, :source
       end
 
       def by_slug(slug)
-        query { where(slug: slug) }.first
+        first { where(slug: slug) }
       end
 
     end

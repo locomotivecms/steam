@@ -12,8 +12,6 @@ module Locomotive
           end
 
           def context=(context)
-            # puts "context=... #{self.class.name} / #{@_source.attributes.inspect} / #{@_source.__getobj__.object_id.inspect}"
-            # puts "locale=#{context.registers[:locale].inspect}"
             if locale = context.registers[:locale]
               @_source.__locale__ = locale
             end

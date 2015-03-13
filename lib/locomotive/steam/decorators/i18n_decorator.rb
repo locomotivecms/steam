@@ -61,55 +61,19 @@ module Locomotive
 
         def __is_localized_attribute__(name)
           __localized_attributes__.include?(name.to_sym)
-
-          # OLD VERSION
-          # return false if name == :try
-          # # __localized_attributes__.include?(name.to_sym)
-          # field = __getobj__.public_send(name.to_sym)
-          # field.respond_to?(:__translations__)
         end
 
         def __get_localized_value__(name)
           field = __getobj__.public_send(name.to_sym)
           field[__locale__] || field[__default_locale__]
-
-          # # first get all the values in all the locales
-          # field = __getobj__.public_send(name.to_sym)
-
-          # # same value (can be nil) for all the locale?
-          # if field.respond_to?(:__translations__)
-          #   # if so, look first for the value in the the current locale.
-          #   # if no value, then in the default locale
-          #   field[__locale__] || field[__default_locale__]
-          # else
-          #   field
-          # end
         end
 
         def __set_localized_value__(name, value)
           field = __getobj__.public_send(name.to_sym)
           field[__locale__] = value
-          # field = __getobj__.public_send(name.to_sym)
-
-          # if field.respond_to?(:__translations__)
-          #   field[__locale__] = value
-          # else
-          #   field = value }
-          # end
         end
 
         def method_missing(name, *args, &block)
-          # ::Object.send(:puts, "[#{name}][#{__locale__.inspect}][#{__default_locale__.inspect}] with #{args.inspect}") # DEBUG:
-
-          # if name.to_s.end_with?('=') && __is_localized_attribute__(name.to_s.chop)
-          #   __set_localized_value__(name.to_s.chop, args.first)
-          # elsif !name.to_s.end_with?('=') && __is_localized_attribute__(name)
-          #   __get_localized_value__(name)
-          # else
-          #   # Note: we want to hit the method_missing of the target object
-          #   __getobj__.send(name, *args, &block)
-          # end
-
           if __is_localized_attribute__(name)
             __get_localized_value__(name)
           elsif name.to_s.end_with?('=') && __is_localized_attribute__(name.to_s.chop)
@@ -124,7 +88,7 @@ module Locomotive
         def inspect
           "[Decorated #{__getobj__.class.name}][I18n] attributes exist? " +
           __getobj__.respond_to?(:attributes).inspect +
-          # ', localized attributes: ' + @__localized_attributes__.inspect +
+          ', localized attributes: ' + @__localized_attributes__.inspect +
           ', locale: ' + @__locale__.inspect
         end
 

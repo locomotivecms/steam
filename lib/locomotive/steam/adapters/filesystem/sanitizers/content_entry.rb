@@ -46,8 +46,8 @@ module Locomotive::Steam
                 entry[:_slug][locale] ||= slugify(entry._id, label, dataset, locale)
               end
             else
-              # not a big deal if we replace the I18nField by a string
-              entry[:_slug] = slugify(entry._id, entry._label, dataset)
+              # Note: replace the translations of the I18nField by a string
+              entry[:_slug].translations = slugify(entry._id, entry._label, dataset)
             end
           end
 

@@ -14,7 +14,8 @@ module Locomotive::Steam
         fullpath:           {},
         content_type:       nil,
         position:           99,
-        template:           {},
+        raw_template:       nil,
+        source:             nil,
         editable_elements:  {},
         redirect_url:       {},
         redirect_type:      nil,
@@ -36,6 +37,10 @@ module Locomotive::Steam
 
     def not_found?
       attributes[:fullpath].values.first == '404'
+    end
+
+    def source
+      self[:raw_template]
     end
 
     def to_liquid

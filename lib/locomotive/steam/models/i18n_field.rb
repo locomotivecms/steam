@@ -7,12 +7,7 @@ module Locomotive::Steam
 
       def initialize(name, translations)
         @name = name
-
-        @translations = (if translations.respond_to?(:fetch)
-          translations
-        else
-          Hash.new { translations }
-        end).with_indifferent_access
+        self.translations = translations
       end
 
       def [](locale)
@@ -25,6 +20,14 @@ module Locomotive::Steam
 
       def values
         @translations.values
+      end
+
+      def translations=(translations)
+        @translations = (if translations.respond_to?(:fetch)
+          translations
+        else
+          Hash.new { translations }
+        end).with_indifferent_access
       end
 
       def each(&block)

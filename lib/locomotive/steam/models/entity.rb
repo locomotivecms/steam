@@ -19,6 +19,10 @@ module Locomotive::Steam
         end
       end
 
+      def respond_to?(name, include_private = false)
+        attributes.include?(name) || super
+      end
+
       def _id
         self[:_id]
       end

@@ -46,7 +46,7 @@ module Locomotive::Steam
           set_default_attributes(entity)
 
           entity.localized_attributes = localized_attributes.inject({}) do |hash, attribute|
-            hash[attribute] = true; hash
+            hash[attribute.to_sym] = true; hash
           end
         end
       end
