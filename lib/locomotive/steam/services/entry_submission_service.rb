@@ -26,7 +26,7 @@ module Locomotive
 
         return nil if type.nil?
 
-        i18n_decorate { repository.by_slug(type, slug) }
+        i18n_decorate { repository.with(type).by_slug(slug) }
       end
 
       def to_json(entry)
@@ -36,7 +36,7 @@ module Locomotive
         hash = { _slug: entry._slug, content_type_slug: entry.content_type_slug }
 
         # dynamic attributes
-        content_type_repository.fields_for(entry.content_type).each do |field|
+        entry.content_type.fields.all.each do |field|
           next if %w(belongs_to has_many many_to_many).include?(field.type.to_s)
 
           hash[field.name] = entry.send(field.name)

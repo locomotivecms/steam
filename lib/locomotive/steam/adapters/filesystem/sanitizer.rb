@@ -37,6 +37,10 @@ module Locomotive::Steam
           entity
         end
 
+        def apply_to_entity_with_dataset(entity, dataset)
+          entity
+        end
+
         def attach_site_to(entity)
           entity[:site_id] = scope.site._id if scope.site
         end

@@ -13,41 +13,53 @@ module Locomotive::Steam
           end
 
           def apply_to_dataset(dataset)
-            dataset.all.each do |entry|
-              set_slug(entry, dataset)
-              set_id(entry)
+            dataset.all.each do |entity|
+              _apply_to_dataset(entity, dataset)
             end
+          end
+
+          def apply_to_entity_with_dataset(entity, dataset)
+            # Note: this statement attaches the site to the entity
+            apply_to_entity(entity)
+
+            # make sure it gets an unique slug and an _id
+            _apply_to_dataset(entity, dataset)
           end
 
           private
 
-          def add_label(entry)
-            value = entry.attributes.delete(:_label)
-            name  = entry.content_type.label_field_name
+          def _apply_to_dataset(entity, dataset)
+            set_slug(entity, dataset)
+            set_id(entity)
+          end
 
-            if entry.attributes[name].respond_to?(:translations) # localized?
-              entry.attributes[name][default_locale] = value
+          def add_label(entity)
+            value = entity.attributes.delete(:_label)
+            name  = entity.content_type.label_field_name
+
+            if entity.attributes[name].respond_to?(:translations) # localized?
+              entity.attributes[name][default_locale] = value
             else
-              entry.attributes[name] ||= value
+              entity.attributes[name] ||= value
             end
           end
 
-          def set_id(entry)
-            if (slug = entry[:_slug]).respond_to?(:translations)
-              entry[:_id] = slug[locale]
+          def set_id(entity)
+            if (slug = entity[:_slug]).respond_to?(:translations)
+              entity[:_id] = slug[locale]
             else
-              entry[:_id] = slug
+              entity[:_id] = slug
             end
           end
 
-          def set_slug(entry, dataset)
-            if entry._label.respond_to?(:translations) # localized?
-              entry._label.each do |locale, label|
-                entry[:_slug][locale] ||= slugify(entry._id, label, dataset, locale)
+          def set_slug(entity, dataset)
+            if entity._label.respond_to?(:translations) # localized?
+              entity._label.each do |locale, label|
+                entity[:_slug][locale] ||= slugify(entity._id, label, dataset, locale)
               end
             else
               # Note: replace the translations of the I18nField by a string
-              entry[:_slug].translations = slugify(entry._id, entry._label, dataset)
+              entity[:_slug].translations = slugify(entity._id, entity._label, dataset)
             end
           end
 

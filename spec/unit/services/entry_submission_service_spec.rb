@@ -30,7 +30,7 @@ describe Locomotive::Steam::EntrySubmissionService do
 
       before do
         allow(type_repository).to receive(:by_slug).and_return(type)
-        allow(entry_repository).to receive(:by_slug).with(type, 'hello-world').and_return(entry)
+        allow(entry_repository).to receive(:by_slug).with('hello-world').and_return(entry)
       end
 
       it { is_expected.to eq entry }
@@ -53,7 +53,7 @@ describe Locomotive::Steam::EntrySubmissionService do
       let(:type)    { instance_double('Articles') }
       let(:entry)   { instance_double('DecoratedEntry', _slug: 'hello-world', title: 'Hello world', content_type: type, content_type_slug: :articles, errors: errors) }
 
-      before { allow(type_repository).to receive(:fields_for).with(type).and_return(fields) }
+      before { allow(type).to receive(:fields).and_return(instance_double('FieldRepository', all: fields)) }
 
       it { is_expected.to eq '{"_slug":"hello-world","content_type_slug":"articles","title":"Hello world"}' }
 
