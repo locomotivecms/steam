@@ -10,7 +10,7 @@ require 'thin'
 require_relative '../lib/locomotive/steam'
 require_relative '../lib/locomotive/steam/server'
 
-path = ARGV[0] || ENV['SITE_PATH'] || File.join(File.expand_path(File.dirname(__FILE__)), '../spec/fixtures/default')
+path = File.expand_path(ARGV[0] || ENV['SITE_PATH'] || File.join(File.dirname(__FILE__), '../spec/fixtures/default'))
 
 Locomotive::Steam.configure do |config|
   config.mode           = :test

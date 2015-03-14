@@ -6,7 +6,9 @@ module Locomotive::Steam
 
     attr_accessor :page
 
-    # TODO
+    def default_content?
+      !!self[:default_content]
+    end
 
   end
 

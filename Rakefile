@@ -26,12 +26,12 @@ end
 
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new('spec') do |spec|
-  spec.exclude_pattern = 'spec/unit/liquid/**/*_spec.rb,spec/integration/server/**/*_spec.rb'
+  spec.exclude_pattern = 'spec/integration/server/contact_form_spec.rb'
 end
 
 RSpec::Core::RakeTask.new('spec:integration') do |spec|
-  # spec.pattern = 'spec/integration/**/*_spec.rb'
-  spec.pattern = 'spec/integration/{mongodb,repositories}/**/*_spec.rb'
+  spec.pattern = 'spec/integration/**/*_spec.rb'
+  # spec.pattern = 'spec/integration/{mongodb,repositories}/**/*_spec.rb'
 end
 
 RSpec::Core::RakeTask.new('spec:unit') do |spec|

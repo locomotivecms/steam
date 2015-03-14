@@ -36,7 +36,7 @@ module Locomotive
 
         conditions[:handle] = handle if handle
 
-        query { where(conditions) }.first.tap do |page|
+        all(conditions).first.tap do |page|
           page.content_entry = entry if page
         end
       end

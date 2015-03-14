@@ -14,6 +14,11 @@ describe Locomotive::Steam::Server do
     expect(last_response.body).to match(/Upcoming events/)
   end
 
+  it 'shows the about us page' do
+    get '/about-us'
+    expect(last_response.status).to eq(200)
+  end
+
   it 'shows an inner page' do
     get '/about-us/jane-doe'
     expect(last_response.body).to include '<link href="/stylesheets/application.css"'
