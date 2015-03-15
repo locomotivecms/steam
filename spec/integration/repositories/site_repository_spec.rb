@@ -19,11 +19,16 @@ describe Locomotive::Steam::SiteRepository do
       it { expect(subject.name).to eq 'Sample website' }
     end
 
+    describe '#by_domain' do
+      subject { repository.by_domain('sample.lvh.me') }
+      it { expect(subject).not_to eq nil }
+    end
+
   end
 
   context 'MongoDB' do
 
-    let(:adapter) { Locomotive::Steam::MongoDBAdapter.new('steam_test', ['127.0.0.1:27017']) }
+    let(:adapter) { Locomotive::Steam::MongoDBAdapter.new(database: 'steam_test', hosts: ['127.0.0.1:27017']) }
 
     it_behaves_like 'a repository'
 

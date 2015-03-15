@@ -7,7 +7,7 @@ require_relative 'mongodb/dataset'
 
 module Locomotive::Steam
 
-  class MongoDBAdapter < Struct.new(:database, :hosts)
+  class MongoDBAdapter < Struct.new(:options)
 
     def all(mapper, query)
       dataset(mapper, query)
@@ -48,6 +48,14 @@ module Locomotive::Steam
       Moped::Session.new([*hosts]).tap do |session|
         session.use database
       end
+    end
+
+    def database
+      options[:database]
+    end
+
+    def hosts
+      options[:hosts]
     end
 
   end

@@ -26,11 +26,4 @@ describe Locomotive::Steam::Configuration do
 
   end
 
-  describe 'overriding a method' do
-
-    before { subject.site_path = '/42' }
-    it { expect(subject.assets_path).to eq('/42/public') }
-
-  end
-
 end

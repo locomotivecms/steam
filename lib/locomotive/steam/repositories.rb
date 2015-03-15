@@ -8,8 +8,7 @@ module Locomotive
       include Morphine
 
       register :adapter do
-        require_relative 'adapters/filesystem'
-        Steam::FilesystemAdapter.new(configuration.site_path)
+        build_adapter(configuration.adapter)
       end
 
       register :site do
@@ -38,6 +37,13 @@ module Locomotive
 
       register :translation do
         TranslationRepository.new(adapter, current_site, locale)
+      end
+
+      def build_adapter(options)
+        name = ((options || {})[:name] || :filesystem).to_s
+        require_relative "adapters/#{name}"
+        klass = "Locomotive::Steam::#{name.camelize}Adapter".constantize
+        klass.new(options)
       end
 
     end

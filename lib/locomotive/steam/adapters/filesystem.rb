@@ -10,7 +10,7 @@ require_relative_all 'filesystem/sanitizers'
 
 module Locomotive::Steam
 
-  class FilesystemAdapter < Struct.new(:site_path)
+  class FilesystemAdapter < Struct.new(:options)
 
     include Morphine
     include Locomotive::Steam::Adapters::Concerns::Key
@@ -107,6 +107,10 @@ module Locomotive::Steam
     def build_klass(type, name)
       _name = name.to_s.singularize.camelize
       "Locomotive::Steam::Adapters::Filesystem::#{type}::#{_name}".constantize
+    end
+
+    def site_path
+      options.respond_to?(:has_key?) ? options[:path] : options
     end
 
   end

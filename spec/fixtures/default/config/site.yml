@@ -2,7 +2,7 @@ name: Sample website
 
 subdomain: sample
 
-domains: ['example.org', 'sample.example.com']
+domains: ['example.org', 'sample.example.com', 'sample.lvh.me']
 
 locales: ['en', 'fr', 'nb']
 

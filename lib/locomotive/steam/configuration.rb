@@ -13,12 +13,14 @@ module Locomotive
       attr_accessor :mode
       def mode; @mode || :production; end
 
-      # Steam is also able to serve a local Wagon site. The following property
-      # should point to the root path of the site.
+      # Steam needs an adapter in order to fetch the site content (site itself, pages, content entries, ...etc).
+      # By default, Steam is shipped with 2 adapters:
+      #     - Filesystem (options: path). the path option should point to the root path of the site
+      #     - MongoDB (options: database, hosts)
       #
-      # default: nil
+      # default: { name: :filesytem, path: nil }
       #
-      attr_accessor :site_path
+      attr_accessor :adapter
 
       # Manage the list of middlewares used by the rack stack.
       #
@@ -59,16 +61,10 @@ module Locomotive
       def serve_assets; @serve_assets.nil? ? true : @serve_assets; end
 
       # Path to the assets (if Steam serves the assets).
-      # If the site_path property is not nil, the assets_path
-      # will point to the "public" sub folder of the site.
       #
       # default: nil
       #
       attr_accessor :assets_path
-      def assets_path
-        return @assets_path if @assets_path
-        site_path ? File.join(site_path, 'public') : nil
-      end
 
       # If java is installed and if this option is enabled,
       # then YUI::JavaScriptCompressor and YUI::CssCompressor are used to minify the css and the javascript.
@@ -107,8 +103,8 @@ module Locomotive
       # Locomotive::Steam.configure do |config|
       #
       #   config.services_hook = -> (services) {
-      #     require 'my_repositories'
-      #     services.repositories = MyRepositories.new
+      #     require 'my_custom_site_finder'
+      #     services.site_finder = MyCustomSiteFinder.new
       #   }
       #
       # end

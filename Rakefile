@@ -31,7 +31,6 @@ end
 
 RSpec::Core::RakeTask.new('spec:integration') do |spec|
   spec.pattern = 'spec/integration/**/*_spec.rb'
-  # spec.pattern = 'spec/integration/{mongodb,repositories}/**/*_spec.rb'
 end
 
 RSpec::Core::RakeTask.new('spec:unit') do |spec|

@@ -11,7 +11,7 @@ describe Locomotive::Steam::ThemeAssetRepository do
   context 'MongoDB' do
 
     let(:site_id) { BSON::ObjectId.from_string('54eb49c12475804b2b000002') }
-    let(:adapter) { Locomotive::Steam::MongoDBAdapter.new('steam_test', ['127.0.0.1:27017']) }
+    let(:adapter) { Locomotive::Steam::MongoDBAdapter.new(database: 'steam_test', hosts: ['127.0.0.1:27017']) }
 
     describe '#url_for' do
       subject { repository.url_for('stylesheets/application.css') }

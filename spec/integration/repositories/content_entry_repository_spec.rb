@@ -58,7 +58,7 @@ describe Locomotive::Steam::ContentEntryRepository do
     it_should_behave_like 'a repository' do
 
       let(:site_id)   { BSON::ObjectId.from_string('54eb49c12475804b2b000002') }
-      let(:adapter)   { Locomotive::Steam::MongoDBAdapter.new('steam_test', ['127.0.0.1:27017']) }
+      let(:adapter)   { Locomotive::Steam::MongoDBAdapter.new(database: 'steam_test', hosts: ['127.0.0.1:27017']) }
       let(:entry_id)  { BSON::ObjectId.from_string('54eb4bbc2475804b2b00003f') }
 
     end

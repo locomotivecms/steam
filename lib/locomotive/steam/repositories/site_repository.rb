@@ -11,7 +11,8 @@ module Locomotive
       end
 
       def by_domain(domain)
-        first { where('domains.in' => domain) }
+        conditions = { k(:domains, :in) => [*domain] }
+        first { where(conditions) }
       end
 
       def by_handle_or_domain(handle, domain)
