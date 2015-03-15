@@ -35,6 +35,10 @@ module Locomotive
           Steam::ParentFinderService.new(repositories.page)
         end
 
+        register :editable_element do
+          Steam::EditableElementService.new(repositories.page, locale)
+        end
+
         register :snippet_finder do
           Steam::SnippetFinderService.new(repositories.snippet)
         end

@@ -28,7 +28,7 @@ module Locomotive::Steam
           if configuration.serve_assets
             use ::Rack::Static, {
               root: configuration.assets_path,
-              urls: ['/images', '/fonts', '/samples', '/media']
+              urls: ['/images', '/fonts', '/samples', '/media', '/sites']
             }
             use Middlewares::DynamicAssets, {
               root:   configuration.assets_path,

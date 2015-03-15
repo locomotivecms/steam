@@ -7,7 +7,7 @@ module Locomotive
       class TemplateDecorator < I18nDecorator
 
         def liquid_source
-          if respond_to?(:template_path)
+          if respond_to?(:template_path) && template_path
             source_from_template_file
           else
             self.source

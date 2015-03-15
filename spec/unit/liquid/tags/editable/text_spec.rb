@@ -72,12 +72,12 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
     let(:inline_editing) { false }
 
-    let(:page)      { instance_double('Page', fullpath: 'hello-world') }
-    let(:element)   { instance_double('EditableText', id: 42, default_content?: true, inline_editing?: true) }
-    let(:services)  { Locomotive::Steam::Services.build_instance(nil) }
-    let(:context)   { ::Liquid::Context.new({ 'inline_editing' => inline_editing }, {}, { page: page, services: services }) }
+    let(:page)        { instance_double('Page', fullpath: 'hello-world') }
+    let(:element)     { instance_double('EditableText', id: 42, default_content?: true, inline_editing?: true) }
+    let(:services)    { Locomotive::Steam::Services.build_instance(nil) }
+    let(:context)     { ::Liquid::Context.new({ 'inline_editing' => inline_editing }, {}, { page: page, services: services }) }
 
-    before { allow(services.repositories.page).to receive(:editable_element_for).and_return(element) }
+    before { allow(services.editable_element).to receive(:find).and_return(element) }
 
     subject { render_template(source, context, options) }
 
@@ -101,7 +101,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
       let(:source) { '{% block wrapper %}{% block sidebar %}{% editable_text title %}Hello world{% endeditable_text %}{% endblock %}{% endblock %}' }
 
-      before { expect(services.repositories.page).to receive(:editable_element_for).with(page, 'wrapper/sidebar', 'title').and_return(element) }
+      before { expect(services.editable_element).to receive(:find).with(page, 'wrapper/sidebar', 'title').and_return(element) }
       it { is_expected.to eq 'Hello world' }
 
     end

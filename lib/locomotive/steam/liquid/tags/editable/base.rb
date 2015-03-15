@@ -30,15 +30,14 @@ module Locomotive
             end
 
             def render(context)
-              repository  = context.registers[:services].repositories.page
-              page        = context.registers[:page]
-              block       = context['block'].try(:name)
+              service   = context.registers[:services].editable_element
+              page      = context.registers[:page]
+              block     = context['block'].try(:name)
 
-              if element = repository.editable_element_for(page, block, @slug)
+              if element = service.find(page, block, @slug)
                 render_element(context, element)
               else
                 # Locomotive::Common::Logger.error "[#{page.fullpath}] missing #{@tag_name} \"#{@slug}\" (#{context['block'].try(:name) || 'default'})"
-                # render_default_content
                 super
               end
             end

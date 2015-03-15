@@ -69,12 +69,12 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
 
     let(:inline_editing) { false }
 
-    let(:page)      { instance_double('Page', fullpath: 'hello-world', updated_at: DateTime.parse('2007-06-29 21:00:00')) }
-    let(:element)   { instance_double('EditableFile', id: 42, default_source_url: nil, source?: false, source: nil) }
-    let(:services)  { Locomotive::Steam::Services.build_instance(nil) }
-    let(:context)   { ::Liquid::Context.new({}, {}, { page: page, services: services }) }
+    let(:page)        { instance_double('Page', fullpath: 'hello-world', updated_at: DateTime.parse('2007-06-29 21:00:00')) }
+    let(:element)     { instance_double('EditableFile', id: 42, default_source_url: nil, source?: false, source: nil) }
+    let(:services)    { Locomotive::Steam::Services.build_instance(nil) }
+    let(:context)     { ::Liquid::Context.new({}, {}, { page: page, services: services }) }
 
-    before { allow(services.repositories.page).to receive(:editable_element_for).and_return(element) }
+    before { allow(services.editable_element).to receive(:find).and_return(element) }
 
     subject { render_template(source, context, options) }
 
@@ -96,7 +96,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
 
     context 'modified value' do
 
-      let(:file)    { instance_double('Source', url: 'http://www.placehold.it/250x250') }
+      let(:file)    { 'http://www.placehold.it/250x250' }
       let(:element) { instance_double('EditableFile', source: file, source?: true, default_source_url: false) }
       it { is_expected.to eq 'http://www.placehold.it/250x250?1183150800' }
 
@@ -106,7 +106,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
 
       let(:source) { '{% block wrapper %}{% block sidebar %}{% editable_file banner %}http://www.placehold.it/250x250{% endeditable_file %}{% endblock %}{% endblock %}' }
 
-      before { expect(services.repositories.page).to receive(:editable_element_for).with(page, 'wrapper/sidebar', 'banner').and_return(element) }
+      before { expect(services.editable_element).to receive(:find).with(page, 'wrapper/sidebar', 'banner').and_return(element) }
       it { is_expected.to eq 'http://www.placehold.it/250x250' }
 
     end
