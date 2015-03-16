@@ -4,11 +4,12 @@
 
 The rendering stack used by both Wagon and Engine (WIP). It includes:
 
-- the rack stack to serve assets (SCSS, Coffeescript, ...etc) and pages
-- the liquid drops/filters/tags libs to parse and render liquid templates
-- a filesystem repository which reads the source of a site written for Wagon
+- the rack stack to serve assets (SCSS, Coffeescript, ...etc) and pages.
+- the liquid drops/filters/tags libs to parse and render liquid templates.
+- a Filesystem adapter which reads the source of a site written for Wagon.
+- a MongoDB adapter which reads an existing site hosted by the Locomotive Engine.
 
-**Note:** Steam passes all the specifications from Wagon.
+**Note:** Steam passes all the specifications of both Wagon and Engine.
 
 ## Installation [WIP]
 
@@ -17,11 +18,27 @@ The rendering stack used by both Wagon and Engine (WIP). It includes:
 
 ## Usage
 
-    steam <PATH to a Wagon site>
+### Command line:
 
-open your browser
+Display all the options:
+
+    steam --help
+
+Render a local Wagon site:
+
+    steam --path=<PATH to a Wagon site>
+
+Render a Engine site:
+
+    steam --database=<NAME of the MongoDB database used by the Engine> --assets-path=<PATH to the public folder of the Locomotive>
+
+Once launched, open your browser
 
     open localhost:8080
+
+### Inside a Rails application:
+
+[TODO]
 
 ## TODO
 
@@ -34,3 +51,7 @@ see the list in the issues section.
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## License
+
+Copyright (c) 2015 NoCoffee. MIT Licensed, see LICENSE for details.
