@@ -12,6 +12,7 @@ module Locomotive
         @scope    = Locomotive::Steam::Models::Scope.new(site, locale)
         @content_type_repository = content_type_repository
         @local_conditions = {}
+        @memoized_mappers = {}
       end
 
       # Entity mapping
@@ -98,8 +99,12 @@ module Locomotive
 
       private
 
-      def mapper(memoized = false)
-        super(memoized).tap do |mapper|
+      def mapper
+        key = self.content_type._id.to_s
+
+        return @memoized_mappers[key] if @memoized_mappers[key]
+
+        @memoized_mappers[key] = super(false).tap do |mapper|
           add_localized_fields_to_mapper(mapper)
           add_associations_to_mapper(mapper)
         end

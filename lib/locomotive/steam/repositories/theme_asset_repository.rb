@@ -9,7 +9,7 @@ module Locomotive
       mapping :theme_assets, entity: ThemeAsset
 
       def url_for(path)
-        [adapter.theme_assets_base_url(scope), path].join('/')
+        "#{base_url}/#{path}"
       end
 
       def checksums

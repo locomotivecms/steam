@@ -64,19 +64,4 @@ describe Locomotive::Steam::Decorators::I18nDecorator do
     Locomotive::Steam::Models::I18nField.new(name, translations)
   end
 
-  # describe 'with a model' do
-
-  #   let(:model)     { Locomotive::Steam::Site.new(name: 'Acme') }
-  #   let(:decorated) { Locomotive::Steam::Decorators::I18nDecorator.new(model, nil, locale, default_locale) }
-
-  #   it 'runs some basic tests' do
-  #     pending
-  #     # expect(model.localized_attributes).to eq [:seo_title, :meta_description, :meta_keywords]
-  #     # expect(model.class.localized_attributes).to eq [:seo_title, :meta_description, :meta_keywords]
-  #     # expect(decorated.name).to eq 'Acme'
-  #     # expect(decorated.meta_description).to eq nil
-  #   end
-
-  # end
-
 end

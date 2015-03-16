@@ -61,6 +61,10 @@ module Locomotive::Steam
         mapper.i18n_value_of(entity, name, locale)
       end
 
+      def base_url(entity = nil)
+        adapter.base_url(mapper, scope, entity)
+      end
+
       def prepare_conditions(*conditions)
         first = { order_by: @local_conditions.delete(:order_by) }.delete_if { |_, v| v.blank? }
 

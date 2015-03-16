@@ -46,7 +46,7 @@ module Locomotive::Steam
       _query(mapper, scope) { where(_id: id) }.first
     end
 
-    def theme_assets_base_url(scope)
+    def base_url(mapper, scope, entity = nil)
       ''
     end
 

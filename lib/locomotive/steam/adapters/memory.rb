@@ -22,6 +22,10 @@ module Locomotive::Steam
       _query(mapper, scope) { where(_id: id) }.first
     end
 
+    def base_url(mapper, scope, entity = nil)
+      ''
+    end
+
     private
 
     def _query(mapper, scope, &block)

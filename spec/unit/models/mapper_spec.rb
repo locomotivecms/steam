@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Models::Mapper do
 
-  let(:repository)  { instance_double('Repository') }
+  let(:repository)  { instance_double('Repository', base_url: '') }
   let(:name)        { 'pages' }
   let(:options)     { { entity: MyPage } }
   let(:block)       { nil }
@@ -24,7 +24,7 @@ describe Locomotive::Steam::Models::Mapper do
     describe 'default attributes' do
 
       let(:attributes) { { title: 'Hello world' } }
-      let(:repository) { instance_double('Repository', my_site: 42) }
+      let(:repository) { instance_double('Repository', my_site: 42, base_url: '') }
       let(:block) { ->(_) { default_attribute(:site, -> (repository) { repository.my_site }) } }
 
       it { expect(subject.site).to eq 42 }
@@ -33,7 +33,7 @@ describe Locomotive::Steam::Models::Mapper do
 
     describe 'association' do
 
-      let(:repository)  { instance_double('Repository', scope: 42) }
+      let(:repository)  { instance_double('Repository', scope: 42, base_url: '') }
       let(:attributes) { { parents: [instance_double('Page', title: 'Hello world')] } }
       let(:klass) { instance_double('RepositoryKlass')}
       let(:block) { ->(_) { embedded_association(:parents, BlankRepository) } }

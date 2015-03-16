@@ -24,6 +24,12 @@ module Locomotive::Steam
 
       def localized_attributes(*args)
         @localized_attributes += [*args]
+
+        @localized_attributes_hash = @localized_attributes.inject({}) do |hash, attribute|
+          hash[attribute.to_sym] = true; hash
+        end
+
+        @localized_attributes
       end
 
       def default_attribute(name, value)
@@ -43,11 +49,12 @@ module Locomotive::Steam
       def to_entity(attributes)
         entity_klass.new(deserialize(attributes)).tap do |entity|
           attach_entity_to_associations(entity)
+
           set_default_attributes(entity)
 
-          entity.localized_attributes = localized_attributes.inject({}) do |hash, attribute|
-            hash[attribute.to_sym] = true; hash
-          end
+          entity.localized_attributes = @localized_attributes_hash || {}
+
+          entity.base_url = @repository.base_url(entity)
         end
       end
 

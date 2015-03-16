@@ -22,8 +22,17 @@ module Locomotive::Steam
       name.__send__(operator)
     end
 
-    def theme_assets_base_url(scope)
-      ['', 'sites', scope.site._id.to_s, 'theme'].join('/')
+    def base_url(mapper, scope, entity = nil)
+      return nil if scope.site.nil?
+
+      # Note: mimic Carrierwave behaviour
+      base = "/sites/#{scope.site._id.to_s}"
+
+      case mapper.name
+      when :theme_assets      then "#{base}/theme"
+      when :pages             then "#{base}/pages/#{entity._id}/files"
+      when :content_entries   then "#{base}/content_entry#{scope.context[:content_type]._id}/#{entity._id}/files"
+      end
     end
 
     private

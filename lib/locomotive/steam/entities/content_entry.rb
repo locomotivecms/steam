@@ -96,7 +96,7 @@ module Locomotive::Steam
 
     def _cast_file(field)
       _cast_convertor(field.name) do |value|
-        value.present? ? { 'url' => value } : nil
+        FileField.new(value, base_url, self.updated_at)
       end
     end
 
@@ -127,6 +127,19 @@ module Locomotive::Steam
       else
         yield(value)
       end
+    end
+
+    # Represent a file
+    class FileField < Struct.new(:filename, :base, :updated_at)
+
+      def url
+        "#{base}/#{filename}"
+      end
+
+      def to_liquid
+        Locomotive::Steam::Liquid::Drops::UploadedFile.new(self)
+      end
+
     end
 
   end

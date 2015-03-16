@@ -26,7 +26,7 @@ module Locomotive
           # {% endif %}
           #
           def next
-            @next ||= repository.next(@_source).to_liquid
+            @next ||= repository(@_source).next(@_source).to_liquid
           end
 
           # Returns the previous content for the parent content type.
@@ -39,7 +39,7 @@ module Locomotive
           # {% endif %}
           #
           def previous
-            @previous ||= repository.previous(@_source).to_liquid
+            @previous ||= repository(@_source).previous(@_source).to_liquid
           end
 
           def errors
@@ -50,7 +50,7 @@ module Locomotive
             return '' if @_source.nil?
 
             if not @@forbidden_attributes.include?(meth.to_s)
-              repository.with(@_source.content_type).value_for(@_source, meth, @context['with_scope'])
+              repository(@_source).value_for(@_source, meth, @context['with_scope'])
             else
               nil
             end
@@ -58,8 +58,9 @@ module Locomotive
 
           protected
 
-          def repository
-            @context.registers[:services].repositories.content_entry
+          def repository(entry)
+            repository = @context.registers[:services].repositories.content_entry
+            repository.with(entry.content_type)
           end
 
         end

@@ -7,7 +7,9 @@ module Locomotive
 
       def find(page, block, slug)
         decorate do
-          repository.editable_element_for(page, block, slug)
+          repository.editable_element_for(page, block, slug).tap do |element|
+            element.base_url = repository.base_url(page) if element
+          end
         end
       end
 

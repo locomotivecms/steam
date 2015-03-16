@@ -17,7 +17,7 @@ module Locomotive
               default_timestamp = context.registers[:page].updated_at.to_i
 
               url, timestamp = (if element.source
-                [element.source, default_timestamp]
+                [source_url(element), default_timestamp]
               else
                 if element.default_source_url.present?
                   [element.default_source_url, default_timestamp]
@@ -27,6 +27,14 @@ module Locomotive
               end)
 
               context.registers[:services].asset_host.compute(url, timestamp)
+            end
+
+            def source_url(element)
+              if element.source =~ /^https?/
+                element.source
+              else
+                "#{element.base_url}/#{element.source}"
+              end
             end
 
           end
