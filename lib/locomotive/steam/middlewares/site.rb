@@ -6,8 +6,8 @@ module Locomotive::Steam
     class Site < ThreadSafe
 
       def _call
-        site = services.site_finder.find
-        env['steam.site'] = services.repositories.current_site = site
+        env['steam.site'] ||= services.site_finder.find
+        services.repositories.current_site = env['steam.site']
       end
 
     end

@@ -26,7 +26,9 @@ module Locomotive
             fetch_url_whitelist /.+/
           end
 
-          ::Dragonfly.logger = Locomotive::Common::Logger.instance
+          if ::Dragonfly.logger.nil?
+            ::Dragonfly.logger = Locomotive::Common::Logger.instance
+          end
         end
 
         def find_imagemagick_commands
