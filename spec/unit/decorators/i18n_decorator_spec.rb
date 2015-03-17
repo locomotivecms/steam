@@ -53,6 +53,19 @@ describe Locomotive::Steam::Decorators::I18nDecorator do
 
   end
 
+  # Note: it could have a been a case for the select field of a content entry
+  # but we found a nice work-around to avoid that specific case.
+  #
+  # describe 'inception' do
+
+  #   let(:inner_field) { i18n_field(:name, { en: 'Beef', fr: 'Boeuf' }) }
+  #   let(:field)       { i18n_field(:category, { en: inner_field, fr: inner_field }) }
+  #   let(:page)        { instance_double('Page', category: field, localized_attributes: { category: true }) }
+
+  #   it { expect(decorated.category).to eq 'Boeuf' }
+
+  # end
+
   it 'uses another way to switch to a different locale' do
     decorated.__with_locale__(:en) do
       expect(decorated.title).to eq 'Hello world!'
