@@ -26,7 +26,7 @@ module Spec
         config.mode           = :test
         config.adapter        = { name: :filesystem, path: default_fixture_site_path }
         # config.adapter        = { name: :'mongoDB', database: 'steam_test', hosts: ['127.0.0.1'] }
-        config.assets_path    = File.expand_path(File.join(default_fixture_site_path, 'public'))
+        config.asset_path     = File.expand_path(File.join(default_fixture_site_path, 'public'))
         config.serve_assets   = true
         config.minify_assets  = true
       end

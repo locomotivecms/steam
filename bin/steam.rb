@@ -8,6 +8,8 @@ Bundler.require
 require 'thin'
 require 'optparse'
 
+server_options = { address: 'localhost', port: 8080 }
+
 options = {
   adapter:  {
     name:   :filesystem,
@@ -22,7 +24,7 @@ OptionParser.new do |opts|
   # Filesystem adapter
   opts.on('-p', '--path PATH', 'Serve a Wagon site from a path in your filesystem') do |path|
     options[:adapter][:path] = File.expand_path(path)
-    options[:assets_path] = File.expand_path(File.join(path, 'public'))
+    options[:asset_path] = File.expand_path(File.join(path, 'public'))
     options[:database] = options[:hosts] = nil
   end
 
@@ -38,7 +40,17 @@ OptionParser.new do |opts|
 
   # Assets path
   opts.on('-a', '--assets-path ASSETS_PATH', 'Tell Steam where to find the assets (if local)') do |path|
-    options[:assets_path] = path
+    options[:asset_path] = path
+  end
+
+  # Asset host
+  opts.on('-h', '--asset-host HOST', 'Required if the assets are stored on Amazon S3 or through a CDN') do |host|
+    options[:asset_host]
+  end
+
+  # TCP port
+  opts.on('-p', '--port PORT', 'Run the HTTP server on the specified port (by default: 8080') do |port|
+    server_options[:port] = port
   end
 
   # Logger
@@ -60,8 +72,10 @@ require_relative '../lib/locomotive/steam/server'
 Locomotive::Steam.configure do |config|
   config.mode           = :test
   config.adapter        = options[:adapter]
-  config.serve_assets   = options[:assets_path].present?
-  config.assets_path    = options[:assets_path]
+  config.serve_assets   = options[:asset_path].present?
+  config.asset_path     = options[:asset_path]
+  config.asset_host     = options[:asset_host]
+  config.mounted_on     = options[:mounted_on]
   config.minify_assets  = false
 end
 
@@ -73,7 +87,7 @@ end
 app = Locomotive::Steam::Server.to_app
 
 # Note: alt thin settings (Threaded)
-server = Thin::Server.new('localhost', '8080', app)
+server = Thin::Server.new(server_options[:address], server_options[:port], app)
 server.threaded = true
 server.start
 # FIXME: Rack::Handler::Thin.run app (not threaded)

@@ -1,7 +1,7 @@
 module Locomotive
   module Steam
 
-    class ImageResizerService < Struct.new(:resizer, :assets_path)
+    class ImageResizerService < Struct.new(:resizer, :asset_path)
 
       IsHTTP = /^https?:\/\//o
 
@@ -29,7 +29,7 @@ module Locomotive
           resizer.fetch_url(url_or_path)
         else
           path = url_or_path.sub(/(\?.*)$/, '')
-          resizer.fetch_file(File.join(assets_path || '', 'public', path))
+          resizer.fetch_file(File.join(asset_path || '', 'public', path))
         end
       end
 

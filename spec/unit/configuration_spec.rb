@@ -8,7 +8,7 @@ describe Locomotive::Steam::Configuration do
 
     it { expect(subject.mode).to eq(:production) }
     it { expect(subject.serve_assets).to eq(true) }
-    it { expect(subject.assets_path).to eq(nil) }
+    it { expect(subject.asset_path).to eq(nil) }
 
   end
 
