@@ -8,6 +8,12 @@ describe Locomotive::Steam::Server do
     run_server
   end
 
+  it 'displays an error message if the site does not exist' do
+    get '/index', {},{ 'HTTP_HOST' => 'www.nowhere.org/index' }
+    expect(last_response.status).to eq(404)
+    expect(last_response.body).to eq 'Hi, we are sorry but no site was found.'
+  end
+
   it 'shows the index page' do
     get '/index'
     expect(last_response.status).to eq(200)

@@ -46,8 +46,8 @@ module Locomotive::Steam
       def steam_middleware_stack
         [
           Middlewares::DefaultEnv,
-          Middlewares::Logging,
           Middlewares::Site,
+          Middlewares::Logging,
           Middlewares::Timezone,
           Middlewares::EntrySubmission,
           Middlewares::Locale,
