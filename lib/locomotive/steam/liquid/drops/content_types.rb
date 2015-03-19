@@ -45,12 +45,12 @@ module Locomotive
 
           protected
 
-          def services
-            @context.registers[:services]
+          def paginate(options = {})
+            raise "TODO #{options.inspect}"
           end
 
-          def repository
-            services.repositories.content_entry
+          def services
+            @context.registers[:services]
           end
 
           def content_type_repository
@@ -58,7 +58,11 @@ module Locomotive
           end
 
           def collection
-            @collection ||= repository.with(@content_type).all(@context['with_scope'])
+            @collection ||= repository.all(@context['with_scope'])
+          end
+
+          def repository
+            services.repositories.content_entry.with(@content_type)
           end
 
         end

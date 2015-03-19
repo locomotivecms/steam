@@ -38,6 +38,16 @@ describe Locomotive::Steam::Adapters::Memory::Query do
     end
   end
 
+  describe '#offset' do
+    specify do
+      expect(
+        query.new(dataset, locale) do
+          offset(1)
+        end.all.map(&:name)
+      ).to eq(['bar', 'zone'])
+    end
+  end
+
   describe '#order_by' do
 
     context 'asc' do
