@@ -45,7 +45,7 @@ EOF
 
       subject { output }
 
-      it { expect { subject }.to raise_error(::Liquid::ArgumentError, "Liquid error: Cannot paginate array 'projects'. Not found.") }
+      it { expect { subject }.to raise_error(::Liquid::ArgumentError, "Liquid error: Cannot paginate 'projects'. Not found.") }
 
     end
 

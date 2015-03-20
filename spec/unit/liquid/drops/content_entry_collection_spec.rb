@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Locomotive::Steam::Liquid::Drops::ContentTypeProxyCollection do
+describe Locomotive::Steam::Liquid::Drops::ContentEntryCollection do
 
   let(:assigns)       { {} }
   let(:content_type)  { instance_double('ContentType', slug: 'articles') }
@@ -30,23 +30,21 @@ describe Locomotive::Steam::Liquid::Drops::ContentTypeProxyCollection do
       it { expect(drop.last).to eq('b') }
     end
 
-    describe '#count' do
-      it { expect(drop.count).to eq 2 }
-    end
-
     context 'with a scope' do
 
       let(:assigns) { { 'with_scope' => { 'visible' => true } } }
 
-      before do
-        expect(services.repositories.content_entry).to receive(:all).with({ 'visible' => true }).and_return(['a', 'b'])
-      end
-
       describe '#first' do
+        before do
+          expect(services.repositories.content_entry).to receive(:all).with({ 'visible' => true }).and_return(['a', 'b'])
+        end
         it { expect(drop.first).to eq('a') }
       end
 
       describe '#count' do
+        before do
+          expect(services.repositories.content_entry).to receive(:count).with({ 'visible' => true }).and_return(2)
+        end
         it { expect(drop.count).to eq 2 }
       end
 

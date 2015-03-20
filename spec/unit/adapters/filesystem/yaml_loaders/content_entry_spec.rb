@@ -28,7 +28,7 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::ContentEntry do
       it 'adds a new attribute for the foreign key' do
         expect(subject.first[:band_id]).to eq 'pearl-jam'
         expect(subject.first[:band]).to eq nil
-        expect(subject.first[:_position_in_band]).to eq 0
+        expect(subject.first[:position_in_band]).to eq 0
       end
 
     end

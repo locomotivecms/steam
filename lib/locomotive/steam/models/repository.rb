@@ -39,6 +39,10 @@ module Locomotive::Steam
         adapter.query(mapper, scope, &block)
       end
 
+      def count(&block)
+        adapter.count(mapper, scope, &block)
+      end
+
       def first(&block)
         adapter.query(mapper, scope, &block).first
       end
@@ -66,12 +70,14 @@ module Locomotive::Steam
       end
 
       def prepare_conditions(*conditions)
-        first = { order_by: @local_conditions.delete(:order_by) }.delete_if { |_, v| v.blank? }
+        _local_conditions = @local_conditions.dup
 
-        [first, *conditions].inject({}) do |memo, hash|
+        first = { order_by: _local_conditions.delete(:order_by) }.delete_if { |_, v| v.blank? }
+
+        [first, *conditions.flatten].inject({}) do |memo, hash|
           memo.merge!(hash) unless hash.blank?
           memo
-        end.merge(@local_conditions)
+        end.merge(_local_conditions)
       end
 
       # TODO: not sure about that. could it be used further in the dev

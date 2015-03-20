@@ -41,7 +41,7 @@ module Locomotive
             if @_source.content_type
               # content_type can be either the slug of a content type or a content type
               content_type = content_type_repository.by_slug(@_source.content_type)
-              ContentTypeProxyCollection.new(content_type)
+              ContentEntryCollection.new(content_type)
             else
               nil
             end

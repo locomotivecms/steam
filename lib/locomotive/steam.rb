@@ -7,7 +7,6 @@ require 'active_support/core_ext'
 
 require_relative      'steam/core_ext'
 require_relative      'steam/configuration'
-require_relative_all  'steam/monkey_patches'
 require_relative_all  'steam/decorators'
 require_relative      'steam/liquid'
 

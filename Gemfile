@@ -19,6 +19,8 @@ group :test do
 
   gem 'pry-byebug',         '~> 3.0.1'
 
+  gem 'rack-test',          '~> 0.6.3'
+
   gem 'codeclimate-test-reporter',  '~> 0.4.7',  require: false
   gem 'coveralls',                  '~> 0.7.11', require: false
 end

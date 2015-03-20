@@ -18,6 +18,11 @@ describe Locomotive::Steam::ContentEntryRepository do
       it { expect(subject.size).to eq 3 }
     end
 
+    describe '#count' do
+      subject { repository.count }
+      it { is_expected.to eq 3 }
+    end
+
     describe '#by_slug' do
       subject { repository.by_slug('alice-in-chains') }
       it { expect(subject.name).to eq 'Alice in Chains' }

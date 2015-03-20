@@ -56,16 +56,12 @@ module Locomotive
             collection    = context[@collection_name]
             current_page  = context['current_page']
 
-            raise ::Liquid::ArgumentError.new("Cannot paginate array '#{@collection_name}'. Not found.") if collection.nil?
+            raise ::Liquid::ArgumentError.new("Cannot paginate '#{@collection_name}'. Not found.") if collection.nil?
 
-            pagination = (if collection.is_a?(Array)
-              Kaminari.paginate_array(collection).page(current_page).per(@per_page)
-            else
-              collection.send(:paginate, page: current_page, per_page: @per_page)
-            end)
+            pager = Locomotive::Steam::Models::Pager.new(collection, current_page, @per_page)
 
             # make sure the pagination object is a hash with strings as keys (and not symbol)
-            HashConverter.to_string(pagination.to_liquid).tap do |_pagination|
+            HashConverter.to_string(pager.to_liquid).tap do |_pagination|
               _pagination['parts'] = []
             end
           end

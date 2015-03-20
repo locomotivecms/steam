@@ -1,7 +1,6 @@
 module Locomotive::Steam
   module Models
 
-    # Note: represents an embedded collection
     class ManyToManyAssociation < ReferencedAssociation
 
       def __load__

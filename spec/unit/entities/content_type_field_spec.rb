@@ -20,12 +20,12 @@ describe Locomotive::Steam::ContentTypeField do
     context 'has_many field' do
 
       let(:attributes) { { name: 'articles', type: 'has_many', inverse_of: 'author' } }
-      it { is_expected.to eq 'position_in_author' }
+      it { is_expected.to eq(position_in_author: 'asc') }
 
       context 'order_by is specified' do
 
         let(:attributes) { { name: 'articles', type: 'has_many', inverse_of: 'author', order_by: 'name asc' } }
-        it { is_expected.to eq 'name asc' }
+        it { is_expected.to eq(name: 'asc') }
 
       end
 
@@ -60,7 +60,7 @@ describe Locomotive::Steam::ContentTypeField do
 
     subject { content_type.association_options }
 
-    it { is_expected.to eq({ target_id: 'articles', inverse_of: 'author', order_by: 'position_in_author' }) }
+    it { is_expected.to eq(target_id: 'articles', inverse_of: 'author', order_by: { position_in_author: 'asc' }) }
 
   end
 

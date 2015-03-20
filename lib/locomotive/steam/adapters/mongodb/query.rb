@@ -7,7 +7,7 @@ module Locomotive::Steam
         attr_reader :criteria, :sort
 
         def initialize(scope, localized_attributes, &block)
-          @criteria, @sort, @fields = {}, nil, nil
+          @criteria, @sort, @fields, @skip, @limit = {}, nil, nil, nil, nil
           @scope, @localized_attributes = scope, localized_attributes
 
           apply_default_scope
@@ -33,13 +33,23 @@ module Locomotive::Steam
           end
         end
 
+        def offset(offset)
+          self.tap { @skip = offset }
+        end
+
+        def limit(limit)
+          self.tap { @limit = limit }
+        end
+
         def against(collection)
           _query = to_origin
           selector, fields, sort = _query.selector, _query.options[:fields], _query.options[:sort]
 
           collection.find(selector).tap do |results|
-            results.sort(sort) if sort
-            results.select(fields) if fields
+            results.sort(sort)      if sort
+            results.select(fields)  if fields
+            results.skip(@skip)     if @skip
+            results.limit(@limit)   if @limit
           end
         end
 

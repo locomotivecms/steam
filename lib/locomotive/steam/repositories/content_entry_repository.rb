@@ -32,29 +32,38 @@ module Locomotive
         self # chainable
       end
 
-      def all(conditions = {})
-        conditions = prepare_conditions({ _visible: true }, conditions)
+      def all(conditions = {}, &block)
+        conditions, order_by = conditions_without_order_by(conditions)
 
         # priority:
         # 1/ order_by passed in the conditions parameter
         # 2/ the default order (_position) defined in the content type
-        order_by = conditions.delete(:order_by)|| conditions.delete('order_by') || content_type.order_by
+        order_by ||= content_type.order_by
 
-        query { where(conditions).order_by(order_by) }.all
+        query {
+          (block_given? ? instance_eval(&block) : where).
+            where(conditions).
+              order_by(order_by)
+        }.all
+      end
+
+      def count(conditions = {})
+        conditions, _ = conditions_without_order_by(conditions)
+        super() { where(conditions) }
       end
 
       def find(id)
-        conditions = prepare_conditions(_id: id)
+        conditions, _ = conditions_without_order_by(_id: id)
         first { where(conditions) }
       end
 
       def exists?(conditions = {})
-        conditions = prepare_conditions(conditions)
+        conditions, _ = conditions_without_order_by(conditions)
         query { where(conditions) }.all.size > 0
       end
 
       def by_slug(slug)
-        conditions = prepare_conditions(_slug: slug)
+        conditions, _ = conditions_without_order_by(_slug: slug)
         first { where(conditions) }
       end
 
@@ -97,6 +106,10 @@ module Locomotive
         end
       end
 
+      def to_liquid
+        Locomotive::Steam::Liquid::Drops::ContentEntryCollection.new(content_type, self)
+      end
+
       private
 
       def mapper
@@ -108,6 +121,16 @@ module Locomotive
           add_localized_fields_to_mapper(mapper)
           add_associations_to_mapper(mapper)
         end
+      end
+
+      def conditions_without_order_by(conditions = {})
+        _conditions = prepare_conditions(conditions)
+        order_by = _conditions.delete(:order_by) || _conditions.delete('order_by')
+        [_conditions, order_by]
+      end
+
+      def prepare_conditions(*conditions)
+        super({ _visible: true }, conditions)
       end
 
       def add_localized_fields_to_mapper(mapper)

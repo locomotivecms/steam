@@ -24,9 +24,12 @@ module Locomotive::Steam
     end
 
     def order_by
-      return self[:order_by] if self[:order_by]
-
-      type == :has_many ? "position_in_#{self[:inverse_of]}" : nil
+      if (order_by = self[:order_by]).present?
+        name, direction = order_by.split
+        { name.to_sym => direction || 'asc' }
+      else
+        type == :has_many ? { :"position_in_#{self[:inverse_of]}" => 'asc' } : nil
+      end
     end
 
     alias :target :class_name

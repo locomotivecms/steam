@@ -18,6 +18,15 @@ module Locomotive::Steam
       all(mapper, query)
     end
 
+    def count(mapper, scope, &block)
+      query = query_klass.new(scope, mapper.localized_attributes, &block)
+      query.against(collection(mapper)).count
+    end
+
+    def find(mapper, scope, id)
+      query(mapper, scope) { where(_id: BSON::ObjectId.from_string(id)) }.first
+    end
+
     def key(name, operator)
       name.__send__(operator)
     end

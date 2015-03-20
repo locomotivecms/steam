@@ -50,6 +50,10 @@ module Locomotive::Steam
       ''
     end
 
+    def count(mapper, scope, &block)
+      query(mapper, scope, &block).count
+    end
+
     private
 
     def _query(mapper, scope, &block)

@@ -50,7 +50,7 @@ module Locomotive
               attributes[:"#{field.name}_id"] = attributes.delete(field.name.to_sym)
 
               # _position_in_<name>
-              attributes[:"_position_in_#{field.name}"] = attributes[:_position]
+              attributes[:"position_in_#{field.name}"] = attributes[:_position]
             end
 
             def modify_many_to_many_association(field, attributes)
