@@ -25,9 +25,7 @@ namespace :mongodb do
 end
 
 require 'rspec/core/rake_task'
-RSpec::Core::RakeTask.new('spec') do |spec|
-  spec.exclude_pattern = 'spec/integration/server/contact_form_spec.rb'
-end
+RSpec::Core::RakeTask.new('spec')
 
 RSpec::Core::RakeTask.new('spec:integration') do |spec|
   spec.pattern = 'spec/integration/**/*_spec.rb'
