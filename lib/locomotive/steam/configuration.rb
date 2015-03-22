@@ -1,5 +1,3 @@
-require_relative 'middlewares/stack_proxy'
-
 module Locomotive
   module Steam
 
