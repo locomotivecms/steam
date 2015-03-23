@@ -31,6 +31,11 @@ describe Locomotive::Steam::Server do
     expect(last_response.body).to include 'Lorem ipsum dolor sit amet'
   end
 
+  it 'responds to the /robots.txt url' do
+    get '/robots.txt'
+    expect(last_response.body).to include "User-agent: *\nDisallow:"
+  end
+
   describe 'redirection' do
 
     let(:url) { '/store' }

@@ -12,4 +12,7 @@ seo_title:
 meta_keywords:
   en: some meta keywords
   fr: quelques mots cles
+
 meta_description: some meta description
+
+robots_txt: "User-agent: *\nDisallow:"
