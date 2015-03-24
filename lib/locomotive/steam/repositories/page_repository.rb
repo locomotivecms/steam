@@ -19,6 +19,13 @@ module Locomotive
         end.all
       end
 
+      def published
+        query do
+          where(published: true).
+            order_by(depth: :asc, position: :asc)
+        end.all
+      end
+
       def by_handle(handle)
         first { where(handle: handle) }
       end
@@ -32,7 +39,7 @@ module Locomotive
       end
 
       def template_for(entry, handle = nil)
-        conditions = { templatized?: true, content_type: entry.try(:content_type_slug) }
+        conditions = { templatized: true, target_klass_name: entry.try(:_class_name) }
 
         conditions[:handle] = handle if handle
 

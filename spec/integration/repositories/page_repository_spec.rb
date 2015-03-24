@@ -31,6 +31,15 @@ describe Locomotive::Steam::PageRepository do
       it { expect(subject.title[:en]).to eq 'News archive' }
     end
 
+    describe '#template_for' do
+      let(:type_repository)   { Locomotive::Steam::ContentTypeRepository.new(adapter, site, locale) }
+      let(:type)              { type_repository.by_slug('songs') }
+      let(:entry_repository)  { Locomotive::Steam::ContentEntryRepository.new(adapter, site, locale, type_repository).with(type) }
+      let(:entry)             { entry_repository.by_slug('song-number-1') }
+      subject { repository.template_for(entry) }
+      it { expect(subject.title[:en]).to eq 'A song template' }
+    end
+
     describe '#matching_fullpath' do
       subject { repository.matching_fullpath(['songs/content_type_template', 'content_type_template/songs', 'songs/song-number-1']) }
       it { expect(subject.size).to eq 2 }
@@ -73,8 +82,8 @@ describe Locomotive::Steam::PageRepository do
 
     it_should_behave_like 'a repository' do
 
-      let(:site_id) { BSON::ObjectId.from_string('54eb49c12475804b2b000002') }
-      let(:adapter) { Locomotive::Steam::MongoDBAdapter.new(database: 'steam_test', hosts: ['127.0.0.1:27017']) }
+      let(:site_id)       { BSON::ObjectId.from_string('54eb49c12475804b2b000002') }
+      let(:adapter)       { Locomotive::Steam::MongoDBAdapter.new(database: 'steam_test', hosts: ['127.0.0.1:27017']) }
 
     end
 

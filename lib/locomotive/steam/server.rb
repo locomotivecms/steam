@@ -49,6 +49,7 @@ module Locomotive::Steam
           Middlewares::Site,
           Middlewares::Logging,
           Middlewares::Robots,
+          Middlewares::Sitemap,
           Middlewares::Timezone,
           Middlewares::EntrySubmission,
           Middlewares::Locale,

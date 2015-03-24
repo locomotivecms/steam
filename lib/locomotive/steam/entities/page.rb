@@ -11,8 +11,10 @@ module Locomotive::Steam
         handle:             nil,
         listed:             false,
         published:          true,
+        templatized:        false,
         fullpath:           {},
         content_type:       nil,
+        target_klass_name:  nil,
         position:           99,
         raw_template:       nil,
         source:             nil,
@@ -26,9 +28,10 @@ module Locomotive::Steam
 
     def listed?; !!listed; end
     def published?; !!published; end
+    def templatized?; !!templatized; end
 
-    def templatized?
-      !!content_type
+    def content_type_id
+      # TODO
     end
 
     def index?

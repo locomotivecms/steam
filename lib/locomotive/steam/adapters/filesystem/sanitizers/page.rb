@@ -73,7 +73,7 @@ module Locomotive::Steam
             if content_type = fetch_content_type(parent_fullpath(page))
               # not a templatized page but it becomes one because
               # its parent is one of them
-              page[:content_type] = content_type
+              _modify_if_templatized(page, content_type)
             end
           end
 
@@ -140,10 +140,16 @@ module Locomotive::Steam
           end
 
           def modify_if_templatized(page, locale)
-            if page.templatized?
+            if content_type = page[:content_type]
+              _modify_if_templatized(page, content_type)
               page[:slug][locale] = Locomotive::Steam::WILDCARD
-              set_content_type(page[:_fullpath], page.content_type)
+              set_content_type(page[:_fullpath], content_type)
             end
+          end
+
+          def _modify_if_templatized(page, content_type)
+            page[:templatized]        = true
+            page[:target_klass_name]  = "Locomotive::ContentEntry#{content_type}"
           end
 
         end

@@ -53,6 +53,10 @@ module Locomotive::Steam
       content_type.slug
     end
 
+    def _class_name
+      "Locomotive::ContentEntry#{content_type_id}"
+    end
+
     def _label
       self[content_type.label_field_name]
     end
