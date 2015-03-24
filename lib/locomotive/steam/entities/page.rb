@@ -22,7 +22,8 @@ module Locomotive::Steam
         redirect_url:       {},
         redirect_type:      nil,
         parent_id:          nil,
-        parent_ids:         nil
+        parent_ids:         nil,
+        updated_at:         Time.now
       }.merge(attributes))
     end
 

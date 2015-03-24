@@ -33,7 +33,7 @@ module Locomotive::Steam
       end
 
       def fetch_content_entry(slug)
-        if type = content_type_repository.by_slug(page.content_type)
+        if type = content_type_repository.find(page.content_type_id)
           decorate(content_entry_repository.with(type).by_slug(slug))
         else
           nil

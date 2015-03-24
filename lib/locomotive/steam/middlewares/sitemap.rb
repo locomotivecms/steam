@@ -7,7 +7,7 @@ module Locomotive::Steam
 
       def _call
         if env['PATH_INFO'] == '/sitemap.xml'
-          render_response(build_xml.tap { |o| puts o }, 200, 'text/plain')
+          render_response(build_xml, 200, 'text/plain')
         end
       end
 
@@ -31,7 +31,7 @@ module Locomotive::Steam
           next if page.index? || page.not_found?
 
           build_page_xml(page)
-        end.flatten.join
+        end.flatten.join.strip
       end
 
       def build_page_xml(page)
@@ -40,24 +40,37 @@ module Locomotive::Steam
         site.locales.map do |locale|
           _page.__locale__ = locale
 
+          next if _page.title.blank? # should be translated
+
           if _page.templatized?
             build_templatized_page_xml(_page, locale)
-          elsif !_page.title.blank? # should be translated
+          else
             page_to_xml(_page, locale)
           end
         end
       end
 
-      def build_templatized_page(page, locale)
-        content_type = repositories.content_type.
-        # TODO
+      def build_templatized_page_xml(page, locale)
+        content_type = repositories.content_type.find(page.content_type_id)
+
+        repositories.content_entry.with(content_type).all.map do |entry|
+          _entry = Locomotive::Steam::Decorators::I18nDecorator.new(entry, locale)
+
+          next if _entry._label.blank? # should be translated
+
+          page.content_entry = _entry
+
+          page_to_xml(page, locale)
+        end
       end
 
       def page_to_xml(page, locale)
+        last_modification = (page.content_entry || page).updated_at.to_date
+
         <<-EOF
   <url>
     <loc>#{base_url}#{url_for(page, locale)}</loc>
-    <lastmod>#{page.updated_at.to_date.to_s('%Y-%m-%d')}</lastmod>
+    <lastmod>#{last_modification.to_s('%Y-%m-%d')}</lastmod>
     <priority>0.9</priority>
   </url>
         EOF
@@ -76,28 +89,6 @@ module Locomotive::Steam
       end
 
     end
-
-  # @pages.each do |page|
-  #   if not page.index_or_not_found?
-  #     if page.templatized?
-  #       page.fetch_target_entries(_visible: true).each do |c|
-  #         if c._slug.present?
-  #           xml.url do
-  #             xml.loc public_page_url(page, { content: c })
-  #             xml.lastmod c.updated_at.to_date.to_s('%Y-%m-%d')
-  #             xml.priority 0.9
-  #           end
-  #         end
-  #       end
-  #     else
-  #       xml.url do
-  #         xml.loc public_page_url(page)
-  #         xml.lastmod page.updated_at.to_date.to_s('%Y-%m-%d')
-  #         xml.priority 0.9
-  #       end
-  #     end
-  #   end
-  # end
 
   end
 end
