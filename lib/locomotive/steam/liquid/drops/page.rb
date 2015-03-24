@@ -38,9 +38,9 @@ module Locomotive
           end
 
           def content_type
-            if @_source.content_type
+            if @_source.templatized?
               # content_type can be either the slug of a content type or a content type
-              content_type = content_type_repository.by_slug(@_source.content_type)
+              content_type = content_type_repository.find(@_source.content_type_id)
               ContentEntryCollection.new(content_type)
             else
               nil

@@ -37,7 +37,7 @@ module Locomotive::Steam
     def target_id
       return @target_id if @target_id
 
-      @target_id = if self.target =~ /^Locomotive::ContentEntry(.*)$/o
+      @target_id = if self.target =~ Locomotive::Steam::CONTENT_ENTRY_ENGINE_CLASS_NAME
         $1
       else
         self.target

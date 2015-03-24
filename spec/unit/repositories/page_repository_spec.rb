@@ -69,7 +69,7 @@ describe Locomotive::Steam::PageRepository do
       subject { repository.find(1) }
 
       it { expect(subject.templatized?).to eq true }
-      it { expect(subject.content_type).to eq :articles }
+      it { expect(subject.content_type_id).to eq 'articles' }
       it { expect(subject.slug[:en]).to eq 'comments' }
       it { expect(subject.slug[:fr]).to eq nil }
       it { expect(subject.fullpath[:en]).to eq 'articles/content_type_template/comments' }
@@ -159,8 +159,8 @@ describe Locomotive::Steam::PageRepository do
 
     let(:pages) do
       [
-        { title: { en: 'Article template' }, content_type: 'articles', slug: { en: 'articles/content_type_template' }, _fullpath: 'articles/template', template_path: { en: 'articles/template.liquid' } },
-        { title: { en: 'Archived article template' }, handle: 'archive', content_type: 'articles', slug: { en: 'archived/articles/content_type_template' }, _fullpath: 'archived/articles/template', template_path: { en: 'archived/articles/template.liquid' } },
+        { title: { en: 'Article template' }, content_type: 'Articles', slug: { en: 'articles/content_type_template' }, _fullpath: 'articles/template', template_path: { en: 'articles/template.liquid' } },
+        { title: { en: 'Archived article template' }, handle: 'archive', content_type: 'Articles', slug: { en: 'archived/articles/content_type_template' }, _fullpath: 'archived/articles/template', template_path: { en: 'archived/articles/template.liquid' } },
         { title: { en: 'Home' }, handle: 'home', slug: { en: 'index' }, _fullpath: 'index', template_path: { en: 'index.liquid' } }
       ]
     end
@@ -173,7 +173,7 @@ describe Locomotive::Steam::PageRepository do
 
     context 'both existing entry and page' do
 
-      let(:entry) { instance_double('Article', content_type_slug: 'articles', _slug: { en: 'hello-world' }) }
+      let(:entry) { instance_double('Article', _class_name: 'Locomotive::ContentEntryArticles', _slug: { en: 'hello-world' }) }
       it { expect(subject.title[:en]).to eq 'Article template' }
       it { expect(subject.content_entry).to eq entry }
 

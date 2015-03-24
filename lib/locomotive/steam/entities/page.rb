@@ -31,7 +31,8 @@ module Locomotive::Steam
     def templatized?; !!templatized; end
 
     def content_type_id
-      # TODO
+      self.target_klass_name =~ Locomotive::Steam::CONTENT_ENTRY_ENGINE_CLASS_NAME
+      $1 || self.target_klass_name
     end
 
     def index?

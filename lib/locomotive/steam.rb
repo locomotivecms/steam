@@ -22,6 +22,8 @@ module Locomotive
 
     WILDCARD = 'content_type_template'.freeze
 
+    CONTENT_ENTRY_ENGINE_CLASS_NAME = /^Locomotive::ContentEntry(.*)$/o
+
     class << self
       attr_writer :configuration
     end

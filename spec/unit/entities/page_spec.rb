@@ -40,4 +40,17 @@ describe Locomotive::Steam::Page do
 
   end
 
+  describe '#content_type_id' do
+
+    let(:attributes) { { target_klass_name: '42' } }
+    subject { page.content_type_id }
+
+    it { is_expected.to eq '42' }
+
+    context 'with a Locomotive Engine class name like' do
+      let(:attributes) { { target_klass_name: 'Locomotive::ContentEntryBigNumber' } }
+      it { is_expected.to eq 'BigNumber' }
+    end
+  end
+
 end

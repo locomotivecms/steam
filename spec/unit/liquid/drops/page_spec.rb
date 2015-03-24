@@ -84,7 +84,7 @@ describe Locomotive::Steam::Liquid::Drops::Page do
 
     let(:entry)   { liquid_instance_double('ContentEntry', _label: 'First Article', _slug: 'first-article') }
     let(:assigns) { { 'entry' => entry } }
-    let(:page)    { instance_double('Page', id: 42, title: 'Index', slug: 'index', localized_attributes: [], templatized?: true, content_type: 'articles') }
+    let(:page)    { instance_double('Page', id: 42, title: 'Index', slug: 'index', localized_attributes: [], templatized?: true, content_type_id: 42) }
 
     it { expect(subject.title).to eq 'First Article' }
     it { expect(subject.slug).to eq 'first-article' }
@@ -92,7 +92,7 @@ describe Locomotive::Steam::Liquid::Drops::Page do
     describe '#content_type' do
 
       before do
-        allow(services.repositories.content_type).to receive(:by_slug).with('articles').and_return('Articles')
+        allow(services.repositories.content_type).to receive(:find).with(42).and_return('Articles')
       end
 
       it { expect(subject.content_type).not_to eq nil }
