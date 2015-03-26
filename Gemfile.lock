@@ -188,6 +188,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
+    timecop (0.7.3)
     tins (1.3.4)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
@@ -210,4 +211,5 @@ DEPENDENCIES
   rake (~> 10.4.2)
   rspec (~> 3.2.0)
   thin
+  timecop (~> 0.7.1)
   yui-compressor (~> 0.12.0)

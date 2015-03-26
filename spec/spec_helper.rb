@@ -25,6 +25,7 @@ require 'rubygems'
 require 'bundler/setup'
 
 require 'i18n-spec'
+require 'timecop'
 
 require_relative '../lib/locomotive/steam'
 require_relative 'support'

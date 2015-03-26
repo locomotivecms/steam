@@ -17,6 +17,8 @@ group :test do
   gem 'json_spec',          '~> 1.1.4'
   gem 'i18n-spec',          '~> 0.6.0'
 
+  gem 'timecop',            '~> 0.7.1'
+
   gem 'pry-byebug',         '~> 3.0.1'
 
   gem 'rack-test',          '~> 0.6.3'
