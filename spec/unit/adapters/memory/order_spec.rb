@@ -41,7 +41,7 @@ describe Locomotive::Steam::Adapters::Memory::Order do
     subject { order.apply_to(entry, :en) }
 
     let(:input) { 'title asc, date desc' }
-    let(:entry) { instance_double('Entry', title: 'foo', date: Time.now) }
+    let(:entry) { instance_double('Entry', title: 'foo', date: Time.zone.now) }
     it { expect(subject.map(&:class)).to eq([Locomotive::Steam::Adapters::Memory::Order::Asc, Locomotive::Steam::Adapters::Memory::Order::Desc]) }
 
   end

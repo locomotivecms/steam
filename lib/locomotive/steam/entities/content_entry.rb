@@ -12,8 +12,8 @@ module Locomotive::Steam
       super({
         _visible:     true,
         _position:    0,
-        created_at:   Time.now,
-        updated_at:   Time.now
+        created_at:   Time.zone.now,
+        updated_at:   Time.zone.now
       }.merge(attributes))
     end
 

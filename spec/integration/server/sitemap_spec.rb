@@ -12,7 +12,7 @@ describe Locomotive::Steam::Server do
 
     subject { get '/sitemap.xml'; last_response.body }
 
-    before { allow(Time).to receive(:now).and_return(Time.zone.parse('2015/03/25 10:00:00')); }
+    before { allow(Time).to receive(:now).and_return(Time.zone.parse('2015/03/25 10:00:00')) }
 
     it 'checks if it looks valid' do
       expect(Nokogiri::XML(subject).errors.empty?).to eq true
@@ -21,7 +21,7 @@ describe Locomotive::Steam::Server do
       expect(subject).to match((<<-EOF
   <url>
     <loc>http://example.org/fr/a-notre-sujet</loc>
-    <lastmod>2015-03-25</lastmod>
+    <lastmod>2015-03-26</lastmod>
     <priority>0.9</priority>
   </url>
       EOF

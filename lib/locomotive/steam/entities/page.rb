@@ -23,7 +23,7 @@ module Locomotive::Steam
         redirect_type:      nil,
         parent_id:          nil,
         parent_ids:         nil,
-        updated_at:         Time.now
+        updated_at:         Time.zone.now
       }.merge(attributes))
     end
 
