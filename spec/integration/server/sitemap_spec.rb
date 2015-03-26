@@ -12,7 +12,7 @@ describe Locomotive::Steam::Server do
 
     subject { get '/sitemap.xml'; last_response.body }
 
-    before { allow(Time).to receive(:now).and_return(Time.parse('2015/03/25 00:00:00')) }
+    before { allow(Time).to receive(:now).and_return(Time.zone.parse('2015/03/25 10:00:00')) }
 
     it 'displays the full sitemap' do
       is_expected.to eq <<-EOF
