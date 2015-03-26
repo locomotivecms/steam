@@ -3,8 +3,7 @@ services: mongodb
 rvm:
   - 2.2.0
 env:
-  - CODECLIMATE_REPO_TOKEN=8d9c25de4eff1cd06d3accdc09775397e1a81be67e2a159453ba4e4408acae16
-  - COVERALLS_REPO_TOKEN=K7iSITlpmmpgh2uanmudoO5Hv62coULxy
+  - CODECLIMATE_REPO_TOKEN=3fa74f2ade25037fccd7261090acbdeae232639c3a83aafb80ee428ec16b8cf9
 addons:
   code_climate:
-    repo_token: 8d9c25de4eff1cd06d3accdc09775397e1a81be67e2a159453ba4e4408acae16
+    repo_token: 3fa74f2ade25037fccd7261090acbdeae232639c3a83aafb80ee428ec16b8cf9

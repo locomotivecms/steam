@@ -73,17 +73,17 @@ describe Locomotive::Steam::Server do
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>http://example.org/filtered</loc>
-    <lastmod>2015-03-25</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>http://example.org/basic</loc>
     <lastmod>2015-03-25</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>http://example.org/contest</loc>
+    <lastmod>2015-03-25</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>http://example.org/filtered</loc>
     <lastmod>2015-03-25</lastmod>
     <priority>0.9</priority>
   </url>
