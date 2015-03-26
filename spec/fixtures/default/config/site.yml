@@ -6,9 +6,12 @@ domains: ['example.org', 'sample.example.com', 'sample.lvh.me']
 
 locales: ['en', 'fr', 'nb']
 
+timezone: 'America/Chicago'
+
 seo_title:
   en: A simple LocomotiveCMS website
   fr: Un simple LocomotiveCMS site web
+
 meta_keywords:
   en: some meta keywords
   fr: quelques mots cles

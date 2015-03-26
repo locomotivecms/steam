@@ -1,5 +1,6 @@
 language: ruby
 services: mongodb
+before_script: ./script/ci/before_build.sh
 rvm:
   - 2.2.0
 env:
