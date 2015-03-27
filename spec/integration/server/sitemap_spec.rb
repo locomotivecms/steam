@@ -14,6 +14,8 @@ describe Locomotive::Steam::Server do
 
     subject { Timecop.freeze(now) { get '/sitemap.xml' }; last_response.body }
 
+    before { Locomotive::Steam::Adapters::Filesystem::SimpleCacheStore.new.clear }
+
     it 'checks if it looks valid' do
       expect(Nokogiri::XML(subject).errors.empty?).to eq true
       expect(subject.scan(/<url>/).size).to eq 45
