@@ -26,6 +26,10 @@ module Locomotive::Steam
           @@store.clear
         end
 
+        def delete(name)
+          @@store.delete(name)
+        end
+
         #:nocov:
         def _store
           @@store
