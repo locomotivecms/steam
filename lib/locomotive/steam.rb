@@ -1,11 +1,5 @@
 require 'locomotive/common'
 
-require 'active_support'
-require 'active_support/concern'
-require 'active_support/deprecation'
-require 'active_support/core_ext'
-
-require_relative      'steam/core_ext'
 require_relative      'steam/configuration'
 require_relative_all  'steam/decorators'
 require_relative      'steam/liquid'
