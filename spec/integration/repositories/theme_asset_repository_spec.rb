@@ -13,6 +13,11 @@ describe Locomotive::Steam::ThemeAssetRepository do
     let(:site_id) { BSON::ObjectId.from_string('54eb49c12475804b2b000002') }
     let(:adapter) { Locomotive::Steam::MongoDBAdapter.new(database: 'steam_test', hosts: ['127.0.0.1:27017']) }
 
+    describe '#all' do
+      subject { repository.all }
+      it { expect(subject.size).to eq 16 }
+    end
+
     describe '#url_for' do
       subject { repository.url_for('stylesheets/application.css') }
       it { is_expected.to eq '/sites/54eb49c12475804b2b000002/theme/stylesheets/application.css' }
@@ -30,6 +35,11 @@ describe Locomotive::Steam::ThemeAssetRepository do
 
     let(:site_id) { 1 }
     let(:adapter) { Locomotive::Steam::FilesystemAdapter.new(default_fixture_site_path) }
+
+    describe '#all' do
+      subject { repository.all }
+      it { expect(subject.size).to eq 16 }
+    end
 
     describe '#url_for' do
       subject { repository.url_for('stylesheets/application.css') }

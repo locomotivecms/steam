@@ -36,6 +36,12 @@ module Locomotive
       require_relative 'steam/initializers'
     end
 
+    # Shortcut to build the Rack stack
+    def self.to_app
+      require_relative 'steam/server'
+      Server.to_app
+    end
+
     # FIXME: not sure it will ever be needed
     # class << self
     #   def method_missing(name, *args, &block)

@@ -14,7 +14,7 @@ module Locomotive
 
       def checksums
         query { only(:checksum, :local_path) }.all.inject({}) do |memo, asset|
-          memo[asset.local_path] = asset.checksum
+          memo[asset.local_path] = asset.checksum if asset.checksum
           memo
         end
       end
