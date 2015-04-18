@@ -1,24 +1,33 @@
 require 'spec_helper'
 
-require 'sprockets'
 require_relative '../../../lib/locomotive/steam/middlewares/dynamic_assets'
 
 describe Locomotive::Steam::Middlewares::DynamicAssets do
 
-  let(:app)     { ->(env) { [200, env, 'app'] }}
-  let(:options) { { root: File.dirname(__FILE__), minify: true } }
+  let(:app)         { ->(env) { [200, env, 'app'] }}
+  let(:options)     { { root: File.dirname(__FILE__), minify: true } }
+  let(:middleware)  { described_class.new(app, options) }
 
-  let(:middleware) { Locomotive::Steam::Middlewares::DynamicAssets.new(app, options) }
+  describe '#call' do
 
-  describe 'java not installed' do
+    let(:env) { { 'PATH_INFO' => '/stylesheets/application.css' } }
+    subject { middleware.call(env) }
 
-    let(:sprockets) { instance_double('Sprockets') }
+    it 'calls sprockets to process the asset' do
+      expect(middleware.assets).to receive(:call).with(env).and_return(true)
+      is_expected.to eq true
+    end
 
-    before { allow(middleware).to receive(:is_java_installed?).and_return(false) }
+    context 'not an asset' do
 
-    subject { middleware.send(:install_yui_compressor, sprockets, options) }
+      let(:env) { { 'PATH_INFO' => '/index' } }
 
-    it { is_expected.to eq(false) }
+      it 'bypasses sprockets' do
+        expect(middleware.assets).not_to receive(:call)
+        is_expected.not_to eq nil
+      end
+
+    end
 
   end
 
