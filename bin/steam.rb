@@ -22,7 +22,7 @@ OptionParser.new do |opts|
   opts.banner = 'Usage: steam.rb [options]'
 
   # Filesystem adapter
-  opts.on('-p', '--path PATH', 'Serve a Wagon site from a path in your filesystem') do |path|
+  opts.on('--path PATH', 'Serve a Wagon site from a path in your filesystem') do |path|
     options[:adapter][:path] = File.expand_path(path)
     options[:asset_path] = File.expand_path(File.join(path, 'public'))
     options[:database] = options[:hosts] = nil

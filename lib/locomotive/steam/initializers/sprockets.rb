@@ -1,6 +1,8 @@
 require 'sprockets'
 require 'sprockets-sass'
+require 'sprockets-less'
 require 'coffee_script'
+require 'compass'
 
 Sprockets::Sass.add_sass_functions = false
 

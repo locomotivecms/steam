@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'sprockets',              '~> 2.12.3'
   spec.add_dependency 'sprockets-sass',         '~> 1.3.1'
+  spec.add_dependency 'sprockets-less',         '~> 0.6.1'
   spec.add_dependency 'coffee-script',          '~> 2.3.0'
   spec.add_dependency 'compass',                '~> 1.0.3'
 
