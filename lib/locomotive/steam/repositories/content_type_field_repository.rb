@@ -14,12 +14,20 @@ module Locomotive
         embedded_association :select_options, ContentTypeFieldSelectOptionRepository
       end
 
+      def by_name(name)
+        first { where(name: name) }
+      end
+
       def selects
         query { where(type: :select) }.all
       end
 
       def associations
         query { where(k(:type, :in) => %i(belongs_to has_many many_to_many)) }.all
+      end
+
+      def no_associations
+        query { where(k(:type, :nin) => %i(belongs_to has_many many_to_many)) }.all
       end
 
       def unique

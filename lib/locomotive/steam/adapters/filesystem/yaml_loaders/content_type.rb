@@ -34,7 +34,7 @@ module Locomotive
             def build_field(name, attributes)
               attributes.tap do |attributes|
                 attributes[:name] = name.to_s
-                attributes[:type] = attributes[:type].try(:to_s)
+                attributes[:type] = (attributes[:type] || 'string').to_s.downcase
 
                 if attributes[:label].blank?
                   attributes[:label] = name.to_s.humanize

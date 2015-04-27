@@ -55,6 +55,10 @@ module Locomotive::Steam
       }
     end
 
+    def is_relationship?
+      %i(belongs_to has_many many_to_many).include?(self.type)
+    end
+
     class SelectOption
 
       include Locomotive::Steam::Models::Entity
