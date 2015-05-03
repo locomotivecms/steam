@@ -78,7 +78,8 @@ module Locomotive::Steam
       # create a proxy class for each localized attribute
       def build_localized_attributes(attributes)
         @localized_attributes.each do |name|
-          attributes[name] = I18nField.new(name, attributes[name])
+          _name = name.to_sym
+          attributes[_name] = I18nField.new(_name, attributes[name.to_s] || attributes[_name])
         end
       end
 
