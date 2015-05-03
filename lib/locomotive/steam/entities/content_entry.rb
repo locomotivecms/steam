@@ -61,6 +61,14 @@ module Locomotive::Steam
       self[content_type.label_field_name]
     end
 
+    def localized_attributes
+      @localized_attributes.tap do |hash|
+        if hash && hash.has_key?(content_type.label_field_name.to_sym)
+          hash[:_label] = true
+        end
+      end
+    end
+
     def to_liquid
       Locomotive::Steam::Liquid::Drops::ContentEntry.new(self)
     end

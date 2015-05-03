@@ -26,6 +26,16 @@ describe Locomotive::Steam::Decorators::I18nDecorator do
     expect(decorated.title).to eq 'Bonjour le monde'
   end
 
+  describe 'the field is nil' do
+
+    let(:field) { nil }
+
+    it 'returns nil if the attribute was originally nil' do
+      expect(decorated.title).to eq nil
+    end
+
+  end
+
   describe 'using a different locale' do
 
     before { decorated.__locale__ = 'en' }
