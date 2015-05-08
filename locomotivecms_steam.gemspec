@@ -22,31 +22,31 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'moped',      '~> 2.0.4'
   spec.add_development_dependency 'origin',     '~> 2.1.1'
 
-  spec.add_dependency 'sanitize',               '~> 3.1.2'
+  spec.add_dependency 'sanitize',               '~> 4.0.0'
   spec.add_dependency 'morphine',               '~> 0.1.1'
   spec.add_dependency 'httparty',               '~> 0.13.3'
   spec.add_dependency 'chronic',                '~> 0.10.2'
 
   spec.add_dependency 'rack-rewrite',           '~> 1.5.1'
   spec.add_dependency 'rack-cache',             '~> 1.2'
-  spec.add_dependency 'dragonfly',              '~> 1.0.7'
+  spec.add_dependency 'dragonfly',              '~> 1.0.9'
   spec.add_dependency 'moneta',                 '~> 0.8.0'
   spec.add_dependency 'rack_csrf',              '~> 2.5.0'
 
   spec.add_dependency 'sprockets',              '~> 2.12.3'
   spec.add_dependency 'sprockets-sass',         '~> 1.3.1'
   spec.add_dependency 'sprockets-less',         '~> 0.6.1'
-  spec.add_dependency 'coffee-script',          '~> 2.3.0'
+  spec.add_dependency 'coffee-script',          '~> 2.4.1'
   spec.add_dependency 'compass',                '~> 1.0.3'
 
-  spec.add_dependency 'kramdown',               '~> 1.6.0'
+  spec.add_dependency 'kramdown',               '~> 1.7.0'
   spec.add_dependency 'RedCloth',               '~> 4.2.9'
   spec.add_dependency 'haml',                   '~> 4.0.6'
   spec.add_dependency 'mimetype-fu',            '~> 0.1.2'
-  spec.add_dependency 'mime-types',             '~> 2.4.3'
+  spec.add_dependency 'mime-types',             '~> 2.5.0'
 
   spec.add_dependency 'locomotivecms-solid',      '~> 4.0.0.alpha2'
-  spec.add_dependency 'locomotivecms_common',     '~> 0.0.3'
+  spec.add_dependency 'locomotivecms_common',     '~> 0.0.4'
 
   spec.required_ruby_version = '>= 2.0'
 end
