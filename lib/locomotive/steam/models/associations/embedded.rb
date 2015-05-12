@@ -18,7 +18,7 @@ module Locomotive::Steam
       # of the parent repository, that will change the local repository
       # as well.
       def initialize(repository_klass, collection, scope, options = {})
-        adapter.collection = collection
+        adapter.collection = collection || []
 
         @repository = repository_klass.new(adapter)
         @repository.scope = scope
