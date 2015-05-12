@@ -18,6 +18,8 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Page do
       expect(subject.size).to eq 24
       expect(subject.first[:title]).to eq(en: 'Page not found')
       expect(subject[14][:slug]).to eq(en: 'music', fr: 'notre-musique')
+      expect(subject[15][:_fullpath]).to eq 'songs'
+      expect(subject[15][:template_path]).to eq(en: false)
     end
 
   end

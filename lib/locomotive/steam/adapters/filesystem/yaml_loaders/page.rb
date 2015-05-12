@@ -21,7 +21,7 @@ module Locomotive
 
             def load_tree
               {}.tap do |hash|
-                each_file do |filepath, relative_path, fullpath, locale|
+                each_file do |filepath, fullpath, locale|
 
                   if leaf = hash[fullpath]
                     update(leaf, filepath, fullpath, locale)
@@ -30,6 +30,10 @@ module Locomotive
                   end
 
                   hash[fullpath] = leaf
+                end
+
+                each_directory do |filepath, fullpath, locale|
+                  hash[fullpath] ||= build(filepath, fullpath, locale)
                 end
               end.values
             end
@@ -63,12 +67,20 @@ module Locomotive
             end
 
             def get_attributes(filepath, fullpath)
-              _load(filepath, true) do |attributes, template|
-                # make sure index/404 are the slugs of the index/404 pages
-                attributes.delete(:slug) if %w(index 404).include?(fullpath)
+              if File.directory?(filepath)
+                {
+                  title:          File.basename(filepath).humanize,
+                  listed:         false,
+                  published:      false
+                }
+              else
+                _load(filepath, true) do |attributes, template|
+                  # make sure index/404 are the slugs of the index/404 pages
+                  attributes.delete(:slug) if %w(index 404).include?(fullpath)
 
-                # trick to use the template of the default locale (if available)
-                attributes[:template_path] = false if template.blank?
+                  # trick to use the template of the default locale (if available)
+                  attributes[:template_path] = false if template.blank?
+                end
               end
             end
 
@@ -82,7 +94,17 @@ module Locomotive
 
                 locale = template_extensions.include?(extension_or_locale) ? default_locale : extension_or_locale
 
-                yield(filepath, relative_path, fullpath, locale.to_sym)
+                yield(filepath, fullpath, locale.to_sym)
+              end
+            end
+
+            def each_directory(&block)
+              Dir.glob(File.join(path, '**', '*')).each do |filepath|
+                next unless File.directory?(filepath)
+
+                fullpath = get_relative_path(filepath)
+
+                yield(filepath, fullpath, default_locale.to_sym)
               end
             end
 
@@ -91,7 +113,7 @@ module Locomotive
             end
 
             def template_path(filepath, attributes, locale)
-              if attributes.delete(:template_path) == false && locale != default_locale
+              if File.directory?(filepath) || (attributes.delete(:template_path) == false && locale != default_locale)
                 false
               else
                 filepath
