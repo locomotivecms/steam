@@ -34,14 +34,13 @@ module Locomotive
           def css_js_asset_url(input, extension, folder)
             return '' if input.nil?
 
-            if input =~ /^(\/|https?:)/
-              uri = URI(input)
+            if input =~ /^https?:/
+              input
             else
-              uri = URI(asset_url("#{folder}/#{input}"))
+              uri = input.starts_with?('/') ? URI(input) : URI(asset_url("#{folder}/#{input}"))
+              uri.path = "#{uri.path}#{extension}" unless uri.path.ends_with?(extension)
+              uri.to_s
             end
-
-            uri.path = "#{uri.path}#{extension}" unless uri.path.ends_with?(extension)
-            uri.to_s
           end
 
           def asset_url(path)

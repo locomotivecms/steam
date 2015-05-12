@@ -63,20 +63,17 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   end
 
   it 'returns an url for a stylesheet file without touching the url that starts with "http:"' do
-    result = "http://cdn.example.com/trash/main.css"
-    expect(stylesheet_url('http://cdn.example.com/trash/main.css')).to eq(result)
-    expect(stylesheet_url('http://cdn.example.com/trash/main')).to eq(result)
+    expect(stylesheet_url('http://cdn.example.com/trash/main.css')).to eq "http://cdn.example.com/trash/main.css"
   end
 
   it 'returns an url for a stylesheet file without touching the url that starts with "https:"' do
-    result = "https://cdn.example.com/trash/main.css"
-    expect(stylesheet_url('https://cdn.example.com/trash/main.css')).to eq(result)
-    expect(stylesheet_url('https://cdn.example.com/trash/main')).to eq(result)
+    expect(stylesheet_url('https://cdn.example.com/trash/main.css')).to eq "https://cdn.example.com/trash/main.css"
   end
 
   it 'returns an url for a stylesheet file with respect to URL-parameters' do
     result = "/sites/42/theme/stylesheets/main.css?v=42"
     expect(stylesheet_url('main.css?v=42')).to eq(result)
+    expect(stylesheet_url('main?v=42')).to eq(result)
   end
 
   it 'returns a link tag for a stylesheet file' do
@@ -92,21 +89,16 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   end
 
   it 'returns a link tag for a stylesheet file without touching the url that starts with "/"' do
-    result = "<link href=\"/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
-    expect(stylesheet_tag('/trash/main.css')).to eq(result)
-    expect(stylesheet_tag('/trash/main')).to eq(result)
+    expect(stylesheet_tag('/trash/main.css')).to eq "<link href=\"/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
+    expect(stylesheet_tag('/trash/main')).to eq "<link href=\"/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
   end
 
   it 'returns a link tag for a stylesheet file without touching the url that starts with "http:"' do
-    result = "<link href=\"http://cdn.example.com/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
-    expect(stylesheet_tag('http://cdn.example.com/trash/main.css')).to eq(result)
-    expect(stylesheet_tag('http://cdn.example.com/trash/main')).to eq(result)
+    expect(stylesheet_tag('http://cdn.example.com/trash/main.css')).to eq "<link href=\"http://cdn.example.com/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
   end
 
   it 'returns a link tag for a stylesheet file without touching the url that starts with "https:"' do
-    result = "<link href=\"https://cdn.example.com/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
-    expect(stylesheet_tag('https://cdn.example.com/trash/main.css')).to eq(result)
-    expect(stylesheet_tag('https://cdn.example.com/trash/main')).to eq(result)
+    expect(stylesheet_tag('https://cdn.example.com/trash/main.css')).to eq "<link href=\"https://cdn.example.com/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
   end
 
   it 'returns a link tag for a stylesheet stored in Amazon S3' do
@@ -135,15 +127,13 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   end
 
   it 'returns a link tag for a stylesheet file without touching the url that starts with "http:" and media attribute set to print' do
-    result = "<link href=\"http://cdn.example.com/trash/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\" />"
-    expect(stylesheet_tag('http://cdn.example.com/trash/main.css','print')).to eq(result)
-    expect(stylesheet_tag('http://cdn.example.com/trash/main','print')).to eq(result)
+    expect(stylesheet_tag('http://cdn.example.com/trash/main.css', 'print')).to eq "<link href=\"http://cdn.example.com/trash/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\" />"
+    expect(stylesheet_tag('http://cdn.example.com/trash/main', 'print')).to eq "<link href=\"http://cdn.example.com/trash/main\" media=\"print\" rel=\"stylesheet\" type=\"text/css\" />"
   end
 
   it 'returns a link tag for a stylesheet file without touching the url that starts with "https:" and media attribute set to print' do
-    result = "<link href=\"https://cdn.example.com/trash/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\" />"
-    expect(stylesheet_tag('https://cdn.example.com/trash/main.css','print')).to eq(result)
-    expect(stylesheet_tag('https://cdn.example.com/trash/main','print')).to eq(result)
+    expect(stylesheet_tag('https://cdn.example.com/trash/main.css', 'print')).to eq "<link href=\"https://cdn.example.com/trash/main.css\" media=\"print\" rel=\"stylesheet\" type=\"text/css\" />"
+    expect(stylesheet_tag('https://cdn.example.com/trash/main', 'print')).to eq "<link href=\"https://cdn.example.com/trash/main\" media=\"print\" rel=\"stylesheet\" type=\"text/css\" />"
   end
 
   it 'returns an url for a javascript file' do
@@ -166,20 +156,17 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   end
 
   it 'returns an url for a javascript file without touching the url that starts with "http:"' do
-    result = "http://cdn.example.com/trash/main.js"
-    expect(javascript_url('http://cdn.example.com/trash/main.js')).to eq(result)
-    expect(javascript_url('http://cdn.example.com/trash/main')).to eq(result)
+    expect(javascript_url('http://cdn.example.com/trash/main.js')).to eq "http://cdn.example.com/trash/main.js"
+    expect(javascript_url('http://cdn.example.com/trash/main')).to eq "http://cdn.example.com/trash/main"
   end
 
   it 'returns an url for a javascript file without touching the url that starts with "https:"' do
-    result = "https://cdn.example.com/trash/main.js"
-    expect(javascript_url('https://cdn.example.com/trash/main.js')).to eq(result)
-    expect(javascript_url('https://cdn.example.com/trash/main')).to eq(result)
+    expect(javascript_url('https://cdn.example.com/trash/main.js')).to eq "https://cdn.example.com/trash/main.js"
+    expect(javascript_url('https://cdn.example.com/trash/main')).to eq "https://cdn.example.com/trash/main"
   end
 
   it 'returns an url for a javascript file with respect to URL-parameters' do
-    result = "/sites/42/theme/javascripts/main.js?v=42"
-    expect(javascript_url('main.js?v=42')).to eq(result)
+    expect(javascript_url('main.js?v=42')).to eq "/sites/42/theme/javascripts/main.js?v=42"
   end
 
   it 'returns a script tag for a javascript file' do
@@ -202,15 +189,13 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   end
 
   it 'returns a script tag for a javascript file without touching the url that starts with "http:"' do
-    result = %{<script src="http://cdn.example.com/trash/main.js" type="text/javascript" ></script>}
-    expect(javascript_tag('http://cdn.example.com/trash/main.js')).to eq(result)
-    expect(javascript_tag('http://cdn.example.com/trash/main')).to eq(result)
+    expect(javascript_tag('http://cdn.example.com/trash/main.js')).to eq %{<script src="http://cdn.example.com/trash/main.js" type="text/javascript" ></script>}
+    expect(javascript_tag('http://cdn.example.com/trash/main')).to eq %{<script src="http://cdn.example.com/trash/main" type="text/javascript" ></script>}
   end
 
   it 'returns a script tag for a javascript file without touching the url that starts with "https:"' do
-    result = %{<script src="https://cdn.example.com/trash/main.js" type="text/javascript" ></script>}
-    expect(javascript_tag('https://cdn.example.com/trash/main.js')).to eq(result)
-    expect(javascript_tag('https://cdn.example.com/trash/main')).to eq(result)
+    expect(javascript_tag('https://cdn.example.com/trash/main.js')).to eq %{<script src="https://cdn.example.com/trash/main.js" type="text/javascript" ></script>}
+    expect(javascript_tag('https://cdn.example.com/trash/main')).to eq %{<script src="https://cdn.example.com/trash/main" type="text/javascript" ></script>}
   end
 
   it 'returns a script tag for a javascript file with "defer" option' do
@@ -219,7 +204,7 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   end
 
   it 'returns an image tag for a given theme file without parameters' do
-    expect(theme_image_tag('foo.jpg')).to eq("<img src=\"/sites/42/theme/images/foo.jpg\" >")
+    expect(theme_image_tag('foo.jpg')).to eq "<img src=\"/sites/42/theme/images/foo.jpg\" >"
   end
 
   it 'returns an image tag for a given theme file with size' do
