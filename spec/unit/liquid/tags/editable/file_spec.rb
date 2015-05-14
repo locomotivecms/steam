@@ -71,8 +71,10 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
 
     let(:page)        { instance_double('Page', fullpath: 'hello-world', updated_at: DateTime.parse('2007-06-29 21:00:00')) }
     let(:element)     { instance_double('EditableFile', id: 42, default_source_url: nil, source?: false, source: nil, base_url: '') }
-    let(:services)    { Locomotive::Steam::Services.build_instance(nil) }
+    let(:services)    { Locomotive::Steam::Services.build_instance }
     let(:context)     { ::Liquid::Context.new({}, {}, { page: page, services: services }) }
+
+    before { allow(services).to receive(:current_site).and_return(nil) }
 
     before { allow(services.editable_element).to receive(:find).and_return(element) }
 

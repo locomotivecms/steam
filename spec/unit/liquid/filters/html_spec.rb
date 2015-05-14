@@ -6,13 +6,15 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   include Locomotive::Steam::Liquid::Filters::Html
 
   let(:site)          { instance_double('Site', _id: 42)}
-  let(:services)      { Locomotive::Steam::Services.build_instance.tap { |s| s.repositories.current_site = site } }
+  let(:services)      { Locomotive::Steam::Services.build_instance }
   let(:context)       { instance_double('Context', registers: { services: services }) }
 
   let(:theme_asset_url)         { services.theme_asset_url }
   let(:theme_asset_repository)  { services.repositories.theme_asset }
 
   before { services.repositories.theme_asset = EngineThemeAsset.new(nil, site) }
+
+  before { allow(services).to receive(:current_site).and_return(site) }
 
   before { @context = context }
 

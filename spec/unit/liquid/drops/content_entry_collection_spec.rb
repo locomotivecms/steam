@@ -8,6 +8,8 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntryCollection do
   let(:context)       { ::Liquid::Context.new(assigns, {}, { services: services }) }
   let(:drop)          { described_class.new(content_type).tap { |d| d.context = context } }
 
+  before { allow(services).to receive(:current_site).and_return(nil) }
+
   describe '#public_submission_url' do
     it { expect(drop.public_submission_url).to eq '/entry_submissions/articles' }
   end

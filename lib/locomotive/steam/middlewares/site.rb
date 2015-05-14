@@ -9,8 +9,7 @@ module Locomotive::Steam
       include Helpers
 
       def _call
-        env['steam.site'] ||= services.site_finder.find
-        services.repositories.current_site = site = env['steam.site']
+        site = find_site
 
         # render a simple message if the service was not able to find a site
         # based on the request.
@@ -21,6 +20,15 @@ module Locomotive::Steam
       end
 
       private
+
+      def find_site
+        if env['steam.site']
+          # happens if Steam is running within the Engine
+          services.set_site(env['steam.site'])
+        else
+          env['steam.site'] = services.current_site
+        end
+      end
 
       def render_no_site
         render_response('Hi, we are sorry but no site was found.', 404, 'text/html')

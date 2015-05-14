@@ -2,9 +2,11 @@ require 'spec_helper'
 
 describe Locomotive::Steam::UrlBuilderService do
 
-  let(:site)    { instance_double('Site', default_locale: 'en') }
-  let(:locale)  { 'en' }
-  let(:service) { described_class.new(site, locale) }
+  let(:mounted_on)  { nil }
+  let(:request)     { instance_double('Request', env: { 'steam.mounted_on' => mounted_on }) }
+  let(:site)        { instance_double('Site', default_locale: 'en') }
+  let(:locale)      { 'en' }
+  let(:service)     { described_class.new(site, locale, request) }
 
   describe '#url_for' do
 
@@ -19,6 +21,11 @@ describe Locomotive::Steam::UrlBuilderService do
       let(:locale) { 'fr' }
       it { is_expected.to eq '/fr/about-us' }
 
+      context 'with a prefix' do
+        let(:mounted_on) { '/foo' }
+        it { is_expected.to eq '/foo/fr/about-us' }
+      end
+
     end
 
     describe 'no need to put the index slug' do
@@ -31,6 +38,11 @@ describe Locomotive::Steam::UrlBuilderService do
         let(:locale) { 'fr' }
         it { is_expected.to eq '/fr' }
 
+        context 'with a prefix' do
+          let(:mounted_on) { '/foo' }
+          it { is_expected.to eq '/foo/fr' }
+        end
+
       end
 
     end
@@ -40,6 +52,11 @@ describe Locomotive::Steam::UrlBuilderService do
       let(:article) { instance_double('Article', _slug: 'hello-world') }
       let(:page)    { instance_double('Template', fullpath: 'articles/content_type_template', templatized?: true, content_entry: article) }
       it { is_expected.to eq '/articles/hello-world' }
+
+      context 'with a prefix' do
+        let(:mounted_on) { '/foo' }
+        it { is_expected.to eq '/foo/articles/hello-world' }
+      end
 
     end
 

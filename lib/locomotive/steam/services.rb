@@ -19,6 +19,10 @@ module Locomotive
 
         include Morphine
 
+        register :current_site do
+          repositories.current_site = site_finder.find
+        end
+
         register :repositories do
           Steam::Repositories.new(nil, nil, configuration)
         end
@@ -52,7 +56,7 @@ module Locomotive
         end
 
         register :url_builder do
-          Steam::UrlBuilderService.new(current_site, locale)
+          Steam::UrlBuilderService.new(current_site, locale, request)
         end
 
         register :theme_asset_url do
@@ -108,8 +112,8 @@ module Locomotive
           @locale = repositories.locale = locale
         end
 
-        def current_site
-          repositories.current_site
+        def set_site(site)
+          self.current_site = repositories.current_site = site
         end
 
       end

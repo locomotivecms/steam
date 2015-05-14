@@ -22,7 +22,7 @@ describe 'Locomotive::Steam::Liquid::Tags::Nav' do
   let(:source)      { '{% nav site %}' }
   let(:site)        { instance_double('Site', name: 'My portfolio', default_locale: 'en') }
   let(:page)        { index }
-  let(:services)    { Locomotive::Steam::Services.build_instance(nil) }
+  let(:services)    { Locomotive::Steam::Services.build_instance }
   let(:repository)  { services.repositories.page }
   let(:assigns)     { {} }
   let(:registers)   { { services: services, site: site, page: page } }
@@ -31,7 +31,7 @@ describe 'Locomotive::Steam::Liquid::Tags::Nav' do
 
   let(:output) { render_template(source, context, options) }
 
-  before { services.repositories.current_site = site }
+  before { allow(services).to receive(:current_site).and_return(site) }
 
   describe 'rendering' do
 
