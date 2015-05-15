@@ -18,8 +18,11 @@ module Locomotive::Steam
       end
 
       def redirect_to(location, type = 301)
-        self.log "Redirected to #{location}".blue
-        @next_response = [type, { 'Content-Type' => 'text/html', 'Location' => location }, []]
+        _location = mounted_on && (location =~ Steam::IsHTTP).nil? ? "#{mounted_on}#{location}" : location
+
+        self.log "Redirected to #{_location}".blue
+
+        @next_response = [type, { 'Content-Type' => 'text/html', 'Location' => _location }, []]
       end
 
       def modify_path(path = nil, &block)
@@ -32,6 +35,10 @@ module Locomotive::Steam
         path = '/' if path.blank?
         path += "?#{request.query_string}" unless request.query_string.empty?
         path
+      end
+
+      def mounted_on
+        request.env['steam.mounted_on']
       end
 
       def log(msg, offset = 2)

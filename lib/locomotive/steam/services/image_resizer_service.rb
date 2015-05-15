@@ -3,8 +3,6 @@ module Locomotive
 
     class ImageResizerService < Struct.new(:resizer, :asset_path)
 
-      IsHTTP = /^https?:\/\//o
-
       def resize(source, geometry)
         return nil if disabled? || geometry.blank?
 
@@ -25,7 +23,7 @@ module Locomotive
       def fetch_file(source)
         url_or_path = get_url_or_path(source)
 
-        if url_or_path =~ IsHTTP
+        if url_or_path =~ Steam::IsHTTP
           resizer.fetch_url(url_or_path)
         else
           path = url_or_path.sub(/(\?.*)$/, '')
