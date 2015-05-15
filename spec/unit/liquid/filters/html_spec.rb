@@ -217,6 +217,10 @@ describe Locomotive::Steam::Liquid::Filters::Html do
     expect(image_tag('foo.jpg')).to eq("<img src=\"foo.jpg\" >")
   end
 
+  it 'returns an image tag for a file with a leading slash' do
+    expect(image_tag('/foo.jpg')).to eq "<img src=\"/foo.jpg\" >"
+  end
+
   it 'returns an image tag with size' do
     expect(image_tag('foo.jpg', 'width:100', 'height:50')).to eq("<img src=\"foo.jpg\" height=\"50\" width=\"100\" >")
   end

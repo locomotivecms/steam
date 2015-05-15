@@ -44,7 +44,7 @@ module Locomotive
 
               {
                 title:              { locale => attributes.delete(:title) || (default_locale == locale ? slug.humanize : nil) },
-                slug:               { locale => attributes.delete(:slug) || slug },
+                slug:               { locale => attributes.delete(:slug) || slug.dasherize },
                 template_path:      { locale => template_path(filepath, attributes, locale) },
                 redirect_url:       { locale => attributes.delete(:redirect_url) },
                 editable_elements:  build_editable_elements(attributes.delete(:editable_elements), locale),
@@ -57,7 +57,7 @@ module Locomotive
               attributes  = get_attributes(filepath, fullpath)
 
               leaf[:title][locale]              = attributes.delete(:title) || slug.humanize
-              leaf[:slug][locale]               = attributes.delete(:slug) || slug
+              leaf[:slug][locale]               = attributes.delete(:slug) || slug.dasherize
               leaf[:template_path][locale]      = template_path(filepath, attributes, locale)
               leaf[:redirect_url][locale]       = attributes.delete(:redirect_url)
 

@@ -145,7 +145,7 @@ module Locomotive::Steam
     class FileField < Struct.new(:filename, :base, :updated_at)
 
       def url
-        "#{base}/#{filename}"
+        base.blank? ? filename : "#{base}/#{filename}"
       end
 
       def to_liquid

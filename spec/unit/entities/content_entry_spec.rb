@@ -133,10 +133,10 @@ describe Locomotive::Steam::ContentEntry do
 
     context 'a file' do
       let(:field_type)  { :file }
-      let(:value)       { 'foo.png' }
+      let(:value)       { '/foo.png' }
       it { expect(subject.url).to eq('/foo.png') }
       context 'localized' do
-        let(:value) { build_i18n_field(en: 'foo-en.png', fr: 'foo-fr.png') }
+        let(:value) { build_i18n_field(en: '/foo-en.png', fr: '/foo-fr.png') }
         it { expect(subject.translations[:en].url).to eq('/foo-en.png') }
         it { expect(subject.translations[:fr].url).to eq('/foo-fr.png') }
       end
