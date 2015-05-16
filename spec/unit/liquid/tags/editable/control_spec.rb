@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Locomotive::Steam::Liquid::Tags::Editable::Control do
 
   let(:page)        { instance_double('Page') }
-  let(:listener)    { Liquid::SimpleEventsListener.new }
-  let(:options)     { { events_listener: listener, page: page } }
+  let!(:listener)   { Liquid::SimpleEventsListener.new }
+  let(:options)     { { page: page } }
 
   let(:source) { "{% editable_control menu, hint: 'some text', options: 'true=Yes,false=No' %}false{% endeditable_control %}" }
 
@@ -47,7 +47,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Control do
       subject { listener.events.first.first }
 
       it 'records the name of the event' do
-        is_expected.to eq :editable_control
+        is_expected.to eq "steam.parse.editable.editable_control"
       end
 
       describe 'attributes' do
@@ -55,6 +55,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Control do
         subject { listener.events.first.last[:attributes] }
 
         it { is_expected.to include(block: nil) }
+        it { is_expected.to include(type: :editable_control) }
         it { is_expected.to include(slug: 'menu') }
         it { is_expected.to include(options: 'true=Yes,false=No') }
         it { is_expected.to include(hint: 'some text') }

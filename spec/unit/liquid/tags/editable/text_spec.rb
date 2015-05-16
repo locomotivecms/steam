@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
   let(:page)        { instance_double('Page') }
-  let(:listener)    { Liquid::SimpleEventsListener.new }
-  let(:options)     { { events_listener: listener, page: page } }
+  let!(:listener)   { Liquid::SimpleEventsListener.new }
+  let(:options)     { { page: page } }
 
   let(:source) { "{% editable_text title, hint: 'Simple short text' %}Hello world{% endeditable_text %}" }
 
@@ -47,7 +47,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
       subject { listener.events.first.first }
 
       it 'records the name of the event' do
-        is_expected.to eq :editable_text
+        is_expected.to eq 'steam.parse.editable.editable_text'
       end
 
       describe 'attributes' do
@@ -55,6 +55,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
         subject { listener.events.first.last[:attributes] }
 
         it { is_expected.to include(block: nil) }
+        it { is_expected.to include(type: :editable_text) }
         it { is_expected.to include(slug: 'title') }
         it { is_expected.to include(hint: 'Simple short text') }
         it { is_expected.to include(format: 'html') }

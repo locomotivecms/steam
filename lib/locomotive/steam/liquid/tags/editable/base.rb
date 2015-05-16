@@ -22,10 +22,8 @@ module Locomotive
             end
 
             def parse(tokens)
-              super
-
-              if listener = options[:events_listener]
-                listener.emit(@tag_name.to_sym, page: options[:page], attributes: default_element_attributes)
+              super.tap do
+                ActiveSupport::Notifications.instrument("steam.parse.editable.#{@tag_name}", page: options[:page], attributes: default_element_attributes)
               end
             end
 
@@ -53,7 +51,8 @@ module Locomotive
                 fixed:          !!@element_options[:fixed],
                 disabled:       false,
                 inline_editing: true,
-                from_parent:    false
+                from_parent:    false,
+                type:           @tag_name.to_sym
               }
             end
 

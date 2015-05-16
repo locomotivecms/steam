@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Locomotive::Steam::Liquid::Tags::Editable::File do
 
   let(:page)        { instance_double('Page', updated_at: DateTime.parse('2007-06-29 21:00:00')) }
-  let(:listener)    { Liquid::SimpleEventsListener.new }
-  let(:options)     { { events_listener: listener, page: page } }
+  let!(:listener)   { Liquid::SimpleEventsListener.new }
+  let(:options)     { { page: page } }
 
   let(:source) { "{% editable_file banner, hint: 'some text' %}http://www.placehold.it/500x500{% endeditable_file %}" }
 
@@ -47,7 +47,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
       subject { listener.events.first.first }
 
       it 'records the name of the event' do
-        is_expected.to eq :editable_file
+        is_expected.to eq 'steam.parse.editable.editable_file'
       end
 
       describe 'attributes' do
@@ -55,6 +55,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
         subject { listener.events.first.last[:attributes] }
 
         it { is_expected.to include(block: nil) }
+        it { is_expected.to include(type: :editable_file) }
         it { is_expected.to include(slug: 'banner') }
         it { is_expected.to include(hint: 'some text') }
         it { is_expected.to include(default_source_url: 'http://www.placehold.it/500x500') }
