@@ -116,9 +116,6 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
     describe 'deprecated elements' do
 
-      let(:listener)    { Liquid::SimpleEventsListener.new }
-      let(:options)     { { events_listener: listener } }
-
       describe 'deprecated editable_long_text' do
 
         let(:source) { "{% editable_long_text body %}Hello world{% endeditable_long_text %}" }

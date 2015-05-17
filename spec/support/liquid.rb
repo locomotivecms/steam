@@ -11,7 +11,7 @@ end
 module Liquid
   class SimpleEventsListener
     def initialize
-      ActiveSupport::Notifications.subscribe(/^steam\.parse\.editable/) do |name, start, finish, id, payload|
+      ActiveSupport::Notifications.subscribe(/^steam\.parse\./) do |name, start, finish, id, payload|
         emit(name, payload)
       end
     end

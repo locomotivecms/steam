@@ -12,12 +12,12 @@ describe Locomotive::Steam::Liquid::Tags::Snippet do
   describe 'parsing' do
 
     let(:page)      { instance_double('Page') }
-    let(:listener)  { Liquid::SimpleEventsListener.new }
-    let(:options)   { { events_listener: listener, page: page, snippet_finder: finder, parser: services.liquid_parser } }
+    let!(:listener) { Liquid::SimpleEventsListener.new }
+    let(:options)   { { page: page, snippet_finder: finder, parser: services.liquid_parser } }
 
     let!(:template) { parse_template(source, options) }
 
-    it { expect(listener.event_names.first).to eq :include }
+    it { expect(listener.event_names.first).to eq 'steam.parse.include' }
 
     # describe 'with an editable_element inside', pending: true do
 

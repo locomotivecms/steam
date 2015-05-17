@@ -3,10 +3,9 @@ module Locomotive
 
     class LiquidParserService < Struct.new(:parent_finder, :snippet_finder)
 
-      def parse(page, events_listener = nil)
+      def parse(page)
         _parse(page,
           page:             page,
-          events_listener:  events_listener,
           parent_finder:    parent_finder,
           snippet_finder:   snippet_finder,
           parser:           self)

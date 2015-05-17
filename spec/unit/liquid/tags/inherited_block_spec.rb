@@ -7,9 +7,9 @@ describe Locomotive::Steam::Liquid::Tags::InheritedBlock do
   let(:source)        { '{% extends parent %}{% block product %}Skis{% endblock %}' }
   let(:page)          { instance_double('Page') }
 
-  let(:listener)      { Liquid::SimpleEventsListener.new }
+  let!(:listener)     { Liquid::SimpleEventsListener.new }
   let(:finder)        { instance_double('Finder', find: parent) }
-  let(:options)       { { page: page, events_listener: listener, parent_finder: finder, parser: Locomotive::Steam::LiquidParserService.new } }
+  let(:options)       { { page: page, parent_finder: finder, parser: Locomotive::Steam::LiquidParserService.new } }
 
   let!(:template)     { parse_template(source, options) }
 
