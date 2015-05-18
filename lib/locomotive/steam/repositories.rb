@@ -41,7 +41,7 @@ module Locomotive
 
       def build_adapter(options)
         name = ((options || {})[:name] || :filesystem).to_s
-        require_relative "adapters/#{name}"
+        require_relative "adapters/#{name.downcase}"
         klass = "Locomotive::Steam::#{name.camelize}Adapter".constantize
         klass.new(options)
       end
