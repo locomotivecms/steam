@@ -5,9 +5,8 @@ Gem::Specification.new do |spec|
   spec.version       = Locomotive::Steam::VERSION
   spec.authors       = ['Didier Lafforgue', 'Rodrigo Alvarez', 'Arnaud Sellenet', 'Joel Azemar']
   spec.email         = ['did@locomotivecms.com', 'papipo@gmail.com', 'arnaud@sellenet.fr', 'joel.azemar@gmail.com']
-  spec.description   = %q{The LocomotiveCMS steam is a front end server LocomotiveCMS libraries}
-  spec.summary       = %q{The LocomotiveCMS steam is a technical piece for compiled and steam front end stuff for LocomotiveCMS libraries}
-  spec.homepage      = 'http://www.locomotivecms.com'
+  spec.description   = %q{The LocomotiveCMS Steam is the rendering stack used by both Wagon and Engine}
+  spec.summary       = %q{The LocomotiveCMS Steam is the rendering stack used by both Wagon and Engine}
   spec.homepage      = 'https://github.com/locomotivecms/steam'
   spec.license       = 'MIT'
 
