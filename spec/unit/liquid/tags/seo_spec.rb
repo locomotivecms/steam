@@ -5,9 +5,9 @@ describe Locomotive::Steam::Liquid::Tags::SEO do
   let(:page)          { nil }
   let(:content_entry) { nil }
 
-  let(:site)      { instance_double('Site', name: 'Acme', seo_title: 'Acme (SEO)', meta_description: 'A short site description', meta_keywords: 'test only cat dog') }
-  let(:assigns)   { { 'page' => page, 'content_entry' => content_entry } }
-  let(:context)   { ::Liquid::Context.new(assigns, {}, { site: site }) }
+  let(:site)      { liquid_instance_double('Site', name: 'Acme', seo_title: 'Acme (SEO)', meta_description: 'A short site description', meta_keywords: 'test only cat dog') }
+  let(:assigns)   { { 'site' => site, 'page' => page, 'content_entry' => content_entry } }
+  let(:context)   { ::Liquid::Context.new(assigns, {}, {}) }
 
   subject { render_template(source, context).strip }
 
@@ -30,7 +30,7 @@ describe Locomotive::Steam::Liquid::Tags::SEO do
 
       describe 'no seo_title site property' do
 
-        let(:site) { instance_double('Site', name: 'Acme', seo_title: nil, meta_description: 'A short site description', meta_keywords: 'test only cat dog') }
+        let(:site) { liquid_instance_double('Site', name: 'Acme', seo_title: nil, meta_description: 'A short site description', meta_keywords: 'test only cat dog') }
         it { is_expected.to eq '<title>Acme</title>' }
 
       end

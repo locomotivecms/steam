@@ -18,7 +18,7 @@ describe Locomotive::Steam::Server do
 
     it 'checks if it looks valid' do
       expect(Nokogiri::XML(subject).errors.empty?).to eq true
-      expect(subject.scan(/<url>/).size).to eq 45
+      expect(subject.scan(/<url>/).size).to eq 46
       expect(subject).to match("<loc>http://example.org/songs/song-number-2/band</loc>")
       expect(subject).to match((<<-EOF
   <url>

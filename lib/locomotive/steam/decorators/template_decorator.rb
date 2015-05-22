@@ -25,9 +25,17 @@ module Locomotive
           end
 
           if template_path.ends_with?('.haml')
-            Haml::Engine.new(source).render
+            render_haml(source, template_path)
           else
             source
+          end
+        end
+
+        def render_haml(source, template_path)
+          begin
+            Haml::Engine.new(source).render
+          rescue Haml::SyntaxError => e
+            raise Steam::RenderError.new(e.message, template_path, source, e.line, e.backtrace)
           end
         end
 

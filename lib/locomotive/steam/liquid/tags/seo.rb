@@ -17,7 +17,7 @@ module Locomotive
 
             def render_title(context)
               title = self.value_for(:seo_title, context)
-              title = context.registers[:site].name if title.blank?
+              title = context['site'].name if title.blank?
 
               %{
                 <title>#{title}</title>
@@ -38,7 +38,7 @@ module Locomotive
 
             def value_for(attribute, context)
               object = self.metadata_object(context)
-              value = object.try(attribute.to_sym).blank? ? context.registers[:site].send(attribute.to_sym) : object.send(attribute.to_sym)
+              value = object.try(attribute.to_sym).blank? ? context['site'].send(attribute.to_sym) : object.send(attribute.to_sym)
               self.sanitized_string(value)
             end
 

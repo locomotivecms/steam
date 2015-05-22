@@ -8,12 +8,10 @@ module Locomotive
       def find(page, fullpath)
         return nil if fullpath.blank?
 
-        decorate do
-          if fullpath.strip == 'parent'
-            repository.parent_of(page)
-          else
-            repository.by_fullpath(fullpath)
-          end
+        if fullpath.strip == 'parent'
+          decorate { repository.parent_of(page) }
+        else
+          super(fullpath)
         end
       end
 
