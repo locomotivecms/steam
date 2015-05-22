@@ -18,7 +18,7 @@ module Locomotive
         private
 
         def source_from_template_file
-          source = File.open(template_path).read.force_encoding('utf-8')
+          source = File.read(template_path).force_encoding('utf-8')
 
           if match = source.match(FRONTMATTER_REGEXP)
             source = match[:template]
