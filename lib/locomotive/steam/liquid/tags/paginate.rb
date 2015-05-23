@@ -54,7 +54,7 @@ module Locomotive
           #
           def paginate_collection(context)
             collection    = context[@collection_name]
-            current_page  = context['current_page']
+            current_page  = context['current_page'].try(:to_i)
 
             raise ::Liquid::ArgumentError.new("Cannot paginate '#{@collection_name}'. Not found.") if collection.nil?
 
