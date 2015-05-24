@@ -162,12 +162,15 @@ module Locomotive
 
         with(entry.content_type)
 
-        name, direction = self.content_type.order_by.first
+        order_by = self.content_type.order_by
+        name, direction = order_by.first
         op = direction == 'asc' ? asc_op : desc_op
 
         conditions = prepare_conditions({ k(name, op) => i18n_value_of(entry, name) })
 
-        first { where(conditions) }
+        public_send(op == 'gt' ? :last : :first) do
+          where(conditions).order_by(order_by)
+        end
       end
 
       def groups_to_array(name, groups)

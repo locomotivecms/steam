@@ -9,7 +9,7 @@ module Locomotive::Steam
         include Enumerable
         extend  Forwardable
 
-        def_delegators :all, :each, :to_s, :to_a, :empty?, :size
+        def_delegators :all, :each, :last, :to_s, :to_a, :empty?, :size
 
         alias :length :size
         alias :count :size

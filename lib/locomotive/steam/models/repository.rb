@@ -47,6 +47,10 @@ module Locomotive::Steam
         adapter.query(mapper, scope, &block).first
       end
 
+      def last(&block)
+        adapter.query(mapper, scope, &block).last
+      end
+
       def k(name, operator)
         adapter.key(name, operator)
       end
