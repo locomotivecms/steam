@@ -13,6 +13,8 @@ module Locomotive
 
               (attributes[:domains] ||= []) << 'localhost'
 
+              attributes[:picture] = File.expand_path(File.join(site_path, 'icon.png'))
+
               [attributes]
             end
 
