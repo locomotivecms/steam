@@ -145,6 +145,7 @@ module Locomotive::Steam
     class FileField < Struct.new(:filename, :base, :updated_at)
 
       def url
+        return if filename.blank?
         base.blank? ? filename : "#{base}/#{filename}"
       end
 
