@@ -5,6 +5,11 @@ require_relative '../../../lib/locomotive/steam/adapters/mongodb.rb'
 
 describe Locomotive::Steam::PageRepository do
 
+  # before(:all) do
+  #   Moped.logger = Logger.new($stdout)
+  #   Moped.logger.level = Logger::DEBUG
+  # end
+
   shared_examples_for 'a repository' do
 
     let(:site)        { Locomotive::Steam::Site.new(_id: site_id, locales: %w(en fr nb)) }
@@ -12,8 +17,14 @@ describe Locomotive::Steam::PageRepository do
     let(:repository)  { described_class.new(adapter, site, locale) }
 
     describe '#all' do
-      subject { repository.all }
+      let(:conditions) { {} }
+      subject { repository.all(conditions) }
       it { expect(subject.size).to eq 24 }
+
+      context 'with conditions' do
+        let(:conditions) { { fullpath: 'index', 'slug.ne' => '404' } }
+        it { expect(subject.size).to eq 1 }
+      end
     end
 
     describe '#query' do

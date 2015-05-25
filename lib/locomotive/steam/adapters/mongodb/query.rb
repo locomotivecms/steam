@@ -17,7 +17,7 @@ module Locomotive::Steam
 
         def where(criterion = nil)
           self.tap do
-            @criteria.merge!(criterion) unless criterion.nil?
+            @criteria.merge!(decode_symbol_operators(criterion)) unless criterion.nil?
           end
         end
 
@@ -73,6 +73,22 @@ module Locomotive::Steam
 
         def apply_default_scope
           where(site_id: @scope.site._id) if @scope.site
+        end
+
+        def decode_symbol_operators(criterion)
+          criterion.dup.tap do |_criterion|
+            criterion.each do |key, value|
+              next unless key.is_a?(String)
+
+              _key, operator = key.split('.')
+
+              if operator
+                _criterion.delete(key)
+                _key = _key.to_s.to_sym.public_send(operator.to_sym)
+                _criterion[_key] = value
+              end
+            end
+          end
         end
 
       end

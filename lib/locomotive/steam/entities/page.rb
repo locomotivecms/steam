@@ -48,6 +48,10 @@ module Locomotive::Steam
       self[:raw_template]
     end
 
+    def depth
+      @depth || self[:depth]
+    end
+
     def to_liquid
       Locomotive::Steam::Liquid::Drops::Page.new(self)
     end

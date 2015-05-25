@@ -28,7 +28,7 @@ module Locomotive::Steam
     end
 
     def key(name, operator)
-      name.__send__(operator)
+      name.to_sym.__send__(operator.to_sym)
     end
 
     def base_url(mapper, scope, entity = nil)
