@@ -4,6 +4,8 @@ module Locomotive::Steam
 
       class Query
 
+        SYMBOL_OPERATORS = %w(all elem_match exists gt gte in lt lte mod ne near near_sphere nin with_size with_type within_box within_circle within_polygon within_spherical_circle)
+
         attr_reader :criteria, :sort
 
         def initialize(scope, localized_attributes, &block)
@@ -82,7 +84,7 @@ module Locomotive::Steam
 
               _key, operator = key.split('.')
 
-              if operator
+              if operator && SYMBOL_OPERATORS.include?(operator)
                 _criterion.delete(key)
                 _key = _key.to_s.to_sym.public_send(operator.to_sym)
                 _criterion[_key] = value
