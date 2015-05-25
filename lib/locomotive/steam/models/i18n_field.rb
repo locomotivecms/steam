@@ -3,6 +3,10 @@ module Locomotive::Steam
 
     class I18nField
 
+      extend Forwardable
+
+      def_delegators :@translations, :values, :blank?
+
       attr_reader :name, :translations
 
       def initialize(name, translations)
@@ -16,10 +20,6 @@ module Locomotive::Steam
 
       def []=(locale, value)
         @translations[locale] = value
-      end
-
-      def values
-        @translations.values
       end
 
       def translations=(translations)

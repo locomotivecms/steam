@@ -100,7 +100,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
     context 'modified value' do
 
       let(:file)    { 'http://www.placehold.it/250x250' }
-      let(:element) { instance_double('EditableFile', content: file, default_source_url: false, base_url: '') }
+      let(:element) { instance_double('EditableFile', source: file, default_source_url: false, base_url: '') }
       it { is_expected.to eq 'http://www.placehold.it/250x250?1183150800' }
 
     end

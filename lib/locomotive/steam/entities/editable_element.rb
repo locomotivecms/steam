@@ -8,12 +8,13 @@ module Locomotive::Steam
 
     def initialize(attributes = {})
       super({
+        content: nil,
         source: nil
       }.merge(attributes))
     end
 
-    def content
-      self[:content] || self[:source]
+    def source
+      self[:source].blank? ? self.content : self[:source]
     end
 
     def default_content?
