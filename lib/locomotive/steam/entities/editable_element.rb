@@ -12,8 +12,12 @@ module Locomotive::Steam
       }.merge(attributes))
     end
 
+    def content
+      self[:content] || self[:source]
+    end
+
     def default_content?
-      !!self[:default_content]
+      self.content.blank?
     end
 
   end

@@ -67,7 +67,7 @@ module Locomotive
         entry.valid?
 
         # check if the entry has unique values for its
-        # fields marked as unique are really
+        # fields marked as unique
         content_type_repository.look_for_unique_fields(entry.content_type).each do |name, _|
           if repository.with(entry.content_type).exists?(name => entry.send(name))
             entry.errors.add(name, :unique)

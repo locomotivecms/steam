@@ -71,7 +71,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
     let(:inline_editing) { false }
 
     let(:page)        { instance_double('Page', fullpath: 'hello-world', updated_at: DateTime.parse('2007-06-29 21:00:00')) }
-    let(:element)     { instance_double('EditableFile', id: 42, default_source_url: nil, source?: false, source: nil, base_url: '') }
+    let(:element)     { instance_double('EditableFile', id: 42, default_source_url: nil, source?: false, source: nil, content: nil, base_url: '') }
     let(:services)    { Locomotive::Steam::Services.build_instance }
     let(:context)     { ::Liquid::Context.new({}, {}, { page: page, services: services }) }
 
@@ -92,7 +92,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
 
     context 'using the default value' do
 
-      let(:element) { instance_double('EditableFile', id: 42, default_source_url: 'http://www.placehold.it/500x500', source?: false, source: nil) }
+      let(:element) { instance_double('EditableFile', id: 42, default_source_url: 'http://www.placehold.it/500x500', source?: false, source: nil, content: nil) }
       it { is_expected.to eq 'http://www.placehold.it/500x500?1183150800' }
 
     end
@@ -100,7 +100,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
     context 'modified value' do
 
       let(:file)    { 'http://www.placehold.it/250x250' }
-      let(:element) { instance_double('EditableFile', source: file, source?: true, default_source_url: false, base_url: '') }
+      let(:element) { instance_double('EditableFile', content: file, default_source_url: false, base_url: '') }
       it { is_expected.to eq 'http://www.placehold.it/250x250?1183150800' }
 
     end

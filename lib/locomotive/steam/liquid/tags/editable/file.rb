@@ -16,7 +16,7 @@ module Locomotive
             def render_element(context, element)
               default_timestamp = context.registers[:page].updated_at.to_i
 
-              url, timestamp = (if element.source
+              url, timestamp = (if element.content
                 [source_url(element), default_timestamp]
               else
                 if element.default_source_url.present?
@@ -30,10 +30,11 @@ module Locomotive
             end
 
             def source_url(element)
-              if element.source =~ /^https?/
-                element.source
+              if element.content =~ /^https?/
+                element.content
               else
-                "#{element.base_url}/#{element.source}"
+                _url = element.content.start_with?('/') ? element.content : "/#{element.content}"
+                "#{element.base_url}#{_url}"
               end
             end
 

@@ -24,7 +24,7 @@ module Locomotive
             name    = options.shift
             options = options.shift || {}
 
-            form_attributes = { method: 'POST', enctype: 'multipart/form-data' }.merge(options.slice(:id, :class))
+            form_attributes = { method: 'POST', enctype: 'multipart/form-data' }.merge(options.slice(:id, :class, :action))
 
             html_content_tag :form,
               content_type_html(name) + csrf_html + callbacks_html(options) + yield,
