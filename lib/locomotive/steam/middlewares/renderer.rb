@@ -16,7 +16,7 @@ module Locomotive::Steam
       private
 
       def render_page
-        if page.redirect_url
+        if page.redirect_url.presence
           redirect_to(page.redirect_url, page.redirect_type)
         else
           content = parse_and_render_liquid
