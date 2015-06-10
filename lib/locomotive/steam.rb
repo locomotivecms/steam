@@ -19,7 +19,7 @@ module Locomotive
 
     CONTENT_ENTRY_ENGINE_CLASS_NAME = /^Locomotive::ContentEntry(.*)$/o
 
-    IsHTTP = /^https?:\/\//o
+    IsHTTP = /\Ahttps?:\/\//o
 
     class << self
       attr_writer :configuration

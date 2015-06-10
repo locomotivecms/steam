@@ -18,7 +18,7 @@ module Locomotive::Steam
       end
 
       def redirect_to(location, type = 301)
-        _location = mounted_on && (location =~ Steam::IsHTTP).nil? ? "#{mounted_on}#{location}" : location
+        _location = mounted_on && (location =~ Locomotive::Steam::IsHTTP).nil? ? "#{mounted_on}#{location}" : location
 
         self.log "Redirected to #{_location}".blue
 
