@@ -19,7 +19,7 @@ module Locomotive
 
             def with_inline_editing(context, element, &block)
               if editable?(context, element)
-                %{<span class="locomotive-editable-text" data-element-id="#{element.id}">#{yield}</span>}
+                %{<span class="locomotive-editable-text" id="#{dom_id}" data-element-id="#{element.id}">#{yield}</span>}
               else
                 yield
               end
@@ -36,6 +36,11 @@ module Locomotive
                 rows:                 @options[:rows] || 10,
                 line_break:           @options[:line_break].blank? ? true : @options[:line_break]
               )
+            end
+
+            def dom_id
+              blocks = options[:inherited_blocks].try(:[], :nested) || nil
+              ['locomotive-editable-text', blocks, @slug].compact.join('-')
             end
 
           end

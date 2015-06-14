@@ -110,7 +110,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
     context 'inline-editing mode' do
 
       let(:inline_editing) { true }
-      it { is_expected.to eq '<span class="locomotive-editable-text" data-element-id="42">Hello world</span>' }
+      it { is_expected.to eq '<span class="locomotive-editable-text" id="locomotive-editable-text-title" data-element-id="42">Hello world</span>' }
 
     end
 
