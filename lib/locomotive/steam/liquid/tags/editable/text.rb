@@ -19,14 +19,14 @@ module Locomotive
 
             def with_inline_editing(context, element, &block)
               if editable?(context, element)
-                %{<span class="locomotive-editable-text" id="#{dom_id}" data-element-id="#{element.id}">#{yield}</span>}
+                %{<span class="locomotive-editable-text" id="#{dom_id(context)}" data-element-id="#{element._id}">#{yield}</span>}
               else
                 yield
               end
             end
 
             def editable?(context, element)
-              !!context['inline_editing'] && element.inline_editing?
+              !!context.registers[:live_editing]
             end
 
             def default_element_attributes
@@ -38,9 +38,9 @@ module Locomotive
               )
             end
 
-            def dom_id
-              blocks = options[:inherited_blocks].try(:[], :nested) || nil
-              ['locomotive-editable-text', blocks, @slug].compact.join('-')
+            def dom_id(context)
+              block_name = context['block'].try(:name).try(:gsub, '/', '-')
+              ['locomotive-editable-text', block_name, @slug].compact.join('-')
             end
 
           end

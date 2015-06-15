@@ -46,7 +46,8 @@ module Locomotive::Steam
           page:           page,
           services:       services,
           repositories:   services.repositories,
-          logger:         Locomotive::Common::Logger
+          logger:         Locomotive::Common::Logger,
+          live_editing:   !!env['steam.live_editing']
         }
       end
 

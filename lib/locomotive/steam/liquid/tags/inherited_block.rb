@@ -6,7 +6,7 @@ module Locomotive
 
           def parse(tokens)
             super.tap do
-              ActiveSupport::Notifications.instrument("steam.parse.inherited_block", page: options[:page], name: @name, found_super: self.contains_super?(nodelist))
+              ActiveSupport::Notifications.instrument('steam.parse.inherited_block', page: options[:page], name: @name, found_super: self.contains_super?(nodelist))
             end
           end
 
