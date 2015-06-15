@@ -18,7 +18,7 @@ describe Locomotive::Steam::Liquid::Tags::FetchPage do
 
     describe 'raises an error if the syntax is incorrect' do
       let(:source) { "{% fetch_page 'about_us' %}{{ a_page.title }}" }
-      it { expect { subject }.to raise_exception }
+      it { expect { subject }.to raise_exception(::SyntaxError) }
     end
 
   end

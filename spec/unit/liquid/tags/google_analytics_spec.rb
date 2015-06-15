@@ -10,7 +10,7 @@ describe Locomotive::Steam::Liquid::Tags::GoogleAnalytics do
 
   describe 'raises an error if the syntax is incorrect' do
     let(:source) { '{% google_analytics %}' }
-    it { expect { subject }.to raise_exception }#(::Liquid::SyntaxError) }
+    it { expect { subject }.to raise_exception(::Liquid::SyntaxError) }
   end
 
 end

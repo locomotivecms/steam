@@ -13,18 +13,18 @@ group :development do
 end
 
 group :test do
-  gem 'rspec',              '~> 3.2.0'
+  gem 'rspec',              '~> 3.3.0'
   gem 'json_spec',          '~> 1.1.4'
   gem 'i18n-spec',          '~> 0.6.0'
 
-  gem 'timecop',            '~> 0.7.1'
+  gem 'timecop',            '~> 0.7.4'
 
   gem 'pry-byebug',         '~> 3.1.0'
 
   gem 'rack-test',          '~> 0.6.3'
 
   gem 'codeclimate-test-reporter',  '~> 0.4.7',  require: false
-  gem 'coveralls',                  '~> 0.7.12', require: false
+  gem 'coveralls',                  '~> 0.8.1', require: false
 end
 
 platform :ruby do

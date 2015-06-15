@@ -30,7 +30,7 @@ describe Locomotive::Steam::Liquid::Tags::Consume do
 
     describe 'raises an error if the syntax is incorrect' do
       let(:source) { '{% consume blog http://www.locomotiveapp.org %}{% endconsume %}' }
-      it { expect { subject }.to raise_exception }
+      it { expect { subject }.to raise_exception(Liquid::SyntaxError) }
     end
 
   end
