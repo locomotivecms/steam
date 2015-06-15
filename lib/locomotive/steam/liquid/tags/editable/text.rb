@@ -32,9 +32,9 @@ module Locomotive
             def default_element_attributes
               super.merge(
                 content_from_default: self.render_default_content,
-                format:               @options[:format] || 'html',
-                rows:                 @options[:rows] || 10,
-                line_break:           @options[:line_break].blank? ? true : @options[:line_break]
+                format:               @element_options[:format] || 'html',
+                rows:                 @element_options[:rows] || 10,
+                line_break:           @element_options[:line_break].blank? ? true : @element_options[:line_break]
               )
             end
 
