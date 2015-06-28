@@ -9,7 +9,7 @@ module Locomotive
 
             def default_element_attributes
               super.merge({
-                content: render_default_content,
+                content_from_default: self.render_default_content,
                 options: @element_options[:options]
               })
             end

@@ -59,7 +59,8 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Control do
         it { is_expected.to include(slug: 'menu') }
         it { is_expected.to include(options: 'true=Yes,false=No') }
         it { is_expected.to include(hint: 'some text') }
-        it { is_expected.to include(content: 'false') }
+        it { is_expected.to include(content_from_default: 'false') }
+        it { is_expected.not_to include(content: 'false') }
 
       end
 

@@ -15,12 +15,12 @@ module Locomotive
         #
         class Paginate < ::Liquid::Block
 
-          Syntax = /(#{::Liquid::QuotedFragment}+)\s+by\s+([0-9]+)/o
+          Syntax = /(#{::Liquid::QuotedFragment}+)\s+by\s+(#{::Liquid::QuotedFragment}+)/o
 
           def initialize(tag_name, markup, options)
             if markup =~ Syntax
               @collection_name  = $1
-              @per_page         = $2.to_i
+              @per_page         = $2
               @paginate_options = {}
               markup.scan(::Liquid::TagAttributes) { |key, value| @paginate_options[key.to_sym] = value.gsub(/^'/, '').gsub(/'$/, '') }
             else
@@ -54,11 +54,12 @@ module Locomotive
           #
           def paginate_collection(context)
             collection    = context[@collection_name]
+            per_page      = context[@per_page].to_i
             current_page  = context['current_page'].try(:to_i)
 
             raise ::Liquid::ArgumentError.new("Cannot paginate '#{@collection_name}'. Not found.") if collection.nil?
 
-            pager = Locomotive::Steam::Models::Pager.new(collection, current_page, @per_page)
+            pager = Locomotive::Steam::Models::Pager.new(collection, current_page, per_page)
 
             # make sure the pagination object is a hash with strings as keys (and not symbol)
             HashConverter.to_string(pager.to_liquid).tap do |_pagination|
