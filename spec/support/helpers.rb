@@ -43,5 +43,18 @@ module Spec
       Rack::MockRequest.env_for(url, opts)
     end
 
+    def notification_payload_for(notification)
+      payload = nil
+      subscription = ActiveSupport::Notifications.subscribe(notification) do |name, start, finish, id, _payload|
+        payload = _payload
+      end
+
+      yield
+
+      ActiveSupport::Notifications.unsubscribe(subscription)
+
+      return payload
+    end
+
   end
 end

@@ -12,24 +12,17 @@ describe Locomotive::Steam::TranslatorService do
     let(:locale)  { nil }
     let(:scope)   { nil }
 
+    before do
+      allow(repository).to receive(:by_key).with('example_test').and_return(translation)
+    end
+
     subject { service.translate(input, locale, scope) }
 
     describe 'existing translation' do
 
       let(:translation) { instance_double('Translation', values: { 'en' => 'Example text', 'es' => 'Texto de ejemplo' }) }
 
-      before do
-        allow(repository).to receive(:by_key).with('example_test').and_return(translation)
-      end
-
       it { is_expected.to eq 'Example text' }
-
-      context 'no translation found' do
-
-        let(:translation) { nil }
-        it { is_expected.to eq 'example_test' }
-
-      end
 
       context 'specifying a locale' do
 
@@ -40,15 +33,15 @@ describe Locomotive::Steam::TranslatorService do
 
       context "specifying a locale that doesn't exist" do
 
-        let(:locale) { 'nl' }
+        let(:locale) { puts 'NL'; 'nl' }
 
         it 'reverts to default locale' do
-          is_expected.to eq "example_test"
+          is_expected.to eq 'example_test'
         end
 
       end
 
-      context "specifying a scope" do
+      context 'specifying a scope' do
 
         let(:input)   { 'fr' }
         let(:locale)  { 'en' }
@@ -56,6 +49,21 @@ describe Locomotive::Steam::TranslatorService do
 
         it { is_expected.to eq 'French' }
 
+      end
+
+    end
+
+    describe 'missing translation' do
+
+      let(:locale)      { 'fr' }
+      let(:translation) { nil }
+
+      it { is_expected.to eq 'example_test' }
+
+      it 'sends a notification' do
+        payload = notification_payload_for('steam.missing_translation') { subject }
+        expect(payload[:input]).to eq 'example_test'
+        expect(payload[:locale]).to eq 'fr'
       end
 
     end

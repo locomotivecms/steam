@@ -17,10 +17,13 @@ module Locomotive
         if scope.blank?
           values = repository.by_key(input).try(:values) || {}
 
-          if translation = values[locale.to_s]
+          # FIXME: important to check if the returned value is nil (instead of nil + false)
+          # false being reserved for an existing key but without provided translation)
+          if (translation = values[locale.to_s]).present?
             translation
           else
             Locomotive::Common::Logger.warn "Missing translation '#{input}' for the '#{locale}' locale".yellow
+            ActiveSupport::Notifications.instrument('steam.missing_translation', input: input, locale: locale)
             input
           end
         else
