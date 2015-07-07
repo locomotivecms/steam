@@ -13,47 +13,59 @@ describe Locomotive::Steam::ContentEntryRepository do
     let(:repository)      { described_class.new(adapter, site, locale, type_repository).with(type) }
     let(:type)            { type_repository.by_slug('bands') }
 
-    describe '#all' do
-      subject { repository.all }
-      it { expect(subject.size).to eq 3 }
-    end
+    # describe '#all' do
+    #   subject { repository.all }
+    #   it { expect(subject.size).to eq 3 }
+    # end
 
-    describe '#count' do
-      subject { repository.count }
-      it { is_expected.to eq 3 }
-    end
+    # describe '#count' do
+    #   subject { repository.count }
+    #   it { is_expected.to eq 3 }
+    # end
 
-    describe '#by_slug' do
-      subject { repository.by_slug('alice-in-chains') }
-      it { expect(subject.name).to eq 'Alice in Chains' }
-    end
+    # describe '#by_slug' do
+    #   subject { repository.by_slug('alice-in-chains') }
+    #   it { expect(subject.name).to eq 'Alice in Chains' }
+    # end
 
-    describe '#exists?' do
-      subject { repository.exists?(featured: true) }
-      it { is_expected.to eq true }
-    end
+    # describe '#exists?' do
+    #   subject { repository.exists?(featured: true) }
+    #   it { is_expected.to eq true }
+    # end
 
-    describe '#find' do
-      subject { repository.find(entry_id) }
-      it { expect(subject.name).to eq 'Pearl Jam' }
-    end
+    # describe '#find' do
+    #   subject { repository.find(entry_id) }
+    #   it { expect(subject.name).to eq 'Pearl Jam' }
+    # end
 
-    describe '#next' do
-      let(:entry) { repository.find(entry_id) }
-      subject     { repository.next(entry) }
-      it { expect(subject.name).to eq 'The who' }
-    end
+    # describe '#next' do
+    #   let(:entry) { repository.find(entry_id) }
+    #   subject     { repository.next(entry) }
+    #   it { expect(subject.name).to eq 'The who' }
+    # end
 
-    describe '#previous' do
-      let(:entry) { repository.find(entry_id) }
-      subject     { repository.previous(entry) }
-      it { expect(subject.name).to eq 'Alice in Chains' }
-    end
+    # describe '#previous' do
+    #   let(:entry) { repository.find(entry_id) }
+    #   subject     { repository.previous(entry) }
+    #   it { expect(subject.name).to eq 'Alice in Chains' }
+    # end
 
-    describe '#group_by_select_option' do
-      subject { repository.group_by_select_option(:kind) }
-      it { expect(subject.map { |h| h[:name] }).to eq(%w(grunge rock country)) }
-      it { expect(subject.map { |h| h[:entries].size }).to eq([2, 1, 0]) }
+    # describe '#group_by_select_option' do
+    #   subject { repository.group_by_select_option(:kind) }
+    #   it { expect(subject.map { |h| h[:name] }).to eq(%w(grunge rock country)) }
+    #   it { expect(subject.map { |h| h[:entries].size }).to eq([2, 1, 0]) }
+    # end
+
+    describe '#create' do
+
+      let(:type) { type_repository.by_slug('songs') }
+      let(:attributes) { { title: 'Jeremy', band: 'pearl-jam', short_description: '"Jeremy" is a song by the American rock band Pearl Jam' } }
+      let(:entry) { repository.with(type).build(attributes) }
+
+      subject { repository.create(entry) }
+
+      it { expect { subject }.to change { repository.all.size } }
+
     end
 
   end

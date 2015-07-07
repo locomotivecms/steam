@@ -4,6 +4,7 @@ require 'origin'
 require_relative 'mongodb/origin'
 require_relative 'mongodb/query'
 require_relative 'mongodb/dataset'
+require_relative 'mongodb/command'
 
 module Locomotive::Steam
 
@@ -25,6 +26,10 @@ module Locomotive::Steam
 
     def find(mapper, scope, id)
       query(mapper, scope) { where(_id: BSON::ObjectId.from_string(id)) }.first
+    end
+
+    def create(mapper, scope, entity)
+      command(mapper).insert(entity)
     end
 
     def key(name, operator)
@@ -50,12 +55,20 @@ module Locomotive::Steam
       Locomotive::Steam::Adapters::MongoDB::Query
     end
 
+    def command_klass
+      Locomotive::Steam::Adapters::MongoDB::Command
+    end
+
     def dataset(mapper, query)
       Locomotive::Steam::Adapters::MongoDB::Dataset.new do
         query.against(collection(mapper)).map do |attributes|
           entity = mapper.to_entity(attributes)
         end
       end
+    end
+
+    def command(mapper)
+      command_klass.new(collection(mapper), mapper)
     end
 
     def collection(mapper)
