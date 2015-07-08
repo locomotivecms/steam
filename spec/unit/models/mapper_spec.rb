@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Models::Mapper do
 
-  let(:repository)  { instance_double('Repository', base_url: '') }
+  let(:adapter)     { instance_double('Adapter') }
+  let(:scope)       { instance_double('SimpleScope', apply: true) }
+  let(:repository)  { instance_double('Repository', scope: scope, base_url: '') }
   let(:name)        { 'pages' }
   let(:options)     { { entity: MyPage } }
   let(:block)       { nil }
@@ -14,6 +16,68 @@ describe Locomotive::Steam::Models::Mapper do
 
     subject { mapper.localized_attributes }
     it { is_expected.to eq [:foo, :bar] }
+
+  end
+
+  describe '#serialize' do
+
+    let(:options) { { entity: MyArticle } }
+    let(:attributes) { { title: 'Hello world', body: 'Lorem ipsum', published_at: DateTime.parse('2007/06/29 00:00:00') } }
+    let(:entity) { mapper.to_entity(attributes) }
+
+    subject { mapper.serialize(entity) }
+
+    it { expect(subject).to eq('title' => 'Hello world', 'body' => 'Lorem ipsum', 'published_at' => DateTime.parse('2007/06/29 00:00:00')) }
+
+    describe 'association' do
+
+      let(:repository)  { instance_double('AuthorRepository', scope: scope, adapter: adapter, base_url: '') }
+
+      describe 'belongs_to' do
+
+        let(:block) { ->(_) { belongs_to_association(:author, BlankRepository) } }
+
+        context 'no object' do
+
+          let(:attributes) { { author_id: nil } }
+
+          it { expect(subject).to eq('author_id' => nil) }
+
+        end
+
+        context 'existing object' do
+
+          before { entity.author = instance_double('Author', _id: 1) }
+
+          it { expect(subject).to eq('title' => 'Hello world', 'author_id' => 1, 'body' => 'Lorem ipsum', 'published_at' => DateTime.parse('2007/06/29 00:00:00')) }
+
+        end
+
+      end
+
+      describe 'many_to_many' do
+
+        let(:block) { ->(_) { many_to_many_association(:authors, BlankRepository) } }
+
+        context 'no object' do
+
+          let(:attributes) { { author_ids: nil } }
+
+          it { expect(subject).to eq('author_ids' => nil) }
+
+        end
+
+        context 'existing object' do
+
+          before { entity.authors = [instance_double('Author', _id: 1), instance_double('Author', _id: 2)] }
+
+          it { expect(subject).to eq('title' => 'Hello world', 'author_ids' => [1, 2], 'body' => 'Lorem ipsum', 'published_at' => DateTime.parse('2007/06/29 00:00:00')) }
+
+        end
+
+      end
+
+    end
 
   end
 
@@ -64,6 +128,11 @@ describe Locomotive::Steam::Models::Mapper do
   end
 
   class MyPage
+    include Locomotive::Steam::Models::Entity
+    attr_accessor :site
+  end
+
+  class MyArticle
     include Locomotive::Steam::Models::Entity
     attr_accessor :site
   end

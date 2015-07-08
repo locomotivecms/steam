@@ -40,6 +40,11 @@ module Locomotive::Steam
         dataset.insert(entity)
         sanitizer.apply_to_entity_with_dataset(entity, dataset)
       end
+      entity
+    end
+
+    def delete(mapper, scope, entity)
+      # TODO: to be implemented
     end
 
     def find(mapper, scope, id)

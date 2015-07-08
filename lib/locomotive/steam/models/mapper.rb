@@ -48,11 +48,12 @@ module Locomotive::Steam
 
       def to_entity(attributes)
         entity_klass.new(deserialize(attributes)).tap do |entity|
-          attach_entity_to_associations(entity)
-
           set_default_attributes(entity)
 
           entity.localized_attributes = @localized_attributes_hash || {}
+          entity.associations = {}
+
+          attach_entity_to_associations(entity)
 
           entity.base_url = @repository.base_url(entity)
         end
@@ -62,6 +63,23 @@ module Locomotive::Steam
         build_localized_attributes(attributes)
         build_associations(attributes)
         attributes
+      end
+
+      def serialize(entity)
+        entity.serialize.tap do |attributes|
+          # scope
+          @repository.scope.apply(attributes)
+
+          # localized fields
+          @localized_attributes.each do |name|
+            entity.send(name).serialize(attributes)
+          end
+
+          # association name -> id (belongs_to) or ids (many_to_many)
+          (entity.associations || {}).each do |name, association|
+            association.__serialize__(attributes)
+          end
+        end
       end
 
       def entity_klass
@@ -88,10 +106,7 @@ module Locomotive::Steam
         @associations.each do |(type, name, repository_klass, options, block)|
           klass = ASSOCIATION_CLASSES[type]
 
-          _options = options.merge({
-            association_name: name,
-            mapper_name:      self.name
-          })
+          _options = options.merge(association_name: name, mapper_name: self.name)
 
           attributes[name] = (if type == :embedded
             klass.new(repository_klass, attributes[name], @repository.scope, _options)
@@ -103,7 +118,10 @@ module Locomotive::Steam
 
       def attach_entity_to_associations(entity)
         @associations.each do |(type, name, _)|
-          entity[name].__attach__(entity)
+          association = entity[name]
+          association.__attach__(entity)
+
+          entity.associations[name] = association
         end
       end
 

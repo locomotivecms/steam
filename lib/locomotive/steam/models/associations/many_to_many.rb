@@ -4,10 +4,9 @@ module Locomotive::Steam
     class ManyToManyAssociation < ReferencedAssociation
 
       def __load__
-        source_key = :"#{@options[:association_name].to_s.singularize}_ids"
         key = @repository.k(:_id, :in)
 
-        @repository.local_conditions[key] = @entity[source_key]
+        @repository.local_conditions[key] = @entity[__target_key__]
 
         # use order_by from options as the default one for further queries
         @repository.local_conditions[:order_by] = @options[:order_by] unless @options[:order_by].blank?
@@ -15,6 +14,17 @@ module Locomotive::Steam
         # all the further calls (method_missing) will be delegated to @repository
         @repository
       end
+
+      def __serialize__(attributes)
+        attributes[__target_key__] = attributes[__name__].try(:map, &:_id)
+
+        attributes.delete(__name__)
+      end
+
+      def __target_key__
+        :"#{__name__.to_s.singularize}_ids"
+      end
+
 
     end
 

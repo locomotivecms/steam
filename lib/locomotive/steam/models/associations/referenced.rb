@@ -19,11 +19,19 @@ module Locomotive::Steam
         @options = options
       end
 
+      def __name__
+        @options[:association_name]
+      end
+
       def __attach__(entity)
         @entity = entity
       end
 
       def __load__
+        # needs implementation
+      end
+
+      def __serialize__(entity)
         # needs implementation
       end
 

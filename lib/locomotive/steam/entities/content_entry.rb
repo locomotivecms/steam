@@ -69,6 +69,10 @@ module Locomotive::Steam
       end
     end
 
+    def serialize
+      super.merge(content_type_id: content_type_id)
+    end
+
     def to_liquid
       Locomotive::Steam::Liquid::Drops::ContentEntry.new(self)
     end

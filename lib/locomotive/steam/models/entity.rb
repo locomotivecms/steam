@@ -5,7 +5,7 @@ module Locomotive::Steam
 
       include Locomotive::Steam::Models::Concerns::Validation
 
-      attr_accessor :attributes, :localized_attributes, :base_url
+      attr_accessor :attributes, :associations, :localized_attributes, :base_url
 
       def initialize(attributes)
         @attributes = attributes.with_indifferent_access
@@ -14,6 +14,8 @@ module Locomotive::Steam
       def method_missing(name, *args, &block)
         if attributes.include?(name)
           self[name]
+        elsif name.to_s.end_with?('=') && attributes.include?(name.to_s.chop)
+          self[name.to_s.chop] = args.first
         else
           super
         end
@@ -33,6 +35,10 @@ module Locomotive::Steam
 
       def [](name)
         attributes[name.to_sym]
+      end
+
+      def serialize
+        attributes.dup
       end
 
     end

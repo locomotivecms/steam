@@ -33,6 +33,10 @@ module Locomotive::Steam
         @repository.send(:"#{name}=", entity)
       end
 
+      def __serialize__(entity)
+        # TODO: not implemented yet
+      end
+
       def method_missing(name, *args, &block)
         @repository.send(name, *args, &block)
       end

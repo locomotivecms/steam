@@ -29,13 +29,13 @@ module Locomotive
             end
 
             def modify_for_selects(attributes)
-              content_type.selects.each do |field|
+              content_type.select_fields.each do |field|
                 attributes[:"#{field.name}_id"] = attributes.delete(field.name.to_sym)
               end
             end
 
             def modify_for_associations(attributes)
-              content_type.associations.each do |field|
+              content_type.association_fields.each do |field|
                 case field.type
                 when :belongs_to
                   modify_belongs_to_association(field, attributes)

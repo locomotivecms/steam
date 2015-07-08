@@ -32,6 +32,10 @@ module Locomotive::Steam
       command(mapper).insert(entity)
     end
 
+    def delete(mapper, scope, entity)
+      command(mapper).delete(entity)
+    end
+
     def key(name, operator)
       name.to_sym.__send__(operator.to_sym)
     end

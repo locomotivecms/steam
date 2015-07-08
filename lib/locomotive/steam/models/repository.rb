@@ -31,6 +31,10 @@ module Locomotive::Steam
         adapter.create(mapper, scope, entity)
       end
 
+      def delete(entity)
+        adapter.delete(mapper, scope, entity)
+      end
+
       def find(id)
         adapter.find(mapper, scope, id)
       end

@@ -4,12 +4,21 @@ module Locomotive::Steam
     class BelongsToAssociation < ReferencedAssociation
 
       def __load__
-        name      = @options[:association_name]
-        target_id = @entity[:"#{name}_id"]
+        target_id = @entity[__target_key__]
         target    = @repository.find(target_id)
 
         # replace the proxy class by the real target entity
-        @entity[name] = target
+        @entity[__name__] = target
+      end
+
+      def __serialize__(attributes)
+        attributes[__target_key__] = attributes[__name__].try(:_id)
+
+        attributes.delete(__name__)
+      end
+
+      def __target_key__
+        :"#{__name__}_id"
       end
 
     end

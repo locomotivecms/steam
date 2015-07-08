@@ -17,6 +17,10 @@ module Locomotive::Steam
         site.try(:locales)
       end
 
+      def apply(attributes)
+        attributes['site_id'] = @site._id
+      end
+
       def to_key
         (@site ? ['site', @site._id] : []).tap do |base|
           @context.each do |name, object|
