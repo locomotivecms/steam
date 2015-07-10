@@ -13,7 +13,7 @@ module Locomotive::Steam
 
         # render a simple message if the service was not able to find a site
         # based on the request.
-        render_no_site unless site
+        render_no_site if site.nil?
 
         # log anyway
         log_site(site)
