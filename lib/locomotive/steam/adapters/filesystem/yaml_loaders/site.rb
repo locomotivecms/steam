@@ -11,7 +11,7 @@ module Locomotive
             def load(scope)
               attributes = _load(File.join(site_path, 'config', 'site.yml'))
 
-              (attributes[:domains] ||= []) << 'localhost'
+              (attributes[:domains] ||= []).concat(%w(0.0.0.0 localhost))
 
               attributes[:picture] = File.expand_path(File.join(site_path, 'icon.png'))
 
