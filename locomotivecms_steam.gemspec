@@ -38,7 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'coffee-script',          '~> 2.4.1'
   spec.add_dependency 'compass',                '~> 1.0.3'
 
-  spec.add_dependency 'kramdown',               '~> 1.7.0'
+  spec.add_dependency 'kramdown',               '~> 1.8.0'
   spec.add_dependency 'RedCloth',               '~> 4.2.9'
   spec.add_dependency 'haml',                   '~> 4.0.6'
   spec.add_dependency 'mimetype-fu',            '~> 0.1.2'
