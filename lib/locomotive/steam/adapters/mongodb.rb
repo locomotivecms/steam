@@ -82,6 +82,7 @@ module Locomotive::Steam
     def session
       Moped::Session.new([*hosts]).tap do |session|
         session.use database
+        session.login(user, password) if username && password
       end
     end
 
@@ -91,6 +92,14 @@ module Locomotive::Steam
 
     def hosts
       options[:hosts]
+    end
+
+    def username
+      options[:username]
+    end
+
+    def password
+      options[:password]
     end
 
   end
