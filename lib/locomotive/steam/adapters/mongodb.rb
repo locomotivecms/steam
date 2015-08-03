@@ -82,7 +82,7 @@ module Locomotive::Steam
     def session
       Moped::Session.new([*hosts]).tap do |session|
         session.use database
-        session.login(user, password) if username && password
+        session.login(username, password) if username && password
       end
     end
 
