@@ -80,10 +80,18 @@ module Locomotive::Steam
     end
 
     def session
-      Moped::Session.new([*hosts]).tap do |session|
-        session.use database
-        session.login(username, password) if username && password
+      if uri
+        Moped::Session.connect(uri)
+      else
+        Moped::Session.new([*hosts]).tap do |session|
+          session.use database
+          session.login(username, password) if username && password
+        end
       end
+    end
+
+    def uri
+      options[:uri]
     end
 
     def database
