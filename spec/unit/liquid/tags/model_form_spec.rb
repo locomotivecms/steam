@@ -11,7 +11,7 @@ describe Locomotive::Steam::Liquid::Tags::ModelForm do
   let(:request)   { instance_double('Request', env: {}) }
   let(:source)    { "{% model_form 'newsletter_addresses' %}Newsletter Form{% endmodel_form %}" }
   let(:services)  { Locomotive::Steam::Services.build_instance(request) }
-  let(:context)   { ::Liquid::Context.new({}, {}, { services: services }) }
+  let(:context)   { ::Liquid::Context.new({ path: '' }, {}, { services: services }) }
 
   subject { render_template(source, context) }
 
@@ -29,6 +29,13 @@ describe Locomotive::Steam::Liquid::Tags::ModelForm do
     let(:source) { "{% model_form 'newsletter_addresses', success: '/success', error: '/error' %}Newsletter Form{% endmodel_form %}" }
     it { is_expected.to include %(<input type="hidden" name="success_callback" value="/success" />) }
     it { is_expected.to include %(<input type="hidden" name="error_callback" value="/error" />) }
+
+  end
+
+  describe 'json enabled' do
+
+    let(:source) { "{% model_form 'newsletter_addresses', json: true %}Newsletter Form{% endmodel_form %}" }
+    it { is_expected.to eq %(<form method="POST" enctype="multipart/form-data" action="index.json"><input type="hidden" name="content_type_slug" value="newsletter_addresses" /><input type="hidden" name="token" value="42" />Newsletter Form</form>) }
 
   end
 

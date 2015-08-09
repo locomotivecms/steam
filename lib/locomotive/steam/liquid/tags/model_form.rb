@@ -24,7 +24,7 @@ module Locomotive
             name    = options.shift
             options = options.shift || {}
 
-            form_attributes = { method: 'POST', enctype: 'multipart/form-data' }.merge(options.slice(:id, :class, :action))
+            form_attributes = prepare_form_attributes(options)
 
             html_content_tag :form,
               content_type_html(name) + csrf_html + callbacks_html(options) + yield,
@@ -62,6 +62,20 @@ module Locomotive
           def inline_options(options = {})
             return '' if options.empty?
             (options.stringify_keys.to_a.collect { |a, b| "#{a}=\"#{b}\"" }).join(' ')
+          end
+
+          def prepare_form_attributes(options)
+            action      = options[:action]
+            attributes  = options.slice(:id, :class, :name, :novalidate)
+
+            if action.blank? && options[:json]
+              action = current_context['path']
+              action = (action.blank? ? 'index' : action) + '.json'
+            end
+
+            { method: 'POST', enctype: 'multipart/form-data' }.merge(attributes).tap do |_attributes|
+              _attributes[:action] = action if action
+            end
           end
 
         end
