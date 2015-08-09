@@ -71,10 +71,11 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
   describe 'rendering' do
 
-    let(:live_editing) { false }
+    let(:live_editing)    { false }
+    let(:element_editing) { true }
 
     let(:page)        { instance_double('Page', fullpath: 'hello-world') }
-    let(:element)     { instance_double('EditableText', _id: 42, id: 42, default_content?: true, inline_editing?: true) }
+    let(:element)     { instance_double('EditableText', _id: 42, id: 42, default_content?: true, inline_editing?: element_editing, inline_editing: element_editing) }
     let(:services)    { Locomotive::Steam::Services.build_instance(nil) }
     let(:context)     { ::Liquid::Context.new({}, {}, { page: page, services: services, live_editing: live_editing }) }
 
@@ -116,6 +117,13 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
         let(:source) { '{% block wrapper %}{% block sidebar %}{% editable_text title %}Hello world{% endeditable_text %}{% endblock %}{% endblock %}' }
         it { is_expected.to eq '<span class="locomotive-editable-text" id="locomotive-editable-text-wrapper-sidebar-title" data-element-id="42">Hello world</span>' }
+
+      end
+
+      context 'editing disabled for the element' do
+
+        let(:element_editing) { false }
+        it { is_expected.to eq 'Hello world' }
 
       end
 

@@ -9,7 +9,8 @@ module Locomotive::Steam
     def initialize(attributes = {})
       super({
         content: nil,
-        source: nil
+        source: nil,
+        inline_editing: true
       }.merge(attributes))
     end
 

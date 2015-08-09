@@ -26,7 +26,7 @@ module Locomotive
             end
 
             def editable?(context, element)
-              !!context.registers[:live_editing]
+              !!context.registers[:live_editing] && element.inline_editing
             end
 
             def default_element_attributes
