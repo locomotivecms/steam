@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    locomotivecms_steam (1.0.0.pre.beta.1)
+    locomotivecms_steam (1.0.0.pre.beta.2)
       RedCloth (~> 4.2.9)
       chronic (~> 0.10.2)
       coffee-script (~> 2.4.1)
@@ -82,7 +82,7 @@ GEM
     eventmachine (1.0.7)
     execjs (2.5.2)
     ffi (1.9.10)
-    haml (4.0.6)
+    haml (4.0.7)
       tilt
     hike (1.2.3)
     http-cookie (1.0.2)
