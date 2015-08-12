@@ -10,6 +10,11 @@ group :development do
   gem 'thin'
   # gem 'sprockets-sass',     '~> 1.2.0'
   gem 'yui-compressor',     '~> 0.12.0'
+
+  gem 'rack-mini-profiler'
+  gem 'flamegraph'
+  gem 'stackprof' # ruby 2.1+ only
+  gem 'memory_profiler'
 end
 
 group :test do

@@ -24,7 +24,7 @@ module Locomotive
         end
 
         def __getobj__
-          super || @default.call
+          @site || (@site = @default.call)
         end
 
         def nil?

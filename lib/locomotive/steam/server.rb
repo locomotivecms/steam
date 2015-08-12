@@ -12,6 +12,11 @@ require 'dragonfly/middleware'
 
 require_relative 'middlewares'
 
+if ENV['PROFILER']
+  require 'moped'
+  require 'rack-mini-profiler'
+end
+
 module Locomotive::Steam
   module Server
 
@@ -37,6 +42,8 @@ module Locomotive::Steam
 
           use Rack::Lint
           use Rack::Session::Moneta, configuration.moneta
+
+          use Rack::MiniProfiler if ENV['PROFILER']
 
           server.steam_middleware_stack.each { |k| use k }
         }

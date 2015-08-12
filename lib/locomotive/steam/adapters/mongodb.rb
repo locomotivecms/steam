@@ -80,7 +80,7 @@ module Locomotive::Steam
     end
 
     def session
-      if uri
+      Thread.current[:moped_session] ||= if uri
         Moped::Session.connect(uri)
       else
         Moped::Session.new([*hosts]).tap do |session|

@@ -8,7 +8,7 @@ Bundler.require
 require 'thin'
 require 'optparse'
 
-server_options = { address: 'localhost', port: 8080 }
+server_options = { address: '0.0.0.0', port: 8080 }
 
 options = {
   adapter:  {
