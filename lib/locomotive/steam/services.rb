@@ -1,4 +1,4 @@
-require 'morphine'
+  require 'morphine'
 
 require_relative_all %w(concerns .), 'services'
 
@@ -25,6 +25,10 @@ module Locomotive
 
         def __getobj__
           @site || (@site = @default.call)
+        end
+
+        def __setobj__(site)
+          @site = super
         end
 
         def nil?
