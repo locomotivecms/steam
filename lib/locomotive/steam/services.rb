@@ -15,26 +15,17 @@ module Locomotive
         end
       end
 
-      class SiteProxy < SimpleDelegator
-
+      class Defer < SimpleDelegator
         def initialize(&block)
-          @site     = nil
-          @default  = block
-          super(@site)
+          @constructor = block
+          super(nil)
         end
-
         def __getobj__
-          @site || (@site = @default.call)
+          super || __setobj__(@constructor.call)
         end
-
-        def __setobj__(site)
-          @site = super
-        end
-
         def nil?
           __getobj__.nil?
         end
-
       end
 
       class Instance < Struct.new(:request)
@@ -42,7 +33,7 @@ module Locomotive
         include Morphine
 
         register :current_site do
-          repositories.current_site = SiteProxy.new { site_finder.find }
+          repositories.current_site = Defer.new { site_finder.find }
         end
 
         register :repositories do
@@ -136,6 +127,10 @@ module Locomotive
 
         def set_site(site)
           self.current_site.__setobj__(site)
+        end
+
+        def defer(name, &block)
+          send(:"#{name}=", Defer.new(&block))
         end
 
       end

@@ -18,8 +18,30 @@ describe Locomotive::Steam::Services do
 
     it { expect(subject.repositories).to be_instance_of(MyService) }
 
+    describe '#defer' do
+
+      let(:status) { { initialized: false } }
+
+      before do
+        Locomotive::Steam.configure do |config|
+          config.services_hook = -> (services) {
+            services.defer(:repositories) { MyService.new(status) }
+          }
+        end
+      end
+
+      it { subject.repositories; expect(status[:initialized]).to eq false }
+      it { subject.repositories.do; expect(status[:initialized]).to eq true }
+
+    end
+
   end
 
-  class MyService; end
+  class MyService
+    def initialize(status = {})
+      status[:initialized] = true
+    end
+    def do; end
+  end
 
 end
