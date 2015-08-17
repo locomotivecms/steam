@@ -9,6 +9,17 @@ def parse_template(source, options = nil)
 end
 
 module Liquid
+
+  class TestDrop < Liquid::Drop
+    def initialize(source)
+      @_source = source
+    end
+
+    def before_method(meth)
+      @_source[meth.to_sym]
+    end
+  end
+
   class SimpleEventsListener
     def initialize
       ActiveSupport::Notifications.subscribe(/^steam\.parse\./) do |name, start, finish, id, payload|
