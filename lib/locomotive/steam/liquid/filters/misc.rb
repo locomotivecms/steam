@@ -40,6 +40,10 @@ module Locomotive
 
           end
 
+          def hexdigest(input, key, digest = nil)
+            OpenSSL::HMAC.hexdigest(digest || 'sha1', key, input)
+          end
+
         end
 
         ::Liquid::Template.register_filter(Misc)

@@ -87,4 +87,14 @@ describe Locomotive::Steam::Liquid::Filters::Number do
 
   end
 
+  describe '#mod' do
+
+    it 'returns correct number modulus' do
+      expect(mod(4, 4)).to eq(0)
+      expect(mod(4, 8)).to eq(4)
+      expect(mod(8, 4)).to eq(0)
+    end
+
+  end
+
 end
