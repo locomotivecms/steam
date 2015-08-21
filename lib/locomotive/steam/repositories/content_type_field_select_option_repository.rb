@@ -18,6 +18,10 @@ module Locomotive
         query { order_by(position: :asc) }.all
       end
 
+      def by_name(name)
+        query { where(name: name) }.first
+      end
+
     end
   end
 end

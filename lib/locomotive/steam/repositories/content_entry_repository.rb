@@ -130,7 +130,21 @@ module Locomotive
       end
 
       def prepare_conditions(*conditions)
-        super({ _visible: true }, conditions)
+        _conditions = conditions.first.try(:with_indifferent_access)
+
+        prepare_conditions_for_select_fields(_conditions) if _conditions
+
+        super({ _visible: true }, _conditions)
+      end
+
+      # select fields? if so, use the _id of the option instead of the option name
+      def prepare_conditions_for_select_fields(conditions)
+        self.content_type.fields.selects.each do |field|
+          if value = conditions[name = field.name.to_s]
+            conditions.delete(name)
+            conditions[name + '_id'] = field.select_options.by_name(value).try(:_id)
+          end
+        end
       end
 
       def add_localized_fields_to_mapper(mapper)
