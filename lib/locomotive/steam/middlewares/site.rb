@@ -11,9 +11,7 @@ module Locomotive::Steam
       def _call
         site = find_site
 
-        # render a simple message if the service was not able to find a site
-        # based on the request.
-        render_no_site if site.nil?
+        no_site! if site.nil?
 
         # log anyway
         log_site(site)
@@ -30,8 +28,14 @@ module Locomotive::Steam
         end
       end
 
-      def render_no_site
-        render_response('Hi, we are sorry but no site was found.', 404, 'text/html')
+      def no_site!
+        # render a simple message if the service was not able to find a site
+        # based on the request.
+        if services.configuration.render_404_if_no_site
+          render_response('Hi, we are sorry but no site was found.', 404, 'text/html')
+        else
+          raise NoSiteException.new
+        end
       end
 
       def log_site(site)

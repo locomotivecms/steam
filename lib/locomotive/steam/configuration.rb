@@ -93,6 +93,15 @@ module Locomotive
       attr_accessor :moneta
       def moneta; @moneta.nil? ? { store: Moneta.new(:Memory, expires: true) } : @moneta; end
 
+      # Render a 404 page if no site has been found.
+      # If Steam is embedded in another app, it's better to let the app handle
+      # the no site case.
+      #
+      # default: true
+      #
+      attr_accessor :render_404_if_no_site
+      def render_404_if_no_site; @render_404_if_no_site.nil? ? true : @render_404_if_no_site; end
+
       # Lambda called once a Services instance has been built.
       # It is used when we want to change one of the services
       #
