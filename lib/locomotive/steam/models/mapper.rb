@@ -19,6 +19,8 @@ module Locomotive::Steam
         @default_attributes   = []
         @associations         = []
 
+        @entity_map           = {}
+
         instance_eval(&block) if block_given?
       end
 
@@ -47,15 +49,17 @@ module Locomotive::Steam
       end
 
       def to_entity(attributes)
-        entity_klass.new(deserialize(attributes)).tap do |entity|
-          set_default_attributes(entity)
+        cache_entity(entity_klass, attributes) do
+          entity_klass.new(deserialize(attributes)).tap do |entity|
+            set_default_attributes(entity)
 
-          entity.localized_attributes = @localized_attributes_hash || {}
-          entity.associations = {}
+            entity.localized_attributes = @localized_attributes_hash || {}
+            entity.associations = {}
 
-          attach_entity_to_associations(entity)
+            attach_entity_to_associations(entity)
 
-          entity.base_url = @repository.base_url(entity)
+            entity.base_url = @repository.base_url(entity)
+          end
         end
       end
 
@@ -130,6 +134,18 @@ module Locomotive::Steam
           _value = value.respond_to?(:call) ? value.call(@repository) : value
           entity.send(:"#{name}=", _value)
         end
+      end
+
+      def cache_entity(entity_klass, attributes, &block)
+        return yield if attributes['_id'].blank?
+
+        key = "#{entity_klass.to_s}-#{attributes['_id']}"
+
+        if (entity = @entity_map[key]).nil?
+          entity = @entity_map[key] = yield
+        end
+
+        entity
       end
 
     end

@@ -12,29 +12,30 @@ module Locomotive::Steam
       end
 
       def method_missing(name, *args, &block)
-        if attributes.include?(name)
-          self[name]
-        elsif name.to_s.end_with?('=') && attributes.include?(name.to_s.chop)
-          self[name.to_s.chop] = args.first
+        _name = name.to_s
+        if attributes.include?(_name)
+          self[_name]
+        elsif _name.end_with?('=') && attributes.include?(_name.chop)
+          self[_name.chop] = args.first
         else
           super
         end
       end
 
       def respond_to?(name, include_private = false)
-        attributes.include?(name) || super
+        attributes.include?(name.to_s) || super
       end
 
       def _id
-        self[:_id]
+        self['_id']
       end
 
       def []=(name, value)
-        attributes[name.to_sym] = value
+        attributes[name] = value
       end
 
       def [](name)
-        attributes[name.to_sym]
+        attributes[name]
       end
 
       def serialize

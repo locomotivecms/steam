@@ -5,7 +5,6 @@ require 'bundler/setup'
 
 Bundler.require
 
-require 'thin'
 require 'optparse'
 
 server_options = { address: '0.0.0.0', port: 8080 }
@@ -85,13 +84,28 @@ end
 
 app = Locomotive::Steam::Server.to_app
 
+# Thin rack handler
 # Note: alt thin settings (Threaded)
-server = Thin::Server.new(server_options[:address], server_options[:port], app)
-server.threaded = true
-server.start
+# require 'thin'
+# server = Thin::Server.new(server_options[:address], server_options[:port], app)
+# server.threaded = true
+# server.start
+# Locomotive::Common::Logger.info 'Server started...'
 # FIXME: Rack::Handler::Thin.run app (not threaded)
 
 # WEBRick rack handler
 # Rack::Handler::WEBrick.run app
+# Locomotive::Common::Logger.info 'Server started...'
 
-Locomotive::Common::Logger.info 'Server started...'
+# Puma rack handler
+require 'puma'
+server   = ::Puma::Server.new(app)
+server.add_tcp_listener server_options[:address], server_options[:port]
+server.min_threads = 4
+server.max_threads = 16
+begin
+  Locomotive::Common::Logger.info 'Server started...'
+  server.run.join
+rescue Interrupt
+  server.stop(true)
+end
