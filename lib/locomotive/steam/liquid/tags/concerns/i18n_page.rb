@@ -18,15 +18,6 @@ module Locomotive
               end
             end
 
-            # def build_fullpath(page)
-            #   services.url_builder.url_for(page, locale).tap do |fullpath|
-            #     if page.templatized?
-            #       entry = page.send(:_source).content_entry
-            #       fullpath.gsub!('content_type_template', entry._slug)
-            #     end
-            #   end
-            # end
-
           end
 
         end

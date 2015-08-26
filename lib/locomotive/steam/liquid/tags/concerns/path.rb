@@ -66,7 +66,7 @@ module Locomotive
             end
 
             def _retrieve_page_drop_from(handle)
-              if page = repository.by_handle(handle)
+              if page = services.page_finder.by_handle(handle)
                 page.to_liquid.tap { |d| d.context = @context }
               end
             end

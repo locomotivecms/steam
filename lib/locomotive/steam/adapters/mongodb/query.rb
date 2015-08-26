@@ -59,6 +59,12 @@ module Locomotive::Steam
           build_origin_query.only(@fields).where(@criteria).order_by(*@sort)
         end
 
+        def key(name, operator)
+          :"#{name}".send(operator.to_sym)
+        end
+
+        alias :k :key
+
         private
 
         def build_origin_query

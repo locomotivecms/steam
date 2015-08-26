@@ -30,7 +30,7 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
     let(:source) { '{% link_to index %}' }
 
     before do
-      expect(services.repositories.page).to receive(:by_handle).with('index').and_return(nil)
+      expect(services.page_finder).to receive(:by_handle).with('index').and_return(nil)
     end
 
     it { is_expected.to eq '' }
@@ -44,7 +44,7 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
     let(:fullpath)  { { en: 'index', fr: 'index' } }
 
     before do
-      allow(services.repositories.page).to receive(:by_handle).with('index').and_return(page)
+      allow(services.page_finder).to receive(:by_handle).with('index').and_return(page)
       allow(page).to receive(:to_liquid).and_return(drop)
     end
 

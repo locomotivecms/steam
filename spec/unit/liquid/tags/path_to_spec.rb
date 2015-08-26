@@ -4,7 +4,7 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
 
   let(:assigns)   { {} }
   let(:services)  { Locomotive::Steam::Services.build_instance }
-  let(:site)      { instance_double('Site', default_locale: 'en') }
+  let(:site)      { instance_double('Site', locales: ['en'], default_locale: 'en') }
   let(:context)   { ::Liquid::Context.new(assigns, {}, { services: services, site: site, locale: 'en' }) }
 
   subject { render_template(source, context) }
@@ -23,7 +23,7 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
     let(:source) { '{% path_to index %}' }
 
     before do
-      expect(services.repositories.page).to receive(:by_handle).with('index').and_return(nil)
+      expect(services.page_finder).to receive(:by_handle).with('index').and_return(nil)
     end
 
     it { is_expected.to eq '' }
@@ -38,7 +38,7 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
     let(:source)    { '{% path_to index %}' }
 
     before do
-      expect(services.repositories.page).to receive(:by_handle).with('index').and_return(page)
+      expect(services.page_finder).to receive(:by_handle).with('index').and_return(page)
       allow(page).to receive(:to_liquid).and_return(drop)
     end
 

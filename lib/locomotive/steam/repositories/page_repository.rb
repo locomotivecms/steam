@@ -26,6 +26,13 @@ module Locomotive
         end.all
       end
 
+      def only_handle_and_fullpath
+        query do
+          where(k(:handle, :ne) => nil).
+            only(:_id, :handle, :fullpath)
+        end.all
+      end
+
       def by_handle(handle)
         first { where(handle: handle) }
       end

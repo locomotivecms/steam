@@ -37,6 +37,11 @@ describe Locomotive::Steam::PageRepository do
       it { expect(subject.title[:en]).to eq 'Music' }
     end
 
+    describe '#only_handle_and_fullpath' do
+      subject { repository.only_handle_and_fullpath }
+      it { expect(subject.size).to eq 3 }
+    end
+
     describe '#by_fullpath' do
       subject { repository.by_fullpath('archives/news') }
       it { expect(subject.title[:en]).to eq 'News archive' }

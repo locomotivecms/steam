@@ -17,7 +17,28 @@ module Locomotive
         end
       end
 
+      def by_handle(handle)
+        decorate { page_map[handle] }
+      end
+
       private
+
+      # Instead of hitting the DB each time we want a page from its handle,
+      # just get all the handles at once and cache the result. (up to 20% boost)
+      #
+      def page_map
+        @page_map ||= {}
+
+        return @page_map[repository.locale] if @page_map[repository.locale]
+
+        {}.tap do |map|
+          repository.only_handle_and_fullpath.each do |page|
+            map[page.handle] = page
+          end
+
+          @page_map[repository.locale] = map
+        end
+      end
 
       def path_combinations(path)
         _path_combinations(path.split('/'))
