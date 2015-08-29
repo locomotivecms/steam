@@ -29,7 +29,7 @@ module Locomotive
       def only_handle_and_fullpath
         query do
           where(k(:handle, :ne) => nil).
-            only(:_id, :handle, :fullpath)
+            only(:_id, :title, :handle, :fullpath)
         end.all
       end
 
