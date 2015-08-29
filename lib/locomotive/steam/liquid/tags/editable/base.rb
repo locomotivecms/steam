@@ -27,6 +27,8 @@ module Locomotive
               end
             end
 
+            alias :default_render :render
+
             def render(context)
               service   = context.registers[:services].editable_element
               page      = context.registers[:page]
