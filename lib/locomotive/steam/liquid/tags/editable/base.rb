@@ -32,7 +32,7 @@ module Locomotive
             def render(context)
               service   = context.registers[:services].editable_element
               page      = context.registers[:page]
-              block     = context['block'].try(:name)
+              block     = @element_options[:block] || context['block'].try(:name)
 
               if element = service.find(page, block, @slug)
                 render_element(context, element)
