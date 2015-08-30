@@ -30,4 +30,17 @@ describe Locomotive::Steam::Liquid::Tags::InheritedBlock do
 
   end
 
+  describe 'passing options' do
+
+    let(:source) { '{% extends parent %}{% block product, short_name: true, priority: 10 %}Skis{% endblock %}' }
+
+    it { expect(listener.events.size).to eq 3 }
+
+    it { expect(listener.events.first.last[:priority]).to eq 10 }
+    it { expect(listener.events.first.last[:short_name]).to eq true }
+    it { expect(listener.events.last.last[:priority]).to eq 0 }
+    it { expect(listener.events.last.last[:short_name]).to eq false }
+
+  end
+
 end
