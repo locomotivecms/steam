@@ -75,7 +75,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
     let(:element_editing) { true }
 
     let(:page)        { instance_double('Page', fullpath: 'hello-world') }
-    let(:element)     { instance_double('EditableText', _id: 42, id: 42, default_content?: true, inline_editing?: element_editing, inline_editing: element_editing) }
+    let(:element)     { instance_double('EditableText', _id: 42, id: 42, default_content?: true, inline_editing?: element_editing, inline_editing: element_editing, format: 'html') }
     let(:services)    { Locomotive::Steam::Services.build_instance(nil) }
     let(:context)     { ::Liquid::Context.new({}, {}, { page: page, services: services, live_editing: live_editing }) }
 
@@ -94,7 +94,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
     context 'modified content' do
 
-      let(:element) { instance_double('EditableText', content: 'Hello world!', default_content?: false) }
+      let(:element) { instance_double('EditableText', content: 'Hello world!', default_content?: false, format: 'html') }
       it { is_expected.to eq 'Hello world!' }
 
     end
@@ -105,6 +105,13 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
       before { expect(services.editable_element).to receive(:find).with(page, 'wrapper/sidebar', 'title').and_return(element) }
       it { is_expected.to eq 'Hello world' }
+
+    end
+
+    context 'markdown format' do
+
+      let(:element) { instance_double('EditableText', content: "#Hello world!\nLorem ipsum", default_content?: false, format: 'markdown') }
+      it { is_expected.to eq "<h1>Hello world!</h1>\n<p>Lorem ipsum</p>\n" }
 
     end
 

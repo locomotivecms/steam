@@ -9,11 +9,21 @@ module Locomotive
 
             def render_element(context, element)
               with_inline_editing(context, element) do
-                if element.default_content?
+                content = if element.default_content?
                   render_default_content
                 else
                   element.content
                 end
+
+                format_content(content, element.format, context)
+              end
+            end
+
+            def format_content(content, format, context)
+              case format
+              when 'markdown' then markdown_service(context).to_html(content)
+              else
+                content
               end
             end
 
@@ -41,6 +51,10 @@ module Locomotive
             def dom_id(context)
               block_name = context['block'].try(:name).try(:gsub, '/', '-')
               ['locomotive-editable-text', block_name, @slug].compact.join('-')
+            end
+
+            def markdown_service(context)
+              context.registers[:services].markdown
             end
 
           end
