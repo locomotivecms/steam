@@ -18,6 +18,7 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::ContentType do
       expect(subject.size).to eq 5
       expect(subject.first[:slug]).to eq('bands')
       expect(subject.first[:entries_custom_fields].size).to eq 5
+      expect(subject.first[:entries_custom_fields].first[:position]).to eq 0
     end
 
   end

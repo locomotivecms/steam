@@ -26,15 +26,16 @@ module Locomotive
             end
 
             def build_fields(list)
-              list.map do |attributes|
-                build_field(attributes.keys.first, attributes.values.first)
+              list.each_with_index.map do |attributes, index|
+                build_field(attributes.keys.first, attributes.values.first, index)
               end
             end
 
-            def build_field(name, attributes)
+            def build_field(name, attributes, position)
               attributes.tap do |attributes|
-                attributes[:name] = name.to_s
-                attributes[:type] = (attributes[:type] || 'string').to_s.downcase
+                attributes[:name]     = name.to_s
+                attributes[:type]     = (attributes[:type] || 'string').to_s.downcase
+                attributes[:position] ||= position
 
                 if attributes[:label].blank?
                   attributes[:label] = name.to_s.humanize
