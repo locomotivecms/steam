@@ -5,7 +5,11 @@ module Locomotive
         class ContentTypes < ::Liquid::Drop
 
           def before_method(meth)
-            fetch_content_type(meth.to_s)
+            if content_type = fetch_content_type(meth.to_s)
+              ContentEntryCollection.new(content_type)
+            else
+              nil
+            end
           end
 
           private
@@ -18,18 +22,10 @@ module Locomotive
             @content_type_map ||= {}
 
             if !@content_type_map.include?(slug)
-              @content_type_map[slug] = _fetch_content_type(slug)
+              @content_type_map[slug] = repository.by_slug(slug)
             end
 
             @content_type_map[slug]
-          end
-
-          def _fetch_content_type(slug)
-            if content_type = repository.by_slug(slug)
-              ContentEntryCollection.new(content_type)
-            else
-              nil
-            end
           end
 
         end
