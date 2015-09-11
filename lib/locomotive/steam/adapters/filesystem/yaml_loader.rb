@@ -27,12 +27,22 @@ module Locomotive::Steam
               yaml, template = match[:yaml], match[:template]
             end
 
-            HashConverter.to_sym(YAML.load(yaml)).tap do |attributes|
-              block.call(attributes, template) if block_given?
-            end
+            safe_yaml_load(yaml, template, path, &block)
           else
             Locomotive::Common::Logger.error "No #{path} file found"
             {}
+          end
+        end
+
+        def safe_yaml_load(yaml, template, path, &block)
+          return {} if yaml.blank?
+
+          begin
+            HashConverter.to_sym(YAML.load(yaml)).tap do |attributes|
+              block.call(attributes, template) if block_given?
+            end
+          rescue Exception => e
+            raise "Malformed YAML in this file #{path}, error: #{e.message}"
           end
         end
 
