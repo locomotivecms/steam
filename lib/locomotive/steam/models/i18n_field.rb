@@ -36,6 +36,8 @@ module Locomotive::Steam
 
       alias :__translations__ :translations
 
+      alias :to_hash :translations
+
       def serialize(attributes)
         attributes[@name] = @translations
       end

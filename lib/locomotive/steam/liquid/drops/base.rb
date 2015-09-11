@@ -28,6 +28,10 @@ module Locomotive
             records
           end
 
+          def as_json(options = nil)
+            @_source.as_json(options)
+          end
+
           protected
 
           def liquify(*records, &block)

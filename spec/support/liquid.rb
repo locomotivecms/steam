@@ -18,6 +18,10 @@ module Liquid
     def before_method(meth)
       @_source[meth.to_sym]
     end
+
+    def as_json(options = nil)
+      @_source.as_json(options)
+    end
   end
 
   class SimpleEventsListener

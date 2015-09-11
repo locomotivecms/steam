@@ -4,6 +4,7 @@ module Locomotive::Steam
     module Entity
 
       include Locomotive::Steam::Models::Concerns::Validation
+      include Locomotive::Steam::Models::Concerns::ToJson
 
       attr_accessor :attributes, :associations, :localized_attributes, :base_url
 

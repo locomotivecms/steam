@@ -83,6 +83,15 @@ describe Locomotive::Steam::Decorators::I18nDecorator do
     expect(decorated.__locale__).to eq :fr
   end
 
+  describe '#to_hash' do
+
+    before { expect(page).to receive(:to_hash).and_return('title' => { 'en' => 'some stuff', 'fr' => 'some stuff' }) }
+    subject { decorated.to_hash }
+
+    it { expect(subject).to eq('title' => 'Bonjour monde', 'slug' => 'hello-world') }
+
+  end
+
   def i18n_field(name, translations)
     Locomotive::Steam::Models::I18nField.new(name, translations)
   end

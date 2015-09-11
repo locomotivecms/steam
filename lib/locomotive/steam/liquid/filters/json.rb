@@ -4,19 +4,15 @@ module Locomotive
       module Filters
         module Json
 
-          def json(input, fields = nil)
+          def json(input, fields = [])
             if fields && fields.is_a?(String)
               fields = fields.split(',').map(&:strip)
             end
 
-            if fields.blank?
-              input.to_json
-            elsif input.respond_to?(:each)
-              if fields.size == 1
-                input.map { |object| object[fields.first].to_json }.join(',')
-              else
-                input.map { |object| "{" + object_to_json(object, fields) + "}" }.join(',')
-              end
+            if input.respond_to?(:each)
+              input.map do |object|
+                fields.size == 1 ? object[fields.first].to_json : object_to_json(object, fields)
+              end.join(',')
             else
               object_to_json(input, fields)
             end
@@ -25,11 +21,12 @@ module Locomotive
           protected
 
           def object_to_json(input, fields)
-            [].tap do |output|
-              fields.each do |field|
-                output << %("#{field}":#{input[field].to_json})
-              end
-            end.join(',')
+            if input.respond_to?(:as_json)
+              options = fields.blank? ? {} : { only: fields }
+              input.as_json(options).to_json
+            else
+              input.to_json
+            end
           end
 
         end

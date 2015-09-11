@@ -13,7 +13,13 @@ module Locomotive
           end
 
           def all
-            collection
+            collection.map do |entry|
+              entry.to_liquid.tap do |drop|
+                if drop && drop.respond_to?(:context=)
+                  drop.context = @context
+                end
+              end
+            end
           end
 
           def count

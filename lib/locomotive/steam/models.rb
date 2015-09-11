@@ -1,4 +1,5 @@
 require_relative 'models/concerns/validation'
+require_relative 'models/concerns/to_json'
 require_relative 'models/i18n_field'
 require_relative 'models/associations/embedded'
 require_relative 'models/associations/referenced'

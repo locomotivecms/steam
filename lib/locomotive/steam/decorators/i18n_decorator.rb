@@ -84,6 +84,22 @@ module Locomotive
           end
         end
 
+        def to_hash
+          __getobj__.to_hash.tap do |hash|
+            @__localized_attributes__.keys.each do |name|
+              hash[name.to_s] = __get_localized_value__(name)
+            end
+          end
+        end
+
+        def as_json(options = nil)
+          to_hash.as_json(options)
+        end
+
+        def to_json
+          as_json.to_json
+        end
+
         #:nocov:
         def inspect
           "[Decorated #{__getobj__.class.name}][I18n] attributes exist? " +
