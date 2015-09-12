@@ -10,11 +10,21 @@ module Locomotive
             end
 
             if input.respond_to?(:each)
-              input.map do |object|
+              '[' + input.map do |object|
                 fields.size == 1 ? object[fields.first].to_json : object_to_json(object, fields)
-              end.join(',')
+              end.join(',') + ']'
             else
               object_to_json(input, fields)
+            end
+          end
+
+          # without the leading and trailing braces/brackets
+          # useful to add a prperty to an object or an element to an array
+          def open_json(input)
+            if input =~ /\A[\{\[](.*)[\}\]]\Z/m
+              $1
+            else
+              input
             end
           end
 

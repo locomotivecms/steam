@@ -12,7 +12,7 @@ module Liquid
 
   class TestDrop < Liquid::Drop
     def initialize(source)
-      @_source = source
+      @_source = source.with_indifferent_access
     end
 
     def before_method(meth)
