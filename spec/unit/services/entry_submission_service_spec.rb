@@ -91,7 +91,8 @@ describe Locomotive::Steam::EntrySubmissionService do
       let(:unique_fields)     { {} }
       let(:first_validation)  { false }
       let(:errors)            { [:title] }
-      let(:type)  { instance_double('Comments') }
+      let(:enabled)           { true }
+      let(:type)  { instance_double('Comments', public_submission_enabled: enabled) }
       let(:entry) { instance_double('Entry', title: 'Hello world', content_type: type, valid?: first_validation, errors: errors, attributes: { title: 'Hello world' }, localized_attributes: []) }
       let(:slug)  { 'comments' }
 
@@ -99,6 +100,13 @@ describe Locomotive::Steam::EntrySubmissionService do
         allow(type_repository).to receive(:by_slug).and_return(type)
         allow(type_repository).to receive(:look_for_unique_fields).and_return(unique_fields)
         allow(entry_repository).to receive(:build).with(attributes).and_return(entry)
+      end
+
+      context 'public submission disabled' do
+
+        let(:enabled) { false }
+        it { is_expected.to eq nil }
+
       end
 
       context 'valid' do

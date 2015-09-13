@@ -32,7 +32,7 @@ describe 'ContactForm' do
 
         let(:url) { '/entry_submissions/foo' }
 
-        it { expect { response }.to raise_error('Unknown content type "foo"') }
+        it { expect { response }.to raise_error('Unknown content type "foo" or public_submission_enabled property not true') }
 
       end
 

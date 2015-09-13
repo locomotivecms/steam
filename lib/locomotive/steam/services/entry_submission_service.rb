@@ -10,7 +10,7 @@ module Locomotive
       def submit(slug, attributes = {})
         type = get_type(slug)
 
-        return nil if type.nil?
+        return nil if type.nil? || type.public_submission_enabled == false
 
         clean_attributes(attributes)
 

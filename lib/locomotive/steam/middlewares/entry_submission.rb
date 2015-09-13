@@ -123,7 +123,7 @@ module Locomotive::Steam
         if entry = services.entry_submission.submit(slug, entry_attributes)
           entry
         else
-          raise %{Unknown content type "#{slug}"}
+          raise %{Unknown content type "#{slug}" or public_submission_enabled property not true}
         end
       end
 
