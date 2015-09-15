@@ -1,6 +1,6 @@
 module Locomotive::Steam::Middlewares
 
-  class ThreadSafe < Struct.new(:app)
+  ThreadSafe = Struct.new(:app) do
 
     attr_accessor :env
 
