@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-require_relative '../../../lib/locomotive/steam/middlewares/threadsafe'
+require_relative '../../../lib/locomotive/steam/middlewares/thread_safe'
 require_relative '../../../lib/locomotive/steam/middlewares/helpers'
 require_relative '../../../lib/locomotive/steam/middlewares/locale_redirection'
 

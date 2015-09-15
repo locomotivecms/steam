@@ -6,6 +6,9 @@ require_relative 'memory/dataset'
 
 module Locomotive::Steam
 
+  module Memory
+  end
+
   class MemoryAdapter < Struct.new(:collection)
 
     include Locomotive::Steam::Adapters::Concerns::Key

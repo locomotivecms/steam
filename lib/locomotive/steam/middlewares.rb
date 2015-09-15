@@ -1,4 +1,4 @@
-require_relative 'middlewares/threadsafe'
+require_relative 'middlewares/thread_safe'
 require_relative 'middlewares/helpers'
 
 require_relative_all 'middlewares'
