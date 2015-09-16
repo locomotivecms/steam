@@ -9,7 +9,7 @@ module Locomotive::Steam
   module Memory
   end
 
-  class MemoryAdapter < Struct.new(:collection)
+  MemoryAdapter = Struct.new(:collection) do
 
     include Locomotive::Steam::Adapters::Concerns::Key
 
