@@ -3,9 +3,11 @@ require 'sanitize'
 module Locomotive
   module Steam
 
-    class EntrySubmissionService < Struct.new(:content_type_repository, :repository, :locale)
+    class EntrySubmissionService
 
       include Locomotive::Steam::Services::Concerns::Decorator
+
+      attr_accessor_initialize :content_type_repository, :repository, :locale
 
       def submit(slug, attributes = {})
         type = get_type(slug)

@@ -1,7 +1,9 @@
 module Locomotive
   module Steam
 
-    class ThemeAssetUrlService < Struct.new(:repository, :asset_host, :checksum)
+    class ThemeAssetUrlService
+
+      attr_accessor_initialize :repository, :asset_host, :checksum
 
       def build(path)
         # keep the query string safe

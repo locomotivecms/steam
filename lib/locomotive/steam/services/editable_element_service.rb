@@ -1,9 +1,11 @@
 module Locomotive
   module Steam
 
-    class EditableElementService < Struct.new(:repository, :locale)
+    class EditableElementService
 
       include Locomotive::Steam::Services::Concerns::Decorator
+
+      attr_accessor_initialize :repository, :locale
 
       def find(page, block, slug)
         decorate(Decorators::I18nDecorator) do

@@ -4,7 +4,9 @@ module Locomotive::Steam
     # Sanitize the path from the previous middleware in order
     # to make it work for the renderer.
     #
-    class Path < Struct.new(:app)
+    class Path
+
+      attr_accessor_initialize :app
 
       def call(env)
         set_path!(env)

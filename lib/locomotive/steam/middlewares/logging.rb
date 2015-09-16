@@ -3,9 +3,11 @@ module Locomotive::Steam
 
     # Track the request into the current logger
     #
-    class Logging < Struct.new(:app)
+    class Logging
 
       include Helpers
+
+      attr_accessor_initialize :app
 
       def call(env)
         now = Time.now

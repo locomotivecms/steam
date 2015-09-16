@@ -1,7 +1,9 @@
 module Locomotive
   module Steam
 
-    class LiquidParserService < Struct.new(:parent_finder, :snippet_finder)
+    class LiquidParserService
+
+      attr_accessor_initialize :parent_finder, :snippet_finder
 
       def parse(page)
         _parse(page,

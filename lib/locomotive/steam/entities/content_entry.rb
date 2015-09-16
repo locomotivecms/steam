@@ -146,7 +146,9 @@ module Locomotive::Steam
     end
 
     # Represent a file
-    class FileField < Struct.new(:filename, :base, :updated_at)
+    class FileField
+
+      attr_accessor_initialize :filename, :base, :updated_at
 
       def url
         return if filename.blank?

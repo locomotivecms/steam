@@ -1,7 +1,9 @@
 module Locomotive
   module Steam
 
-    class TranslatorService < Struct.new(:repository, :current_locale)
+    class TranslatorService
+
+      attr_accessor_initialize :repository, :current_locale
 
       # Return the translation described by a key.
       #

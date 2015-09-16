@@ -8,7 +8,9 @@ require_relative 'mongodb/command'
 
 module Locomotive::Steam
 
-  class MongoDBAdapter < Struct.new(:options)
+  class MongoDBAdapter
+
+    attr_accessor_initialize :options
 
     def all(mapper, query)
       dataset(mapper, query)

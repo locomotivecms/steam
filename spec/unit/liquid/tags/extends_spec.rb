@@ -7,7 +7,7 @@ describe Locomotive::Steam::Liquid::Tags::Extends do
   let(:site)        { instance_double('Site', default_locale: :en) }
   let!(:listener)   { Liquid::SimpleEventsListener.new }
   let(:finder)      { Locomotive::Steam::ParentFinderService.new(instance_double('PageRepository', site: site, locale: :en)) }
-  let(:parser)      { Locomotive::Steam::LiquidParserService.new }
+  let(:parser)      { Locomotive::Steam::LiquidParserService.new(nil, nil) }
   let(:options)     { { parent_finder: finder, page: page, parser: parser } }
 
   before do

@@ -1,4 +1,4 @@
-  require 'morphine'
+require 'morphine'
 
 require_relative_all %w(concerns .), 'services'
 
@@ -28,9 +28,11 @@ module Locomotive
         end
       end
 
-      class Instance < Struct.new(:request)
+      class Instance
 
         include Morphine
+
+        attr_accessor_initialize :request
 
         register :current_site do
           repositories.current_site = Defer.new { site_finder.find }

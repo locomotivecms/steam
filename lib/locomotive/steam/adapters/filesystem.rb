@@ -10,10 +10,12 @@ require_relative_all 'filesystem/sanitizers'
 
 module Locomotive::Steam
 
-  class FilesystemAdapter < Struct.new(:options)
+  class FilesystemAdapter
 
     include Morphine
     include Locomotive::Steam::Adapters::Concerns::Key
+
+    attr_accessor_initialize :options
 
     register :cache do
       Locomotive::Steam::Adapters::Filesystem::SimpleCacheStore.new

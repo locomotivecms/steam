@@ -1,7 +1,8 @@
 module Locomotive::Steam::Middlewares
 
-  ThreadSafe = Struct.new(:app) do
+  class ThreadSafe
 
+    attr_accessor_initialize :app
     attr_accessor :env
 
     def call(env)

@@ -1,7 +1,9 @@
 module Locomotive::Steam
   module Middlewares
 
-    class Favicon < Struct.new(:app)
+    class Favicon
+
+      attr_accessor_initialize :app
 
       include Helpers
 

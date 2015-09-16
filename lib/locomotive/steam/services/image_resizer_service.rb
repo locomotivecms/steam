@@ -1,7 +1,9 @@
 module Locomotive
   module Steam
 
-    class ImageResizerService < Struct.new(:resizer, :asset_path)
+    class ImageResizerService
+
+      attr_accessor_initialize :resizer, :asset_path
 
       def resize(source, geometry)
         return nil if disabled? || geometry.blank?

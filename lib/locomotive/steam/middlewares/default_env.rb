@@ -1,7 +1,9 @@
 module Locomotive::Steam
   module Middlewares
 
-    class DefaultEnv < Struct.new(:app)
+    class DefaultEnv
+
+      attr_accessor_initialize :app
 
       def call(env)
         request = Rack::Request.new(env)

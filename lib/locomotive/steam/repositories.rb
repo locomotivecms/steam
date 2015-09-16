@@ -3,9 +3,11 @@ require_relative_all 'repositories'
 module Locomotive
   module Steam
 
-    class Repositories < Struct.new(:current_site, :locale, :configuration)
+    class Repositories
 
       include Morphine
+
+      attr_accessor_initialize :current_site, :locale, :configuration
 
       register :adapter do
         build_adapter(configuration.adapter)

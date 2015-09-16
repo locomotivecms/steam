@@ -1,9 +1,11 @@
 module Locomotive::Steam
   module Middlewares
 
-    class Robots < Struct.new(:app, :options)
+    class Robots
 
       include Helpers
+
+      attr_accessor_initialize :app
 
       def call(env)
         if env['PATH_INFO'] == '/robots.txt'

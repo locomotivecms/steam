@@ -1,9 +1,11 @@
 module Locomotive
   module Steam
 
-    class PageFinderService < Struct.new(:repository)
+    class PageFinderService
 
       include Locomotive::Steam::Services::Concerns::Decorator
+
+      attr_accessor_initialize :repository
 
       def find(path)
         decorate do

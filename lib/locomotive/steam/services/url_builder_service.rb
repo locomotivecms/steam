@@ -1,7 +1,9 @@
 module Locomotive
   module Steam
 
-    class UrlBuilderService < Struct.new(:site, :current_locale, :request)
+    class UrlBuilderService
+
+      attr_accessor_initialize :site, :current_locale, :request
 
       def url_for(page, locale = nil)
         prefix(_url_for(page, locale))

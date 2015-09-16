@@ -1,7 +1,9 @@
 module Locomotive
   module Steam
 
-    class CsrfProtectionService < Struct.new(:enabled, :field, :token)
+    class CsrfProtectionService
+
+      attr_accessor_initialize :enabled, :field, :token
 
       def enabled?
         !!enabled

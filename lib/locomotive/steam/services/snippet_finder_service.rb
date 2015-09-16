@@ -1,9 +1,11 @@
 module Locomotive
   module Steam
 
-    class SnippetFinderService < Struct.new(:repository)
+    class SnippetFinderService
 
       include Locomotive::Steam::Services::Concerns::Decorator
+
+      attr_accessor_initialize :repository
 
       def find(slug)
         decorate do
