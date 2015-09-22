@@ -30,7 +30,7 @@ module Locomotive
           if host.respond_to?(:call)
             host.call(request, site)
           else
-            host
+            host =~ Steam::IsHTTP ? host : "https://#{host}"
           end
         else
           nil

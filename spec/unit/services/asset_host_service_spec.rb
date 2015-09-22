@@ -50,6 +50,13 @@ describe Locomotive::Steam::AssetHostService do
     let(:host) { 'http://assets.locomotivecms.com' }
     it { is_expected.to eq 'http://assets.locomotivecms.com/sites/42/assets/1/banner.png' }
 
+    context 'without the protocol' do
+
+      let(:host) { 's3-us-east-1.amazonaws.com' }
+      it { is_expected.to eq 'https://s3-us-east-1.amazonaws.com/sites/42/assets/1/banner.png' }
+
+    end
+
   end
 
   describe 'the host is a block' do
