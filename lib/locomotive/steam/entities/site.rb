@@ -7,7 +7,8 @@ module Locomotive::Steam
     def initialize(attributes = {})
       super({
         prefix_default_locale: false,
-        updated_at: nil
+        updated_at: nil,
+        template_version: nil
       }.merge(attributes))
     end
 

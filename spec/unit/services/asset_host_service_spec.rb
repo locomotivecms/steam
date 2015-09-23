@@ -29,6 +29,14 @@ describe Locomotive::Steam::AssetHostService do
 
     end
 
+    context 'the timestamp coming from the site' do
+
+      let(:timestamp) { nil }
+      let(:site) { instance_double('ModifiedSite', template_version: DateTime.parse('2007/06/29 00:00:00'), updated_at: DateTime.parse('2009/09/10 00:00:00')) }
+      it { is_expected.to eq '/sites/42/assets/1/banner.png?1183075200' }
+
+    end
+
   end
 
   describe 'the source is already a full url' do
