@@ -14,7 +14,7 @@ module Locomotive
       def compute(source, timestamp = nil)
         return source if source.nil?
 
-        timestamp ||= site.try(:template_version).to_i || site.try(:updated_at).to_i
+        timestamp ||= (site.try(:template_version) || site.try(:updated_at)).to_i
 
         return add_timestamp_suffix(source, timestamp) if source =~ Steam::IsHTTP
 
