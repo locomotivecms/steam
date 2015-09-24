@@ -20,7 +20,7 @@ module Locomotive::Steam
           redirect_to(page.redirect_url, page.redirect_type)
         else
           content = parse_and_render_liquid
-          render_response(content, page.not_found? ? 404: 200)
+          render_response(content, page.not_found? ? 404: 200, page.response_type)
         end
       end
 

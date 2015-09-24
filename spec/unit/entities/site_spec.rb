@@ -60,4 +60,26 @@ describe Locomotive::Steam::Site do
 
   end
 
+  describe '#last_modified_at' do
+
+    subject { site.last_modified_at }
+
+    it { is_expected.to eq nil }
+
+    context 'only updated_at is defined' do
+
+      let(:attributes) { { updated_at: DateTime.parse('2015/10/16 00:00:00') } }
+      it { is_expected.to eq DateTime.parse('2015/10/16 00:00:00') }
+
+    end
+
+    context 'template_version or content_version are defined' do
+
+      let(:attributes) { { updated_at: DateTime.parse('2015/10/16 00:00:00'), template_version: DateTime.parse('2007/06/29 00:00:00'), content_version: DateTime.parse('2009/09/10 00:00:00') } }
+      it { is_expected.to eq DateTime.parse('2009/09/10 00:00:00') }
+
+    end
+
+  end
+
 end
