@@ -11,6 +11,7 @@ module Locomotive
 
             def initialize(tag_name, markup, options)
               if markup =~ Syntax
+                @page_fullpath    = options[:page].fullpath
                 @slug             = $1.gsub(/[\"\']/, '')
                 @element_options  = { fixed: false, inline_editing: true }
                 markup.scan(::Liquid::TagAttributes) { |key, value| @element_options[key.to_sym] = value.gsub(/^[\"\']/, '').gsub(/[\"\']$/, '') }
@@ -31,7 +32,7 @@ module Locomotive
 
             def render(context)
               service   = context.registers[:services].editable_element
-              page      = context.registers[:page]
+              page      = fetch_page(context)
               block     = @element_options[:block] || context['block'].try(:name)
 
               if element = service.find(page, block, @slug)
@@ -43,6 +44,17 @@ module Locomotive
             end
 
             protected
+
+            def fetch_page(context)
+              page = context.registers[:page]
+
+              return page if page.fullpath == @page_fullpath
+
+              pages   = context.registers[:pages] ||= {}
+              service = context.registers[:services].page_finder
+
+              pages[@page_fullpath] ||= service.find(@page_fullpath)
+            end
 
             def default_element_attributes
               {

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Tags::Editable::File do
 
-  let(:page)        { instance_double('Page', updated_at: DateTime.parse('2007-06-29 21:00:00')) }
+  let(:page)        { instance_double('Page', fullpath: 'hello-world', updated_at: DateTime.parse('2007-06-29 21:00:00')) }
   let!(:listener)   { Liquid::SimpleEventsListener.new }
   let(:options)     { { page: page } }
 

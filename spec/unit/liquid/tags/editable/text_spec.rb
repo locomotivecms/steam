@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
-  let(:page)        { instance_double('Page') }
+  let(:page)        { instance_double('Page', fullpath: 'hello-world') }
   let!(:listener)   { Liquid::SimpleEventsListener.new }
   let(:options)     { { page: page } }
 
