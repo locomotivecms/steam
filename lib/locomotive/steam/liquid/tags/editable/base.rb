@@ -38,7 +38,7 @@ module Locomotive
               if element = service.find(page, block, @slug)
                 render_element(context, element)
               else
-                # Locomotive::Common::Logger.error "[#{page.fullpath}] missing #{@tag_name} \"#{@slug}\" (#{context['block'].try(:name) || 'default'})"
+                Locomotive::Common::Logger.error "[#{page.fullpath}] missing #{@tag_name} \"#{@slug}\" (#{context['block'].try(:name) || 'default'})"
                 super
               end
             end
@@ -48,7 +48,7 @@ module Locomotive
             def fetch_page(context)
               page = context.registers[:page]
 
-              return page if page.fullpath == @page_fullpath
+              return page if !@element_options[:fixed] || page.fullpath == @page_fullpath
 
               pages   = context.registers[:pages] ||= {}
               service = context.registers[:services].page_finder

@@ -74,10 +74,10 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
     let(:live_editing)    { false }
     let(:element_editing) { true }
 
-    let(:page)        { instance_double('Page', fullpath: 'hello-world') }
+    let(:child_page)  { instance_double('Page', fullpath: 'child-page') }
     let(:element)     { instance_double('EditableText', _id: 42, id: 42, default_content?: true, inline_editing?: element_editing, inline_editing: element_editing, format: 'html') }
     let(:services)    { Locomotive::Steam::Services.build_instance(nil) }
-    let(:context)     { ::Liquid::Context.new({}, {}, { page: page, services: services, live_editing: live_editing }) }
+    let(:context)     { ::Liquid::Context.new({}, {}, { page: child_page, services: services, live_editing: live_editing }) }
 
     before { allow(services.editable_element).to receive(:find).and_return(element) }
 
@@ -85,10 +85,29 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
     it { is_expected.to eq 'Hello world' }
 
+    it "doesn't try to find the element in another page" do
+      expect(services.page_finder).not_to receive(:find).with('hello-world')
+      is_expected.to eq 'Hello world'
+    end
+
     context 'no element found, render the default content' do
 
       let(:element) { nil }
       it { is_expected.to eq 'Hello world' }
+
+    end
+
+    context 'fixed element' do
+
+      let(:layout)  { instance_double('Page', fullpath: 'layout') }
+      let(:source)  { "{% editable_text title, hint: 'Simple short text', fixed: true %}Hello world{% endeditable_text %}" }
+      let(:options) { { page: layout } }
+      let(:element) { instance_double('EditableText', _id: 42, id: 42, default_content?: true, inline_editing?: element_editing, inline_editing: element_editing, format: 'html', fixed: true) }
+
+      it 'fetches the related page in order to get the element' do
+        expect(services.page_finder).to receive(:find).with('layout').and_return(layout)
+        is_expected.to eq 'Hello world'
+      end
 
     end
 
@@ -103,7 +122,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
       let(:source) { '{% block wrapper %}{% block sidebar %}{% editable_text title %}Hello world{% endeditable_text %}{% endblock %}{% endblock %}' }
 
-      before { expect(services.editable_element).to receive(:find).with(page, 'wrapper/sidebar', 'title').and_return(element) }
+      before { expect(services.editable_element).to receive(:find).with(child_page, 'wrapper/sidebar', 'title').and_return(element) }
       it { is_expected.to eq 'Hello world' }
 
     end
