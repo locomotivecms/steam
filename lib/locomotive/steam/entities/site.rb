@@ -19,11 +19,11 @@ module Locomotive::Steam
     end
 
     def default_locale
-      locales.try(:first) || :en
+      locales.first || :en
     end
 
     def locales
-      self[:locales].map(&:to_sym)
+      (self[:locales] || [:en]).map(&:to_sym)
     end
 
     def timezone_name

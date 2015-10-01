@@ -23,19 +23,35 @@ describe Locomotive::Steam::Site do
 
   describe '#locales' do
 
-    let(:attributes) { { locales: %w(en fr) } }
-
     subject { site.locales }
-    it { is_expected.to eq [:en, :fr] }
+
+    context 'without locales' do
+      it { is_expected.to eq [:en] }
+    end
+
+    context 'with locales' do
+
+      let(:attributes) { { locales: %w(en fr) } }
+      it { is_expected.to eq [:en, :fr] }
+
+    end
 
   end
 
   describe '#default_locale' do
 
-    let(:attributes) { { locales: %w(en fr) } }
-
     subject { site.default_locale }
-    it { is_expected.to eq :en }
+
+    context 'without locales' do
+      it { is_expected.to eq :en }
+    end
+
+    context 'with locales' do
+
+      let(:attributes) { { locales: %w(en fr) } }
+      it { is_expected.to eq :en }
+
+    end
 
   end
 
