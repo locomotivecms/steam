@@ -41,6 +41,10 @@ module Locomotive
                   attributes[:label] = name.to_s.humanize
                 end
 
+                if %w(belongs_to has_many many_to_many).include?(attributes[:type])
+                  attributes[:localized] = false
+                end
+
                 if select_options = attributes.delete(:select_options)
                   attributes[:select_options] = build_select_options(select_options)
                 end
