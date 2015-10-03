@@ -80,6 +80,9 @@ module Locomotive
 
                   # trick to use the template of the default locale (if available)
                   attributes[:template_path] = false if template.blank?
+
+                  # page under layouts/ should be treated differently
+                  set_layout_attributes(attributes) if fullpath.split('/').first == 'layouts'
                 end
               end
             end
@@ -156,6 +159,12 @@ module Locomotive
               block       = nil if block.blank?
 
               { block: block, slug: slug, content: { locale => content } }
+            end
+
+            def set_layout_attributes(attributes)
+              attributes[:is_layout]  = true if attributes[:is_layout].nil?
+              attributes[:listed]     = false
+              attributes[:published]  = false
             end
 
           end

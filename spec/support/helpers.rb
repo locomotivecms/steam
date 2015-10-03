@@ -3,6 +3,10 @@ require 'locomotive/common'
 module Spec
   module Helpers
 
+    def mongodb_site_id
+      BSON::ObjectId.from_string('561030e287f6431555000006')
+    end
+
     def reset!
       FileUtils.rm_rf(File.expand_path('../../../site', __FILE__))
     end

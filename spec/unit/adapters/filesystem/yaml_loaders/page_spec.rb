@@ -15,11 +15,14 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Page do
     subject { loader.load(scope).sort { |a, b| a[:_fullpath] <=> b[:_fullpath] } }
 
     it 'tests various stuff' do
-      expect(subject.size).to eq 24
+      expect(subject.size).to eq 26
       expect(subject.first[:title]).to eq(en: 'Page not found')
-      expect(subject[14][:slug]).to eq(en: 'music', fr: 'notre-musique')
-      expect(subject[15][:_fullpath]).to eq 'songs'
-      expect(subject[15][:template_path]).to eq(en: false)
+      expect(subject[15][:is_layout]).to eq true
+      expect(subject[15][:listed]).to eq false
+      expect(subject[15][:published]).to eq false
+      expect(subject[16][:slug]).to eq(en: 'music', fr: 'notre-musique')
+      expect(subject[17][:_fullpath]).to eq 'songs'
+      expect(subject[17][:template_path]).to eq(en: false)
     end
 
   end

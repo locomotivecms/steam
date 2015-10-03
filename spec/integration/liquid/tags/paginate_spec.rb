@@ -69,7 +69,7 @@ EOF
 
     it_should_behave_like 'pagination' do
 
-      let(:site_id)   { BSON::ObjectId.from_string('54eb49c12475804b2b000002') }
+      let(:site_id)   { mongodb_site_id }
       let(:adapter)   { Locomotive::Steam::MongoDBAdapter.new(database: 'steam_test', hosts: ['127.0.0.1:27017']) }
 
     end

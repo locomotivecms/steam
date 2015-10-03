@@ -15,12 +15,12 @@ describe Locomotive::Steam::SiteRepository do
     end
 
     describe '#query' do
-      subject { repository.query { where(subdomain: 'sample') }.first }
-      it { expect(subject.name).to eq 'Sample website' }
+      subject { repository.query { where(handle: 'sample') }.first }
+      it { expect(subject.name).to eq 'Sample site' }
     end
 
     describe '#by_domain' do
-      subject { repository.by_domain('sample.lvh.me') }
+      subject { repository.by_domain('sample.example.com') }
       it { expect(subject).not_to eq nil }
     end
 

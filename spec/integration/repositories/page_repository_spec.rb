@@ -19,7 +19,7 @@ describe Locomotive::Steam::PageRepository do
     describe '#all' do
       let(:conditions) { {} }
       subject { repository.all(conditions) }
-      it { expect(subject.size).to eq 24 }
+      it { expect(subject.size).to eq 26 }
 
       context 'with conditions' do
         let(:conditions) { { fullpath: 'index', 'slug.ne' => '404' } }
@@ -83,7 +83,7 @@ describe Locomotive::Steam::PageRepository do
     describe '#children_of' do
       let(:page) { repository.root }
       subject { repository.children_of(page) }
-      it { expect(subject.size).to eq 14 }
+      it { expect(subject.size).to eq 15 }
     end
 
     describe '#editable_element_for' do
@@ -98,7 +98,7 @@ describe Locomotive::Steam::PageRepository do
 
     it_should_behave_like 'a repository' do
 
-      let(:site_id)       { BSON::ObjectId.from_string('54eb49c12475804b2b000002') }
+      let(:site_id)       { mongodb_site_id }
       let(:adapter)       { Locomotive::Steam::MongoDBAdapter.new(database: 'steam_test', hosts: ['127.0.0.1:27017']) }
 
     end

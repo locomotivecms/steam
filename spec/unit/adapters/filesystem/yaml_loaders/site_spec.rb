@@ -12,7 +12,7 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Site do
 
     subject { loader.load(nil) }
 
-    it { expect(subject.first[:name]).to eq 'Sample website' }
+    it { expect(subject.first[:name]).to eq 'Sample site' }
 
   end
 

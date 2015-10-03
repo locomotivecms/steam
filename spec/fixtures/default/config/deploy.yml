@@ -1,7 +1,8 @@
 development:
-  host: sample.lvh.me:3000
-  email: john@doe.net
-  api_key: a9ac1e08c2c22c1b6f3da6db77a70cac4a615bd7
+  host: localhost:3000
+  handle: sample
+  email: admin@locomotivecms.com
+  api_key: d49cd50f6f0d2b163f48fc73cb249f0244c37074
 staging:
   host: staging.example.com
   email: john@doe.net

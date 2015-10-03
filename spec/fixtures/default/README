@@ -1,0 +1,11 @@
+[LocomotiveCMS]
+
+mongoid.yml: locomotive_engine_wagon_dev
+
+> bundle exec rake development:bootstrap
+> bundle exec rails c
+  # Locomotive::Site.first.destroy
+
+[Steam]
+wagon_dev deploy development -d -v spec/fixtures/default
+bundle exec rake mongodb:test:seed

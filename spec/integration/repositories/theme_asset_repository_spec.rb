@@ -10,7 +10,7 @@ describe Locomotive::Steam::ThemeAssetRepository do
 
   context 'MongoDB' do
 
-    let(:site_id) { BSON::ObjectId.from_string('54eb49c12475804b2b000002') }
+    let(:site_id) { mongodb_site_id }
     let(:adapter) { Locomotive::Steam::MongoDBAdapter.new(database: 'steam_test', hosts: ['127.0.0.1:27017']) }
 
     describe '#all' do
@@ -20,13 +20,13 @@ describe Locomotive::Steam::ThemeAssetRepository do
 
     describe '#url_for' do
       subject { repository.url_for('stylesheets/application.css') }
-      it { is_expected.to eq '/sites/54eb49c12475804b2b000002/theme/stylesheets/application.css' }
+      it { is_expected.to eq "/sites/#{mongodb_site_id}/theme/stylesheets/application.css" }
     end
 
     describe '#checksums' do
       subject { repository.checksums }
       it { expect(subject.size).to eq 16 }
-      it { expect(subject['stylesheets/application.css']).to eq 'aa017461d702a80ef8837e51e65deb4f' }
+      it { expect(subject['stylesheets/application.css']).to eq '3bacf4c2b7877e230e6990d72dae7724' }
     end
 
   end
