@@ -21,6 +21,7 @@ module Locomotive::Steam
         raw_template:       nil,
         source:             nil,
         editable_elements:  {},
+        redirect:           false,
         redirect_url:       {},
         redirect_type:      nil,
         parent_id:          nil,
@@ -32,6 +33,7 @@ module Locomotive::Steam
     def listed?; !!listed; end
     def published?; !!published; end
     def templatized?; !!templatized; end
+    def redirect?; redirect.nil? ? redirect_url.present? : redirect; end
 
     def content_type_id
       self.target_klass_name =~ Locomotive::Steam::CONTENT_ENTRY_ENGINE_CLASS_NAME
