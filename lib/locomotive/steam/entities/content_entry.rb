@@ -73,6 +73,22 @@ module Locomotive::Steam
       super.merge(content_type_id: content_type_id)
     end
 
+    def to_hash
+      attributes.slice(:id, :_slug, :_position, :created_at, :updated_at).tap do |hash|
+        # _id & id
+        hash['_id'] = hash['id']
+
+        hash['_slug']             = self._slug
+        hash['_label']            = self._label
+        hash['_visible']          = self._visible
+        hash['content_type_slug'] = self.content_type_slug
+
+        content_type.fields_by_name.each do |name, field|
+          hash[name] = _cast_value(field)
+        end
+      end
+    end
+
     def to_liquid
       Locomotive::Steam::Liquid::Drops::ContentEntry.new(self)
     end

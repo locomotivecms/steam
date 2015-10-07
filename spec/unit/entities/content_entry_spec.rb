@@ -55,6 +55,21 @@ describe Locomotive::Steam::ContentEntry do
 
   end
 
+  describe '#to_hash' do
+
+    let(:fields)      { [instance_double('Field', name: :title, type: :string, required: true)] }
+    let(:attributes)  { { id: 42, title: 'Hello world', _slug: 'hello-world', custom_fields_recipe: ['hello', 'world'], _type: 'Entry' } }
+
+    subject { content_entry.to_hash }
+
+    before do
+      allow(type).to receive(:fields_by_name).and_return({ title: fields.first })
+    end
+
+    it { expect(Set.new(subject.keys)).to eq(Set.new(['id', '_id', '_position', '_visible', '_label', '_slug', 'content_type_slug', 'title', 'created_at', 'updated_at'])) }
+
+  end
+
   describe 'dynamic attributes' do
 
     let(:field_type)  { :string }
