@@ -47,14 +47,8 @@ module Locomotive::Steam
         attributes[@name] = @translations
       end
 
-      def transform
-        @translations.each do |locale, value|
-          @translations[locale] = yield(value)
-        end
-      end
-
-      def transform!(&block)
-        self.dup.tap { |field| field.transform(&block) }
+      def to_json
+        to_hash.to_json
       end
 
     end

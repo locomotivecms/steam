@@ -74,31 +74,15 @@ module Locomotive::Steam
     end
 
     def to_hash
-      attributes.slice(:id, :_slug, :_position, :created_at, :updated_at).tap do |hash|
-        # _id & id
-        hash['_id'] = hash['id']
+      # default attributes
+      _attributes = %i(id _slug _label _visible _position content_type_slug created_at updated_at)
 
-        hash['_slug']             = self._slug
-        hash['_label']            = self._label
-        hash['_visible']          = self._visible
-        hash['content_type_slug'] = self.content_type_slug
+      # dynamic attributes
+      _attributes += content_type.persisted_field_names
 
-        content_type.fields_by_name.each do |name, field|
-          value = send(field.name)
-
-          # custom behaviors for some types
-          case field.type
-          when :belongs_to
-            # TODO
-          when :many_to_many
-            # TODO
-          when :file
-            puts "value = #{value.inspect}"
-            hash[name] = hash[:"#{name}_url"] = value.respond_to?(:transform!) ? value.transform!(&:url) : value.url
-          else
-            hash[name] = value
-          end
-        end
+      _attributes.inject({}) do |hash, name|
+        hash[name.to_s] = send(name)
+        hash
       end
     end
 
@@ -182,6 +166,10 @@ module Locomotive::Steam
       def url
         return if filename.blank?
         base.blank? ? filename : "#{base}/#{filename}"
+      end
+
+      def to_json
+        url
       end
 
       def to_liquid

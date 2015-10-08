@@ -86,7 +86,6 @@ module Locomotive
 
         def to_hash
           __getobj__.to_hash.tap do |hash|
-            puts @__localized_attributes__.inspect
             @__localized_attributes__.keys.each do |name|
               hash[name.to_s] = __get_localized_value__(name)
             end

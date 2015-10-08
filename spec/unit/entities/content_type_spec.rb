@@ -56,4 +56,14 @@ describe Locomotive::Steam::ContentType do
 
   end
 
+  describe '#persisted_field_names' do
+
+    let(:fields) { [instance_double('Field1', name: :title, persisted_name: 'title'), instance_double('Field2', name: :author, persisted_name: nil)] }
+
+    subject { content_type.persisted_field_names }
+
+    it { is_expected.to eq(['title']) }
+
+  end
+
 end

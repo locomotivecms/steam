@@ -74,4 +74,45 @@ describe Locomotive::Steam::ContentTypeField do
 
   end
 
+  describe '#persisted_name' do
+
+    subject { field.persisted_name }
+
+    context 'string type' do
+
+      let(:attributes) { { name: 'title', type: 'string' } }
+      it { is_expected.to eq 'title' }
+
+    end
+
+    context 'select type' do
+
+      let(:attributes) { { name: 'category', type: 'select' } }
+      it { is_expected.to eq 'category_id' }
+
+    end
+
+    context 'belongs_to type' do
+
+      let(:attributes) { { name: 'article', class_name: 'articles', type: 'belongs_to' } }
+      it { is_expected.to eq 'article_id' }
+
+    end
+
+    context 'many_to_many type' do
+
+      let(:attributes) { { name: 'articles', class_name: 'articles', type: 'many_to_many' } }
+      it { is_expected.to eq 'article_ids' }
+
+    end
+
+    context 'has_many type' do
+
+      let(:attributes) { { name: 'articles', class_name: 'articles', type: 'has_many', inverse_of: 'author' } }
+      it { is_expected.to eq nil }
+
+    end
+
+  end
+
 end

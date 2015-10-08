@@ -59,6 +59,15 @@ module Locomotive::Steam
       %i(belongs_to has_many many_to_many).include?(self.type)
     end
 
+    def persisted_name
+      case type
+      when :belongs_to, :select then "#{name}_id"
+      when :many_to_many        then "#{name.singularize}_ids"
+      when :has_many            then nil
+      else name
+      end
+    end
+
     class SelectOption
 
       include Locomotive::Steam::Models::Entity

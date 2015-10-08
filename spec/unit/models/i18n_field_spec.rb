@@ -22,16 +22,4 @@ describe Locomotive::Steam::Models::I18nField do
 
   end
 
-  describe '#transform' do
-
-    let(:translations) { { fr: 42, en: '42' } }
-
-    before { field.transform(&:to_s) }
-
-    subject { field.translations }
-
-    it { is_expected.to eq('fr' => '42', 'en' => '42') }
-
-  end
-
 end

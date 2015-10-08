@@ -64,9 +64,10 @@ describe Locomotive::Steam::ContentEntry do
 
     before do
       allow(type).to receive(:fields_by_name).and_return({ title: fields.first, picture: fields.last })
+      allow(type).to receive(:persisted_field_names).and_return([:title, :picture])
     end
 
-    it { expect(Set.new(subject.keys)).to eq(Set.new(['id', '_id', '_position', '_visible', '_label', '_slug', 'content_type_slug', 'title', 'picture_url', 'picture', 'created_at', 'updated_at'])) }
+    it { expect(Set.new(subject.keys)).to eq(Set.new(['id', '_position', '_visible', '_label', '_slug', 'content_type_slug', 'title', 'picture', 'created_at', 'updated_at'])) }
 
     context 'when decorated' do
 
@@ -74,9 +75,9 @@ describe Locomotive::Steam::ContentEntry do
 
       before { allow(content_entry).to receive(:localized_attributes).and_return({ picture: true }) }
 
-      subject { puts decorated.picture.inspect; puts decorated.send(:picture).inspect; puts "---"; decorated.to_hash }
+      subject { decorated.to_hash }
 
-      it { expect(subject[:picture]).to eq '/assets/foo.png' }
+      it { expect(subject['picture'].url).to eq '/assets/foo.png' }
 
     end
 

@@ -10,12 +10,9 @@ module Locomotive
               attributes.each do |key, value|
                 next if value && value.respond_to?(:repository) # skip associations
 
-                _attributes[key] = (case value
-                when Locomotive::Steam::Models::I18nField then value.to_hash
-                else value
-                end)
+                _attributes[key.to_s] = value
               end
-            end.stringify_keys
+            end
           end
 
           def as_json(options = nil)

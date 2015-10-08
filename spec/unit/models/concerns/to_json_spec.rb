@@ -17,8 +17,9 @@ describe Locomotive::Steam::Models::Concerns::ToJson do
     end
 
     context 'localized attributes' do
-      let(:attributes) { { title: Locomotive::Steam::Models::I18nField.new(:title, { fr: 'Bonjour', en: 'Hi' })} }
-      it { expect(subject).to eq('title' => { 'fr' => 'Bonjour', 'en' => 'Hi' }) }
+      let(:i18n_field) { Locomotive::Steam::Models::I18nField.new(:title, { fr: 'Bonjour', en: 'Hi' }) }
+      let(:attributes) { { title: i18n_field} }
+      it { expect(subject).to eq('title' => i18n_field) }
     end
 
     context 'referenced associations' do
@@ -58,6 +59,14 @@ describe Locomotive::Steam::Models::Concerns::ToJson do
       let(:attributes) { { title: 'Hello world', published: true } }
 
       it { expect(subject).to eq(%{{"title":"Hello world","published":true}}) }
+
+    end
+
+    context 'with localized attributes' do
+
+      let(:attributes) { { title: Locomotive::Steam::Models::I18nField.new(:title, { fr: 'Bonjour', en: 'Hi' })} }
+
+      it { expect(subject).to eq(%{{"title":{"fr":"Bonjour","en":"Hi"}}}) }
 
     end
 

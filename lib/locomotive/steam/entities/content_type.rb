@@ -31,6 +31,15 @@ module Locomotive::Steam
       fields.localized_names + select_fields.map(&:name)
     end
 
+    def persisted_field_names
+      [].tap do |names|
+        fields_by_name.each do |name, field|
+          _name = field.persisted_name
+          names << _name if _name
+        end
+      end
+    end
+
     def label_field_name
       (self[:label_field_name] || fields.first.name).to_sym
     end
