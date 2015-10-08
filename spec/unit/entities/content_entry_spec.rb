@@ -57,16 +57,28 @@ describe Locomotive::Steam::ContentEntry do
 
   describe '#to_hash' do
 
-    let(:fields)      { [instance_double('Field', name: :title, type: :string, required: true)] }
-    let(:attributes)  { { id: 42, title: 'Hello world', _slug: 'hello-world', custom_fields_recipe: ['hello', 'world'], _type: 'Entry' } }
+    let(:fields)      { [instance_double('TitleField', name: :title, type: :string), instance_double('PictureField', name: :picture, type: :file, localized: true)] }
+    let(:attributes)  { { id: 42, title: 'Hello world', _slug: 'hello-world', picture: Locomotive::Steam::Models::I18nField.new(:picture, fr: 'foo.png', en: 'bar.png'), base_url: '/assets', custom_fields_recipe: ['hello', 'world'], _type: 'Entry' } }
 
     subject { content_entry.to_hash }
 
     before do
-      allow(type).to receive(:fields_by_name).and_return({ title: fields.first })
+      allow(type).to receive(:fields_by_name).and_return({ title: fields.first, picture: fields.last })
     end
 
-    it { expect(Set.new(subject.keys)).to eq(Set.new(['id', '_id', '_position', '_visible', '_label', '_slug', 'content_type_slug', 'title', 'created_at', 'updated_at'])) }
+    it { expect(Set.new(subject.keys)).to eq(Set.new(['id', '_id', '_position', '_visible', '_label', '_slug', 'content_type_slug', 'title', 'picture_url', 'picture', 'created_at', 'updated_at'])) }
+
+    context 'when decorated' do
+
+      let(:decorated) { Locomotive::Steam::Decorators::I18nDecorator.new(content_entry, :fr, :en) }
+
+      before { allow(content_entry).to receive(:localized_attributes).and_return({ picture: true }) }
+
+      subject { puts decorated.picture.inspect; puts decorated.send(:picture).inspect; puts "---"; decorated.to_hash }
+
+      it { expect(subject[:picture]).to eq '/assets/foo.png' }
+
+    end
 
   end
 

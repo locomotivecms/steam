@@ -84,7 +84,20 @@ module Locomotive::Steam
         hash['content_type_slug'] = self.content_type_slug
 
         content_type.fields_by_name.each do |name, field|
-          hash[name] = _cast_value(field)
+          value = send(field.name)
+
+          # custom behaviors for some types
+          case field.type
+          when :belongs_to
+            # TODO
+          when :many_to_many
+            # TODO
+          when :file
+            puts "value = #{value.inspect}"
+            hash[name] = hash[:"#{name}_url"] = value.respond_to?(:transform!) ? value.transform!(&:url) : value.url
+          else
+            hash[name] = value
+          end
         end
       end
     end
@@ -128,7 +141,7 @@ module Locomotive::Steam
 
     def _cast_file(field)
       _cast_convertor(field.name) do |value|
-        FileField.new(value, base_url, self.updated_at)
+        value.respond_to?(:url) ? value : FileField.new(value, self[:base_url], self.updated_at)
       end
     end
 

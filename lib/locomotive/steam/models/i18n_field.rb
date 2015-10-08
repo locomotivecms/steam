@@ -14,6 +14,11 @@ module Locomotive::Steam
         self.translations = translations
       end
 
+      def initialize_copy(field)
+        super
+        self.translations = field.translations.dup
+      end
+
       def [](locale)
         @translations[locale]
       end
@@ -40,6 +45,16 @@ module Locomotive::Steam
 
       def serialize(attributes)
         attributes[@name] = @translations
+      end
+
+      def transform
+        @translations.each do |locale, value|
+          @translations[locale] = yield(value)
+        end
+      end
+
+      def transform!(&block)
+        self.dup.tap { |field| field.transform(&block) }
       end
 
     end
