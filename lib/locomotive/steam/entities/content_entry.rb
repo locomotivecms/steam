@@ -17,6 +17,8 @@ module Locomotive::Steam
       }.merge(attributes))
     end
 
+    def _id; self[:_id] || self[:id]; end
+
     def _visible?; !!self[:_visible]; end
     alias :visible? :_visible?
 
@@ -75,7 +77,7 @@ module Locomotive::Steam
 
     def to_hash
       # default attributes
-      _attributes = %i(id _slug _label _visible _position content_type_slug created_at updated_at)
+      _attributes = %i(_id _slug _label _visible _position content_type_slug created_at updated_at)
 
       # dynamic attributes
       _attributes += content_type.persisted_field_names

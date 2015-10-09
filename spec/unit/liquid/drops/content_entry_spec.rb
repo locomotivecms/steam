@@ -102,7 +102,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
     let(:picture_field) { Locomotive::Steam::ContentEntry::FileField.new('foo.png', 'http://assets.dev', 42) }
 
     before do
-      allow(entry).to receive(:to_hash).and_return({ 'id' => 1, 'title' => 'Hello world', 'picture' => picture_field, 'category_id' => 42 })
+      allow(entry).to receive(:to_hash).and_return({ '_id' => 1, 'title' => 'Hello world', 'picture' => picture_field, 'category_id' => 42 })
       allow(entry).to receive(:category).and_return('Test')
     end
 

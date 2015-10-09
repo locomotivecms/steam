@@ -58,7 +58,7 @@ module Locomotive
 
           def to_hash
             @_source.to_hash.tap do |hash|
-              hash['_id'] = hash['id']
+              hash['id'] = hash['_id']
 
               @_source.content_type.fields_by_name.each do |name, field|
                 case field.type

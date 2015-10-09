@@ -67,7 +67,7 @@ describe Locomotive::Steam::ContentEntry do
       allow(type).to receive(:persisted_field_names).and_return([:title, :picture])
     end
 
-    it { expect(Set.new(subject.keys)).to eq(Set.new(['id', '_position', '_visible', '_label', '_slug', 'content_type_slug', 'title', 'picture', 'created_at', 'updated_at'])) }
+    it { expect(Set.new(subject.keys)).to eq(Set.new(['_id', '_position', '_visible', '_label', '_slug', 'content_type_slug', 'title', 'picture', 'created_at', 'updated_at'])) }
 
     context 'when decorated' do
 
