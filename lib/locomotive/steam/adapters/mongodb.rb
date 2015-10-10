@@ -1,4 +1,4 @@
-require 'mongo'
+require 'moped'
 require 'origin'
 
 require_relative 'mongodb/origin'
@@ -82,15 +82,13 @@ module Locomotive::Steam
     end
 
     def session
-      Thread.current[:mongo_session] ||= if uri
-        Mongo::Client.new(uri)
+      Thread.current[:moped_session] ||= if uri
+        Moped::Session.connect(uri)
       else
-        options = { database: database }
-        if username && password
-          options[:user]      = username
-          options[:password]  = password
+        Moped::Session.new([*hosts]).tap do |session|
+          session.use database
+          session.login(username, password) if username && password
         end
-        Mongo::Client.new([*hosts], options)
       end
     end
 

@@ -13,7 +13,7 @@ require 'dragonfly/middleware'
 require_relative 'middlewares'
 
 if ENV['PROFILER']
-  require 'mongo'
+  require 'moped'
   require 'rack-mini-profiler'
 end
 

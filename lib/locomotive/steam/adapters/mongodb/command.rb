@@ -15,13 +15,13 @@ module Locomotive::Steam
 
           serialized_entity = @mapper.serialize(entity)
 
-          @collection.insert_one(serialized_entity)
+          @collection.insert(serialized_entity)
 
           entity
         end
 
         def delete(entity)
-          @collection.find(_id: entity._id).delete_one if entity._id
+          @collection.find(_id: entity._id).remove if entity._id
         end
 
       end
