@@ -47,12 +47,14 @@ module Locomotive::Steam
           _query = to_origin
           selector, fields, sort = _query.selector, _query.options[:fields], _query.options[:sort]
 
-          collection.find(selector).tap do |results|
-            results.sort(sort)      if sort
-            results.select(fields)  if fields
-            results.skip(@skip)     if @skip
-            results.limit(@limit)   if @limit
-          end
+          # FIXME: not very elegant (a proxy class would be better)
+          chainable = collection.find(selector)
+          chainable = chainable.sort(sort)          if sort
+          chainable = chainable.projection(fields)  if fields
+          chainable = chainable.skip(@skip)         if @skip
+          chainable = chainable.limit(@limit)       if @limit
+
+          chainable
         end
 
         def to_origin
