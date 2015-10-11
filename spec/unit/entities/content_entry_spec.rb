@@ -58,13 +58,14 @@ describe Locomotive::Steam::ContentEntry do
   describe '#to_hash' do
 
     let(:fields)      { [instance_double('TitleField', name: :title, type: :string), instance_double('PictureField', name: :picture, type: :file, localized: true)] }
-    let(:attributes)  { { id: 42, title: 'Hello world', _slug: 'hello-world', picture: Locomotive::Steam::Models::I18nField.new(:picture, fr: 'foo.png', en: 'bar.png'), base_url: '/assets', custom_fields_recipe: ['hello', 'world'], _type: 'Entry' } }
+    let(:attributes)  { { id: 42, title: 'Hello world', _slug: 'hello-world', picture: Locomotive::Steam::Models::I18nField.new(:picture, fr: 'foo.png', en: 'bar.png'), custom_fields_recipe: ['hello', 'world'], _type: 'Entry' } }
 
     subject { content_entry.to_hash }
 
     before do
       allow(type).to receive(:fields_by_name).and_return({ title: fields.first, picture: fields.last })
       allow(type).to receive(:persisted_field_names).and_return([:title, :picture])
+      allow(content_entry).to receive(:base_url).and_return('/assets')
     end
 
     it { expect(Set.new(subject.keys)).to eq(Set.new(['_id', '_position', '_visible', '_label', '_slug', 'content_type_slug', 'title', 'picture', 'created_at', 'updated_at'])) }

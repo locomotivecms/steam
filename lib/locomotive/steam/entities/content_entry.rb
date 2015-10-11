@@ -127,7 +127,7 @@ module Locomotive::Steam
 
     def _cast_file(field)
       _cast_convertor(field.name) do |value|
-        value.respond_to?(:url) ? value : FileField.new(value, self[:base_url], self.updated_at)
+        value.respond_to?(:url) ? value : FileField.new(value, self.base_url, self.updated_at)
       end
     end
 

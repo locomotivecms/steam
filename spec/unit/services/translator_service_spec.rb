@@ -33,7 +33,7 @@ describe Locomotive::Steam::TranslatorService do
 
       context "specifying a locale that doesn't exist" do
 
-        let(:locale) { puts 'NL'; 'nl' }
+        let(:locale) { 'nl' }
 
         it 'reverts to default locale' do
           is_expected.to eq 'example_test'
