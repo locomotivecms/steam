@@ -1,5 +1,7 @@
 require File.dirname(__FILE__) + '/../integration_helper'
 
+require 'locomotive/steam/adapters/filesystem.rb'
+
 describe Locomotive::Steam::Server do
 
   include Rack::Test::Methods
@@ -11,8 +13,9 @@ describe Locomotive::Steam::Server do
   describe 'sitemap.xml' do
 
     let(:now) { Time.use_zone('America/Chicago') { Time.zone.local(2015, 'mar', 25, 10, 0) } }
+    let(:env) { {} }
 
-    subject { Timecop.freeze(now) { get '/sitemap.xml' }; last_response.body }
+    subject { Timecop.freeze(now) { get('/sitemap.xml', {}, env) }; last_response.body }
 
     before { Locomotive::Steam::Adapters::Filesystem::SimpleCacheStore.new.clear }
 
@@ -29,6 +32,19 @@ describe Locomotive::Steam::Server do
       EOF
       ).strip)
     end
+
+    context 'existing sitemap page' do
+
+      let(:template)  { %{<?xml version="1.0" encoding="utf-8"?>OK</xml>} }
+      let(:page)      { instance_double('Page', liquid_source: template, templatized?: false, redirect_url: false, to_liquid: template, not_found?: false, response_type: 'application/xml') }
+      let(:env)       { { 'steam.page' => page } }
+
+      it 'renders the existing sitemap page' do
+        expect(subject).to eq %{<?xml version="1.0" encoding="utf-8"?>OK</xml>}
+      end
+
+    end
+
   end
 
 end

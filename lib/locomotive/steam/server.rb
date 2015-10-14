@@ -56,12 +56,12 @@ module Locomotive::Steam
           Middlewares::Logging,
           Middlewares::Robots,
           Middlewares::Timezone,
-          Middlewares::Sitemap,
           Middlewares::EntrySubmission,
           Middlewares::Locale,
           Middlewares::LocaleRedirection,
           Middlewares::Path,
           Middlewares::Page,
+          Middlewares::Sitemap,
           Middlewares::TemplatizedPage
         ]
       end

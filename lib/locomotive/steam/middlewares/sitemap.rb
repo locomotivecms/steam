@@ -6,7 +6,7 @@ module Locomotive::Steam
       include Helpers
 
       def _call
-        if env['PATH_INFO'] == '/sitemap.xml'
+        if env['PATH_INFO'] == '/sitemap.xml' && (page.nil? || page.not_found?)
           render_response(build_xml, 200, 'text/plain')
         end
       end

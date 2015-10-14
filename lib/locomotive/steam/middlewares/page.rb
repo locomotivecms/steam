@@ -9,6 +9,8 @@ module Locomotive::Steam
       include Helpers
 
       def _call
+        return env['steam.page'] if env['steam.page']
+
         if page = fetch_page
           if !page.not_found?
             log "Found page \"#{page.title}\" [#{page.fullpath}]"
