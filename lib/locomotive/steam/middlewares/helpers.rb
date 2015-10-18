@@ -4,7 +4,7 @@ module Locomotive::Steam
     module Helpers
 
       def html?
-        ['text/html', 'application/x-www-form-urlencoded'].include?(self.request.media_type) &&
+        ['text/html', 'application/x-www-form-urlencoded', 'multipart/form-data'].include?(self.request.media_type) &&
         !self.request.xhr? &&
         !self.json?
       end
