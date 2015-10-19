@@ -60,7 +60,11 @@ module Locomotive
             def each(slug, &block)
               position = 0
               _load(File.join(path, "#{slug}.yml")).each do |element|
-                label, attributes = element.keys.first, element.values.first
+                label, attributes = if element.respond_to?(:keys)
+                  [element.keys.first, element.values.first]
+                else
+                  [element, {}]
+                end
                 yield(label, attributes, position)
                 position += 1
               end
