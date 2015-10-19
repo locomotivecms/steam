@@ -34,20 +34,7 @@ module Locomotive
       def to_json(entry)
         return nil if entry.nil?
 
-        # default values
-        hash = { _slug: entry._slug, content_type_slug: entry.content_type_slug }
-
-        # dynamic attributes
-        entry.content_type.fields.all.each do |field|
-          next if %w(belongs_to has_many many_to_many).include?(field.type.to_s)
-
-          hash[field.name] = entry.send(field.name)
-        end
-
-        # errors
-        hash[:errors] = entry.errors.messages unless entry.errors.empty?
-
-        hash.to_json
+        entry.to_json
       end
 
       private

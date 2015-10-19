@@ -49,9 +49,9 @@ describe 'ContactForm' do
           subject { entry['errors'] }
 
           it 'lists all the errors' do
-            expect(subject['name']).to eq ["can't not be blank"]
-            expect(subject['email']).to eq ["can't not be blank"]
-            expect(subject['email']).to eq ["can't not be blank"]
+            expect(subject['name']).to eq ["can't be blank"]
+            expect(subject['email']).to eq ["can't be blank"]
+            expect(subject['email']).to eq ["can't be blank"]
           end
 
         end
@@ -79,7 +79,7 @@ describe 'ContactForm' do
         end
 
         it 'displays errors' do
-          expect(response.body.to_s).to include "can't not be blank"
+          expect(response.body.to_s).to include "can't be blank"
         end
 
         context 'redirects outside the site' do
@@ -130,7 +130,7 @@ describe 'ContactForm' do
       end
 
       it 'displays errors' do
-        expect(response.body.to_s).to include "can't not be blank"
+        expect(response.body.to_s).to include "can't be blank"
       end
 
     end

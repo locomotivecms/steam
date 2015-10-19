@@ -26,7 +26,7 @@ en:
       paginate: "Syntax Error in 'paginate' - Valid syntax: paginate <collection> by <number>"
       session_assign: "Syntax Error in 'session_assign' - Valid syntax: session_assign [var] = [source]"
     messages:
-      blank: "can't not be blank"
+      blank: "can't be blank"
       unique: "must be unique"
 
   pagination:

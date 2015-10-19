@@ -26,7 +26,7 @@ describe Locomotive::Steam::ContentEntry do
 
       let(:attributes) { {} }
       it { is_expected.to eq false }
-      it { subject; expect(content_entry.errors[:title]).to eq(["can't not be blank"]) }
+      it { subject; expect(content_entry.errors[:title]).to eq(["can't be blank"]) }
       it { subject; expect(content_entry.errors.empty?).to eq false }
 
     end

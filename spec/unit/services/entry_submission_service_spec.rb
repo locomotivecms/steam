@@ -48,19 +48,20 @@ describe Locomotive::Steam::EntrySubmissionService do
 
     context 'existing content entry' do
 
-      let(:errors)  { {} }
-      let(:fields)  { [instance_double('TitleField', name: :title, type: :string)] }
-      let(:type)    { instance_double('Articles') }
-      let(:entry)   { instance_double('DecoratedEntry', _slug: 'hello-world', title: 'Hello world', content_type: type, content_type_slug: :articles, errors: errors) }
+      let(:field)   { instance_double('TitleField', name: :title, type: :string) }
+      let(:fields)  { [field] }
+      let(:type)    { instance_double('Articles', slug: 'articles', label_field_name: :title, fields_by_name: { title: field }, persisted_field_names: [:title]) }
+      let(:entry)   { Locomotive::Steam::ContentEntry.new(_slug: 'hello-world', title: 'Hello world', content_type: type) }
 
       before { allow(type).to receive(:fields).and_return(instance_double('FieldRepository', all: fields)) }
 
-      it { is_expected.to eq '{"_slug":"hello-world","content_type_slug":"articles","title":"Hello world"}' }
+      it { is_expected.to match %r{{"_id":null,"_slug":"hello-world","_label":"Hello world","_visible":true,"_position":0,"content_type_slug":"articles","created_at":"[^\"]+","updated_at":"[^\"]+","title":"Hello world"}} }
 
       context 'with errors' do
 
-        let(:errors) { instance_double('Errors', empty?: false, messages: { title: ["can't be blank"] }) }
-        it { is_expected.to eq '{"_slug":"hello-world","content_type_slug":"articles","title":"Hello world","errors":{"title":["can\'t be blank"]}}' }
+        before { entry.errors.add(:title, "can't be blank") }
+
+        it { is_expected.to match %r{,\"errors\":\{\"title\":\[\"can't be blank\"\]\}} }
 
       end
 

@@ -85,6 +85,9 @@ module Locomotive::Steam
       _attributes.inject({}) do |hash, name|
         hash[name.to_s] = send(name)
         hash
+      end.tap do |hash|
+        # errors?
+        hash['errors'] = self.errors.to_hash.stringify_keys unless self.errors.empty?
       end
     end
 

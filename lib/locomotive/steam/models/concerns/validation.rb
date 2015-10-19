@@ -22,7 +22,7 @@ module Locomotive
 
             attr_accessor :messages
 
-            def_delegators :@messages, :[], :clear, :empty?, :each, :size
+            def_delegators :@messages, :[], :clear, :empty?, :each, :size, :to_hash
 
             alias_method :blank?, :empty?
 
