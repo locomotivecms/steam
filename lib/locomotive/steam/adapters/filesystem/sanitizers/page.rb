@@ -80,7 +80,7 @@ module Locomotive::Steam
           def set_fullpath_for(page, locale)
             page._fullpath ||= page.attributes.delete(:_fullpath)
 
-            slug = fullpath = page.slug[locale].try(page.templatized? ? :to_s : :dasherize)
+            slug = fullpath = page.slug[locale].try(:to_s)
 
             return if slug.blank?
 
