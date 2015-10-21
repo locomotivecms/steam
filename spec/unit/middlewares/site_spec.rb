@@ -12,10 +12,12 @@ describe Locomotive::Steam::Middlewares::Site do
   let(:url)             { 'http://models.example.com' }
   let(:app)             { ->(env) { [200, env, 'app'] } }
   let(:middleware)      { Locomotive::Steam::Middlewares::Site.new(app) }
+  let(:is_default_host) { nil }
 
   subject do
     env = env_for(url, 'steam.services' => services)
-    env['steam.request'] = Rack::Request.new(env)
+    env['steam.request']          = Rack::Request.new(env)
+    env['steam.is_default_host']  = is_default_host
     code, env = middleware.call(env)
     [code, env['Location']]
   end
@@ -58,7 +60,14 @@ describe Locomotive::Steam::Middlewares::Site do
 
       context 'first domain requested' do
 
-        let(:url)  { 'http://www.acme.com' }
+        let(:url) { 'http://www.acme.com' }
+        it { is_expected.to eq [200, nil] }
+
+      end
+
+      context 'requesting the default host' do
+
+        let(:is_default_host) { true }
         it { is_expected.to eq [200, nil] }
 
       end

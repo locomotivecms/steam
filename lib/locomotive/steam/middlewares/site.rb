@@ -41,9 +41,7 @@ module Locomotive::Steam
       end
 
       def redirect_to_first_domain_if_enabled(site)
-        # the site parameter can be an instance of Locomotive::Steam::Services::Defer and
-        # so comparing just site may not be reliable.
-        if site.try(:redirect_to_first_domain) && site.domains.first != request.host
+        if redirect_to_first_domain?(site)
           klass = request.scheme == 'https' ? URI::HTTPS : URI::HTTP
           redirect_to klass.build(
             host:   site.domains.first,
@@ -51,6 +49,14 @@ module Locomotive::Steam
             path:   request.path,
             query:  request.query_string.present? ? request.query_string : nil).to_s
         end
+      end
+
+      def redirect_to_first_domain?(site)
+        # the site parameter can be an instance of Locomotive::Steam::Services::Defer and
+        # so comparing just site may not be reliable.
+        !env['steam.is_default_host'] &&
+        site.try(:redirect_to_first_domain) &&
+        site.domains.first != request.host
       end
 
       def log_site(site)
