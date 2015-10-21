@@ -40,4 +40,31 @@ describe Locomotive::Steam::Middlewares::Site do
 
   end
 
+  describe 'redirection to the first domain' do
+
+    let(:redirect_to_first_domain) { false }
+    let(:url)  { 'http://acme.com' }
+    let(:site) { instance_double('SiteWithDomains', name: 'Acme', domains: ['www.acme.com', 'acme.com'], redirect_to_first_domain: redirect_to_first_domain) }
+
+    before { expect(services).to receive(:current_site).and_return(site) }
+
+    it { is_expected.to eq [200, nil] }
+
+    describe 'option enabled' do
+
+      let(:redirect_to_first_domain) { true }
+
+      it { is_expected.to eq [301, 'http://www.acme.com/'] }
+
+      context 'first domain requested' do
+
+        let(:url)  { 'http://www.acme.com' }
+        it { is_expected.to eq [200, nil] }
+
+      end
+
+    end
+
+  end
+
 end

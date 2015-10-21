@@ -15,6 +15,8 @@ module Locomotive::Steam
 
         # log anyway
         log_site(site)
+
+        redirect_to_first_domain_if_enabled(site)
       end
 
       private
@@ -35,6 +37,19 @@ module Locomotive::Steam
           render_response('Hi, we are sorry but no site was found.', 404, 'text/html')
         else
           raise NoSiteException.new
+        end
+      end
+
+      def redirect_to_first_domain_if_enabled(site)
+        # the site parameter can be an instance of Locomotive::Steam::Services::Defer and
+        # so comparing just site may not be reliable.
+        if site.try(:redirect_to_first_domain) && site.domains.first != request.host
+          klass = request.scheme == 'https' ? URI::HTTPS : URI::HTTP
+          redirect_to klass.build(
+            host:   site.domains.first,
+            port:   [80, 443].include?(request.port) ? nil : request.port,
+            path:   request.path,
+            query:  request.query_string.present? ? request.query_string : nil).to_s
         end
       end
 

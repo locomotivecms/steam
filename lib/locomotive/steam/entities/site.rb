@@ -6,11 +6,13 @@ module Locomotive::Steam
 
     def initialize(attributes = {})
       super({
-        cache_enabled:          false,
-        prefix_default_locale:  false,
-        updated_at:             nil,
-        content_version:        nil,
-        template_version:       nil
+        cache_enabled:            false,
+        prefix_default_locale:    false,
+        updated_at:               nil,
+        content_version:          nil,
+        template_version:         nil,
+        domains:                  [],
+        redirect_to_first_domain: false
       }.merge(attributes))
     end
 
