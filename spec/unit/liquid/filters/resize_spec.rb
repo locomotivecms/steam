@@ -27,7 +27,7 @@ describe Locomotive::Steam::Liquid::Filters::Resize do
 
       let(:geometry) { '30x40#' }
 
-      it { is_expected.to match /images\/dynamic\/.*\/240px-Metropolitan_railway_steam_locomotive_2781022036.png/ }
+      it { is_expected.to match /images\/steam\/dynamic\/.*\/240px-Metropolitan_railway_steam_locomotive_2781022036.png/ }
 
     end
 

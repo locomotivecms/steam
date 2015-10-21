@@ -40,6 +40,8 @@ module Locomotive::Steam
             }
           end
 
+          use Dragonfly::Middleware, :steam
+
           use Rack::Lint
           use Rack::Session::Moneta, configuration.moneta
 

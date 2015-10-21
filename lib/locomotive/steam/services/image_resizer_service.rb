@@ -29,7 +29,7 @@ module Locomotive
           resizer.fetch_url(url_or_path)
         else
           path = url_or_path.sub(/(\?.*)$/, '')
-          resizer.fetch_file(File.join(asset_path || '', 'public', path))
+          resizer.fetch_file(File.join(asset_path || '', path))
         end
       end
 
