@@ -12,7 +12,8 @@ module Locomotive::Steam
         content_version:          nil,
         template_version:         nil,
         domains:                  [],
-        redirect_to_first_domain: false
+        redirect_to_first_domain: false,
+        url_redirections:         []
       }.merge(attributes))
     end
 
