@@ -31,33 +31,33 @@ describe Locomotive::Steam::ImageResizerService do
         it { is_expected.to eq nil }
       end
 
-      it { is_expected.to match /images\/steam\/dynamic\/.*\/240px-Metropolitan_railway_steam_locomotive_2781022036.png/ }
+      it { is_expected.to match /\/steam\/dynamic\/.*\/240px-Metropolitan_railway_steam_locomotive_2781022036.png/ }
 
       describe 'a local asset' do
 
         let(:input)  { '/sites/42/theme/images/banner.png' }
-        it { is_expected.to match /images\/steam\/dynamic\/.*\/banner.png/ }
+        it { is_expected.to match /\/steam\/dynamic\/.*\/banner.png/ }
 
       end
 
       describe 'a hash' do
 
         let(:input) { { 'url' => '/sites/42/theme/images/banner.png' } }
-        it { is_expected.to match /images\/steam\/dynamic\/.*\/banner.png/ }
+        it { is_expected.to match /\/steam\/dynamic\/.*\/banner.png/ }
 
       end
 
       describe 'an object responding to the url method (Carrierwave uploaded file)' do
 
         let(:input)  { instance_double('UploadedFile', url: '/sites/42/theme/acme.png') }
-        it { is_expected.to match /images\/steam\/dynamic\/.*\/acme.png/ }
+        it { is_expected.to match /\/steam\/dynamic\/.*\/acme.png/ }
 
       end
 
       describe 'an url with a timestamp' do
 
         let(:input)  { '/sites/42/theme/images/banner.png?24e29997bcb00e97d8252cdd29d14e2d' }
-        it { is_expected.to match /images\/steam\/dynamic\/.*\/[a-z0-9]+\/banner.png/ }
+        it { is_expected.to match /\/steam\/dynamic\/.*\/[a-z0-9]+\/banner.png/ }
 
       end
 
