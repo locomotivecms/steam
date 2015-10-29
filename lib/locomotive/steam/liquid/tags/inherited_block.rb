@@ -18,7 +18,7 @@ module Locomotive
           def initialize(tag_name, markup, options)
             super
 
-            @attributes = { short_name: false, priority: 0 }
+            @attributes = { short_name: false, priority: 0, anchor: true }
             markup.scan(::Liquid::TagAttributes) do |key, value|
               @attributes[key.to_sym] = ::Liquid::Expression.parse(value)
             end
@@ -32,6 +32,14 @@ module Locomotive
                 found_super: self.contains_super?(nodelist)
               }.merge(@attributes))
             end
+          end
+
+          def render(context)
+            (if live_editing?(context) && @attributes[:anchor]
+              %{<span class="locomotive-block-anchor" data-element-id="#{@name}" style="visibility: hidden"></span>}
+            else
+              ''
+            end) + super
           end
 
           protected
@@ -58,6 +66,10 @@ module Locomotive
                _nodelist = node.nodelist rescue nil
                !_nodelist.nil?
             end
+          end
+
+          def live_editing?(context)
+            !!context.registers[:live_editing]
           end
 
         end

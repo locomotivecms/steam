@@ -43,4 +43,12 @@ describe Locomotive::Steam::Liquid::Tags::InheritedBlock do
 
   end
 
+  describe 'live editing on' do
+
+    let(:context) { ::Liquid::Context.new({}, {}, { live_editing: true }) }
+
+    it { expect(template.render(context)).to eq 'My product: <span class="locomotive-block-anchor" data-element-id="product" style="visibility: hidden"></span>Skis' }
+
+  end
+
 end

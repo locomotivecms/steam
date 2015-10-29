@@ -141,7 +141,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
       context 'with inside blocks' do
 
-        let(:source) { '{% block wrapper %}{% block sidebar %}{% editable_text title %}Hello world{% endeditable_text %}{% endblock %}{% endblock %}' }
+        let(:source) { '{% block wrapper, anchor: false %}{% block sidebar, anchor: false %}{% editable_text title %}Hello world{% endeditable_text %}{% endblock %}{% endblock %}' }
         it { is_expected.to eq '<span class="locomotive-editable-text" id="locomotive-editable-text-wrapper-sidebar-title" data-element-id="42">Hello world</span>' }
 
       end
