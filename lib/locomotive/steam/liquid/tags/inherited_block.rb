@@ -35,7 +35,7 @@ module Locomotive
           end
 
           def render(context)
-            (if live_editing?(context) && @attributes[:anchor]
+            (if live_editing?(context) && (@attributes[:anchor] || @attributes[:anchor].nil?)
               %{<span class="locomotive-block-anchor" data-element-id="#{@name}" style="visibility: hidden"></span>}
             else
               ''
