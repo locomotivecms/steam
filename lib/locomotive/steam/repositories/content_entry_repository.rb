@@ -130,22 +130,32 @@ module Locomotive
       end
 
       def prepare_conditions(*conditions)
-        _conditions = conditions.first.try(:with_indifferent_access)
+        # _conditions = conditions.first.try(:with_indifferent_access)
 
-        prepare_conditions_for_select_fields(_conditions) if _conditions
+        _conditions = Conditions.new(conditions.first, self.content_type.fields).prepare
 
         super({ _visible: true }, _conditions)
       end
 
-      # select fields? if so, use the _id of the option instead of the option name
-      def prepare_conditions_for_select_fields(conditions)
-        self.content_type.fields.selects.each do |field|
-          if value = conditions[name = field.name.to_s]
-            conditions.delete(name)
-            conditions[name + '_id'] = field.select_options.by_name(value).try(:_id)
-          end
-        end
-      end
+      # # belongs_to fields? if so, make sure we use the _id and we deal with the ID, not the object itself
+      # def prepare_conditions_for_belongs_to_fields(conditions)
+      #   self.content_type.fields.belongs_to.each do |field|
+      #     if value = conditions[name = field.name.to_s]
+      #       conditions.delete(name)
+      #       conditions[name + '_id'] = value.try(:_id)
+      #     end
+      #   end
+      # end
+
+      # # select fields? if so, use the _id of the option instead of the option name
+      # def prepare_conditions_for_select_fields(conditions)
+      #   self.content_type.fields.selects.each do |field|
+      #     if value = conditions[name = field.name.to_s]
+      #       conditions.delete(name)
+      #       conditions[name + '_id'] = field.select_options.by_name(value).try(:_id)
+      #     end
+      #   end
+      # end
 
       def add_localized_fields_to_mapper(mapper)
         unless self.content_type.localized_names.blank?
@@ -192,6 +202,37 @@ module Locomotive
           option_name = i18n_value_of(option, :name)
           { name: option_name, entries: groups.delete(option_name) || [] }
         end
+      end
+
+      class Conditions
+
+        def initialize(conditions = {}, fields)
+          @conditions, @fields = conditions.try(:with_indifferent_access) || {}, fields
+        end
+
+        def prepare
+          return {} if @conditions.blank?
+
+          _prepare(@fields.selects) do |field, value|
+            field.select_options.by_name(value).try(:_id)
+          end
+
+          _prepare(@fields.belongs_to) { |field, value| value.try(:_id) }
+
+          @conditions
+        end
+
+        protected
+
+        def _prepare(fields, &block)
+          fields.each do |field|
+            if value = @conditions[name = field.name.to_s]
+              @conditions.delete(name)
+              @conditions[name + '_id'] = yield(field, value)
+            end
+          end
+        end
+
       end
 
     end

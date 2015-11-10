@@ -4,7 +4,7 @@ require_relative '../../../lib/locomotive/steam/adapters/filesystem.rb'
 
 describe Locomotive::Steam::ContentEntryRepository do
 
-  let(:_fields) { instance_double('Fields', selects: []) }
+  let(:_fields) { instance_double('Fields', selects: [], belongs_to: []) }
   let(:type)    { build_content_type('Articles', label_field_name: :title, localized_names: [:title], fields: _fields, fields_by_name: { title: instance_double('Field', name: :title, type: :string) }) }
   let(:entries) { [{ content_type_id: 1, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' }] }
   let(:locale)  { :en }
@@ -248,7 +248,7 @@ describe Locomotive::Steam::ContentEntryRepository do
     let(:other_type)    { build_content_type('Authors', _id: 2, label_field_name: :name, fields: _fields, fields_by_name: { name: instance_double('Field', name: :name, type: :string) }) }
     let(:other_entries) { [{ content_type_id: 2, _id: 'john-doe', name: 'John Doe' }] }
 
-    let(:type_repository) { instance_double('ArticleBelongsToRepository', selects: []) }
+    let(:type_repository) { instance_double('ArticleBelongsToRepository', selects: [], belongs_to: []) }
 
     before do
       allow(type).to receive(:fields).and_return(type_repository)
@@ -281,7 +281,7 @@ describe Locomotive::Steam::ContentEntryRepository do
         ]
       }
 
-    let(:type_repository) { instance_double('AuthorRepository', selects: []) }
+    let(:type_repository) { instance_double('AuthorRepository', selects: [], belongs_to: []) }
 
     before do
       allow(type).to receive(:fields).and_return(type_repository)
@@ -314,7 +314,7 @@ describe Locomotive::Steam::ContentEntryRepository do
         ]
       }
 
-    let(:type_repository) { instance_double('AuthorRepository', selects: []) }
+    let(:type_repository) { instance_double('AuthorRepository', selects: [], belongs_to: []) }
 
     before do
       allow(type).to receive(:fields).and_return(type_repository)

@@ -22,6 +22,10 @@ module Locomotive
         query { where(type: :select) }.all
       end
 
+      def belongs_to
+        query { where(type: :belongs_to) }.all
+      end
+
       def associations
         query { where(k(:type, :in) => %i(belongs_to has_many many_to_many)) }.all
       end

@@ -46,8 +46,11 @@ module Locomotive
                 _key = key.to_s == '_permalink' ? '_slug' : key.to_s
 
                 hash[_key] = (case value
-                  # regexp inside a string
+                # regexp inside a string
                 when /^\/[^\/]*\/$/ then Regexp.new(value[1..-2])
+                # content entry drop? Use the source (entity) instead
+                when Locomotive::Steam::Liquid::Drops::ContentEntry
+                  value.send(:_source)
                 else
                   value
                 end)
