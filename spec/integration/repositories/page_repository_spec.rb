@@ -5,11 +5,6 @@ require_relative '../../../lib/locomotive/steam/adapters/mongodb.rb'
 
 describe Locomotive::Steam::PageRepository do
 
-  # before(:all) do
-  #   Moped.logger = Logger.new($stdout)
-  #   Moped.logger.level = Logger::DEBUG
-  # end
-
   shared_examples_for 'a repository' do
 
     let(:site)        { Locomotive::Steam::Site.new(_id: site_id, locales: %w(en fr nb)) }
