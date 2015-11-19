@@ -2,7 +2,7 @@ language: ruby
 services: mongodb
 before_script: ./script/ci/before_build.sh
 rvm:
-  - 2.2.2
+  - 2.2.3
 env:
   - CODECLIMATE_REPO_TOKEN=3fa74f2ade25037fccd7261090acbdeae232639c3a83aafb80ee428ec16b8cf9
 addons:
