@@ -23,6 +23,8 @@ module Locomotive
       protected
 
       def fetch_file(source)
+        return nil if source.blank?
+
         url_or_path = get_url_or_path(source)
 
         if url_or_path =~ Steam::IsHTTP
