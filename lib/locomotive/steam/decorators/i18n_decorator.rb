@@ -51,6 +51,10 @@ module Locomotive
           end
         end
 
+        def __with_default_locale__(&block)
+          __with_locale__(self.__default_locale__, &block)
+        end
+
         def __freeze_locale__
           @__frozen_locale__ = true
         end

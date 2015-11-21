@@ -5,7 +5,7 @@ describe Locomotive::Steam::Decorators::TemplateDecorator do
   let(:template_path)   { 'template.liquid' }
   let(:page)            { instance_double('Page', localized_attributes: [], template_path: template_path) }
   let(:locale)          { 'fr' }
-  let(:default_locale)  { nil }
+  let(:default_locale)  { 'en' }
   let(:decorated)       { described_class.new(page, locale, default_locale) }
 
   describe '#liquid_source' do
@@ -17,6 +17,14 @@ describe Locomotive::Steam::Decorators::TemplateDecorator do
     subject { decorated.liquid_source.strip }
 
     it { is_expected.to eq 'Lorem ipsum' }
+
+    context 'Raw template' do
+
+      let(:page) { instance_double('Page', localized_attributes: [:source], source: { en: 'Lorem ipsum [EN]', fr: '' }) }
+
+      it { is_expected.to eq 'Lorem ipsum [EN]' }
+
+    end
 
     context 'HAML file' do
 

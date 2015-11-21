@@ -11,11 +11,15 @@ module Locomotive
           if respond_to?(:template_path) && template_path
             source_from_template_file
           else
-            self.source
+            self.source.blank? ? source_in_default_locale : self.source
           end
         end
 
         private
+
+        def source_in_default_locale
+          self.__with_default_locale__ { self.source }
+        end
 
         def source_from_template_file
           source = File.read(template_path).force_encoding('utf-8')

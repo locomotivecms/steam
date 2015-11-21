@@ -46,9 +46,28 @@ describe Locomotive::Steam::Decorators::I18nDecorator do
 
   describe 'using the default locale' do
 
-    let(:locale)          { 'de' }
-    let(:default_locale)  { 'en' }
-    it { expect(decorated.title).to eq 'Hello world!' }
+    let(:default_locale) { 'en' }
+
+    context 'unknown locale' do
+
+      let(:locale) { 'de' }
+
+      it { expect(decorated.title).to eq 'Hello world!' }
+
+    end
+
+    context 'existing locale' do
+
+      let(:locale) { 'fr' }
+
+      it 'uses the default locale and get back to the previous one' do
+        decorated.__with_default_locale__ do
+          expect(decorated.title).to eq 'Hello world!'
+        end
+        expect(decorated.__locale__).to eq :fr
+      end
+
+    end
 
   end
 
