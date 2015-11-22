@@ -52,7 +52,11 @@ module Locomotive
         end
 
         def __with_default_locale__(&block)
-          __with_locale__(self.__default_locale__, &block)
+          if self.__default_locale__
+            __with_locale__(self.__default_locale__, &block)
+          else
+            yield
+          end
         end
 
         def __freeze_locale__

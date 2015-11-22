@@ -67,6 +67,18 @@ describe Locomotive::Steam::Decorators::I18nDecorator do
         expect(decorated.__locale__).to eq :fr
       end
 
+      context 'default_locale is nil' do
+
+        let(:default_locale) { nil }
+
+        it 'yields the block if no default locale' do
+          decorated.__with_default_locale__ do
+            expect(decorated.title).to eq 'Bonjour monde'
+          end
+        end
+
+      end
+
     end
 
   end
