@@ -13,7 +13,7 @@ module Locomotive
         # build the url of the theme asset based on the persistence layer
         _url = repository.url_for(path)
 
-        # get a timestamp only the source url does not include a query string
+        # get a timestamp only if the source url doesn't include a query string
         timestamp = query_string.blank? ? checksums[path] : nil
 
         # prefix by a asset host if given
