@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    locomotivecms_steam (1.0.0.rc4)
+    locomotivecms_steam (1.0.0.rc5)
       RedCloth (~> 4.2.9)
       chronic (~> 0.10.2)
       coffee-script (~> 2.4.1)
@@ -120,7 +120,7 @@ GEM
     mime-types (2.6.1)
     mimetype-fu (0.1.2)
     mini_portile (0.6.2)
-    minitest (5.8.2)
+    minitest (5.8.3)
     moneta (0.8.0)
     mongo (2.1.2)
       bson (~> 3.0)
@@ -128,7 +128,7 @@ GEM
     multi_json (1.11.1)
     multi_xml (0.5.5)
     netrc (0.10.3)
-    nokogiri (1.6.6.2)
+    nokogiri (1.6.6.4)
       mini_portile (~> 0.6.0)
     nokogumbo (1.4.1)
       nokogiri
