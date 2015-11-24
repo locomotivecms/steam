@@ -27,11 +27,29 @@ describe Locomotive::Steam::Liquid::Tags::Extends do
 
     let!(:template) { parse_template(source, options) }
 
-    let(:parent) { instance_double('Index', localized_attributes: { source: true, template: true }, source: { en: 'Hello world!' }, template: { en: nil }) }
+    let(:parent) { instance_double('Index', handle: nil, slug: nil, localized_attributes: { source: true, template: true }, source: { en: 'Hello world!' }, template: { en: nil }) }
 
     it { expect(listener.event_names.first).to eq 'steam.parse.extends' }
     it { expect(template.render).to eq 'Hello world!' }
     it { expect(options[:page]).to eq page }
+
+    describe 'set the layout name' do
+
+      let(:source) { '{% extends parent %}{% block message %}My layout: {{ layout_name }}{% endblock %}' }
+
+      let(:parent) { instance_double('Index', handle: nil, slug: 'index', localized_attributes: { source: true, template: true }, source: { en: 'Hello world! {% block message %}{% endblock %}' }, template: { en: nil }) }
+
+      it { expect(template.render).to eq 'Hello world! My layout: index' }
+
+      context 'the handle of the parent page exists' do
+
+        let(:parent) { instance_double('Index', handle: 'home', slug: 'index', localized_attributes: { source: true, template: true }, source: { en: 'Hello world! {% block message %}{% endblock %}' }, template: { en: nil }) }
+
+        it { expect(template.render).to eq 'Hello world! My layout: home' }
+
+      end
+
+    end
 
   end
 

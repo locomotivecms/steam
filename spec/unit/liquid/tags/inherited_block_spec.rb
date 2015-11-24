@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Locomotive::Steam::Liquid::Tags::InheritedBlock do
 
   let(:parent_source) { 'My product: {% block product %}Random{% endblock %}' }
-  let(:parent)        { instance_double('Index', liquid_source: parent_source, template: nil, :template= => nil) }
+  let(:parent)        { instance_double('Index', liquid_source: parent_source, template: nil, :template= => nil, slug: nil, handle: nil) }
   let(:source)        { '{% extends parent %}{% block product %}Skis{% endblock %}' }
   let(:page)          { instance_double('Page') }
 
