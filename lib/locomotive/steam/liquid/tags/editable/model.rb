@@ -9,6 +9,10 @@ module Locomotive
               default_render(context)
             end
 
+            def render_default_content
+              nil
+            end
+
           end
 
           ::Liquid::Template.register_tag('editable_model'.freeze, Model)

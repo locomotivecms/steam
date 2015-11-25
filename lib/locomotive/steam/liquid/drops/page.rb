@@ -62,31 +62,51 @@ module Locomotive
           end
 
           def build_editable_elements_hash
-              {}.tap do |hash|
-                repository.editable_elements_of(@_source).each do |el|
-                  safe_slug = el.slug.parameterize.underscore
-                  keys      = el.block.try(:split, '/').try(:compact) || []
+            {}.tap do |hash|
+              # default content from the template itself
+              _build_default_editable_elements_hash(hash)
 
-                  _hash = _build_editable_elements_hashes(hash, keys)
+              # content updated by the users
+              _build_editable_elements_hash(hash)
+            end
+          end
 
-                  _hash[safe_slug] = el.content
-                end
-              end
+          def _build_default_editable_elements_hash(hash)
+            (@context.registers[:default_editable_content] || []).each do |key, content|
+              keys = key.split('/')
+              _build_editable_elements_hashes(hash, keys, keys.pop, content)
+            end
+          end
+
+          def _build_editable_elements_hash(hash)
+            (repository.editable_elements_of(@_source) || []).each do |el|
+              keys = el.block.try(:split, '/').try(:compact) || []
+
+              # decorate the el instance which is localized because
+              # el.content returns a I18nField.
+              content = editable_element_content(el)
+
+              _build_editable_elements_hashes(hash, keys, el.slug, content)
+            end
+          end
+
+          def editable_element_content(element)
+            Locomotive::Steam::Decorators::I18nDecorator.new(element,
+              @_source.__locale__,
+              @_source.__default_locale__).content
+          end
+
+          def _build_editable_elements_hashes(hash, keys, slug, content)
+            last_hash = hash
+
+            # go the last hash
+            keys.each do |key|
+              safe_key  = key.parameterize.underscore
+              last_hash = (last_hash[safe_key] ||= {})
             end
 
-            def _build_editable_elements_hashes(hash, keys)
-              _hash = hash
-
-              keys.each do |key|
-                safe_key = key.parameterize.underscore
-
-                _hash[safe_key] = {} if _hash[safe_key].nil?
-
-                _hash = _hash[safe_key]
-              end
-
-              _hash
-            end
+            last_hash[slug.parameterize.underscore] = content
+          end
 
         end
       end

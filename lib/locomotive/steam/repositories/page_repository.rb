@@ -81,7 +81,7 @@ module Locomotive
       end
 
       def editable_element_for(page, block, slug)
-        return nil if page.nil?
+        return nil if page.nil? || page.editable_elements.nil?
         page.editable_elements.first do
           where(block: block, slug: slug)
         end

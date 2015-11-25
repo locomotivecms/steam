@@ -11,6 +11,7 @@ module Locomotive::Steam
       attr_accessor :adapter, :scope, :local_conditions
 
       def_delegators :@scope, :site, :site=, :locale, :locale=
+      def_delegators :all, :each
 
       def initialize(adapter, site = nil, locale = nil)
         @adapter  = adapter

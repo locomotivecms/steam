@@ -25,6 +25,8 @@ module Locomotive
             def parse(tokens)
               super.tap do
                 ActiveSupport::Notifications.instrument("steam.parse.editable.#{@tag_name}", page: options[:page], attributes: default_element_attributes)
+
+                register_default_content
               end
             end
 
@@ -54,6 +56,15 @@ module Locomotive
               service = context.registers[:services].page_finder
 
               pages[@page_fullpath] ||= service.find(@page_fullpath)
+            end
+
+            def register_default_content
+              return if options[:default_editable_content].nil?
+
+              hash  = options[:default_editable_content]
+              key   = [current_inherited_block_name, @slug].compact.join('/')
+
+              hash[key] = render_default_content
             end
 
             def default_element_attributes

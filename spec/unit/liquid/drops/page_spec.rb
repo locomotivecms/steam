@@ -70,7 +70,7 @@ describe Locomotive::Steam::Liquid::Drops::Page do
 
   describe '#editable_elements' do
 
-    let(:elements) { [instance_double('EditableElement', block: 'top/left', slug: 'banner', content: 'Hello world')] }
+    let(:elements) { [instance_double('EditableElement', block: 'top/left', slug: 'banner', content: 'Hello world', localized_attributes: [])] }
 
     before do
       allow(services.repositories.page).to receive(:editable_elements_of).with(page).and_return(elements)

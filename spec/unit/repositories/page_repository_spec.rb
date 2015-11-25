@@ -331,6 +331,12 @@ describe Locomotive::Steam::PageRepository do
 
       end
 
+      context 'looping over' do
+
+        it { i = 0; subject.each { |el| i += 1 }; expect(i).to eq 1 }
+
+      end
+
     end
 
   end
