@@ -66,6 +66,7 @@ module Locomotive
                     if (option = list.at(position)).nil?
                       list << { _id: name, name: { locale => name }, position: position }
                     else
+                      option[name] ||= {}
                       option[name][locale] = name
                     end
                   end
