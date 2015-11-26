@@ -23,4 +23,25 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::ContentType do
 
   end
 
+  describe '#build_select_options_from_hash' do
+
+    let(:options) { { en: ['General', 'Gigs', 'Bands'], fr: ['Général', 'Concerts', 'Groupes'] } }
+
+    subject { loader.send(:build_select_options_from_hash, options) }
+
+    it { is_expected.to eq [{ _id: 'General', name: { en: 'General', fr: 'Général' }, position: 0 }, { _id: 'Gigs', name: { en: 'Gigs', fr: 'Concerts' }, position: 1 }, { _id: 'Bands', name: { en: 'Bands', fr: 'Groupes' }, position: 2 }] }
+
+  end
+
+  describe '#build_select_options_from_array' do
+
+    # let(:options) { { en: ['General', 'Gigs', 'Bands'], fr: ['Général', 'Concerts', 'Groupes'] } }
+    let(:options) { [{ en: 'General', fr: 'Général' }, { en: 'Gigs', fr: 'Concerts'}, { en: 'Bands', fr: 'Groupes' }] }
+
+    subject { loader.send(:build_select_options_from_array, options) }
+
+    it { is_expected.to eq [{ _id: 'General', name: { en: 'General', fr: 'Général' }, position: 0 }, { _id: 'Gigs', name: { en: 'Gigs', fr: 'Concerts' }, position: 1 }, { _id: 'Bands', name: { en: 'Bands', fr: 'Groupes' }, position: 2 }] }
+
+  end
+
 end
