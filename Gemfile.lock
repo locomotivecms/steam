@@ -17,6 +17,7 @@ PATH
       moneta (~> 0.8.0)
       mongo (~> 2.1.2)
       morphine (~> 0.1.1)
+      nokogiri (~> 1.6.6.4)
       origin (~> 2.1.1)
       rack-cache (~> 1.2)
       rack-rewrite (~> 1.5.1)
