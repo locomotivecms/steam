@@ -25,6 +25,11 @@ module Locomotive::Steam
         def apply_to(entry, locale)
           @list.collect do |(name, direction)|
             value = entry.send(name)
+
+            if value.respond_to?(:translations) # localized
+              value = value[locale]
+            end
+
             asc?(direction) ? Asc.new(value) : Desc.new(value)
           end
         end

@@ -44,6 +44,15 @@ describe Locomotive::Steam::Adapters::Memory::Order do
     let(:entry) { instance_double('Entry', title: 'foo', date: Time.zone.now) }
     it { expect(subject.map(&:class)).to eq([Locomotive::Steam::Adapters::Memory::Order::Asc, Locomotive::Steam::Adapters::Memory::Order::Desc]) }
 
+    context 'localized field' do
+
+      let(:now)   { Time.zone.now }
+      let(:field) { instance_double('TitleI18nField', :[] => 'Hello world', translations: true) }
+      let(:entry) { instance_double('Entry', title: field, date: now) }
+      it { expect(subject.map(&:obj)).to eq(['Hello world', now]) }
+
+    end
+
   end
 
   describe 'sort' do
