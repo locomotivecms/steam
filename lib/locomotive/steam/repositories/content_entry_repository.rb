@@ -130,32 +130,10 @@ module Locomotive
       end
 
       def prepare_conditions(*conditions)
-        # _conditions = conditions.first.try(:with_indifferent_access)
-
         _conditions = Conditions.new(conditions.first, self.content_type.fields).prepare
 
         super({ _visible: true }, _conditions)
       end
-
-      # # belongs_to fields? if so, make sure we use the _id and we deal with the ID, not the object itself
-      # def prepare_conditions_for_belongs_to_fields(conditions)
-      #   self.content_type.fields.belongs_to.each do |field|
-      #     if value = conditions[name = field.name.to_s]
-      #       conditions.delete(name)
-      #       conditions[name + '_id'] = value.try(:_id)
-      #     end
-      #   end
-      # end
-
-      # # select fields? if so, use the _id of the option instead of the option name
-      # def prepare_conditions_for_select_fields(conditions)
-      #   self.content_type.fields.selects.each do |field|
-      #     if value = conditions[name = field.name.to_s]
-      #       conditions.delete(name)
-      #       conditions[name + '_id'] = field.select_options.by_name(value).try(:_id)
-      #     end
-      #   end
-      # end
 
       def add_localized_fields_to_mapper(mapper)
         unless self.content_type.localized_names.blank?
@@ -207,17 +185,25 @@ module Locomotive
       class Conditions
 
         def initialize(conditions = {}, fields)
-          @conditions, @fields = conditions.try(:with_indifferent_access) || {}, fields
+          @conditions, @fields, @operators = conditions.try(:with_indifferent_access) || {}, fields, {}
+
+          @conditions.each do |name, value|
+            _name, operator = name.to_s.split('.')
+            @operators[_name] = operator if operator
+          end
         end
 
         def prepare
-          return {} if @conditions.blank?
-
+          # selects
           _prepare(@fields.selects) do |field, value|
             field.select_options.by_name(value).try(:_id)
           end
 
-          _prepare(@fields.belongs_to) { |field, value| value.try(:_id) }
+          # belongs_to
+          _prepare(@fields.belongs_to) { |field, value| value_to_id(value) }
+
+          # many_to_many
+          _prepare(@fields.many_to_many) { |field, value| values_to_ids(value) }
 
           @conditions
         end
@@ -226,11 +212,29 @@ module Locomotive
 
         def _prepare(fields, &block)
           fields.each do |field|
-            if value = @conditions[name = field.name.to_s]
-              @conditions.delete(name)
-              @conditions[name + '_id'] = yield(field, value)
+            name      = field.name.to_s
+            operator  = @operators[name]
+            _name     = operator ? "#{name}.#{operator}" : name
+
+            if value = @conditions[_name]
+              # delete old name
+              @conditions.delete(_name)
+
+              # build the new name with the prefix and the operator if there is one
+              _name = field.persisted_name + (operator ? ".#{operator}" : '')
+
+              # store the new name
+              @conditions[_name] = yield(field, value)
             end
           end
+        end
+
+        def value_to_id(value)
+          value.respond_to?(:_id) ? value._id : value
+        end
+
+        def values_to_ids(value)
+          [*value].map { |_value| value_to_id(_value) }
         end
 
       end

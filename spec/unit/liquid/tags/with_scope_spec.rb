@@ -25,6 +25,27 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
 
   end
 
+  describe 'decode content entry' do
+
+    let(:entry) {
+      instance_double('ContentEntry', _id: 1, _source: 'entity').tap do |_entry|
+        allow(_entry).to receive(:to_liquid).and_return(_entry)
+      end }
+    let(:assigns) { { 'my_project' => entry } }
+    let(:source)  { "{% with_scope project: my_project %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+
+    it { expect(conditions['project']).to eq 'entity' }
+
+    context 'an array of content entries' do
+
+      let(:source) { "{% with_scope project: [my_project, my_project, my_project] %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+
+      it { expect(conditions['project']).to eq ['entity', 'entity', 'entity'] }
+
+    end
+
+  end
+
   describe 'decode context variable' do
 
     let(:assigns) { { 'params' => { 'type' => 'posts' } } }
