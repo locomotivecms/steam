@@ -41,7 +41,7 @@ module Locomotive::Steam
         end
 
         def inspect
-          "#{field}.#{operator} #{value}"
+          "#{field}#{operator != :== ? '.' : ' '}#{operator} #{value}"
         end
 
         protected
@@ -92,7 +92,7 @@ module Locomotive::Steam
           if target.size == 0
             source.size == 0
           else
-            source & target == target
+            (source & target).size != 0
           end
         end
 

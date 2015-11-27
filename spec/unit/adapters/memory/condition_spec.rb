@@ -90,7 +90,15 @@ describe Locomotive::Steam::Adapters::Memory::Condition do
   describe '#array_contains?' do
     let(:source) { [1, 2, 3, 4] }
     let(:target) { [1, 2, 3] }
-    context 'with target contains in source' do
+    context 'target contains the source' do
+      specify('should be true') do
+        expect(subject.send(:array_contains?, source, target)).to eq true
+      end
+    end
+
+    context 'target contains at least one element' do
+      let(:source) { [1] }
+      let(:target) { [1, 2, 3] }
       specify('should be true') do
         expect(subject.send(:array_contains?, source, target)).to eq true
       end
