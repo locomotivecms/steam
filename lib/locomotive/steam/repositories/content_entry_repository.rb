@@ -230,7 +230,11 @@ module Locomotive
         end
 
         def value_to_id(value)
-          value.respond_to?(:_id) ? value._id : value
+          if value.respond_to?(:each) # array
+            values_to_ids(value)
+          else
+            value.respond_to?(:_id) ? value._id : value
+          end
         end
 
         def values_to_ids(value)

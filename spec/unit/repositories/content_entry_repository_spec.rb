@@ -371,6 +371,15 @@ describe Locomotive::Steam::ContentEntryRepository do
 
       end
 
+      context 'the target value is an arry of content entry' do
+
+        let(:value) { [instance_double('TargetContentEntry', _id: 1), instance_double('TargetContentEntry', _id: 2)] }
+        let(:conditions)  { { 'person.in' => value } }
+
+        it { is_expected.to eq([{ _visible: true, content_type_id: 1, 'person_id.in' => [1, 2] }, nil]) }
+
+      end
+
     end
 
     context 'many_to_many fields' do
