@@ -139,7 +139,7 @@ module Locomotive::Steam
     end
 
     def _cast_date_time(field)
-      _cast_time(field, :to_date)
+      _cast_time(field, :to_datetime)
     end
 
     def _cast_time(field, end_method)

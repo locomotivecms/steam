@@ -151,11 +151,11 @@ describe Locomotive::Steam::ContentEntry do
 
     context 'a date time' do
       let(:field_type)  { :date_time }
-      let(:value)       { '2007/06/29 00:00:00' }
-      let(:datetime)    { DateTime.parse('2007/06/29 00:00:00') }
+      let(:value)       { '2007/06/29 10:00:00' }
+      let(:datetime)    { DateTime.parse('2007/06/29 10:00:00') }
       it { is_expected.to eq datetime }
       context 'localized' do
-        let(:value) { build_i18n_field(en: '2007/06/29 00:00:00', fr: datetime) }
+        let(:value) { build_i18n_field(en: '2007/06/29 10:00:00', fr: datetime) }
         it { expect(subject.translations).to eq('en' => datetime, 'fr' => datetime) }
       end
     end
