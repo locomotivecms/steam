@@ -42,14 +42,19 @@ module Locomotive
               slug        = fullpath.split('/').last
               attributes  = get_attributes(filepath, fullpath)
 
-              {
+              _attributes = {
                 title:              { locale => attributes.delete(:title) || (default_locale == locale ? slug.humanize : nil) },
                 slug:               { locale => attributes.delete(:slug) || slug.dasherize },
                 template_path:      { locale => template_path(filepath, attributes, locale) },
-                redirect_url:       { locale => attributes.delete(:redirect_url) },
                 editable_elements:  build_editable_elements(attributes.delete(:editable_elements), locale),
                 _fullpath:          fullpath
-              }.merge(attributes)
+              }
+
+              [:redirect_url, :seo_title, :meta_description, :meta_keywords].each do |name|
+                _attributes[name] = { locale => attributes.delete(name) }
+              end
+
+              _attributes.merge!(attributes)
             end
 
             def update(leaf, filepath, fullpath, locale)
@@ -59,7 +64,10 @@ module Locomotive
               leaf[:title][locale]              = attributes.delete(:title) || slug.humanize
               leaf[:slug][locale]               = attributes.delete(:slug) || slug.dasherize
               leaf[:template_path][locale]      = template_path(filepath, attributes, locale)
-              leaf[:redirect_url][locale]       = attributes.delete(:redirect_url)
+
+              [:redirect_url, :seo_title, :meta_description, :meta_keywords].each do |name|
+                leaf[name][locale] = attributes.delete(name)
+              end
 
               update_editable_elements(leaf, attributes.delete(:editable_elements), locale)
 
