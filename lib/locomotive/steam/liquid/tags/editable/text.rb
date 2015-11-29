@@ -14,7 +14,6 @@ module Locomotive
                 else
                   element.content
                 end
-
                 format_content(content, element.format, context)
               end
             end
@@ -22,6 +21,7 @@ module Locomotive
             def format_content(content, format, context)
               case format
               when 'markdown' then markdown_service(context).to_html(content)
+              when 'rst' then rst_service(context).to_html(content)
               else
                 content
               end
@@ -55,6 +55,10 @@ module Locomotive
 
             def markdown_service(context)
               context.registers[:services].markdown
+            end
+
+            def rst_service(context)
+              context.registers[:services].rst
             end
 
           end
