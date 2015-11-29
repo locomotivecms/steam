@@ -9,7 +9,7 @@ module Locomotive
 
             def render_element(context, element)
               with_inline_editing(context, element) do
-                content = if element.default_content?
+                content = if default_content?(element)
                   render_default_content
                 else
                   element.content
@@ -37,6 +37,10 @@ module Locomotive
 
             def editable?(context, element)
               !!context.registers[:live_editing] && element.inline_editing
+            end
+
+            def default_content?(element)
+              element.content.blank?
             end
 
             def default_element_attributes

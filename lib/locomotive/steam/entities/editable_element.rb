@@ -23,10 +23,6 @@ module Locomotive::Steam
       self[:format] || 'html' # only editable_text elements
     end
 
-    def default_content?
-      self.content.blank?
-    end
-
   end
 
 end

@@ -26,7 +26,7 @@ describe Locomotive::Steam::Liquid::Drops::Page do
 
     context 'content updated by an user' do
 
-      let(:elements) { [instance_double('EditableText', block: 'content/header', slug: 'title', content: 'Bonjour le monde', :base_url= => nil, localized_attributes: [], default_content?: false, format: 'raw')] }
+      let(:elements) { [instance_double('EditableText', block: 'content/header', slug: 'title', content: 'Bonjour le monde', :base_url= => nil, localized_attributes: [], format: 'raw')] }
 
       before do
         services.locale = :en

@@ -75,7 +75,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
     let(:element_editing) { true }
 
     let(:child_page)  { instance_double('Page', fullpath: 'child-page') }
-    let(:element)     { instance_double('EditableText', _id: 42, id: 42, default_content?: true, inline_editing?: element_editing, inline_editing: element_editing, format: 'html') }
+    let(:element)     { instance_double('EditableText', _id: 42, id: 42, content: nil, inline_editing?: element_editing, inline_editing: element_editing, format: 'html') }
     let(:services)    { Locomotive::Steam::Services.build_instance(nil) }
     let(:context)     { ::Liquid::Context.new({}, {}, { page: child_page, services: services, live_editing: live_editing }) }
 
@@ -102,7 +102,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
       let(:layout)  { instance_double('Page', fullpath: 'layout') }
       let(:source)  { "{% editable_text title, hint: 'Simple short text', fixed: true %}Hello world{% endeditable_text %}" }
       let(:options) { { page: layout } }
-      let(:element) { instance_double('EditableText', _id: 42, id: 42, default_content?: true, inline_editing?: element_editing, inline_editing: element_editing, format: 'html', fixed: true) }
+      let(:element) { instance_double('EditableText', _id: 42, id: 42, content: nil, inline_editing?: element_editing, inline_editing: element_editing, format: 'html', fixed: true) }
 
       it 'fetches the related page in order to get the element' do
         expect(services.page_finder).to receive(:find).with('layout').and_return(layout)
@@ -113,7 +113,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
     context 'modified content' do
 
-      let(:element) { instance_double('EditableText', content: 'Hello world!', default_content?: false, format: 'html') }
+      let(:element) { instance_double('EditableText', content: 'Hello world!', format: 'html') }
       it { is_expected.to eq 'Hello world!' }
 
     end
@@ -129,7 +129,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
     context 'markdown format' do
 
-      let(:element) { instance_double('EditableText', content: "#Hello world!\nLorem ipsum", default_content?: false, format: 'markdown') }
+      let(:element) { instance_double('EditableText', content: "#Hello world!\nLorem ipsum", format: 'markdown') }
       it { is_expected.to eq "<h1>Hello world!</h1>\n<p>Lorem ipsum</p>\n" }
 
     end
