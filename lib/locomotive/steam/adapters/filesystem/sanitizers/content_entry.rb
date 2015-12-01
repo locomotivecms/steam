@@ -59,9 +59,9 @@ module Locomotive::Steam
               entity._label.each do |locale, label|
                 entity[:_slug][locale] ||= slugify(entity._id, label, dataset, locale)
               end
-            elsif entity._slug[:anylocale].nil?
+            elsif entity[:_slug] && entity[:_slug][:anylocale].nil?
               # Note: replace the translations of the I18nField by a string
-              entity._slug.translations = slugify(entity._id, entity._label, dataset)
+              entity[:_slug].translations = slugify(entity._id, entity._label, dataset)
             end
           end
 

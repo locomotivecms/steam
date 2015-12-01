@@ -95,6 +95,10 @@ module Locomotive::Steam
         value.respond_to?(:translations) ? value[locale] : value
       end
 
+      def reset_entity_map
+        @entity_map = {}
+      end
+
       private
 
       # create a proxy class for each localized attribute
