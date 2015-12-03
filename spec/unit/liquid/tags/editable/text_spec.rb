@@ -153,6 +153,13 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
     end
 
+    context 'rst format' do
+
+      let(:element) { instance_double('EditableText', content: "Hello world!\n============\nLorem ipsum", default_content?: false, format: 'rst') }
+      it { is_expected.to eq "<h1 class=\"title\">Hello world!</h1>\n<p>Lorem ipsum</p>\n\n" }
+
+    end
+
     context 'inline-editing mode' do
 
       let(:live_editing) { true }

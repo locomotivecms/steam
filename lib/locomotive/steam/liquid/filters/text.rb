@@ -45,6 +45,10 @@ module Locomotive
             @context.registers[:services].markdown.to_html(input)
           end
 
+          def rst(input)
+            @context.registers[:services].rst.to_html(input)
+          end
+
         end
 
         ::Liquid::Template.register_filter(Text)

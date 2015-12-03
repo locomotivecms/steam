@@ -102,6 +102,10 @@ module Locomotive
           Steam::MarkdownService.new
         end
 
+        register :rst do
+          Steam::RstService.new
+        end
+
         register :textile do
           Steam::TextileService.new
         end
