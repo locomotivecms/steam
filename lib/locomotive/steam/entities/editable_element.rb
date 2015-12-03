@@ -8,6 +8,7 @@ module Locomotive::Steam
 
     def initialize(attributes = {})
       super({
+        label:          nil,
         block:          nil,
         content:        nil,
         source:         nil,

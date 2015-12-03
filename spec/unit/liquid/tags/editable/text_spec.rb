@@ -57,11 +57,30 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
         it { is_expected.to include(block: nil) }
         it { is_expected.to include(type: :editable_text) }
         it { is_expected.to include(slug: 'title') }
+        it { is_expected.to include(label: nil) }
         it { is_expected.to include(hint: 'Simple short text') }
         it { is_expected.to include(format: 'html') }
         it { is_expected.to include(rows: 10) }
         it { is_expected.to include(line_break: true) }
         it { is_expected.to include(content_from_default: 'Hello world') }
+
+        context 'with a defined slug' do
+
+          let(:source) { "{% editable_text 'First column', slug: 'column_1' %}{% endeditable_text %}" }
+
+          it { is_expected.to include(slug: 'column_1') }
+          it { is_expected.to include(label: 'First column') }
+
+        end
+
+        context 'with a defined label' do
+
+          let(:source) { "{% editable_text 'first_column', label: 'Column #1' %}{% endeditable_text %}" }
+
+          it { is_expected.to include(slug: 'first_column') }
+          it { is_expected.to include(label: 'Column #1') }
+
+        end
 
       end
 

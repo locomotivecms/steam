@@ -12,9 +12,11 @@ module Locomotive
             def initialize(tag_name, markup, options)
               if markup =~ Syntax
                 @page_fullpath    = options[:page].fullpath
-                @slug             = $1.gsub(/[\"\']/, '')
+                @label_or_slug    = $1.gsub(/[\"\']/, '')
                 @element_options  = { fixed: false, inline_editing: true }
                 markup.scan(::Liquid::TagAttributes) { |key, value| @element_options[key.to_sym] = value.gsub(/^[\"\']/, '').gsub(/[\"\']$/, '') }
+
+                self.set_label_and_slug
               else
                 raise ::Liquid::SyntaxError.new("Valid syntax: #{tag_name} <slug>(, <options>)")
               end
@@ -67,9 +69,20 @@ module Locomotive
               hash[key] = render_default_content
             end
 
+            def set_label_and_slug
+              @slug   = @label_or_slug
+              @label  = @element_options[:label]
+
+              if @element_options[:slug].present?
+                @slug   = @element_options[:slug]
+                @label  ||= @label_or_slug
+              end
+            end
+
             def default_element_attributes
               {
                 block:          self.current_inherited_block_name,
+                label:          @label,
                 slug:           @slug,
                 hint:           @element_options[:hint],
                 priority:       @element_options[:priority] || 0,
