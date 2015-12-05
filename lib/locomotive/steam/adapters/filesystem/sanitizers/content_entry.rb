@@ -1,5 +1,3 @@
-require 'pry-byebug'
-
 module Locomotive::Steam
   module Adapters
     module Filesystem
