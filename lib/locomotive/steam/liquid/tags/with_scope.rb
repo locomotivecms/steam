@@ -33,6 +33,7 @@ module Locomotive
           def display(options = {}, &block)
             current_context.stack do
               current_context['with_scope'] = self.decode(options)
+              current_context['with_scope_content_type'] = false # for now, no content type is assigned to this with_scope
               yield
             end
           end

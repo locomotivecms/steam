@@ -112,4 +112,30 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
   end
 
+  describe '#conditions_for' do
+
+    let(:name) { 'news' }
+
+    subject { drop.send(:conditions_for, name) }
+
+    before { context['with_scope'] = 42 }
+
+    it { is_expected.to eq 42 }
+
+    context 'the with_scope has been used before by another and different content type' do
+
+      before { context['with_scope_content_type'] = 'articles' }
+      it { is_expected.to eq nil }
+
+    end
+
+    context 'the with_scope has been used before by the same content type' do
+
+      before { context['with_scope_content_type'] = 'news' }
+      it { is_expected.to eq 42 }
+
+    end
+
+  end
+
 end

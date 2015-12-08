@@ -7,6 +7,15 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
   let!(:output)     { render_template(source, context) }
   let(:conditions)  { context['conditions'] }
 
+  describe 'store the conditions in the context' do
+
+    let(:source) { "{% with_scope active: true, price: 42, title: 'foo', hidden: false %}{% assign conditions = with_scope %}{% assign content_type = with_scope_content_type %}{% endwith_scope %}" }
+
+    it { expect(context['conditions'].keys).to eq(%w(active price title hidden)) }
+    it { expect(context['content_type']).to eq false }
+
+  end
+
   describe 'decode basic options (boolean, integer, ...)' do
 
     let(:source) { "{% with_scope active: true, price: 42, title: 'foo', hidden: false %}{% assign conditions = with_scope %}{% endwith_scope %}" }

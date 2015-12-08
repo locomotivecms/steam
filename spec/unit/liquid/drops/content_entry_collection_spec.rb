@@ -38,16 +38,34 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntryCollection do
 
       describe '#first' do
         before do
-          expect(services.repositories.content_entry).to receive(:all).with({ 'visible' => true }).and_return(['a', 'b'])
+          expect(services.repositories.content_entry).to receive(:all).with('visible' => true).and_return(['a', 'b'])
         end
         it { expect(drop.first).to eq('a') }
       end
 
       describe '#count' do
         before do
-          expect(services.repositories.content_entry).to receive(:count).with({ 'visible' => true }).and_return(2)
+          expect(services.repositories.content_entry).to receive(:count).with('visible' => true).and_return(2)
         end
         it { expect(drop.count).to eq 2 }
+      end
+
+      describe 'only applied to the first content type' do
+
+        it 'sets the content type in the context' do
+          expect(services.repositories.content_entry).to receive(:all).with('visible' => true).and_return(['a', 'b'])
+          expect(context['with_scope_content_type']).to eq nil
+          drop.first
+          expect(context['with_scope_content_type']).to eq 'articles'
+        end
+
+        it "doesn't apply the with_scope conditions if it's not the same content type" do
+          context['with_scope_content_type'] = 'projects'
+          expect(services.repositories.content_entry).to receive(:all).with({}).and_return(['a', 'b'])
+          drop.first
+          expect(context['with_scope_content_type']).to eq 'projects'
+        end
+
       end
 
     end

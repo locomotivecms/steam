@@ -50,7 +50,7 @@ module Locomotive
             return '' if @_source.nil?
 
             if not @@forbidden_attributes.include?(meth.to_s)
-              repository(@_source).value_for(@_source, meth, @context['with_scope'])
+              repository(@_source).value_for(@_source, meth, conditions_for(meth))
             else
               nil
             end
@@ -84,6 +84,12 @@ module Locomotive
           def repository(entry)
             repository = @context.registers[:services].repositories.content_entry
             repository.with(entry.content_type)
+          end
+
+          def conditions_for(name)
+            # note: treat conditions only they apply to the content type (if it's a has_many/many_to_many relationships)
+            _name = @context['with_scope_content_type']
+            !_name || _name == name ? @context['with_scope'] : nil
           end
 
         end
