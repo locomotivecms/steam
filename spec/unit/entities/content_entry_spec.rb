@@ -146,6 +146,11 @@ describe Locomotive::Steam::ContentEntry do
       context 'localized' do
         let(:value) { build_i18n_field(en: '2007/06/29', fr: date) }
         it { expect(subject.translations).to eq('en' => date, 'fr' => date) }
+        context 'with a single value for all the translations' do
+          let(:value) { build_i18n_field('2007/06/29') }
+          it { expect(subject[:fr]).to eq(date) }
+          it { expect(subject[:en]).to eq(date) }
+        end
       end
     end
 

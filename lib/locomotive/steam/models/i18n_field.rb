@@ -5,7 +5,7 @@ module Locomotive::Steam
 
       extend Forwardable
 
-      def_delegators :@translations, :values, :blank?
+      def_delegators :@translations, :values, :blank?, :default
 
       attr_reader :name, :translations
 
@@ -37,6 +37,15 @@ module Locomotive::Steam
 
       def each(&block)
         @translations.each(&block)
+      end
+
+      def apply(&block)
+        if default
+          @translations = Hash.new(yield(default))
+        else
+          each { |l, _value| self[l] = yield(_value) }
+        end
+        self
       end
 
       alias :__translations__ :translations

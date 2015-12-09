@@ -156,8 +156,7 @@ module Locomotive::Steam
 
     def _cast_convertor(name, &block)
       if (value = attributes[name]).respond_to?(:translations)
-        value.each { |l, _value| value[l] = yield(_value) }
-        value
+        value.apply(&block)
       else
         yield(value)
       end
