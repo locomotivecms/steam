@@ -41,7 +41,7 @@ module Locomotive::Steam
         end
 
         def inspect
-          "#{field}#{operator != :== ? '.' : ' '}#{operator} #{value}"
+          "#{field}#{operator != :== ? '.' : ' '}#{operator} #{value.inspect}"
         end
 
         protected

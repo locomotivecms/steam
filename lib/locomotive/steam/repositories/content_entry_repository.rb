@@ -217,7 +217,9 @@ module Locomotive
             operator  = @operators[name]
             _name     = operator ? "#{name}.#{operator}" : name
 
-            if value = @conditions[_name]
+            if @conditions.has_key?(_name)
+              value = @conditions[_name]
+
               # delete old name
               @conditions.delete(_name)
 
