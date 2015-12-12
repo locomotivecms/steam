@@ -95,7 +95,8 @@ module Locomotive::Steam
           'url'         => request.url,
           'ip_address'  => request.ip,
           'post?'       => request.post?,
-          'host'        => request.host_with_port
+          'host'        => request.host_with_port,
+          'mounted_on'  => mounted_on
         }
       end
 

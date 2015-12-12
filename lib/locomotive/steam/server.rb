@@ -59,6 +59,7 @@ module Locomotive::Steam
           Middlewares::UrlRedirection,
           Middlewares::Robots,
           Middlewares::Timezone,
+          Middlewares::PrivateAccess,
           Middlewares::EntrySubmission,
           Middlewares::Locale,
           Middlewares::LocaleRedirection,
