@@ -19,8 +19,10 @@ module Locomotive
         end
       end
 
-      def by_handle(handle)
-        decorate { page_map[handle] }
+      def by_handle(handle, with_cache = true)
+        decorate do
+          with_cache ? page_map[handle] : repository.by_handle(handle)
+        end
       end
 
       private

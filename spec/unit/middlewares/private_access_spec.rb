@@ -9,7 +9,9 @@ describe Locomotive::Steam::Middlewares::PrivateAccess do
   let(:password)        { nil }
   let(:site)            { instance_double('Site', name: 'Acme Corp', private_access: private_access, password: password) }
   let(:url)             { 'http://models.example.com' }
-  let(:locomotive_path) { nil }
+  let(:lock_screen)     { nil }
+  let(:page_finder)     { instance_double('PageFinder', by_handle: lock_screen) }
+  let(:services)        { instance_double('Services', page_finder: page_finder) }
   let(:session)         { {} }
   let(:app)             { ->(env) { [200, env, ['app']] } }
   let(:middleware)      { described_class.new(app) }
@@ -33,6 +35,14 @@ describe Locomotive::Steam::Middlewares::PrivateAccess do
     context 'no password defined' do
 
       it { is_expected.not_to eq 'app' }
+
+      describe 'with a custom lock screen page' do
+
+        let(:lock_screen) { instance_double('LockScreenPage', title: 'LockScreen') }
+
+        it { subject; expect(rack_env['steam.page'].title).to eq 'LockScreen' }
+
+      end
 
     end
 
@@ -85,7 +95,7 @@ describe Locomotive::Steam::Middlewares::PrivateAccess do
     env_for(url, params: form).tap do |env|
       env['steam.site']       = site
       env['steam.request']    = Rack::Request.new(env)
-      env['locomotive.path']  = locomotive_path
+      env['steam.services']   = services
       env['rack.session']     = session
     end
   end

@@ -19,19 +19,28 @@ module Locomotive::Steam
           if access_granted?
             store_password
           else
-            render_response(lock_screen_html, 403)
+            render_lock_screen
           end
         end
       end
 
       private
 
+      def render_lock_screen
+        if page = services.page_finder.by_handle('lock_screen', false)
+          log "Found custom lock screen: #{page.title}"
+          env['steam.page'] = page
+        else
+          render_response(lock_screen_html, 403)
+        end
+      end
+
       def access_granted?
         !submitted_password.blank? && submitted_password == site.password
       end
 
       def submitted_password
-        request.session[:private_access_password] || params[:private_access_password]
+        params[:private_access_password] || request.session[:private_access_password]
       end
 
       def store_password
@@ -53,7 +62,7 @@ module Locomotive::Steam
   }
   </style>
   <body>
-    <form action="/#{mounted_on}" method="POST">
+    <form action="#{mounted_on}" method="POST">
       #{'<p>Wrong password</p>' unless submitted_password.blank?}
       <input type="password" name="private_access_password" placeholder="Password" />
       &nbsp;
