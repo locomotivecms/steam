@@ -53,7 +53,7 @@ module Locomotive::Steam
   <title>#{site.name} - Password protected</title>
   <style>
     @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
-    body { background: #f8f8f8; font-family: "Open Sans", sans-serif; font-size: 12px; }
+    body { background: #f8f8f8; height: 100%; font-family: "Open Sans", sans-serif; font-size: 12px; -webkit-transform-style: preserve-3d; -moz-transform-style: preserve-3d; transform-style: preserve-3d; }
     form { position: relative; top: 50%; width: 300px; margin: 0px auto; transform: translateY(-50%); -webkit-transform: translateY(-50%); -ms-transform: translateY(-50%); }
     form p { text-align: center; color: #d9684c; }
     form input[type=password] { border: 2px solid #eee; font-size: 14px; padding: 5px 8px; background: #fff; }
