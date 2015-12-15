@@ -4,6 +4,10 @@ module Locomotive
       module Filters
         module Base
 
+          def absolute_url(url)
+            url =~ Locomotive::Steam::IsHTTP ? url : URI.join(@context['base_url'], url).to_s
+          end
+
           protected
 
           # Convert an array of properties ('key:value') into a hash
@@ -45,10 +49,6 @@ module Locomotive
 
           def asset_url(path)
             @context.registers[:services].theme_asset_url.build(path)
-          end
-
-          def absolute_url(url)
-            url.starts_with?('/') ? url : "/#{url}"
           end
 
         end
