@@ -44,6 +44,12 @@ describe Locomotive::Steam::Liquid::Drops::Site do
 
     it { expect(subject.pages).to eq([{ 'title' => 'About us' }, { 'title' => 'Contact' }]) }
 
+    it "doesn't memoize it" do
+      subject.pages
+      allow(services.repositories.page).to receive(:all).and_return([pages.first])
+      expect(subject.pages).to eq([{ 'title' => 'About us' }])
+    end
+
   end
 
 end

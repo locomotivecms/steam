@@ -11,7 +11,7 @@ module Locomotive
           end
 
           def pages
-            @pages ||= liquify(*self.scoped_pages)
+            liquify(*self.scoped_pages)
           end
 
           protected
