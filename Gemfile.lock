@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    locomotivecms_steam (1.0.0.rc8)
+    locomotivecms_steam (1.0.0.rc9)
       RedCloth (~> 4.2.9)
       chronic (~> 0.10.2)
       coffee-script (~> 2.4.1)
@@ -37,7 +37,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    addressable (2.3.8)
+    addressable (2.4.0)
     attr_extras (4.4.0)
     bson (3.2.6)
     byebug (4.0.5)
@@ -132,7 +132,7 @@ GEM
     netrc (0.11.0)
     nokogiri (1.6.6.4)
       mini_portile (~> 0.6.0)
-    nokogumbo (1.4.1)
+    nokogumbo (1.4.6)
       nokogiri
     origin (2.1.1)
     pry (0.10.3)
@@ -176,11 +176,11 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.3.0)
     rspec-support (3.3.0)
-    sanitize (4.0.0)
+    sanitize (4.0.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
-      nokogumbo (= 1.4.1)
-    sass (3.4.19)
+      nokogumbo (~> 1.4.1)
+    sass (3.4.20)
     simplecov (0.11.1)
       docile (~> 1.1.0)
       json (~> 1.8)
