@@ -9,11 +9,20 @@ module Locomotive
 
             def default_element_attributes
               super.merge({
-                default_source_url: render_default_content.strip
+                default_source_url: render_default_content.strip,
+                resize_format:      @element_options[:resize]
               })
             end
 
             def render_element(context, element)
+              _url, timestamp = url_with_timestamp(context, element)
+
+              url = context.registers[:services].asset_host.compute(_url, timestamp)
+
+              apply_transformation(url, context)
+            end
+
+            def url_with_timestamp(context, element)
               default_timestamp = context.registers[:page].updated_at.to_i
 
               url, timestamp = (if element.source
@@ -25,8 +34,6 @@ module Locomotive
                   [render_default_content, nil]
                 end
               end)
-
-              context.registers[:services].asset_host.compute(url, timestamp)
             end
 
             def source_url(element)
@@ -35,6 +42,15 @@ module Locomotive
               else
                 _url = element.source.start_with?('/') ? element.source : "/#{element.source}"
                 "#{element.base_url}#{_url}"
+              end
+            end
+
+            def apply_transformation(url, context)
+              # resize image with the image_resizer service?
+              if (format = @element_options[:resize]).present?
+                context.registers[:services].image_resizer.resize(url, format) || url
+              else
+                url
               end
             end
 

@@ -114,6 +114,13 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
 
     end
 
+    context 'resize image' do
+
+      let(:source) { "{% editable_file banner, hint: 'some text', resize: '500x100#' %}http://www.placehold.it/500x500{% endeditable_file %}" }
+      it { is_expected.to eq '/steam/dynamic/W1siZnUiLCJodHRwOi8vd3d3LnBsYWNlaG9sZC5pdC81MDB4NTAwIl0sWyJwIiwidGh1bWIiLCI1MDB4MTAwIyJdXQ/1c79f4581f33aae4/500x500' }
+
+    end
+
   end
 
 end
