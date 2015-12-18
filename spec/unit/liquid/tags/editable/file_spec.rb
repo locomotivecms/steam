@@ -68,12 +68,12 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
 
   describe 'rendering' do
 
-    let(:inline_editing) { false }
+    let(:live_editing) { false }
 
     let(:page)        { instance_double('Page', fullpath: 'hello-world', updated_at: DateTime.parse('2007-06-29 21:00:00')) }
     let(:element)     { instance_double('EditableFile', id: 42, default_source_url: nil, source?: false, source: nil, content: nil, base_url: '') }
     let(:services)    { Locomotive::Steam::Services.build_instance }
-    let(:context)     { ::Liquid::Context.new({}, {}, { page: page, services: services }) }
+    let(:context)     { ::Liquid::Context.new({}, {}, { page: page, services: services, live_editing: live_editing }) }
 
     before { allow(services).to receive(:current_site).and_return(nil) }
 
@@ -82,6 +82,22 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
     subject { render_template(source, context, options) }
 
     it { is_expected.to eq 'http://www.placehold.it/500x500' }
+
+    context 'live editing' do
+
+      let(:live_editing) { true }
+
+      it { is_expected.to eq 'http://www.placehold.it/500x500?editable-path=banner' }
+
+      context 'inside a block' do
+
+        let(:source) { "{% block head %}{% editable_file banner, hint: 'some text' %}http://www.placehold.it/500x500?123456{% endeditable_file %}{% endblock %}" }
+
+        it { is_expected.to include('http://www.placehold.it/500x500?123456&editable-path=head--banner') }
+
+      end
+
+    end
 
     context 'no element found, render the default content' do
 
@@ -116,8 +132,16 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
 
     context 'resize image' do
 
-      let(:source) { "{% editable_file banner, hint: 'some text', resize: '500x100#' %}http://www.placehold.it/500x500{% endeditable_file %}" }
+      let(:source) { "{% block header %}{% editable_file banner, hint: 'some text', resize: '500x100#' %}http://www.placehold.it/500x500{% endeditable_file %}{% endblock %}" }
       it { is_expected.to eq '/steam/dynamic/W1siZnUiLCJodHRwOi8vd3d3LnBsYWNlaG9sZC5pdC81MDB4NTAwIl0sWyJwIiwidGh1bWIiLCI1MDB4MTAwIyJdXQ/1c79f4581f33aae4/500x500' }
+
+      context 'live editing on' do
+
+        let(:live_editing) { true }
+
+        it { is_expected.to eq '<span class="locomotive-block-anchor" data-element-id="header" style="visibility: hidden"></span>/steam/dynamic/W1siZnUiLCJodHRwOi8vd3d3LnBsYWNlaG9sZC5pdC81MDB4NTAwIl0sWyJwIiwidGh1bWIiLCI1MDB4MTAwIyJdXQ/1c79f4581f33aae4/500x500?editable-path=header--banner' }
+
+      end
 
     end
 

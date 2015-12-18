@@ -35,10 +35,6 @@ module Locomotive
               end
             end
 
-            def editable?(context, element)
-              !!context.registers[:live_editing] && element.inline_editing
-            end
-
             def default_content?(element)
               element.content.blank?
             end

@@ -49,6 +49,24 @@ module Locomotive
 
             protected
 
+            def render_default_content
+              begin
+                if nodelist.all? { |n| n.is_a? String }
+                  @body.render(::Liquid::Context.new)
+                else
+                  raise ::Liquid::SyntaxError.new("No liquid tags are allowed inside the #{@tag_name} \"#{@slug}\" (block: #{current_inherited_block_name || 'default'})")
+                end
+              end
+            end
+
+            def editable?(context, element = nil)
+              !(
+                element.try(:inline_editing) == false ||
+                [false, 'false'].include?(default_element_attributes[:inline_editing]) ||
+                context.registers[:live_editing].blank?
+              )
+            end
+
             def fetch_page(context)
               page = context.registers[:page]
 
@@ -100,16 +118,6 @@ module Locomotive
 
             def current_inherited_block
               options[:inherited_blocks].try(:[], :nested).try(:last)
-            end
-
-            def render_default_content
-              begin
-                if nodelist.all? { |n| n.is_a? String }
-                  @body.render(::Liquid::Context.new)
-                else
-                  raise ::Liquid::SyntaxError.new("No liquid tags are allowed inside the #{@tag_name} \"#{@slug}\" (block: #{current_inherited_block_name || 'default'})")
-                end
-              end
             end
 
             #:nocov:

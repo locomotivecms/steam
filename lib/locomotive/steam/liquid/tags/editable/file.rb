@@ -5,6 +5,16 @@ module Locomotive
         module Editable
           class File < Base
 
+            def parse(tokens)
+              super.tap do
+                @path = [current_inherited_block_name, @slug].compact.join('--').gsub('/', '--')
+              end
+            end
+
+            def render(context)
+              apply_transformation(super, context)
+            end
+
             protected
 
             def default_element_attributes
@@ -15,11 +25,8 @@ module Locomotive
             end
 
             def render_element(context, element)
-              _url, timestamp = url_with_timestamp(context, element)
-
-              url = context.registers[:services].asset_host.compute(_url, timestamp)
-
-              apply_transformation(url, context)
+              url, timestamp = url_with_timestamp(context, element)
+              context.registers[:services].asset_host.compute(url, timestamp)
             end
 
             def url_with_timestamp(context, element)
@@ -48,10 +55,15 @@ module Locomotive
             def apply_transformation(url, context)
               # resize image with the image_resizer service?
               if (format = @element_options[:resize]).present?
-                context.registers[:services].image_resizer.resize(url, format) || url
-              else
-                url
+                url = context.registers[:services].image_resizer.resize(url, format) || url
               end
+
+              # in the live editing mode, tag all the images with their editable path (block + slug)
+              if editable?(context)
+                url = url + (url.include?('?') ? '&' : '?') + 'editable-path=' + @path
+              end
+
+              url
             end
 
           end
