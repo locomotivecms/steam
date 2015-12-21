@@ -9,7 +9,6 @@ group :development do
   # gem 'locomotivecms-liquid', path: '/Users/didier/Documents/LocomotiveCMS/gems/liquid'
   # gem 'thin'
   gem 'puma'
-  # gem 'sprockets-sass',     '~> 1.2.0'
   gem 'yui-compressor',     '~> 0.12.0'
 
   gem 'rack-mini-profiler'

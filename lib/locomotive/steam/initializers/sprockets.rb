@@ -1,10 +1,8 @@
 require 'sprockets'
-require 'sprockets-sass'
-require 'sprockets-less'
+require 'sass'
+require 'less'
 require 'coffee_script'
 require 'compass'
-
-Sprockets::Sass.add_sass_functions = false
 
 module Locomotive::Steam
 
@@ -26,6 +24,8 @@ module Locomotive::Steam
       %w(fonts stylesheets javascripts).each do |name|
         append_path File.join(@steam_path, name)
       end
+
+      Compass::Frameworks::ALL.each { |f| append_path(f.stylesheets_directory) }
     end
 
     def install_yui_compressor(options)

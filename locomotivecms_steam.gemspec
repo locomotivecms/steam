@@ -18,11 +18,11 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler',    '~> 1.7'
   spec.add_development_dependency 'rake',       '~> 10.4.2'
 
-  spec.add_dependency 'mongo',                  '~> 2.1.2'
+  spec.add_dependency 'mongo',                  '~> 2.2.1'
   spec.add_dependency 'origin',                 '~> 2.1.1'
 
-  spec.add_dependency 'nokogiri',               '~> 1.6.6.4'
-  spec.add_dependency 'sanitize',               '~> 4.0.0'
+  spec.add_dependency 'nokogiri',               '~> 1.6.7.1'
+  spec.add_dependency 'sanitize',               '~> 4.0.1'
   spec.add_dependency 'morphine',               '~> 0.1.1'
   spec.add_dependency 'httparty',               '~> 0.13.6'
   spec.add_dependency 'chronic',                '~> 0.10.2'
@@ -33,13 +33,14 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'moneta',                 '~> 0.8.0'
   spec.add_dependency 'rack_csrf',              '~> 2.5.0'
 
-  spec.add_dependency 'sprockets',              '~> 2.12.3'
-  spec.add_dependency 'sprockets-sass',         '~> 1.3.1'
-  spec.add_dependency 'sprockets-less',         '~> 0.6.1'
+  spec.add_dependency 'sprockets',              '~> 3.5.2'
+  spec.add_dependency 'sass',                   '~> 3.4.20'
+  spec.add_dependency 'less',                   '~> 2.6.0'
+  spec.add_dependency 'therubyracer',           '~> 0.12.2'
   spec.add_dependency 'coffee-script',          '~> 2.4.1'
   spec.add_dependency 'compass',                '~> 1.0.3'
 
-  spec.add_dependency 'kramdown',               '~> 1.8.0'
+  spec.add_dependency 'kramdown',               '~> 1.9.0'
   spec.add_dependency 'RedCloth',               '~> 4.2.9'
   spec.add_dependency 'haml',                   '~> 4.0.6'
   spec.add_dependency 'mimetype-fu',            '~> 0.1.2'
