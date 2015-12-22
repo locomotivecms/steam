@@ -18,13 +18,13 @@ group :development do
 end
 
 group :test do
-  gem 'rspec',              '~> 3.3.0'
+  gem 'rspec',              '~> 3.4.0'
   gem 'json_spec',          '~> 1.1.4'
   gem 'i18n-spec',          '~> 0.6.0'
 
-  gem 'timecop',            '~> 0.7.4'
+  gem 'timecop',            '~> 0.8.0'
 
-  gem 'pry-byebug',         '~> 3.1.0'
+  gem 'pry-byebug',         '~> 3.3.0'
 
   gem 'rack-test',          '~> 0.6.3'
 
