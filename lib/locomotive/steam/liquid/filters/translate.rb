@@ -5,8 +5,14 @@ module Locomotive
 
         module Translate
 
-          def translate(input, locale = nil, scope = nil)
-            @context.registers[:services].translator.translate(input, locale, scope) || input
+          def translate(input, options = nil, legacy_scope = nil)
+            options ||= {}
+
+            unless options.respond_to?(:values) # String
+              options = { 'locale' => options, 'scope' => legacy_scope }
+            end
+
+            @context.registers[:services].translator.translate(input, options) || input
           end
 
         end

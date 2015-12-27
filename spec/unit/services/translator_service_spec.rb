@@ -16,7 +16,7 @@ describe Locomotive::Steam::TranslatorService do
       allow(repository).to receive(:by_key).with('example_test').and_return(translation)
     end
 
-    subject { service.translate(input, locale, scope) }
+    subject { service.translate(input, 'locale' => locale, 'scope' => scope) }
 
     describe 'existing translation' do
 

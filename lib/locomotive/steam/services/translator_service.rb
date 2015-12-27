@@ -8,13 +8,13 @@ module Locomotive
       # Return the translation described by a key.
       #
       # @param [ String ] key The key of the translation.
-      # @param [ String ] locale The locale we want the translation in
-      # @param [ String ] scope If specified, instead of looking in the translations, it will use I18n instead.
+      # @param [ Hash ] options This includes the following options: count, locale (The locale we want the translation in), scope (If specified, instead of looking in the translations, it will use I18n instead)
       #
       # @return [ String ] the translated text or nil if not found
       #
-      def translate(input, locale, scope = nil)
-        locale ||= self.current_locale
+      def translate(input, options = {})
+        locale  = options['locale'] || self.current_locale
+        scope   = options['scope']
 
         if scope.blank?
           values = repository.by_key(input).try(:values) || {}
