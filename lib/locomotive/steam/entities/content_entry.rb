@@ -144,7 +144,14 @@ module Locomotive::Steam
 
     def _cast_time(field, end_method)
       _cast_convertor(field.name) do |value|
-        value.is_a?(String) ? Chronic.parse(value).send(end_method) : value
+        if value.is_a?(String)
+          # context: time from a YAML file (String).
+          # In that case, use the timezone defined by the site.
+          Chronic.time_class = Time.zone
+          Chronic.parse(value).send(end_method)
+        else
+          value
+        end
       end
     end
 

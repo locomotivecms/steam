@@ -155,6 +155,7 @@ describe Locomotive::Steam::ContentEntry do
     end
 
     context 'a date time' do
+      before { Time.zone = 'UTC' }
       let(:field_type)  { :date_time }
       let(:value)       { '2007/06/29 10:00:00' }
       let(:datetime)    { DateTime.parse('2007/06/29 10:00:00') }
