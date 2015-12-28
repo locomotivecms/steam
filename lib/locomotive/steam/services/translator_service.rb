@@ -14,7 +14,7 @@ module Locomotive
       #
       def translate(input, options = {})
         locale  = options['locale'] || self.current_locale
-        scope   = options['scope']
+        scope   = options.delete('scope')
 
         if scope.blank?
           values = repository.by_key(input).try(:values) || {}
@@ -22,7 +22,7 @@ module Locomotive
           # FIXME: important to check if the returned value is nil (instead of nil + false)
           # false being reserved for an existing key but without provided translation)
           if (translation = values[locale.to_s]).present?
-            translation
+            _translate(translation, options)
           else
             Locomotive::Common::Logger.warn "Missing translation '#{input}' for the '#{locale}' locale".yellow
             ActiveSupport::Notifications.instrument('steam.missing_translation', input: input, locale: locale)
@@ -31,6 +31,12 @@ module Locomotive
         else
           I18n.t(input, scope: scope.split('.'), locale: locale)
         end
+      end
+
+      private
+
+      def _translate(string, options)
+        ::Liquid::Template.parse(string).render(options)
       end
 
     end

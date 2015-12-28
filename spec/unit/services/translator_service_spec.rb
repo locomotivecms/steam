@@ -8,15 +8,16 @@ describe Locomotive::Steam::TranslatorService do
 
   describe '#translate' do
 
-    let(:input)   { 'example_test' }
-    let(:locale)  { nil }
-    let(:scope)   { nil }
+    let(:input)         { 'example_test' }
+    let(:locale)        { nil }
+    let(:scope)         { nil }
+    let(:interpolation) { {} }
 
     before do
       allow(repository).to receive(:by_key).with('example_test').and_return(translation)
     end
 
-    subject { service.translate(input, 'locale' => locale, 'scope' => scope) }
+    subject { service.translate(input, interpolation.merge('locale' => locale, 'scope' => scope)) }
 
     describe 'existing translation' do
 
@@ -24,14 +25,14 @@ describe Locomotive::Steam::TranslatorService do
 
       it { is_expected.to eq 'Example text' }
 
-      context 'specifying a locale' do
+      describe 'specifying a locale' do
 
         let(:locale) { 'es' }
         it { is_expected.to eq 'Texto de ejemplo' }
 
       end
 
-      context "specifying a locale that doesn't exist" do
+      describe "specifying a locale that doesn't exist" do
 
         let(:locale) { 'nl' }
 
@@ -41,13 +42,22 @@ describe Locomotive::Steam::TranslatorService do
 
       end
 
-      context 'specifying a scope' do
+      context 'with a scope' do
 
         let(:input)   { 'fr' }
         let(:locale)  { 'en' }
         let(:scope)   { 'locomotive.locales' }
 
         it { is_expected.to eq 'French' }
+
+      end
+
+      describe 'interpolation' do
+
+        let(:interpolation) { { 'name' => 'John' } }
+        let(:translation)   { instance_double('Translation', values: { 'en' => 'Hello {{ name }}', 'es' => 'Texto de ejemplo' }) }
+
+        it { is_expected.to eq 'Hello John' }
 
       end
 
