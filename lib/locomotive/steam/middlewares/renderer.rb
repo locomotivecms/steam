@@ -82,7 +82,7 @@ module Locomotive::Steam
 
       def _locale_liquid_assigns
         {
-          'locale'         => locale,
+          'locale'         => locale.to_s,
           'default_locale' => site.default_locale.to_s,
           'locales'        => site.locales.map(&:to_s)
         }
