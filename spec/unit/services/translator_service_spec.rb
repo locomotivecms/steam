@@ -61,6 +61,54 @@ describe Locomotive::Steam::TranslatorService do
 
       end
 
+      describe 'pluralization' do
+
+        context 'zero' do
+
+          let(:interpolation) { { 'count' => '0' } }
+          let(:translation)   { instance_double('Translation', values: { 'en' => 'No posts' }) }
+
+          before { expect(repository).to receive(:by_key).with('example_test_zero').and_return(translation) }
+
+          it { is_expected.to eq 'No posts' }
+
+        end
+
+        context 'one' do
+
+          let(:interpolation) { { 'count' => '1' } }
+          let(:translation)   { instance_double('Translation', values: { 'en' => '1 post' }) }
+
+          before { expect(repository).to receive(:by_key).with('example_test_one').and_return(translation) }
+
+          it { is_expected.to eq '1 post' }
+
+        end
+
+        context 'two' do
+
+          let(:interpolation) { { 'count' => 2 } }
+          let(:translation)   { instance_double('Translation', values: { 'en' => '2 posts' }) }
+
+          before { expect(repository).to receive(:by_key).with('example_test_two').and_return(translation) }
+
+          it { is_expected.to eq '2 posts' }
+
+        end
+
+        context 'other' do
+
+          let(:interpolation) { { 'count' => 42 } }
+          let(:translation)   { instance_double('Translation', values: { 'en' => '{{ count }} posts' }) }
+
+          before { expect(repository).to receive(:by_key).with('example_test_other').and_return(translation) }
+
+          it { is_expected.to eq '42 posts' }
+
+        end
+
+      end
+
     end
 
     describe 'missing translation' do

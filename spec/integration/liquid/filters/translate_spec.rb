@@ -10,16 +10,13 @@ describe Locomotive::Steam::Liquid::Filters::Translate do
   let(:assigns)     { {} }
   let(:context)     { ::Liquid::Context.new(assigns, {}, { services: services }) }
 
-  before {
-    services.locale = :en
-    allow(translator).to receive(:translate).and_return(translation)
-  }
+  before { services.locale = :en }
 
   subject { render_template(source, context) }
 
   context 'missing translation' do
 
-    let(:translation) { nil }
+    before { allow(translator).to receive(:translate).and_return(nil) }
 
     it { is_expected.to eq 'welcome_message' }
 
@@ -27,15 +24,15 @@ describe Locomotive::Steam::Liquid::Filters::Translate do
 
   context 'existing translation' do
 
-    let(:translation) { 'Hello world' }
+    before { allow(translator).to receive(:translate).and_return('Hello world') }
 
     it { is_expected.to eq 'Hello world' }
 
   end
 
-  context 'passing a locale and a scope' do
+  describe 'passing a locale and a scope' do
 
-    let(:translation) { 'Bonjour monde' }
+    before { allow(translator).to receive(:translate).and_return('Bonjour monde') }
 
     describe 'legacy syntax' do
 
@@ -50,6 +47,16 @@ describe Locomotive::Steam::Liquid::Filters::Translate do
       it { expect(translator).to receive(:translate).with('welcome_message', 'locale' => 'fr', 'scope' => 'locomotive.default'); subject }
 
     end
+
+  end
+
+  describe 'pluralization' do
+
+    let(:translation) { instance_double('Translation', values: { 'en' => '{{ name }} has {{ count }} articles' }) }
+    before { expect(translator.repository).to receive(:by_key).with('post_count_two').and_return(translation) }
+
+    let(:source) { "{{ 'post_count' | translate: count: 2, name: 'John' }}" }
+    it { expect(subject).to eq('John has 2 articles') }
 
   end
 

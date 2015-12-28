@@ -17,6 +17,8 @@ module Locomotive
         scope   = options.delete('scope')
 
         if scope.blank?
+          input = "#{input}_#{pluralize_prefix(options['count'])}" if options['count']
+
           values = repository.by_key(input).try(:values) || {}
 
           # FIXME: important to check if the returned value is nil (instead of nil + false)
@@ -37,6 +39,15 @@ module Locomotive
 
       def _translate(string, options)
         ::Liquid::Template.parse(string).render(options)
+      end
+
+      def pluralize_prefix(count)
+        case count.to_i
+        when 0 then 'zero'
+        when 1 then 'one'
+        when 2 then 'two'
+        else 'other'
+        end
       end
 
     end
