@@ -63,6 +63,14 @@ describe Locomotive::Steam::Liquid::Tags::Consume do
 
     end
 
+    describe 'inside a loop' do
+
+      let(:assigns) { { 'urls' => ['http://blog.locomotiveapp.org/api/read', 'http://blog.locomotiveapp.org/api/read'] } }
+      let(:source)  { "{% for url in urls %}{% consume blog from url %}{{ blog.title }}{% endconsume %}{% endfor %}" }
+      it { is_expected.to eq 'Locomotive rocks!Locomotive rocks!' }
+
+    end
+
   end
 
   describe 'timeout' do

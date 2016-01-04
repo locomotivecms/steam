@@ -32,6 +32,7 @@ module Liquid
       return nil if string.blank?
 
       string = string.gsub(/^(\s*,)/, '')
+
       Solid::Arguments.parse(string)
     end
 
