@@ -3,6 +3,7 @@ require 'sass'
 require 'less'
 require 'coffee_script'
 require 'compass'
+require 'autoprefixer-rails'
 
 module Locomotive::Steam
 
@@ -16,6 +17,8 @@ module Locomotive::Steam
       append_steam_paths
 
       install_yui_compressor(options)
+
+      install_autoprefixer
     end
 
     private
@@ -42,6 +45,13 @@ module Locomotive::Steam
         Locomotive::Common::Logger.warn message.red
         false
       end
+    end
+
+    def install_autoprefixer
+      file   = File.join(root, '..', 'config', 'autoprefixer.yml')
+      params = (File.exist?(file) ? ::YAML.load_file(file) : {}).symbolize_keys
+
+      AutoprefixerRails.install(self, params)
     end
 
     def is_java_installed?

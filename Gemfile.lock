@@ -3,6 +3,7 @@ PATH
   specs:
     locomotivecms_steam (1.0.0.rc9)
       RedCloth (~> 4.2.9)
+      autoprefixer-rails (~> 6.2.3)
       chronic (~> 0.10.2)
       coffee-script (~> 2.4.1)
       compass (~> 1.0.3)
@@ -40,6 +41,9 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.4.0)
     attr_extras (4.4.0)
+    autoprefixer-rails (6.2.3)
+      execjs
+      json
     bson (4.0.0)
     byebug (8.2.1)
     chronic (0.10.2)
@@ -156,7 +160,7 @@ GEM
     rake (10.4.2)
     rake-compiler (0.9.5)
       rake
-    rb-fsevent (0.9.6)
+    rb-fsevent (0.9.7)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
     ref (2.0.0)

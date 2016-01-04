@@ -5,11 +5,13 @@ module Locomotive::Steam
 
       REGEXP = /^\/(javascripts|stylesheets)\/(.*)$/o
 
+      @@sprocket_environments = {}
+
       attr_reader :app, :assets
 
       def initialize(app, options)
         @app    = app
-        @assets = Locomotive::Steam::SprocketsEnvironment.new(options[:root], options)
+        @assets = self.class.sprocket_environment(options[:root], options)
       end
 
       def call(env)
@@ -19,6 +21,10 @@ module Locomotive::Steam
         else
           app.call(env)
         end
+      end
+
+      def self.sprocket_environment(root, options)
+        @@sprocket_environments[root] ||= Locomotive::Steam::SprocketsEnvironment.new(root, options)
       end
 
     end
