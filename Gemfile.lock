@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    locomotivecms_steam (1.0.0.rc9)
+    locomotivecms_steam (1.0.0.rc10)
       RedCloth (~> 4.2.9)
       autoprefixer-rails (~> 6.2.3)
       chronic (~> 0.10.2)
