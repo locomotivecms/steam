@@ -35,8 +35,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'sprockets',              '~> 3.5.2'
   spec.add_dependency 'sass',                   '~> 3.4.20'
-  spec.add_dependency 'less',                   '~> 2.6.0'
-  spec.add_dependency 'therubyracer',           '~> 0.12.2'
   spec.add_dependency 'coffee-script',          '~> 2.4.1'
   spec.add_dependency 'compass',                '~> 1.0.3'
   spec.add_dependency 'autoprefixer-rails',     '~> 6.2.3'

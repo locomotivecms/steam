@@ -1,6 +1,5 @@
 require 'sprockets'
 require 'sass'
-require 'less'
 require 'coffee_script'
 require 'compass'
 require 'autoprefixer-rails'
