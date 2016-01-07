@@ -18,8 +18,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler',    '~> 1.7'
   spec.add_development_dependency 'rake',       '~> 10.4.2'
 
-  spec.add_dependency 'mongo',                  '~> 2.2.1'
-  spec.add_dependency 'origin',                 '~> 2.1.1'
+  spec.add_development_dependency 'mongo',      '~> 2.2.1'
+  spec.add_development_dependency 'origin',     '~> 2.1.1'
 
   spec.add_dependency 'nokogiri',               '~> 1.6.7.1'
   spec.add_dependency 'sanitize',               '~> 4.0.1'
