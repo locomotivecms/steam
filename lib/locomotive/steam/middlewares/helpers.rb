@@ -26,7 +26,7 @@ module Locomotive::Steam
       end
 
       def modify_path(path = nil, &block)
-        path ||= request.path
+        path ||= env['steam.path']
 
         segments = path.split('/')
         yield(segments)

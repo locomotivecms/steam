@@ -13,10 +13,13 @@ describe Locomotive::Steam::Middlewares::LocaleRedirection do
   let(:middleware)      { Locomotive::Steam::Middlewares::LocaleRedirection.new(app) }
   let(:locale)          { 'de' }
   let(:locale_in_path)  { true }
+  let(:mounted_on)      { nil }
 
   subject do
     env = env_for(url, 'steam.site' => site, 'steam.locale' => locale, 'steam.locale_in_path' => locale_in_path)
-    env['steam.request'] = Rack::Request.new(env)
+    env['steam.mounted_on'] = mounted_on
+    env['steam.request']    = Rack::Request.new(env)
+    env['steam.path']       = env['steam.request'].path_info.gsub(/\A#{mounted_on}/, '')
     code, env = middleware.call(env)
     [code, env['Location']]
   end
@@ -79,6 +82,12 @@ describe Locomotive::Steam::Middlewares::LocaleRedirection do
       describe 'add default locale to url with path and query' do
         let(:url) { 'http://models.example.com/hello/world?this=is_me' }
         it { is_expected.to eq [301, '/de/hello/world?this=is_me'] }
+      end
+
+      describe 'mounted_on is present' do
+        let(:mounted_on) { '/mounted-on/somewhere' }
+        let(:url) { 'http://models.example.com/mounted-on/somewhere/hello/world' }
+        it { is_expected.to eq [301, '/mounted-on/somewhere/de/hello/world'] }
       end
 
     end
