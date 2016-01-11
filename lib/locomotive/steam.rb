@@ -22,7 +22,8 @@ module Locomotive
     IsHTTP = /\Ahttps?:\/\//o
 
     class << self
-      attr_writer :configuration
+      attr_writer   :configuration
+      attr_accessor :extension_configurations
     end
 
     def self.configuration
@@ -39,8 +40,16 @@ module Locomotive
       require_relative 'steam/initializers'
     end
 
+    def self.configure_extension(&block)
+      (@extension_configurations ||= []) << block
+    end
+
     # Shortcut to build the Rack stack
     def self.to_app
+      (@extension_configurations || []).each do |block|
+        block.call(@configuration)
+      end
+
       require_relative 'steam/server'
       Server.to_app
     end
