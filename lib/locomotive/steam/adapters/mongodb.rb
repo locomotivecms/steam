@@ -82,33 +82,15 @@ module Locomotive::Steam
     end
 
     def session
-      Thread.current[:mongo_session] ||= if uri
-        Mongo::Client.new(uri)
-      else
-        client = Mongo::Client.new([*hosts], database: database)
-        client = client.with(user: username, password: password) if username && password
-        client
-      end
+      Thread.current[:mongo_session] ||= Mongo::Client.new(uri_or_hosts, client_options)
     end
 
-    def uri
-      options[:uri]
+    def uri_or_hosts
+      options[:uri] || [*options[:hosts]]
     end
 
-    def database
-      options[:database]
-    end
-
-    def hosts
-      options[:hosts]
-    end
-
-    def username
-      options[:username]
-    end
-
-    def password
-      options[:password]
+    def client_options
+      options.slice(*Mongo::Client::VALID_OPTIONS)
     end
 
   end
