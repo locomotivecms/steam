@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    locomotivecms_steam (1.0.0.rc10)
+    locomotivecms_steam (1.0.0)
       RedCloth (~> 4.2.9)
       autoprefixer-rails (~> 6.2.3)
       chronic (~> 0.10.2)
@@ -22,7 +22,7 @@ PATH
       rack-rewrite (~> 1.5.1)
       rack_csrf (~> 2.5.0)
       sanitize (~> 4.0.1)
-      sass (~> 3.4.20)
+      sass (~> 3.4.21)
       sprockets (~> 3.5.2)
 
 GEM
@@ -176,7 +176,7 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
       nokogumbo (~> 1.4.1)
-    sass (3.4.20)
+    sass (3.4.21)
     simplecov (0.11.1)
       docile (~> 1.1.0)
       json (~> 1.8)
@@ -227,4 +227,4 @@ DEPENDENCIES
   yui-compressor (~> 0.12.0)
 
 BUNDLED WITH
-   1.10.6
+   1.11.2
