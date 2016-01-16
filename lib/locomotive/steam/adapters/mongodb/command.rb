@@ -20,6 +20,14 @@ module Locomotive::Steam
           entity
         end
 
+        def inc(entity, attribute, amount = 1)
+          entity.tap do
+            @collection.find(_id: entity._id).update_one('$inc' => { attribute => amount })
+            entity[attribute] ||= 0
+            entity[attribute] += amount
+          end
+        end
+
         def delete(entity)
           @collection.find(_id: entity._id).delete_one if entity._id
         end

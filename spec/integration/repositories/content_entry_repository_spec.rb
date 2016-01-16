@@ -76,6 +76,22 @@ describe Locomotive::Steam::ContentEntryRepository do
 
     end
 
+    describe '#inc' do
+
+      let(:type) { type_repository.by_slug('songs') }
+      let(:attributes) { { title: 'Jeremy', band: 'pearl-jam', short_description: '"Jeremy" is a song by the American rock band Pearl Jam', views: 41 } }
+      let(:entry) { repository.with(type).build(attributes) }
+
+      before { repository.create(entry) }
+
+      subject { repository.inc(entry, :views) }
+
+      it { expect(subject.views).to eq 42 }
+
+      after { repository.delete(entry) }
+
+    end
+
   end
 
   context 'MongoDB' do

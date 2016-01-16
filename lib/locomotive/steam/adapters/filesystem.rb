@@ -45,6 +45,11 @@ module Locomotive::Steam
       entity
     end
 
+    def inc(mapper, entity, attribute, amount = 1)
+      entity[attribute] += amount
+      entity
+    end
+
     def delete(mapper, scope, entity)
       # TODO: to be implemented
     end

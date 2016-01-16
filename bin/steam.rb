@@ -82,7 +82,7 @@ Locomotive::Common.configure do |config|
   config.notifier = Locomotive::Common::Logger.setup(options[:log_file])
 end
 
-app = Locomotive::Steam::Server.to_app
+app = Locomotive::Steam.to_app
 
 # Thin rack handler
 # Note: alt thin settings (Threaded)

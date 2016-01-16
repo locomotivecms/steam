@@ -34,6 +34,10 @@ module Locomotive::Steam
       command(mapper).insert(entity)
     end
 
+    def inc(mapper, entity, attribute, amount = 1)
+      command(mapper).inc(entity, attribute, amount)
+    end
+
     def delete(mapper, scope, entity)
       command(mapper).delete(entity)
     end
