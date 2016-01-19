@@ -4,7 +4,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
   let(:site)      { instance_double('Site', default_locale: 'en') }
   let(:type)      { instance_double('Type', fields_by_name: { title: instance_double('Field', type: :string ) }) }
-  let(:entry)     { instance_double('Article', _id: 42, localized_attributes: {}, content_type: type, title: 'Hello world', _label: 'Hello world', _slug: 'hello-world', _translated: false, seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description') }
+  let(:entry)     { instance_double('Article', _id: 42, localized_attributes: {}, content_type: type, title: 'Hello world', _label: 'Hello world', _slug: 'hello-world', _translated: false, seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description', created_at: 0, updated_at: 1) }
   let(:assigns)   { {} }
   let(:services)  { Locomotive::Steam::Services.build_instance }
   let(:context)   { ::Liquid::Context.new(assigns, {}, { services: services, site: site, locale: 'en' }) }
@@ -20,6 +20,8 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
     expect(subject.seo_title).to eq 'seo title'
     expect(subject.meta_keywords).to eq 'keywords'
     expect(subject.meta_description).to eq 'description'
+    expect(subject.created_at).to eq 0
+    expect(subject.updated_at).to eq 1
   end
 
   describe '#before_method (dynamic attributes)' do
