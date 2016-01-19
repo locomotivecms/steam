@@ -48,4 +48,14 @@ describe Locomotive::Steam::ContentTypeFieldRepository do
 
   end
 
+  describe '#default' do
+
+    let(:collection)  { [{ name: 'name', type: 'string' }, { name: 'email', type: 'email', default: 'john@doe.net' }] }
+
+    subject { repository.default }
+
+    it { expect(subject.first.name).to eq 'email' }
+
+  end
+
 end

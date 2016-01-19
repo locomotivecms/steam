@@ -11,7 +11,8 @@ module Locomotive::Steam
         type:       :string,
         localized:  false,
         required:   false,
-        unique:     false
+        unique:     false,
+        default:    nil
       }.merge(attributes))
     end
 

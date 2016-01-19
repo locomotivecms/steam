@@ -53,6 +53,10 @@ module Locomotive
         query { where(localized: true) }.all.map(&:name)
       end
 
+      def default
+        query { where(k(:default, :neq) => nil, k(:type, :in) => [:string, :text, :color, :select, :boolean, :email, :integer, :float]) }.all
+      end
+
       def select_options(name)
         if field = first { where(name: name, type: :select) }
           field.select_options.all

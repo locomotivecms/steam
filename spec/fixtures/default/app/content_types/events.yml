@@ -12,6 +12,7 @@ fields:
 - city:
     type: string
     label: City of the event
+    default: Chicago
 - state:
     type: string
     label: State of the event

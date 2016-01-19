@@ -30,6 +30,16 @@ describe Locomotive::Steam::ContentType do
 
   end
 
+  describe '#default' do
+
+    subject { content_type.fields_with_default }
+
+    before { expect(repository).to receive(:default).and_return([true]) }
+
+    it { expect(subject).to eq([true])  }
+
+  end
+
   describe '#order_by' do
 
     subject { content_type.order_by }
