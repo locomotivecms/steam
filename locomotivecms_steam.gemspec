@@ -34,6 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rack_csrf',              '~> 2.5.0'
 
   spec.add_dependency 'sprockets',              '~> 3.5.2'
+  spec.add_dependency 'sprockets-es6',          '~> 0.8.2'
   spec.add_dependency 'sass',                   '~> 3.4.21'
   spec.add_dependency 'coffee-script',          '~> 2.4.1'
   spec.add_dependency 'compass',                '~> 1.0.3'
