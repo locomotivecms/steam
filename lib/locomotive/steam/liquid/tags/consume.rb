@@ -52,11 +52,11 @@ module Locomotive
 
           def set_api_options(context)
             @api_options  = interpolate_options(@default_api_options, context)
-            @expires_in   = @api_options.delete(:expires_in) || 0
+            @expires_in   = @api_options.delete(:expires_in)
           end
 
           def render_all_and_cache_it(context)
-            cache_service(context).fetch(page_fragment_cache_key, expires_in: @expires_in, force: @expires_in == 0) do
+            cache_service(context).fetch(page_fragment_cache_key, cache_options) do
               self.render_all_without_cache(context)
             end
           end
@@ -81,12 +81,16 @@ module Locomotive
             context.registers[:services].cache
           end
 
+          def cache_options
+            @expires_in.blank? ? { force: true } : { expires_in: @expires_in }
+          end
+
           def last_response(context)
             cache_service(context).read(page_fragment_cache_key)
           end
 
           def page_fragment_cache_key
-            Digest::SHA1.hexdigest(@name + @url)
+            "Steam-consume-#{Digest::SHA1.hexdigest(@name + @url)}"
           end
 
         end

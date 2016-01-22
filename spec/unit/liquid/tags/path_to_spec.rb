@@ -57,7 +57,7 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
 
     let(:assigns)   { { 'about_us' => drop } }
     let(:drop)      { Locomotive::Steam::Liquid::Drops::Page.new(page) }
-    let(:page)      { liquid_instance_double('AboutUs', title: 'About us', handle: 'index', localized_attributes: { fullpath: true }, fullpath: fullpath, localized_attributes: [:fullpath], templatized?: false) }
+    let(:page)      { liquid_instance_double('AboutUs', title: 'About us', handle: 'index', localized_attributes: { fullpath: true }, fullpath: fullpath, templatized?: false) }
     let(:fullpath)  { { en: 'about-us', fr: 'a-notre-sujet' } }
     let(:source)    { '{% path_to about_us %}' }
 
