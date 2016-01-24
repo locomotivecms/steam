@@ -18,21 +18,19 @@ module Locomotive::Steam
 
             schema.map do |namespace, definitions|
               {
-                name:   { default: namespace.to_s }.merge(definitions.delete(:name) || {}),
+                label:   { default: namespace.to_s }.merge(definitions.delete(:label) || {}),
                 fields: parse_metafields(definitions.delete(:fields))
               }.merge(definitions)
-            end
+            end.as_json
           end
 
           def parse_metafields(fields)
             fields.map do |name, attributes|
               if attributes # Hash
-                attributes[:hint] = { default: attributes[:hint] } if attributes[:hint].is_a?(String)
-
-                { name: { default: name.to_s }.merge(attributes.delete(:name)) }.merge(attributes)
-              else # Array
-                { name: { default: name.to_s } }
+                attributes[:label]  = { default: attributes[:label] } if attributes[:label].is_a?(String)
+                attributes[:hint]   = { default: attributes[:hint] } if attributes[:hint].is_a?(String)
               end
+              { name: name.to_s }.merge(attributes || {})
             end
           end
 

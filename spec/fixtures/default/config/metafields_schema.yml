@@ -1,22 +1,28 @@
+Theme:
+  fields:
+    color_scheme:
+      localized: true
+
 Social:
-  name:
+  label:
     fr: Social (FR)
   position: 1
   fields:
-    - Facebook ID
-    - Google ID
+    - facebook_id
+    - google_id
 
 Github:
   position: 0
   fields:
-    "API url":
-      name:
+    api_url:
+      label:
+        en: 'API Url'
         fr: "Url de l'API"
       type: string
-      hint: "API endpoint"
-      default: https://api.github.com/repos/locomotivecms/engine/issues?state=opened
-    "Expire in":
-      name:
+      hint: 'API endpoint'
+    expires_in:
+      label:
+        en: 'Expires in'
         fr: 'Expire dans'
       hint:
         en: 'Cache - In milliseconds'

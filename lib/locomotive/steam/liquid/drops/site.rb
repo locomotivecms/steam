@@ -14,6 +14,10 @@ module Locomotive
             liquify(*self.scoped_pages)
           end
 
+          def metafields
+            @metafields ||= Metafields.new(@_source)
+          end
+
           protected
 
           def repository
