@@ -27,6 +27,8 @@ module Locomotive::Steam
           def parse_metafields(fields)
             fields.map do |name, attributes|
               if attributes # Hash
+                attributes[:hint] = { default: attributes[:hint] } if attributes[:hint].is_a?(String)
+
                 { name: { default: name.to_s }.merge(attributes.delete(:name)) }.merge(attributes)
               else # Array
                 { name: { default: name.to_s } }

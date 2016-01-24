@@ -26,7 +26,7 @@ describe Locomotive::Steam::Adapters::Filesystem::Sanitizers::Site do
     describe 'with a schema' do
 
       # see the metafields_schema.yml in the fixtures folder
-      let(:schema) { {:Social=>{:name=>{:fr=>"Social (FR)"}, :position=>1, :fields=>["Facebook ID", "Google ID"]}, :Github=>{:position=>0, :fields=>{:"API url"=>{:name=>{:fr=>"Url de l'API"}, :type=>"string", :default=>"https://api.github.com/repos/locomotivecms/engine/issues?state=opened"}, :"Expire in"=>{:name=>{:fr=>"Expire dans"}, :hint=>{:en=>"Cache - In milliseconds", :fr=>"Cache - En millisecondes"}, :type=>"integer", :min=>0, :max=>3600}}}} }
+      let(:schema) { {:Social=>{:name=>{:fr=>"Social (FR)"}, :position=>1, :fields=>["Facebook ID", "Google ID"]}, :Github=>{:position=>0, :fields=>{:"API url"=>{:name=>{:fr=>"Url de l'API"}, :type=>"string", :hint=>"API endpoint", :default=>"https://api.github.com/repos/locomotivecms/engine/issues?state=opened"}, :"Expire in"=>{:name=>{:fr=>"Expire dans"}, :hint=>{:en=>"Cache - In milliseconds", :fr=>"Cache - En millisecondes"}, :type=>"integer", :min=>0, :max=>3600}}}} }
 
       it 'loads the full schema' do
         # First namespace
@@ -38,7 +38,7 @@ describe Locomotive::Steam::Adapters::Filesystem::Sanitizers::Site do
         expect(subject[1][:name]).to eq(default: 'Github')
         expect(subject[1][:position]).to eq 0
         expect(subject[1][:fields].count).to eq 2
-        expect(subject[1][:fields][0]).to eq(name: { default: 'API url', fr: "Url de l'API" }, type: 'string', default: 'https://api.github.com/repos/locomotivecms/engine/issues?state=opened')
+        expect(subject[1][:fields][0]).to eq(name: { default: 'API url', fr: "Url de l'API" }, type: 'string', hint: { default: 'API endpoint' }, default: 'https://api.github.com/repos/locomotivecms/engine/issues?state=opened')
       end
 
     end

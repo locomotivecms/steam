@@ -13,6 +13,7 @@ Github:
       name:
         fr: "Url de l'API"
       type: string
+      hint: "API endpoint"
       default: https://api.github.com/repos/locomotivecms/engine/issues?state=opened
     "Expire in":
       name:
