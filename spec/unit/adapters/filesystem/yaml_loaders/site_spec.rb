@@ -10,9 +10,19 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Site do
 
   describe '#load' do
 
-    subject { loader.load(nil) }
+    subject { loader.load(nil).first }
 
-    it { expect(subject.first[:name]).to eq 'Sample site' }
+    it { expect(subject[:name]).to eq 'Sample site' }
+
+    describe '#metafields_schema' do
+
+      subject { loader.load(nil).first[:metafields_schema] }
+
+      it 'loads the full schema' do
+        expect(subject.count).to eq 2
+      end
+
+    end
 
   end
 

@@ -15,7 +15,9 @@ module Locomotive::Steam
         redirect_to_first_domain: false,
         url_redirections:         [],
         private_access:           false,
-        password:                 nil
+        password:                 nil,
+        metafields_schema:        {},
+        metafields:               nil
       }.merge(attributes))
     end
 

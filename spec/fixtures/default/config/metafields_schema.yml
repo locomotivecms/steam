@@ -1,0 +1,26 @@
+Social:
+  name:
+    fr: Social (FR)
+  position: 1
+  fields:
+    - Facebook ID
+    - Google ID
+
+Github:
+  position: 0
+  fields:
+    "API url":
+      name:
+        fr: "Url de l'API"
+      type: string
+      default: https://api.github.com/repos/locomotivecms/engine/issues?state=opened
+    "Expire in":
+      name:
+        fr: 'Expire dans'
+      hint:
+        en: 'Cache - In milliseconds'
+        fr: 'Cache - En millisecondes'
+      type: integer
+      min: 0
+      max: 3600
+
