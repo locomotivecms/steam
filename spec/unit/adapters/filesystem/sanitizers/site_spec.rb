@@ -38,7 +38,7 @@ describe Locomotive::Steam::Adapters::Filesystem::Sanitizers::Site do
         expect(subject[1][:name]).to eq(default: 'Github')
         expect(subject[1][:position]).to eq 0
         expect(subject[1][:fields].count).to eq 2
-        expect(subject[1][:fields][0]).to eq(name: { default: 'API url', fr: "Url de l'API" }, type: 'string', default: 'https://api.github.com/repos/locomotivecms/engine/issues?state=opened')
+        expect(subject[1][:fields][0]).to eq(name: { default: 'API url', fr: "Url de l'API" }, type: 'string', hint: { default: 'JSON API endpoint' }, default: 'https://api.github.com/repos/locomotivecms/engine/issues?state=opened')
       end
 
     end
