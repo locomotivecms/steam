@@ -3,7 +3,7 @@ module Locomotive
     module Liquid
       module Tags
 
-        # Consume web services as easy as pie directly in liquid !
+        # Consume web services as easy as pie directly in liquid!
         #
         # Usage:
         #
@@ -33,11 +33,16 @@ module Locomotive
           def render(context)
             self.set_api_options(context)
 
-            if instance_variable_defined? :@variable_name
+            if instance_variable_defined?(:@variable_name)
               @url = context[@variable_name]
             end
 
-            render_all_and_cache_it(context)
+            if @url.blank?
+              Locomotive::Common::Logger.error "A consume tag can't call an empty URL."
+              ''
+            else
+              render_all_and_cache_it(context)
+            end
           end
 
           protected
@@ -52,7 +57,7 @@ module Locomotive
 
           def set_api_options(context)
             @api_options  = interpolate_options(@default_api_options, context)
-            @expires_in   = @api_options.delete(:expires_in)
+            @expires_in   = @api_options.delete(:expires_in).try(:to_i)
           end
 
           def render_all_and_cache_it(context)
@@ -64,6 +69,8 @@ module Locomotive
           def render_all_without_cache(context)
             context.stack do
               begin
+                Locomotive::Common::Logger.info "[consume] #{@url.inspect} / #{@api_options.inspect}"
+
                 context.scopes.last[@name] = service(context).consume(@url, @api_options)
               rescue Timeout::Error
                 context.scopes.last[@name] = last_response(context)

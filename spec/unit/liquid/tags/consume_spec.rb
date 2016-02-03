@@ -71,6 +71,13 @@ describe Locomotive::Steam::Liquid::Tags::Consume do
 
     end
 
+    describe "don't render it if the url is blank" do
+
+      let(:source) { "{% consume blog from \"\" %}{{ blog.title }}{% endconsume %}" }
+      it { is_expected.to eq '' }
+
+    end
+
   end
 
   describe 'timeout' do
