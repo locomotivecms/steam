@@ -1,9 +1,9 @@
-Theme:
+theme:
   fields:
     color_scheme:
       localized: true
 
-Social:
+social:
   label:
     fr: Social (FR)
   position: 1
@@ -11,7 +11,7 @@ Social:
     - facebook_id
     - google_id
 
-Github:
+github:
   position: 0
   fields:
     api_url:

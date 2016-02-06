@@ -21,11 +21,14 @@ meta_description: some meta description
 robots_txt: "User-agent: *\nDisallow:"
 
 metafields:
-  color_scheme:
-    en: 'white'
-    fr: 'blue'
-    nb: 'red'
-  facebook_id: 'FB42'
-  google_id: 'G42'
-  api_url: https://api.github.com/repos/vmg/redcarpet/issues?state=closed
-  expires_in: 42
+  theme:
+    color_scheme:
+      en: 'white'
+      fr: 'blue'
+      nb: 'red'
+  social:
+    facebook_id: 'FB42'
+    google_id: 'G42'
+  github:
+    api_url: https://api.github.com/repos/vmg/redcarpet/issues?state=closed
+    expires_in: 42

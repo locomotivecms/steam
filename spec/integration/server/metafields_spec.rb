@@ -17,4 +17,10 @@ describe 'Site metafields' do
     expect(last_response.body).to include 'Expires In=42'
   end
 
+  it 'iterates over the metafields of a namespace' do
+    get '/basic'
+    expect(last_response.body).to include "<li class='property'>Facebook(facebook_id)=FB42</li>"
+    expect(last_response.body).to include "<li class='property'>Google(google_id)=G42</li>"
+  end
+
 end

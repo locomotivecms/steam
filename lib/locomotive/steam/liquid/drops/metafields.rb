@@ -3,40 +3,91 @@ module Locomotive
     module Liquid
       module Drops
 
-        class Metafields < Base
+        class MetafieldsNamespace < Base
+
+          delegate :first, :last, :each, :each_with_index, :empty?, :any?, :size, to: :labels_and_values
+
+          alias :count    :size
+          alias :length   :size
 
           def before_method(meth)
-            if field = fields[meth.to_s]
-              find_value(meth.to_s, field)
+            find_value(meth.to_s)
+          end
+
+          def namespace=(namespace)
+            @namespace = namespace
+          end
+
+          protected
+
+          def find_value(name)
+            if field = fields[name]
+              t(values[name], field['localized'])
             else
-              Locomotive::Common::Logger.warn "[Liquid template] unknown site metafield \"#{meth.to_s}\""
+              Locomotive::Common::Logger.warn "[Liquid template] unknown site metafield \"#{name}\" under #{@namespace['name']}"
               nil
             end
           end
 
-          private
+          def values
+            @_source.metafields[@namespace['name']] || {}
+          end
 
-          def find_value(name, field)
-            value = @_source.metafields[name]
+          def labels_and_values
+            return [] if @namespace['fields'].blank?
 
-            return nil if value.blank?
+            return @labels_and_values if @labels_and_values
 
-            key   = field['localized'] ? @context.registers[:locale] : 'default'
-            value = { 'default' => value } unless value.is_a?(Hash)
+            ordered_fields = @namespace['fields'].sort { |f| f['position'] }
 
-            value[key]
+            @labels_and_values = ordered_fields.map do |field|
+              value, localized = values[field['name']], field['localized']
+              {
+                'name'  => field['name'],
+                'label' => t(field['label']) || field['name'].humanize,
+                'value' => t(value, localized)
+              }
+            end.tap { |o| puts o.inspect }
           end
 
           def fields
-            return @schema if @schema
+            return @fields if @fields
 
-            (@schema = {}).tap do
-              @_source.metafields_schema.each do |definition|
-                definition['fields'].each do |field|
-                  @schema[field['name']] = field
-                end
+            (@fields = {}).tap do
+              (@namespace['fields'] || []).each do |field|
+                @fields[field['name']] = field
               end
             end
+          end
+
+          def t(value, localized = true)
+            key   = localized ? @context.registers[:locale] : 'default'
+            value = { 'default' => value } unless value.is_a?(Hash)
+            value[key]
+          end
+
+        end
+
+        class Metafields < Base
+
+          def before_method(meth)
+            find_namespace(meth.to_s)
+          end
+
+          private
+
+          def find_namespace(name)
+            if namespace = _find_namespace(name)
+              MetafieldsNamespace.new(@_source).tap { |d| d.namespace = namespace }
+            else
+              Locomotive::Common::Logger.warn "[Liquid template] unknown site metafield namespace \"#{name}\""
+              nil
+            end
+          end
+
+          def _find_namespace(name)
+            puts @_source.metafields_schema.inspect
+            @_source.metafields_schema.find { |s| s['name'] == name }
           end
 
         end

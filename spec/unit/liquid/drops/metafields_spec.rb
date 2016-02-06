@@ -2,61 +2,75 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Drops::Metafields do
 
-  let(:metafields)  { { 'analytics_id' => { 'default' => '42' }, 'street' => { 'en' => '7 Albert Camus Alley', 'fr' => '7 allée Albert Camus' } } }
-  let(:schema)      { [ { fields: [{ name: 'analytics_id' }] }, { fields: [{ name: 'street', localized: true }, { name: 'country' }] }].as_json }
+  let(:metafields)  { { 'my_namespace' => { 'analytics_id' => { 'default' => '42' }, 'street' => { 'en' => '7 Albert Camus Alley', 'fr' => '7 allée Albert Camus' } } } }
+  let(:schema)      { [ { 'name' => 'my_namespace', fields: [{ name: 'analytics_id' }, { name: 'street', localized: true }, { name: 'country' }] }].as_json }
   let(:site)        { instance_double('Site', metafields: metafields, metafields_schema: schema) }
   let(:context)     { ::Liquid::Context.new({}, {}, { locale: 'en' }) }
   let(:drop)        { described_class.new(site).tap { |d| d.context = context } }
 
   describe 'calling a metafield' do
 
-    context 'unknown field' do
+    context 'unknown namespace' do
 
-      subject { drop.before_method(:unknown_field) }
+      subject { drop.before_method(:unknown_namespace) }
 
       it { is_expected.to eq nil }
 
     end
 
-    context 'not localized field' do
+    context 'existing namespace' do
 
-      context 'the value exists' do
+      let(:namespace) { drop.before_method(:my_namespace).tap { |d| d.context = context } }
 
-        subject { drop.before_method(:analytics_id) }
+      context 'unknown field' do
 
-        it { is_expected.to eq '42' }
-
-      end
-
-      context "the value doesn't exist" do
-
-        subject { drop.before_method(:country) }
+        subject { namespace.before_method(:unknown_field) }
 
         it { is_expected.to eq nil }
 
       end
 
-    end
+      context 'not a localized field' do
 
-    context 'localized field' do
+        context 'the value exists' do
 
-      subject { drop.before_method(:street) }
+          subject { namespace.before_method(:analytics_id) }
 
-      it { is_expected.to eq '7 Albert Camus Alley' }
+          it { is_expected.to eq '42' }
 
-      context 'in another locale' do
+        end
 
-        let(:context) { ::Liquid::Context.new({}, {}, { locale: 'fr' }) }
+        context "the value doesn't exist" do
 
-        it { is_expected.to eq '7 allée Albert Camus' }
+          subject { namespace.before_method(:country) }
+
+          it { is_expected.to eq nil }
+
+        end
 
       end
 
-      context 'in a locale with no translation' do
+      context 'localized field' do
 
-        let(:context) { ::Liquid::Context.new({}, {}, { locale: 'de' }) }
+        subject { namespace.before_method(:street) }
 
-        it { is_expected.to eq nil }
+        it { is_expected.to eq '7 Albert Camus Alley' }
+
+        context 'in another locale' do
+
+          let(:context) { ::Liquid::Context.new({}, {}, { locale: 'fr' }) }
+
+          it { is_expected.to eq '7 allée Albert Camus' }
+
+        end
+
+        context 'in a locale with no translation' do
+
+          let(:context) { ::Liquid::Context.new({}, {}, { locale: 'de' }) }
+
+          it { is_expected.to eq nil }
+
+        end
 
       end
 

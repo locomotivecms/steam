@@ -16,21 +16,23 @@ module Locomotive::Steam
           def clean_metafields_schema(schema)
             return nil unless schema
 
-            schema.map do |namespace, definitions|
+            schema.each_with_index.map do |(namespace, definitions), position|
               {
-                label:   { default: namespace.to_s }.merge(definitions.delete(:label) || {}),
-                fields: parse_metafields(definitions.delete(:fields))
+                name:     namespace.to_s,
+                label:    { default: namespace.to_s }.merge(definitions.delete(:label) || {}),
+                fields:   parse_metafields(definitions.delete(:fields)),
+                position: definitions.delete(:position)
               }.merge(definitions)
             end.as_json
           end
 
           def parse_metafields(fields)
-            fields.map do |name, attributes|
+            fields.each_with_index.map do |(name, attributes), position|
               if attributes # Hash
                 attributes[:label]  = { default: attributes[:label] } if attributes[:label].is_a?(String)
                 attributes[:hint]   = { default: attributes[:hint] } if attributes[:hint].is_a?(String)
               end
-              { name: name.to_s }.merge(attributes || {})
+              { name: name.to_s, position: position }.merge(attributes || {})
             end
           end
 
