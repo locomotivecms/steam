@@ -21,7 +21,7 @@ module Locomotive::Steam
                 name:     namespace.to_s,
                 label:    { default: namespace.to_s }.merge(definitions.delete(:label) || {}),
                 fields:   parse_metafields(definitions.delete(:fields)),
-                position: definitions.delete(:position)
+                position: definitions.delete(:position) || position
               }.merge(definitions)
             end.as_json
           end
