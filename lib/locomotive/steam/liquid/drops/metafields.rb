@@ -47,7 +47,7 @@ module Locomotive
                 'label' => t(field['label']) || field['name'].humanize,
                 'value' => t(value, localized)
               }
-            end.tap { |o| puts o.inspect }
+            end
           end
 
           def fields
@@ -86,7 +86,6 @@ module Locomotive
           end
 
           def _find_namespace(name)
-            puts @_source.metafields_schema.inspect
             @_source.metafields_schema.find { |s| s['name'] == name }
           end
 
