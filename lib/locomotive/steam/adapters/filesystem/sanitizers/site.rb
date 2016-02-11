@@ -19,7 +19,7 @@ module Locomotive::Steam
             schema.each_with_index.map do |(namespace, definitions), position|
               {
                 name:     namespace.to_s,
-                label:    { default: namespace.to_s }.merge(definitions.delete(:label) || {}),
+                label:    localized_label(definitions.delete(:label), namespace.to_s), # { default: namespace.to_s }.merge(definitions.delete(:label) || {}),
                 fields:   parse_metafields(definitions.delete(:fields)),
                 position: definitions.delete(:position) || position
               }.merge(definitions)
@@ -33,6 +33,14 @@ module Locomotive::Steam
                 attributes[:hint]   = { default: attributes[:hint] } if attributes[:hint].is_a?(String)
               end
               { name: name.to_s, position: position }.merge(attributes || {})
+            end
+          end
+
+          def localized_label(label, default)
+            case label
+            when Hash   then label
+            when String then { default: label }
+            else { default: default}
             end
           end
 
