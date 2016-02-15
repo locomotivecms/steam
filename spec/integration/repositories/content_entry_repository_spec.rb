@@ -61,6 +61,16 @@ describe Locomotive::Steam::ContentEntryRepository do
       it { expect(subject.map { |h| h[:entries].size }).to eq([2, 1, 0]) }
     end
 
+    describe '#order_by' do
+      let(:order_by) { 'name' }
+      subject { repository.all(order_by: order_by) }
+      it { expect(subject.map { |h| h[:name] }).to eq(['Alice in Chains', 'Pearl Jam', 'The who']) }
+      context 'a field and a direction' do
+        let(:order_by) { 'name.desc, leader asc' }
+        it { expect(subject.map { |h| h[:name] }).to eq(['The who', 'Pearl Jam', 'Alice in Chains']) }
+      end
+    end
+
     describe '#create' do
 
       let(:type) { type_repository.by_slug('songs') }

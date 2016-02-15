@@ -25,7 +25,7 @@ module Locomotive::Steam
 
         def order_by(*args)
           self.tap do
-            @sort = [*args]
+            @sort = decode_order_by(*args)
           end
         end
 
@@ -97,6 +97,25 @@ module Locomotive::Steam
                 _criterion[_key] = value
               end
             end
+          end
+        end
+
+        def decode_order_by(*spec)
+          [*spec].compact.map do |arg|
+            _decode_order_by(arg)
+          end
+        end
+
+        def _decode_order_by(arg)
+          case arg
+          when String
+            if arg.include?(',')
+              _decode_order_by(arg.split(','))
+            else
+              arg.strip.split(/[\s|.]/)
+            end
+          when Array  then arg.map { |_arg| _decode_order_by(_arg) }
+          else arg
           end
         end
 

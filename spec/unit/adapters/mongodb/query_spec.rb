@@ -40,7 +40,31 @@ describe Locomotive::Steam::Adapters::MongoDB::Query do
 
   describe '#order_by' do
 
-    it { expect(query.order_by(title: :asc, published: :desc).sort).to eq [{title: :asc, published: :desc}] }
+    subject { query.order_by(order_by).sort }
+
+    context 'passing a hash' do
+
+      let(:order_by) { { title: :asc, published: :desc } }
+
+      it { is_expected.to eq [{title: :asc, published: :desc}] }
+
+    end
+
+    context 'passing an array of strings' do
+
+      let(:order_by) { ['title.asc', 'published'] }
+
+      it { is_expected.to eq [[['title', 'asc'], ['published']]] }
+
+    end
+
+    context 'passing a string' do
+
+      let(:order_by) { 'title.asc, published' }
+
+      it { is_expected.to eq [[['title', 'asc'], ['published']]] }
+
+    end
 
   end
 
