@@ -59,6 +59,21 @@ module Locomotive::Steam
       end
     end
 
+    class << self
+
+      attr_reader :session
+
+      def build_session(uri_or_hosts, client_options)
+        @session ||= Mongo::Client.new(uri_or_hosts, client_options)
+      end
+
+      def disconnect_session
+        @session.try(:close)
+        @session = nil
+      end
+
+    end
+
     private
 
     def query_klass
@@ -86,7 +101,7 @@ module Locomotive::Steam
     end
 
     def session
-      Thread.current[:mongo_session] ||= Mongo::Client.new(uri_or_hosts, client_options)
+      self.class.build_session(uri_or_hosts, client_options)
     end
 
     def uri_or_hosts
