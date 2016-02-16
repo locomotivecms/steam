@@ -25,8 +25,14 @@ module Locomotive::Steam
       end
 
       def render_missing_404
-        log "[Warning] Your 404 page is missing. Please create it.".red
-        render_response('Missing 404 page', 404)
+        message = (if locale != default_locale
+          "Your 404 page is missing in the #{locale} locale."
+        else
+          "Your 404 page is missing."
+        end) + " Please create it."
+
+        log "[Warning] #{message}".red
+        render_response(message, 404)
       end
 
       def parse_and_render_liquid

@@ -15,6 +15,7 @@ module Locomotive::Steam
           if !page.not_found?
             log "Found page \"#{page.title}\" [#{page.fullpath}]"
           else
+            ActiveSupport::Notifications.instrument('steam.render.page_not_found', path: path, locale: locale, default_locale: default_locale)
             log "Page not found, rendering the 404 page.".magenta
           end
         end
