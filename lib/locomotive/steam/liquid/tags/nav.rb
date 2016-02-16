@@ -35,7 +35,7 @@ module Locomotive
 
             # get all the children of a source: site (index page), parent or page.
             pages   = children_of(fetch_starting_page)
-            output  = self.build_entries_output(pages)
+            output  = self.build_entries_output(pages, context)
 
             if self.no_wrapper?
               output
@@ -54,7 +54,7 @@ module Locomotive
           #
           # @return [ String ] The final HTML output
           #
-          def build_entries_output(pages, depth = 1)
+          def build_entries_output(pages, depth = 1, context)
             output  = []
 
             pages.each_with_index do |page, index|
@@ -62,7 +62,7 @@ module Locomotive
               css << 'first'  if index == 0
               css << 'last'   if index == pages.size - 1
 
-              output << self.render_entry_link(page, css.join(' '), depth)
+              output << self.render_entry_link(page, css.join(' '), depth, context)
             end
 
             output.join("\n")
@@ -133,9 +133,9 @@ module Locomotive
           #
           # @return [ String ] The label in HTML
           #
-          def entry_label(page)
+          def entry_label(page, context)
             icon  = @_options[:icon] ? '<span></span>' : ''
-            title = @_options[:liquid_render] ? @_options[:liquid_render].render('page' => page) : page.title
+            title = @_options[:liquid_render] ? @_options[:liquid_render].render({ 'page' => page }, registers: context.registers) : page.title
 
             if icon.blank?
               title
@@ -178,10 +178,10 @@ module Locomotive
           #
           # @return [ String ] The HTML output
           #
-          def render_entry_link(page, css, depth)
+          def render_entry_link(page, css, depth, context)
             page      = decorate_page(page)
             url       = self.entry_url(page)
-            label     = self.entry_label(page)
+            label     = self.entry_label(page, context)
             css       = self.entry_css(page, css)
             options   = ''
 
@@ -193,7 +193,7 @@ module Locomotive
             end
 
             self.render_tag(:li, id: "#{page.slug.to_s.dasherize}-link", css: css) do
-              children_output = depth.succ <= @_options[:depth].to_i ? self.render_entry_children(page, depth.succ) : ''
+              children_output = depth.succ <= @_options[:depth].to_i ? self.render_entry_children(page, depth.succ, context) : ''
               %{<a href="#{url}"#{options}>#{label}</a>} + children_output
             end
           end
@@ -205,13 +205,13 @@ module Locomotive
           #
           # @return [ String ] The HTML code
           #
-          def render_entry_children(page, depth)
+          def render_entry_children(page, depth, context)
             entries = children_of(page)
             css     = self.bootstrap? ? 'dropdown-menu' : ''
 
             unless entries.empty?
               self.render_tag(:ul, id: "#{@_options[:id]}-#{page.slug.to_s.dasherize}", css: css) do
-                self.build_entries_output(entries, depth)
+                self.build_entries_output(entries, depth, context)
               end
             else
               ''
@@ -254,7 +254,13 @@ module Locomotive
             source = if template_name.include?('{{')
               template_name
             else
-              services.snippet_finder.find(template_name).try(:source)
+              snippet = services.snippet_finder.find(template_name)
+              if snippet
+                snippet.liquid_source
+              else
+                Locomotive::Common::Logger.warn "[Liquid][Nav] unable to find the #{template_name} snippet"
+                nil
+              end
             end
 
             source ? ::Liquid::Template.parse(source) : nil

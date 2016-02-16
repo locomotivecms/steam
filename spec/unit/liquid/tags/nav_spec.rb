@@ -174,13 +174,21 @@ describe 'Locomotive::Steam::Liquid::Tags::Nav' do
       describe 'from a registered snippet' do
 
         let(:source)  { %({% nav site, snippet: nav_title %}) }
-        let(:snippet) { instance_double('Snippet', source: '{{ page.title }}!') }
+        let(:snippet) { instance_double('Snippet', liquid_source: '{{ page.title }}!') }
 
         before do
           allow(services.snippet_finder).to receive(:find).with('nav_title').and_return(snippet)
         end
 
         it { is_expected.to include %{<a href="/child-1">Child #1!</a>} }
+
+        context "the snippet doesn't exist" do
+
+          let(:snippet) { nil }
+
+          it { is_expected.to include %{<a href="/child-1">Child #1</a>} }
+
+        end
 
       end
 
