@@ -47,10 +47,14 @@ module Locomotive::Steam
     end
 
     def install_autoprefixer
-      file   = File.join(root, '..', 'config', 'autoprefixer.yml')
-      params = (File.exist?(file) ? ::YAML.load_file(file) : {}).symbolize_keys
+      file = File.join(root, '..', 'config', 'autoprefixer.yml')
 
-      AutoprefixerRails.install(self, params)
+      if File.exists?(file)
+        params = (::YAML.load_file(file) || {}).symbolize_keys
+        AutoprefixerRails.install(self, params)
+
+        Locomotive::Common::Logger.info "Autoprefixer detected and installed".light_white + "\n\n"
+      end
     end
 
     def is_java_installed?
