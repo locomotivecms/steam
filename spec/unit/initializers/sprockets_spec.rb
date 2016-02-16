@@ -24,6 +24,8 @@ describe Locomotive::Steam::SprocketsEnvironment do
 
   describe '#install_autoprefixer' do
 
+    let(:options) { { minify: false } }
+
     subject { env }
 
     context "config/autoprefixer.yml doesn't exist" do
@@ -42,6 +44,15 @@ describe Locomotive::Steam::SprocketsEnvironment do
       }
 
       it { expect(AutoprefixerRails).to receive(:install).and_return(true); subject }
+
+      it 'warns developers if they notice bad performance when using autoprefixer' do
+        curent_execjs_runtime = ENV['EXECJS_RUNTIME']
+        ENV['EXECJS_RUNTIME'] = 'NodeJS'
+        expect(Locomotive::Common::Logger).not_to receive(:warn)
+        expect(AutoprefixerRails).to receive(:install).and_return(true)
+        subject
+        ENV['EXECJS_RUNTIME'] = curent_execjs_runtime
+      end
 
     end
 
