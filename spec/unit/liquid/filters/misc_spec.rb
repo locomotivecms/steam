@@ -119,4 +119,17 @@ describe Locomotive::Steam::Liquid::Filters::Misc do
 
   end
 
+  describe '#shuffle' do
+
+    let(:array) { [1, 2, 3, 4] }
+
+    subject { shuffle(array) }
+
+    it 'returns an array in a random order' do
+      expect(subject.size).to eq 4
+      expect(subject).not_to eq([1, 2, 3, 4])
+    end
+
+  end
+
 end

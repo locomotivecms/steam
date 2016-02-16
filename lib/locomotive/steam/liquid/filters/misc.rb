@@ -14,6 +14,10 @@ module Locomotive
             array.at(position) if array.respond_to?(:at)
           end
 
+          def shuffle(array)
+            array.to_a.shuffle
+          end
+
           def default(input, value)
             input.blank? ? value : input
           end
