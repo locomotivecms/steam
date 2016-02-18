@@ -129,8 +129,13 @@ module Locomotive::Steam
     end
 
     def _cast_file(field)
-      _cast_convertor(field.name) do |value|
-        value.respond_to?(:url) ? value : FileField.new(value, self.base_url, self.updated_at)
+      _cast_convertor(field.name) do |value, locale|
+        if value.respond_to?(:url)
+          value
+        else
+          size = (self[:"#{field.name}_size"] || {})[locale || 'default']
+          FileField.new(value, self.base_url, size, self.updated_at)
+        end
       end
     end
 
@@ -172,7 +177,7 @@ module Locomotive::Steam
     # Represent a file
     class FileField
 
-      attr_accessor_initialize :filename, :base, :updated_at
+      attr_accessor_initialize :filename, :base, :size, :updated_at
 
       def url
         return if filename.blank?

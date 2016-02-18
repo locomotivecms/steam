@@ -43,7 +43,9 @@ module Locomotive::Steam
         if default
           @translations = Hash.new(yield(default))
         else
-          each { |l, _value| self[l] = yield(_value) }
+          each do |l, _value|
+            self[l] = block.arity == 2 ? yield(_value, l) : yield(_value)
+          end
         end
         self
       end

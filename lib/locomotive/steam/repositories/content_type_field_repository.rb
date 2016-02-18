@@ -22,6 +22,10 @@ module Locomotive
         query { where(type: :select) }.all
       end
 
+      def files
+        query { where(type: :file) }.all
+      end
+
       def belongs_to
         query { where(type: :belongs_to) }.all
       end

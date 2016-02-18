@@ -12,6 +12,10 @@ module Locomotive
             NumberProxyHelper.new(:percentage, @context).invoke(input, options)
           end
 
+          def human_size(input, *options)
+            NumberProxyHelper.new(:human_size, @context).invoke(input, options)
+          end
+
           def mod(input, modulus)
             input.to_i % modulus.to_i
           end

@@ -101,7 +101,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
   describe '#as_json' do
 
     let(:type) { instance_double('Type', fields_by_name: { title: instance_double('StringField', type: :string ), picture: instance_double('FileField', type: :file), category: instance_double('SelectField', type: :select) }) }
-    let(:picture_field) { Locomotive::Steam::ContentEntry::FileField.new('foo.png', 'http://assets.dev', 42) }
+    let(:picture_field) { Locomotive::Steam::ContentEntry::FileField.new('foo.png', 'http://assets.dev', 0, 42) }
 
     before do
       allow(entry).to receive(:to_hash).and_return({ '_id' => 1, 'title' => 'Hello world', 'picture' => picture_field, 'category_id' => 42 })

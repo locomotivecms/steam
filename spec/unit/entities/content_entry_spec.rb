@@ -169,11 +169,20 @@ describe Locomotive::Steam::ContentEntry do
     context 'a file' do
       let(:field_type)  { :file }
       let(:value)       { '/foo.png' }
+      let(:attributes)  { { my_field: value, my_field_size: { 'default' => 42 } } }
       it { expect(subject.url).to eq('/foo.png') }
+      it { expect(subject.size).to eq(42) }
       context 'localized' do
         let(:value) { build_i18n_field(en: '/foo-en.png', fr: '/foo-fr.png') }
+        let(:attributes)  { { my_field: value, my_field_size: { 'en' => 42, 'fr' => 7 } } }
         it { expect(subject.translations[:en].url).to eq('/foo-en.png') }
+        it { expect(subject.translations[:en].size).to eq(42) }
         it { expect(subject.translations[:fr].url).to eq('/foo-fr.png') }
+        it { expect(subject.translations[:fr].size).to eq(7) }
+      end
+      context 'no file size provided' do
+        let(:attributes)  { { my_field: value } }
+        it { expect(subject.size).to eq(nil) }
       end
     end
 

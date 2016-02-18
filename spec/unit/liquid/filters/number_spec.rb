@@ -87,6 +87,35 @@ describe Locomotive::Steam::Liquid::Filters::Number do
 
   end
 
+  describe '#human_size' do
+
+    subject { human_size(input, options) }
+
+    context 'not a number' do
+
+      it { expect(subject).to eq nil }
+
+    end
+
+    context 'a number' do
+
+      let(:input) { 1234567890 }
+
+      it { expect(subject).to eq '1.15 GB' }
+
+    end
+
+    context 'with options' do
+
+      let(:input) { '1234567' }
+      let(:options) { ['precision: 2'] }
+
+      it { expect(subject).to eq '1.2 MB' }
+
+    end
+
+  end
+
   describe '#mod' do
 
     it 'returns correct number modulus' do

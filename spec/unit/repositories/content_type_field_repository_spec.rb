@@ -55,6 +55,18 @@ describe Locomotive::Steam::ContentTypeFieldRepository do
     subject { repository.default }
 
     it { expect(subject.first.name).to eq 'email' }
+    it { expect(subject.count).to eq 1 }
+
+  end
+
+  describe '#files' do
+
+    let(:collection)  { [{ name: 'name', type: 'string' }, { name: 'picture', type: 'file' }] }
+
+    subject { repository.files }
+
+    it { expect(subject.first.name).to eq 'picture' }
+    it { expect(subject.count).to eq 1 }
 
   end
 

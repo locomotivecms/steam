@@ -22,6 +22,7 @@ module Locomotive
 
                   modify_for_selects(_attributes)
                   modify_for_associations(_attributes)
+                  modify_for_files(_attributes)
 
                   list << _attributes
                 end
@@ -32,6 +33,27 @@ module Locomotive
               content_type.select_fields.each do |field|
                 attributes[:"#{field.name}_id"] = attributes.delete(field.name.to_sym)
               end
+            end
+
+            def modify_for_files(attributes)
+              content_type.file_fields.each do |field|
+                attributes[:"#{field.name}_size"] ||= {}
+                value = attributes[:"#{field.name}_size"]
+
+                if (path = attributes[field.name.to_sym]).is_a?(Hash)
+                  path.each { |locale, path| value[locale.to_s] = file_size(path) }
+                else
+                  value['default'] = file_size(path)
+                end
+              end
+            end
+
+            def file_size(path)
+              return nil if path.blank?
+
+              _path = File.join(site_path, 'public', path)
+
+              File.exists?(_path) ? File.size(_path) : nil
             end
 
             def modify_for_associations(attributes)
