@@ -51,11 +51,11 @@ module Locomotive::Steam
         end
 
         class Asc < Direction
-          def <=>(other); @obj <=> other.obj; end
+          def <=>(other) @obj && other.obj ? @obj <=> other.obj : @obj ? -1 : 1; end
         end
 
         class Desc < Direction
-          def <=>(other); other.obj <=> @obj; end
+          def <=>(other); @obj && other.obj ? other.obj <=> @obj : @obj ? -1 : 1; end
         end
 
       end

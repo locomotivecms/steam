@@ -71,6 +71,21 @@ describe Locomotive::Steam::Adapters::Memory::Order do
 
     it { expect(subject.map(&:id)).to eq([3, 2, 1, 4]) }
 
+    context 'nil value in the array' do
+
+      let(:array) {
+        [
+          instance_double('Entry1', id: 1, title: 'b', position: 1),
+          instance_double('Entry2', id: 2, title: 'b', position: 2),
+          instance_double('Entry3', id: 3, title: nil, position: 3),
+          instance_double('Entry3', id: 4, title: 'c', position: 1)
+        ]
+      }
+
+      it { expect(subject.map(&:id)).to eq([2, 1, 4, 3]) }
+
+    end
+
   end
 
 end
