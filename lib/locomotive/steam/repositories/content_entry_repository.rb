@@ -171,7 +171,7 @@ module Locomotive
 
         conditions = prepare_conditions({ k(name, op) => i18n_value_of(entry, name) })
 
-        first do
+        public_send(asc_op == 'gt' ? :first : :last) do
           where(conditions).order_by(order_by)
         end
       end

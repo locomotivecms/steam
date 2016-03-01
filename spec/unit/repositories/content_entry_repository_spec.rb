@@ -123,10 +123,11 @@ describe Locomotive::Steam::ContentEntryRepository do
 
   end
 
-  describe '#next' do
+  describe '#next or #previous' do
 
     let(:direction) { 'asc' }
-    let(:type) { build_content_type('Articles', order_by: { _position: direction }, label_field_name: :title, localized_names: [:title], fields: _fields, fields_by_name: { title: instance_double('Field', name: :title, type: :string) }, fields_with_default: []) }
+    let(:type)      { build_content_type('Articles', order_by: { _position: direction }, label_field_name: :title, localized_names: [:title], fields: _fields, fields_by_name: { title: instance_double('Field', name: :title, type: :string) }, fields_with_default: []) }
+    let(:entry)     { nil }
     let(:entries) do
       [
         { content_type_id: 1, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' },
@@ -136,69 +137,77 @@ describe Locomotive::Steam::ContentEntryRepository do
       ]
     end
 
-    let(:entry) { nil }
-    subject { repository.next(entry) }
+    describe '#next' do
 
-    it { is_expected.to eq nil }
+      subject { repository.next(entry) }
 
-    context 'being last' do
-
-      let(:entry) { instance_double('Entry', content_type: type, _position: 3) }
       it { is_expected.to eq nil }
 
-    end
+      context 'being last' do
 
-    context 'being middle' do
-
-      let(:entry) { instance_double('Entry', content_type: type, _position: 0) }
-      it { expect(subject._position).to eq 1 }
-
-      describe 'another example' do
-
-        let(:entry) { instance_double('Entry', content_type: type, _position: 1) }
-        it { expect(subject._position).to eq 2 }
+        let(:entry) { instance_double('Entry', content_type: type, _position: 3) }
+        it { is_expected.to eq nil }
 
       end
 
-      context 'changing direction' do
+      context 'being middle' do
 
-        let(:direction) { 'desc' }
-        let(:entry) { instance_double('Entry', content_type: type, _position: 2) }
+        let(:entry) { instance_double('Entry', content_type: type, _position: 0) }
         it { expect(subject._position).to eq 1 }
 
+        describe 'another example' do
+
+          let(:entry) { instance_double('Entry', content_type: type, _position: 1) }
+          it { expect(subject._position).to eq 2 }
+
+        end
+
+        context 'changing direction' do
+
+          let(:direction) { 'desc' }
+          let(:entry) { instance_double('Entry', content_type: type, _position: 2) }
+          it { expect(subject._position).to eq 1 }
+
+        end
+
       end
 
     end
 
-  end
+    describe '#previous' do
 
-  describe '#previous' do
+      subject { repository.previous(entry) }
 
-    let(:type) { build_content_type('Articles', order_by: { _position: 'asc' }, label_field_name: :title, localized_names: [:title], fields: _fields, fields_by_name: { title: instance_double('Field', name: :title, type: :string) }, fields_with_default: []) }
-    let(:entries) do
-      [
-        { content_type_id: 1, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' },
-        { content_type_id: 1, _position: 1, _label: 'Update #2', title: { fr: 'Mise a jour #2' }, text: { en: 'bla bla', fr: 'blabbla' }, date: '2009/05/12', category: 'General' },
-        { content_type_id: 1, _position: 2, _label: 'Update #3', title: { fr: 'Mise a jour #2' }, text: { en: 'bla bla', fr: 'blabbla' }, date: '2009/05/12', category: 'General' }
-      ]
-    end
-
-    let(:entry) { nil }
-    subject { repository.previous(entry) }
-
-    it { is_expected.to eq nil }
-
-    context 'being first' do
-
-      let(:entry) { instance_double('Entry', content_type: type, _position: 0) }
       it { is_expected.to eq nil }
 
-    end
+      context 'being first' do
 
-    context 'being middle' do
+        let(:entry) { instance_double('Entry', content_type: type, _position: 0) }
+        it { is_expected.to eq nil }
 
-      let(:entry) { instance_double('Entry', content_type: type, _position: 1) }
-      it { expect(subject._position).to eq 0 }
+      end
+
+      context 'being middle' do
+
+        let(:entry) { instance_double('Entry', content_type: type, _position: 1) }
+        it { expect(subject._position).to eq 0 }
+
+        describe 'another example' do
+
+          let(:entry) { instance_double('Entry', content_type: type, _position: 2) }
+          it { expect(subject._position).to eq 1 }
+
+        end
+
+        context 'changing direction' do
+
+          let(:direction) { 'desc' }
+          let(:entry) { instance_double('Entry', content_type: type, _position: 2) }
+          it { expect(subject._position).to eq 3 }
+
+        end
+
+      end
 
     end
 
