@@ -62,6 +62,7 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
         it { is_expected.to include(format: 'html') }
         it { is_expected.to include(rows: 10) }
         it { is_expected.to include(line_break: true) }
+        it { is_expected.to include(inline: nil) }
         it { is_expected.to include(content_from_default: 'Hello world') }
 
         context 'with a defined slug' do

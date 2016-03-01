@@ -44,7 +44,8 @@ module Locomotive
                 content_from_default: self.render_default_content,
                 format:               @element_options[:format] || 'html',
                 rows:                 @element_options[:rows] || 10,
-                line_break:           @element_options[:line_break].blank? ? true : @element_options[:line_break]
+                inline:               @element_options[:inline],
+                line_break:           @element_options[:line_break].blank? ? true : @element_options[:line_break],
               )
             end
 
@@ -67,14 +68,14 @@ module Locomotive
               super
             end
             def default_element_attributes
-              super.merge(format: 'raw', rows: 2, line_break: false)
+              super.merge(format: 'raw', rows: 2, line_break: false, inline: true)
             end
           end
           ::Liquid::Template.register_tag('editable_short_text'.freeze, ShortText)
 
           class LongText < ShortText
             def default_element_attributes
-              super.merge(format: 'html', rows: 15, line_break: true)
+              super.merge(format: 'html', rows: 15, line_break: true, inline: false)
             end
           end
           ::Liquid::Template.register_tag('editable_long_text'.freeze, LongText)
