@@ -130,7 +130,8 @@ describe Locomotive::Steam::ContentEntryRepository do
       [
         { content_type_id: 1, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' },
         { content_type_id: 1, _position: 1, _label: 'Update #2', title: { fr: 'Mise a jour #2' }, text: { en: 'bla bla', fr: 'blabbla' }, date: '2009/05/12', category: 'General' },
-        { content_type_id: 1, _position: 2, _label: 'Update #3', title: { fr: 'Mise a jour #2' }, text: { en: 'bla bla', fr: 'blabbla' }, date: '2009/05/12', category: 'General' }
+        { content_type_id: 1, _position: 2, _label: 'Update #3', title: { fr: 'Mise a jour #2' }, text: { en: 'bla bla', fr: 'blabbla' }, date: '2009/05/12', category: 'General' },
+        { content_type_id: 1, _position: 3, _label: 'Update #4', title: { fr: 'Mise a jour #2' }, text: { en: 'bla bla', fr: 'blabbla' }, date: '2009/05/12', category: 'General' }
       ]
     end
 
@@ -141,7 +142,7 @@ describe Locomotive::Steam::ContentEntryRepository do
 
     context 'being last' do
 
-      let(:entry) { instance_double('Entry', content_type: type, _position: 2) }
+      let(:entry) { instance_double('Entry', content_type: type, _position: 3) }
       it { is_expected.to eq nil }
 
     end
@@ -162,7 +163,8 @@ describe Locomotive::Steam::ContentEntryRepository do
       [
         { content_type_id: 1, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' },
         { content_type_id: 1, _position: 1, _label: 'Update #2', title: { fr: 'Mise a jour #2' }, text: { en: 'bla bla', fr: 'blabbla' }, date: '2009/05/12', category: 'General' },
-        { content_type_id: 1, _position: 2, _label: 'Update #3', title: { fr: 'Mise a jour #2' }, text: { en: 'bla bla', fr: 'blabbla' }, date: '2009/05/12', category: 'General' }
+        { content_type_id: 1, _position: 2, _label: 'Update #3', title: { fr: 'Mise a jour #2' }, text: { en: 'bla bla', fr: 'blabbla' }, date: '2009/05/12', category: 'General' },
+        { content_type_id: 1, _position: 3, _label: 'Update #4', title: { fr: 'Mise a jour #2' }, text: { en: 'bla bla', fr: 'blabbla' }, date: '2009/05/12', category: 'General' }
       ]
     end
 
