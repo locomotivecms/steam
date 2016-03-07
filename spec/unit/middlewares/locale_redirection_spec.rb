@@ -90,6 +90,11 @@ describe Locomotive::Steam::Middlewares::LocaleRedirection do
         it { is_expected.to eq [301, '/mounted-on/somewhere/de/hello/world'] }
       end
 
+      describe 'requesting sitemap.xml' do
+        let(:url) { 'http://models.example.com/sitemap.xml' }
+        it { is_expected.to eq [200, nil] }
+      end
+
     end
 
     describe 'with locale' do

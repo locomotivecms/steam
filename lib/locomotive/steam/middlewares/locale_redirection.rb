@@ -29,7 +29,7 @@ module Locomotive::Steam
       end
 
       def apply_redirection?
-        site.locales.size > 1 && request.get?
+        site.locales.size > 1 && request.get? && env['PATH_INFO'] != '/sitemap.xml'
       end
 
       def default_locale?
