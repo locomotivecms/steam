@@ -47,6 +47,10 @@ module Locomotive
               end
             end
 
+            def blank?
+              false
+            end
+
             protected
 
             def render_default_content

@@ -145,6 +145,12 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
 
     end
 
+    context 'no default file and inside a capture block' do
+      let(:source)  { "{% capture url %}{% editable_file banner, hint: 'some text' %}{% endeditable_file %}{% endcapture %}->{{ url }}" }
+      let(:element) { instance_double('EditableFile', id: 42, default_source_url: nil, source?: true, source: '/foo/bar', content: nil, base_url: '') }
+      it { is_expected.to eq '->/foo/bar?1183150800' }
+    end
+
   end
 
 end
