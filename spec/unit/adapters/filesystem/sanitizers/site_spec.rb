@@ -26,7 +26,26 @@ describe Locomotive::Steam::Adapters::Filesystem::Sanitizers::Site do
     describe 'with a schema' do
 
       # see the metafields_schema.yml in the fixtures folder
-      let(:schema) { {:social=>{:label=>{:fr=>"Social (FR)"}, :position=>1, :fields=>["facebook_id", "google_id"]}, :github=>{:position=>0, :fields=>{:api_url=>{:label=>"API Url", :type=>"string", :hint=>"API endpoint"}, :expires_in=>{:label=>{:en=>"Expires in", :fr=>"Expire dans"}, :hint=>{:en=>"Cache - In milliseconds", :fr=>"Cache - En millisecondes"}, :type=>"integer", :min=>0, :max=>3600}}}} }
+      let(:schema) { {
+        :social => {
+          :label    => { :fr=>"Social (FR)" },
+          :position => 1,
+          :fields   => ["facebook_id", "google_id"]
+        },
+        :github => {
+          :position => 0,
+          :fields   => {
+            :api_url    => { :label => "API Url", :type => "string", :hint => "API endpoint" },
+            :expires_in => { :label => { :en => "Expires in", :fr => "Expire dans" }, :hint => { :en => "Cache - In milliseconds", :fr => "Cache - En millisecondes" }, :type => "integer", :min => 0, :max => 3600 }
+          }
+        },
+        :theme => {
+          :fields => [
+            { :color => { :label => 'Color', type: 'color' } },
+            { :header => { :label => 'Header image', type: 'image' } }
+          ]
+        }
+      } }
 
       it 'loads the full schema' do
         # First namespace
@@ -40,6 +59,12 @@ describe Locomotive::Steam::Adapters::Filesystem::Sanitizers::Site do
         expect(subject[1]['position']).to eq 0
         expect(subject[1]['fields'].count).to eq 2
         expect(subject[1]['fields'][0]).to eq('name' => 'api_url', 'position' => 0, 'label' => { 'default' => 'API Url' }, 'type' => 'string', 'hint' => { 'default' => 'API endpoint' })
+
+        # Third namespace
+        expect(subject[2]['label']).to eq('default' => 'theme')
+        expect(subject[2]['fields'].count).to eq 2
+        expect(subject[2]['fields'][0]).to eq('name' => 'color', 'position' => 0, 'label' => { 'default' => 'Color' }, 'type' => 'color')
+        expect(subject[2]['fields'][1]).to eq('name' => 'header', 'position' => 1, 'label' => { 'default' => 'Header image' }, 'type' => 'image')
       end
 
       context 'label is a string instead of a hash' do

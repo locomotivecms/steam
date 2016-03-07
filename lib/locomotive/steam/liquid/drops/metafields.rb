@@ -38,7 +38,7 @@ module Locomotive
 
             return @labels_and_values if @labels_and_values
 
-            ordered_fields = @namespace['fields'].sort { |f| f['position'] }
+            ordered_fields = @namespace['fields'].sort { |a, b| a['position'] <=> b['position'] }
 
             @labels_and_values = ordered_fields.map do |field|
               value, localized = values[field['name']], field['localized']

@@ -28,10 +28,13 @@ module Locomotive::Steam
 
           def parse_metafields(fields)
             fields.each_with_index.map do |(name, attributes), position|
+              name, attributes = name.to_a[0] if name.is_a?(Hash) # ordered list of fields
+
               if attributes # Hash
                 attributes[:label]  = { default: attributes[:label] } if attributes[:label].is_a?(String)
                 attributes[:hint]   = { default: attributes[:hint] } if attributes[:hint].is_a?(String)
               end
+
               { name: name.to_s, position: position }.merge(attributes || {})
             end
           end

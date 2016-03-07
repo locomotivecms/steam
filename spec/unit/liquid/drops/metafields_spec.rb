@@ -3,10 +3,26 @@ require 'spec_helper'
 describe Locomotive::Steam::Liquid::Drops::Metafields do
 
   let(:metafields)  { { 'my_namespace' => { 'analytics_id' => { 'default' => '42' }, 'street' => { 'en' => '7 Albert Camus Alley', 'fr' => '7 allée Albert Camus' } } } }
-  let(:schema)      { [ { 'name' => 'my_namespace', fields: [{ name: 'analytics_id' }, { name: 'street', localized: true }, { name: 'country' }] }].as_json }
+  let(:schema)      { [ { 'name' => 'my_namespace', fields: [{ name: 'analytics_id', position: 1 }, { name: 'street', localized: true, position: 0 }, { name: 'country', :position => 2 }] }].as_json }
   let(:site)        { instance_double('Site', metafields: metafields, metafields_schema: schema) }
   let(:context)     { ::Liquid::Context.new({}, {}, { locale: 'en' }) }
   let(:drop)        { described_class.new(site).tap { |d| d.context = context } }
+
+  describe 'fields' do
+
+    let(:namespace) { drop.before_method(:my_namespace).tap { |d| d.context = context } }
+
+    it 'gives the number of the fields' do
+      expect(namespace.size).to eq 3
+    end
+
+    it 'iterates over the fields and keeps the order' do
+      list = []
+      namespace.each { |el| list << el['name'] }
+      expect(list).to eq(['street', 'analytics_id', 'country'])
+    end
+
+  end
 
   describe 'calling a metafield' do
 

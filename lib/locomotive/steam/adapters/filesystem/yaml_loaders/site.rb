@@ -23,7 +23,7 @@ module Locomotive
             private
 
             def load_metafields_schema
-              schema = _load(File.join(site_path, 'config', 'metafields_schema.yml'))
+              _load(File.join(site_path, 'config', 'metafields_schema.yml'))
             end
 
           end
