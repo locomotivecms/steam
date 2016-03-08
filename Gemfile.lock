@@ -1,18 +1,7 @@
-GIT
-  remote: git://github.com/locomotivecms/common.git
-  revision: 257047b7e067c0ed4bc33a03656ee1e49f622374
-  ref: 257047b
-  specs:
-    locomotivecms_common (0.0.5)
-      activesupport (~> 4.2.5.2)
-      attr_extras (~> 4.4.0)
-      colorize
-      stringex (~> 2.6.0)
-
 PATH
   remote: .
   specs:
-    locomotivecms_steam (1.0.1)
+    locomotivecms_steam (1.1.0.rc1)
       RedCloth (~> 4.2.9)
       autoprefixer-rails (~> 6.3.3.1)
       chronic (~> 0.10.2)
@@ -23,7 +12,7 @@ PATH
       httparty (~> 0.13.6)
       kramdown (~> 1.10.0)
       locomotivecms-solid (~> 4.0.1)
-      locomotivecms_common (~> 0.0.5)
+      locomotivecms_common (~> 0.1.0)
       mime-types (~> 2.6.1)
       mimetype-fu (~> 0.1.2)
       moneta (~> 0.8.0)
@@ -118,6 +107,11 @@ GEM
     locomotivecms-liquid (4.0.0)
     locomotivecms-solid (4.0.1)
       locomotivecms-liquid (~> 4.0.0)
+    locomotivecms_common (0.1.0)
+      activesupport (~> 4.2.5.2)
+      attr_extras (~> 4.4.0)
+      colorize
+      stringex (~> 2.6.0)
     memory_profiler (0.9.6)
     method_source (0.8.2)
     mime-types (2.6.2)
@@ -217,7 +211,6 @@ DEPENDENCIES
   flamegraph
   i18n-spec (~> 0.6.0)
   json_spec (~> 1.1.4)
-  locomotivecms_common!
   locomotivecms_steam!
   memory_profiler
   mongo (~> 2.2.3)
