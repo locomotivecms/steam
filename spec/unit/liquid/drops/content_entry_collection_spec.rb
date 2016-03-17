@@ -5,7 +5,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntryCollection do
   let(:assigns)       { {} }
   let(:content_type)  { instance_double('ContentType', slug: 'articles') }
   let(:services)      { Locomotive::Steam::Services.build_instance }
-  let(:context)       { ::Liquid::Context.new(assigns, {}, { services: services }) }
+  let(:context)       { ::Liquid::Context.new(assigns, {}, { services: services, locale: :en }) }
   let(:drop)          { described_class.new(content_type).tap { |d| d.context = context } }
 
   before { allow(services).to receive(:current_site).and_return(nil) }
@@ -74,8 +74,11 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntryCollection do
 
   describe 'get options of a select field' do
 
+    let(:option_a) { build_select_option(en: 'a') }
+    let(:option_b) { build_select_option('b') }
+
     before do
-      expect(services.repositories.content_type).to receive(:select_options).with(content_type, 'category').and_return(['a', 'b'])
+      expect(services.repositories.content_type).to receive(:select_options).with(content_type, 'category').and_return([option_a, option_b])
     end
 
     it { expect(drop.before_method(:category_options)).to eq ['a', 'b'] }
@@ -96,6 +99,13 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntryCollection do
 
     it { expect(drop.before_method(:foo)).to eq nil }
 
+  end
+
+  def build_select_option(name)
+    _name = Locomotive::Steam::Models::I18nField.new('name', name)
+    Locomotive::Steam::ContentTypeField::SelectOption.new(name: _name).tap do |option|
+      option.localized_attributes = [:name]
+    end
   end
 
 end

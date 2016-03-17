@@ -42,7 +42,7 @@ module Locomotive
             if (meth.to_s =~ /^group_by_(.+)$/) == 0
               repository.group_by_select_option(@content_type, $1)
             elsif (meth.to_s =~ /^(.+)_options$/) == 0
-              content_type_repository.select_options(@content_type, $1)
+              select_options($1)
             else
               Locomotive::Common::Logger.warn "[Liquid template] trying to call #{meth} on a content_type object"
               nil
@@ -74,6 +74,16 @@ module Locomotive
 
           def repository
             @repository || services.repositories.content_entry.with(@content_type)
+          end
+
+          def select_options(name)
+            locale          = @context.registers[:locale]
+            default_locale  = @context.registers[:site].try(:default_locale)
+
+            (content_type_repository.select_options(@content_type, name) || []).map do |option|
+              _option = Locomotive::Steam::Decorators::I18nDecorator.new(option, locale, default_locale)
+              _option.name
+            end
           end
 
         end
