@@ -22,7 +22,7 @@ module Locomotive
 
           def find_value(name)
             if field = fields[name]
-              t(values[name], field['localized'])
+              safe_value(t(values[name], field['localized']))
             else
               Locomotive::Common::Logger.warn "[Liquid template] unknown site metafield \"#{name}\" under #{@namespace['name']}"
               nil
@@ -45,7 +45,7 @@ module Locomotive
               {
                 'name'  => field['name'],
                 'label' => t(field['label']) || field['name'].humanize,
-                'value' => t(value, localized)
+                'value' => safe_value(t(value, localized))
               }
             end
           end
@@ -64,6 +64,10 @@ module Locomotive
             key   = localized ? @context.registers[:locale] : 'default'
             value = { 'default' => value } unless value.is_a?(Hash)
             value[key]
+          end
+
+          def safe_value(value)
+            value.blank? ? nil : value
           end
 
         end

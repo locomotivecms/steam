@@ -54,7 +54,16 @@ describe Locomotive::Steam::Liquid::Drops::Metafields do
 
           it { is_expected.to eq '42' }
 
+          context 'the value exists but is an empty string' do
+
+            let(:metafields)  { { 'my_namespace' => { 'analytics_id' => { 'default' => '' }, 'street' => { 'en' => '7 Albert Camus Alley', 'fr' => '7 allée Albert Camus' } } } }
+            it { is_expected.to eq nil }
+
+          end
+
         end
+
+
 
         context "the value doesn't exist" do
 
