@@ -8,10 +8,12 @@ describe Locomotive::Steam::Liquid::Tags::ModelForm do
     allow(Rack::Csrf).to receive(:token).and_return(42)
   end
 
-  let(:request)   { instance_double('Request', env: {}) }
+  let(:path)      { '' }
+  let(:env)       { {} }
+  let(:request)   { instance_double('Request', env: env) }
   let(:source)    { "{% model_form 'newsletter_addresses' %}Newsletter Form{% endmodel_form %}" }
   let(:services)  { Locomotive::Steam::Services.build_instance(request) }
-  let(:context)   { ::Liquid::Context.new({ path: '' }, {}, { services: services }) }
+  let(:context)   { ::Liquid::Context.new({ 'path' => path }, {}, { services: services }) }
 
   subject { render_template(source, context) }
 
@@ -35,7 +37,29 @@ describe Locomotive::Steam::Liquid::Tags::ModelForm do
   describe 'json enabled' do
 
     let(:source) { "{% model_form 'newsletter_addresses', json: true %}Newsletter Form{% endmodel_form %}" }
-    it { is_expected.to eq %(<form method="POST" enctype="multipart/form-data" action="index.json"><input type="hidden" name="content_type_slug" value="newsletter_addresses" /><input type="hidden" name="token" value="42" />Newsletter Form</form>) }
+    it { is_expected.to eq %(<form method="POST" enctype="multipart/form-data" action="/index.json"><input type="hidden" name="content_type_slug" value="newsletter_addresses" /><input type="hidden" name="token" value="42" />Newsletter Form</form>) }
+
+    context 'rendered at /_app/foo/preview' do
+
+      let(:path)  { '/_app/foo/preview/' }
+      let(:env)   { { 'steam.mounted_on' => '/_app/foo/preview/' } }
+      it { is_expected.to eq %(<form method="POST" enctype="multipart/form-data" action="/_app/foo/preview/index.json"><input type="hidden" name="content_type_slug" value="newsletter_addresses" /><input type="hidden" name="token" value="42" />Newsletter Form</form>) }
+
+    end
+
+  end
+
+  describe 'specifying an action' do
+
+    let(:source) { "{% model_form 'newsletter_addresses', action: 'foo/bar' %}Newsletter Form{% endmodel_form %}" }
+    it { is_expected.to eq %(<form method="POST" enctype="multipart/form-data" action="/foo/bar"><input type="hidden" name="content_type_slug" value="newsletter_addresses" /><input type="hidden" name="token" value="42" />Newsletter Form</form>) }
+
+    context 'mounted_on is not empty' do
+
+      let(:env) { { 'steam.mounted_on' => '/_app/foo/preview' } }
+      it { is_expected.to eq %(<form method="POST" enctype="multipart/form-data" action="/_app/foo/preview/foo/bar"><input type="hidden" name="content_type_slug" value="newsletter_addresses" /><input type="hidden" name="token" value="42" />Newsletter Form</form>) }
+
+    end
 
   end
 

@@ -96,7 +96,9 @@ describe 'ContactForm' do
 
       context 'when valid' do
 
-        let(:response) { post_contact_form(url, params, false, true) }
+        let(:env)             { {} }
+        let(:follow_redirect) { true }
+        let(:response)        { post_contact_form(url, params, false, follow_redirect, env) }
 
         it 'returns a success status' do
           expect(response.status).to eq 200
@@ -104,6 +106,17 @@ describe 'ContactForm' do
 
         it 'displays a success message' do
           expect(response.body.to_s).to include 'Thank you John'
+        end
+
+        context 'mounted on a different path than /' do
+
+          let(:env)             { { 'steam.mounted_on' => '/foo/bar/' } }
+          let(:follow_redirect) { false }
+
+          it 'redirects to the location prefixed by the mounted_on path' do
+            expect(response.location).to match(/\A\/foo\/bar\/\/events\?submitted_type_slug=messages\&submitted_entry_slug=john/)
+          end
+
         end
 
       end
@@ -162,13 +175,13 @@ describe 'ContactForm' do
 
   end
 
-  def post_contact_form(url, params, json = false, follow_redirect = false)
+  def post_contact_form(url, params, json = false, follow_redirect = false, env = {})
     if json
       url += '.json'
       params = params.symbolize_keys
     end
 
-    post url, params
+    post url, params, env
 
     follow_redirect! if follow_redirect
 

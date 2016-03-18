@@ -65,17 +65,32 @@ module Locomotive
           end
 
           def prepare_form_attributes(options)
-            action      = options[:action]
+            url         = action_url(options)
             attributes  = options.slice(:id, :class, :name, :novalidate)
 
-            if action.blank? && options[:json]
-              action = current_context['path']
-              action = (action.blank? ? 'index' : action) + '.json'
-            end
-
             { method: 'POST', enctype: 'multipart/form-data' }.merge(attributes).tap do |_attributes|
-              _attributes[:action] = action if action
+              _attributes[:action] = url if url
             end
+          end
+
+          def action_url(options)
+            url = options[:action]
+
+            if url.blank?
+              if options[:json]
+                url = current_context['path'].blank? ? '/' : current_context['path']
+                url + 'index.json'
+              else
+                nil
+              end
+            else
+              url = '/' + url unless url.starts_with?('/')
+              url_builder.prefix(url)
+            end
+          end
+
+          def url_builder
+            current_context.registers[:services].url_builder
           end
 
         end

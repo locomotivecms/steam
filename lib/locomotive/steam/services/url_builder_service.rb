@@ -30,11 +30,11 @@ module Locomotive
         "/entry_submissions/#{content_type.slug}"
       end
 
-      private
-
       def prefix(url)
         mounted_on ? "#{mounted_on}#{url}" : url
       end
+
+      private
 
       def mounted_on
         return if request.nil?
