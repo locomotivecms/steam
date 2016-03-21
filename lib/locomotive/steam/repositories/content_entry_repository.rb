@@ -102,7 +102,7 @@ module Locomotive
         groups_to_array(name, _groups).tap do |groups|
           # entries with a not existing select_option value?
           unless _groups.blank?
-            groups << { name: nil, entries: _groups.values.flatten }
+            groups << { name: nil, entries: _groups.values.flatten }.with_indifferent_access
           end
         end
       end
@@ -179,7 +179,7 @@ module Locomotive
       def groups_to_array(name, groups)
         content_type_repository.select_options(content_type, name).map do |option|
           option_name = i18n_value_of(option, :name)
-          { name: option_name, entries: groups.delete(option_name) || [] }
+          { 'name' => option_name, 'entries' => groups.delete(option_name) || [] }.with_indifferent_access
         end
       end
 

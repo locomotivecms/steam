@@ -88,7 +88,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntryCollection do
   describe 'group entries by a select/belongs_to field' do
 
     before do
-      expect(services.repositories.content_entry).to receive(:group_by_select_option).with(content_type, 'category').and_return([['a', [1, 2]]])
+      expect(services.repositories.content_entry).to receive(:group_by_select_option).with('category').and_return([['a', [1, 2]]])
     end
 
     it { expect(drop.before_method(:group_by_category)).to eq [['a', [1, 2]]] }

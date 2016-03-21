@@ -40,7 +40,7 @@ module Locomotive
 
           def before_method(meth)
             if (meth.to_s =~ /^group_by_(.+)$/) == 0
-              repository.group_by_select_option(@content_type, $1)
+              repository.group_by_select_option($1)
             elsif (meth.to_s =~ /^(.+)_options$/) == 0
               select_options($1)
             else
