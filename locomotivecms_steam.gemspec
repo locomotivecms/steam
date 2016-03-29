@@ -44,6 +44,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'haml',                   '~> 4.0.6'
   spec.add_dependency 'mimetype-fu',            '~> 0.1.2'
   spec.add_dependency 'mime-types',             '~> 2.6.1'
+  spec.add_dependency 'duktape',                '~> 1.3.0.6'
+  spec.add_dependency 'pony',                   '~> 1.11'
 
   spec.add_dependency 'locomotivecms-solid',      '~> 4.0.1'
   spec.add_dependency 'locomotivecms_common',     '~> 0.1.0'

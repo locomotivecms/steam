@@ -10,6 +10,21 @@ describe Locomotive::Steam::ContentEntry do
 
   before { content_entry.content_type = type }
 
+  describe '#change' do
+
+    let(:fields) { [instance_double('Field', name: :title, type: :string, required: true)] }
+
+    before do
+      allow(type).to receive(:fields_by_name).and_return({ title: fields.first })
+    end
+
+    subject { content_entry.change('title' => 'Hello world!') }
+
+    it { expect(subject.title).to eq('Hello world!') }
+    it { expect(subject._slug).to eq('hello-world') }
+
+  end
+
   describe '#valid?' do
 
     let(:fields) { [instance_double('Field', name: :title, type: :string, required: true)] }

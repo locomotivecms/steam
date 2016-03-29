@@ -4,6 +4,13 @@ require 'coffee_script'
 require 'compass'
 require 'autoprefixer-rails'
 
+require 'execjs'
+
+# Force ExecJS to select the best engine based on the current configuration.
+# It means that if, down the road, we load a different javascript engine,
+# the ExecJS runtime won't be affected.
+ExecJS.runtime
+
 module Locomotive::Steam
 
   class SprocketsEnvironment < ::Sprockets::Environment

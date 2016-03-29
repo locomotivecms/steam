@@ -77,4 +77,14 @@ describe Locomotive::Steam::Page do
 
   end
 
+  describe '#source' do
+
+    let(:attributes) { { 'raw_template' => 'template code here' } }
+
+    subject { page.source }
+
+    it { is_expected.to eq 'template code here'}
+
+  end
+
 end

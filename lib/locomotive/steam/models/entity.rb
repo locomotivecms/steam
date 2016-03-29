@@ -39,6 +39,11 @@ module Locomotive::Steam
         attributes[name]
       end
 
+      def change(new_attributes)
+        attributes.merge!((new_attributes || {}).with_indifferent_access)
+        self
+      end
+
       def serialize
         attributes.dup
       end
