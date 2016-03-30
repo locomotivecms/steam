@@ -51,11 +51,11 @@ module Locomotive
       end
 
       def send_email_lambda(liquid_context)
-        -> (options) { email.send_email(options, liquid_context) }
+        -> (options) { email.send_email(options.with_indifferent_access, liquid_context) }
       end
 
       def get_prop_lambda(liquid_context)
-        -> (name) { liquid_context[name].as_json.tap { |e| puts e.inspect } }
+        -> (name) { liquid_context[name].as_json }
       end
 
       def set_prop_lambda(liquid_context)

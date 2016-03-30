@@ -15,7 +15,7 @@ module Locomotive
         options[:via] ||= :smtp
         options[:via_options] ||= options.delete(:smtp)
 
-        log(options)
+        log(options, simulation)
 
         !simulation ? Pony.mail(options) : nil
       end
@@ -75,8 +75,8 @@ module Locomotive
         end
       end
 
-      def log(options)
-        message = ["Sent email via #{options[:via]} (#{options[:via_options].inspect}):"]
+      def log(options, simulation)
+        message = ["[#{simulation ? 'Test' : 'Live'}] Sent email via #{options[:via]} (#{options[:via_options].inspect}):"]
         message << "From:     #{options[:from]}"
         message << "To:       #{options[:to]}"
         message << "Subject:  #{options[:subject]}"
