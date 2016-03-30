@@ -61,9 +61,9 @@ describe Locomotive::Steam::ActionService do
 
       end
 
-      describe 'sendProp' do
+      describe 'setProp' do
 
-        let(:script) { "return sendProp('done', true);" }
+        let(:script) { "return setProp('done', true);" }
 
         it { subject; expect(context['done']).to eq true }
 

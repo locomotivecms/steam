@@ -6,14 +6,11 @@ require 'autoprefixer-rails'
 
 require 'execjs'
 
-# Force ExecJS to select the best engine based on the current configuration.
-# It means that if, down the road, we load a different javascript engine,
-# the ExecJS runtime won't be affected.
-ExecJS.runtime
-
 module Locomotive::Steam
 
   class SprocketsEnvironment < ::Sprockets::Environment
+
+    attr_reader :steam_path
 
     def initialize(root, options = {})
       super(root)
@@ -25,6 +22,12 @@ module Locomotive::Steam
       install_yui_compressor(options)
 
       install_autoprefixer
+
+      context_class.class_eval do
+        def asset_path(path, options = {})
+          path
+        end
+      end
     end
 
     private

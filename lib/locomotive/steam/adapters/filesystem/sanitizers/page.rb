@@ -9,9 +9,8 @@ module Locomotive::Steam
 
           def setup(scope)
             super.tap do
-              @ids, @parent_ids = {}, {}
-              @content_types    = {}
-              @localized = locales.inject({}) { |m, l| m[l] = {}; m }
+              @ids, @parent_ids, @templatized_ids = {}, {}, {}
+              @localized      = locales.inject({}) { |m, l| m[l] = {}; m }
             end
           end
 
@@ -22,27 +21,31 @@ module Locomotive::Steam
 
             locales.each do |locale|
               set_default_redirect_type(entity, locale)
-              modify_if_templatized(entity, locale)
             end
+
+            check_and_mark_as_templatized(entity)
           end
 
           def apply_to_dataset(dataset)
             sorted_collection(dataset.records.values).each do |page|
               locales.each do |locale|
+                set_parent_id(page)
+
+                modify_if_parent_templatized(page, locale)
+
                 # the following method needs to be called first
                 set_fullpath_for(page, locale)
 
-                set_parent_id(page)
                 use_default_locale_template_path(page, locale)
               end
-
-              modify_if_nested_templatized(page)
             end
           end
 
           # when this is called, the @ids hash has been populated completely
           def set_parent_id(page)
-            return if page.not_found?
+            page._fullpath ||= page.attributes.delete(:_fullpath)
+
+            return if page._fullpath == '404'
 
             parent_key = parent_fullpath(page)
 
@@ -69,17 +72,7 @@ module Locomotive::Steam
             end
           end
 
-          def modify_if_nested_templatized(page)
-            if content_type = fetch_content_type(parent_fullpath(page))
-              # not a templatized page but it becomes one because
-              # its parent is one of them
-              _modify_if_templatized(page, content_type)
-            end
-          end
-
           def set_fullpath_for(page, locale)
-            page._fullpath ||= page.attributes.delete(:_fullpath)
-
             slug = fullpath = page.slug[locale].try(:to_s)
 
             return if slug.blank?
@@ -98,7 +91,7 @@ module Locomotive::Steam
 
             page.depth = page[:_fullpath].split('/').size
 
-            if page.depth == 1 && system_pages?(page)
+            if system_pages?(page)
               page.depth = 0
             end
 
@@ -106,6 +99,7 @@ module Locomotive::Steam
           end
 
           def system_pages?(page)
+            page.depth == 1 &&
             %w(index 404).include?(page.slug.values.compact.first)
           end
 
@@ -114,17 +108,9 @@ module Locomotive::Steam
           end
 
           def parent_fullpath(page)
-            return nil if page._fullpath == 'index'
+            return nil if page._fullpath == 'index' || page._fullpath == '404'
             path = page._fullpath.split('/')[0..-2].join('/')
             path.blank? ? 'index' : path
-          end
-
-          def fetch_content_type(fullpath)
-            @content_types[fullpath]
-          end
-
-          def set_content_type(fullpath, value)
-            @content_types[fullpath] = value
           end
 
           def fetch_localized_fullpath(fullpath, locale)
@@ -139,17 +125,26 @@ module Locomotive::Steam
             @ids[entity[:_fullpath]] = entity._id
           end
 
-          def modify_if_templatized(page, locale)
+          def check_and_mark_as_templatized(page)
             if content_type = page[:content_type]
-              _modify_if_templatized(page, content_type)
-              page[:slug][locale] = Locomotive::Steam::WILDCARD
-              set_content_type(page[:_fullpath], content_type)
+              mark_as_templatized(page, content_type)
             end
           end
 
-          def _modify_if_templatized(page, content_type)
-            page[:templatized]        = true
-            page[:target_klass_name]  = "Locomotive::ContentEntry#{content_type}"
+          def mark_as_templatized(page, content_type)
+            @templatized_ids[page._id]  = content_type
+            page[:templatized]          = true
+            page[:target_klass_name]    = "Locomotive::ContentEntry#{content_type}"
+          end
+
+          def modify_if_parent_templatized(page, locale)
+            parent_templatized = @templatized_ids[page.parent_id]
+
+            if page[:templatized]
+              page[:slug][locale] = Locomotive::Steam::WILDCARD unless parent_templatized
+            elsif parent_templatized
+              mark_as_templatized(page, parent_templatized)
+            end
           end
 
         end

@@ -103,6 +103,7 @@ module Locomotive::Steam
           'ip_address'  => request.ip,
           'post?'       => request.post?,
           'base_url'    => request.base_url,
+          'user_agent'  => request.user_agent,
           'mounted_on'  => mounted_on
         }
       end

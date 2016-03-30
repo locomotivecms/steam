@@ -1,20 +1,10 @@
-# TODO: accessor to other services: email, content_entry CRUD actions
-
-# built-in functions (prefix by a namespace? or included in a module):
-# x site
-# x sendEmail(params) => nil
-# x setProp(key, value) # Liquid context (assigns)
-# x getProp(key) # Liquid context (assigns)
-# x setSessionProp(key, value)
-# x getSessionProp(key)
-# x allEntries(type, filters) => Array of hashes
-# x findEntry(type, <id_or_slug>)
-# - createEntry(<type>, attributes) => Hash (with id)
-# - updateEntry(<type>, <id_or_slug>, attributes)
-
-# liquid tag: {% action '<name>' %}<coffee script here>{% endaction %}
-
+# Force ExecJS to select the best engine based on the current configuration.
+# It means that if, down the road, we load a different javascript engine,
+# the ExecJS runtime won't be affected.
 require 'duktape'
+require 'execjs'
+ExecJS.runtimes.delete_if { |mod| mod.is_a?(ExecJS::DuktapeRuntime) }
+ExecJS.instance_variable_set(:@runtime, ExecJS::Runtimes.autodetect)
 
 module Locomotive
   module Steam
@@ -23,7 +13,7 @@ module Locomotive
 
       BUILT_IN_FUNCTIONS = %w(
         getProp
-        sendProp
+        setProp
         getSessionProp
         setSessionProp
         sendEmail
@@ -39,11 +29,15 @@ module Locomotive
 
         define_built_in_functions(context, liquid_context)
 
-        context.exec_string <<-JS
+        script = <<-JS
           function locomotiveAction(site, params) {
             #{script}
           }
         JS
+
+        # puts script.inspect # DEBUG
+
+        context.exec_string script
 
         context.call_prop('locomotiveAction', site.as_json, params)
       end
@@ -61,11 +55,11 @@ module Locomotive
       end
 
       def get_prop_lambda(liquid_context)
-        -> (name) { liquid_context[name].as_json }
+        -> (name) { liquid_context[name].as_json.tap { |e| puts e.inspect } }
       end
 
-      def send_prop_lambda(liquid_context)
-        -> (name, value) { liquid_context[name] = value }
+      def set_prop_lambda(liquid_context)
+        -> (name, value) { liquid_context.scopes.last[name] = value }
       end
 
       def get_session_prop_lambda(liquid_context)
