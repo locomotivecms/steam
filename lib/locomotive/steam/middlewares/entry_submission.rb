@@ -59,7 +59,7 @@ module Locomotive::Steam
         if error_location =~ HTTP_REGEXP
           redirect_to error_location
         else
-          env['PATH_INFO'] = error_location
+          env['PATH_INFO'] = make_local_path(error_location)
           store_in_liquid(entry)
           self.next
         end

@@ -51,7 +51,7 @@ module Locomotive
       end
 
       def send_email_lambda(liquid_context)
-        -> (options) { email.send_email(options.with_indifferent_access, liquid_context) }
+        -> (options) { !!email.send_email(options, liquid_context) }
       end
 
       def get_prop_lambda(liquid_context)

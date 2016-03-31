@@ -68,6 +68,10 @@ module Locomotive::Steam
       ''
     end
 
+    def make_id(value)
+      value
+    end
+
     def count(mapper, scope, &block)
       query(mapper, scope, &block).count
     end

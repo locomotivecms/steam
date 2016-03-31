@@ -72,7 +72,8 @@ module Locomotive::Steam
           'now'               => Time.zone.now,
           'today'             => Date.today,
           'mode'              => Locomotive::Steam.configuration.mode,
-          'wagon'             => Locomotive::Steam.configuration.mode == :test
+          'wagon'             => Locomotive::Steam.configuration.mode == :test,
+          'live_editing'      => !!env['steam.live_editing']
         }
       end
 

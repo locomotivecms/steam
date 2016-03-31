@@ -27,7 +27,8 @@ module Locomotive::Steam
     end
 
     def find(mapper, scope, id)
-      query(mapper, scope) { where(_id: BSON::ObjectId.from_string(id)) }.first
+      _id = make_id(id)
+      query(mapper, scope) { where(_id: _id) }.first
     end
 
     def create(mapper, scope, entity)
@@ -48,6 +49,10 @@ module Locomotive::Steam
 
     def key(name, operator)
       name.to_sym.__send__(operator.to_sym)
+    end
+
+    def make_id(id)
+      BSON::ObjectId.from_string(id)
     end
 
     def base_url(mapper, scope, entity = nil)

@@ -8,12 +8,12 @@ module Locomotive
       attr_accessor_initialize :page_finder_service, :liquid_parser, :asset_host, :simulation
 
       def send_email(options, context)
-        build_body(options, context, options.delete(:html))
+        build_body(options.symbolize_keys!, context, options.delete(:html))
 
         extract_attachment(options)
 
         options[:via] ||= :smtp
-        options[:via_options] ||= options.delete(:smtp)
+        options[:via_options] ||= options.delete(:smtp).try(:symbolize_keys)
 
         log(options, simulation)
 
@@ -80,6 +80,7 @@ module Locomotive
         message << "From:     #{options[:from]}"
         message << "To:       #{options[:to]}"
         message << "Subject:  #{options[:subject]}"
+        message << "Attachments:  #{options[:attachments]}"
         message << "-----------"
         message << (options[:body] || options[:html_body]).gsub("\n", "\n\t")
         message << "-----------"

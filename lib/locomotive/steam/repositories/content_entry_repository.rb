@@ -131,7 +131,7 @@ module Locomotive
       end
 
       def prepare_conditions(*conditions)
-        _conditions = Conditions.new(conditions.first, self.content_type.fields).prepare
+        _conditions = Conditions.new(adapter, conditions.first, self.content_type.fields).prepare
 
         super({ _visible: true }, _conditions)
       end
@@ -185,8 +185,10 @@ module Locomotive
 
       class Conditions
 
-        def initialize(conditions = {}, fields)
-          @conditions, @fields, @operators = conditions.try(:with_indifferent_access) || {}, fields, {}
+        def initialize(adapter, conditions = {}, fields)
+          @adapter    = adapter
+          @conditions = conditions.try(:with_indifferent_access) || {}
+          @fields, @operators = fields, {}
 
           @conditions.each do |name, value|
             _name, operator = name.to_s.split('.')
@@ -199,6 +201,9 @@ module Locomotive
           _prepare(@fields.selects) do |field, value|
             field.select_options.by_name(value).try(:_id)
           end
+
+          # date
+          _prepare(@fields.dates_and_date_times) { |field, value| value_to_date(value, field.type) }
 
           # belongs_to
           _prepare(@fields.belongs_to) { |field, value| value_to_id(value) }
@@ -233,11 +238,25 @@ module Locomotive
         end
 
         def value_to_id(value)
-          if value.respond_to?(:each) # array
+          _value = if value.is_a?(Hash)
+            value['_id'] || value[:_id]
+          elsif value.respond_to?(:each) # array
             values_to_ids(value)
           else
             value.respond_to?(:_id) ? value._id : value
           end
+
+          @adapter.make_id(_value)
+        end
+
+        def value_to_date(value, type)
+          _value = if value.is_a?(String)
+            Chronic.time_class = Time.zone
+            Chronic.parse(value)
+          else
+            value
+          end
+          type == :date ? _value.to_date : _value.to_datetime
         end
 
         def values_to_ids(value)

@@ -83,7 +83,7 @@ module Locomotive::Steam
       _attributes += content_type.persisted_field_names
 
       _attributes.inject({}) do |hash, name|
-        hash[name.to_s] = send(name)
+        hash[name.to_s] = send(name) rescue nil
         hash
       end.tap do |hash|
         # errors?
@@ -182,6 +182,10 @@ module Locomotive::Steam
       def url
         return if filename.blank?
         base.blank? ? filename : "#{base}/#{filename}"
+      end
+
+      def to_hash
+        { 'url' => url, 'filename' => filename, 'size' => size, 'updated_at' => updated_at }
       end
 
       def to_json

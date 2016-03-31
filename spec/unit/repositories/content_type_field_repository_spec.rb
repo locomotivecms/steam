@@ -70,4 +70,14 @@ describe Locomotive::Steam::ContentTypeFieldRepository do
 
   end
 
+  describe '#dates_and_date_times' do
+
+    let(:collection)  { [{ name: 'name', type: 'string' }, { name: 'launched_at', type: 'date' }, { name: 'updated_at', type: 'date_time' }] }
+
+    subject { repository.dates_and_date_times }
+
+    it { expect(subject.map(&:name)).to eq(['launched_at', 'updated_at']) }
+
+  end
+
 end

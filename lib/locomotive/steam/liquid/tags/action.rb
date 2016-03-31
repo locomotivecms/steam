@@ -12,11 +12,16 @@ module Locomotive
         #
         # Usage:
         #
-        # {% action "" %}
-        #   {% for post in blog.posts %}
-        #     {{ post.title }}
-        #   {% endfor %}
-        # {% endconsume %}
+        # {% action "My javascript action" %}
+        #   var lastPost = allEntries('posts', { 'posted_at.lte': getProp('today'), published: true, order_by: 'posted_at desc' })[0];
+        #   var views = lastPost.views + 1;
+        #
+        #   updateEntry('posts', lastPost._id, { views: views });
+        #
+        #   setProp('views', views);
+        # {% endaction %}
+        #
+        # <p>Number of views for the last published post: {{ views }}</p>
         #
         class Action < ::Liquid::Block
 
