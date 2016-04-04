@@ -8,16 +8,15 @@ module Locomotive
       attr_accessor_initialize :page_finder_service, :liquid_parser, :asset_host, :simulation
 
       def send_email(options, context)
-        build_body(options.symbolize_keys!, context, options.delete(:html))
-
-        extract_attachment(options)
-
-        options[:via] ||= :smtp
-        options[:via_options] ||= options.delete(:smtp).try(:symbolize_keys)
+        prepare_options(options, context)
 
         log(options, simulation)
 
-        !simulation ? Pony.mail(options) : nil
+        !simulation ? send_email!(options) : nil
+      end
+
+      def send_email!(options)
+        Pony.mail(options)
       end
 
       def logger
@@ -25,6 +24,15 @@ module Locomotive
       end
 
       private
+
+      def prepare_options(options, context)
+        build_body(options.symbolize_keys!, context, options.delete(:html))
+
+        extract_attachment(options)
+
+        options[:via] ||= :smtp
+        options[:via_options] ||= options.delete(:smtp).try(:symbolize_keys)
+      end
 
       def build_body(options, context, html = true)
         key = html || html.nil? ? :html_body : :body
