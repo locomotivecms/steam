@@ -26,7 +26,8 @@ module Locomotive::Steam
 
     def order_by
       if (order_by = self[:order_by]).present?
-        name, direction = order_by.split
+        # from Filesystem -> string, from MongoDB -> array (string transformed by Engine)
+        name, direction = order_by.respond_to?(:each) ? order_by : order_by.split
         { name.to_sym => direction || 'asc' }
       else
         type == :has_many ? { :"position_in_#{self[:inverse_of]}" => 'asc' } : nil

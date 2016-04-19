@@ -5,7 +5,7 @@ module Locomotive::Steam
 
       extend Forwardable
 
-      def_delegators :@translations, :values, :blank?, :default
+      def_delegators :@translations, :values, :default
 
       attr_reader :name, :translations
 
@@ -37,6 +37,10 @@ module Locomotive::Steam
 
       def each(&block)
         @translations.each(&block)
+      end
+
+      def blank?
+        @translations.blank? && @translations[:anything].blank?
       end
 
       def apply(&block)
