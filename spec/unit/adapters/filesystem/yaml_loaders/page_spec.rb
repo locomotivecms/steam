@@ -16,7 +16,7 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Page do
 
     it 'tests various stuff' do
       expect(subject.size).to eq 26
-      expect(subject.first[:title]).to eq(en: 'Page not found')
+      expect(subject.first[:title]).to eq(en: 'Page not found', fr: 'Page non trouvée')
       expect(subject[15][:is_layout]).to eq true
       expect(subject[15][:listed]).to eq false
       expect(subject[15][:published]).to eq false

@@ -35,6 +35,9 @@ module Locomotive::Steam
 
       def fetch_content_entry(slug)
         if type = content_type_repository.find(page.content_type_id)
+          # don't accept a non localized entry in a locale other than the default one
+          return nil if type.localized_names.count == 0 && locale.to_s != default_locale.to_s
+
           decorate(content_entry_repository.with(type).by_slug(slug))
         else
           nil

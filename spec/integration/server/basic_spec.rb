@@ -115,6 +115,13 @@ describe Locomotive::Steam::Server do
       expect(last_response.body).to include 'Leader: Eddie'
     end
 
+    it 'redirects to the 404 if a locale other than the default one is asked' do
+      get '/fr/songs/song-number-2'
+      expect(last_response).to be_redirect
+      follow_redirect!
+      expect(last_response.status).to eq(404)
+    end
+
     it 'redirects to the 404 if it does not match a content entry' do
       get '/songs/unknown'
       expect(last_response).to be_redirect
