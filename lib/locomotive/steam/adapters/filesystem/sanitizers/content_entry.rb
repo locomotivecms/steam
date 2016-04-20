@@ -70,13 +70,15 @@ module Locomotive::Steam
           end
 
           def set_slug(entity, dataset)
-            if entity._label.respond_to?(:translations) # localized?
-              entity._label.each do |locale, label|
-                entity[:_slug][locale] ||= slugify(entity._id, label, dataset, locale)
+            if entity._slug.blank?
+              if entity._label.respond_to?(:translations)
+                entity._label.each do |locale, label|
+                  entity[:_slug][locale] = slugify(entity._id, label, dataset, locale)
+                end
+              else
+                # same value for any locale
+                entity[:_slug].translations = slugify(entity._id, entity._label, dataset)
               end
-            elsif entity[:_slug] && entity[:_slug][:anylocale].nil?
-              # Note: replace the translations of the I18nField by a string
-              entity[:_slug].translations = slugify(entity._id, entity._label, dataset)
             end
           end
 
