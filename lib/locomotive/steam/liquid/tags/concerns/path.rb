@@ -74,7 +74,7 @@ module Locomotive
             def _retrieve_templatized_page_drop_from(drop)
               entry = drop.send(:_source)
 
-              if page = repository.template_for(entry, @path_options[:with])
+              if page = repository.template_for(entry, template_slug)
                 page.to_liquid.tap { |d| d.context = @context }
               end
             end
@@ -84,7 +84,11 @@ module Locomotive
             end
 
             def locale
-              @path_options[:locale] || @locale
+              @path_options[:locale] || @raw_locale || @locale
+            end
+
+            def template_slug
+              @path_options[:with] || @raw_with
             end
 
             def set_vars_from_context(context)
@@ -101,7 +105,9 @@ module Locomotive
             def make_options_compatible_with_previous_version(options)
               if options
                 %w(with locale).each do |name|
-                  options.gsub!(/#{name}: ([\w-]+)/, name + ': "\1"')
+                  if options =~ /#{name}: ([\w-]+)/
+                    instance_variable_set(:"@raw_#{name}", $1);
+                  end
                 end
               end
             end

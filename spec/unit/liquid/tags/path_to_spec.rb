@@ -68,6 +68,15 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
       let(:source) { "{% path_to about_us, locale: 'fr' %}" }
       it { is_expected.to eq '/fr/a-notre-sujet' }
 
+      context 'locale is a variable' do
+
+        let(:assigns) { { 'about_us' => drop, 'language' => 'fr' } }
+        let(:source) { "{% path_to about_us, locale: language %}" }
+
+        it { is_expected.to eq '/fr/a-notre-sujet' }
+
+      end
+
     end
 
   end
@@ -82,7 +91,7 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
     let(:source)      { '{% path_to article %}' }
 
     before do
-      expect(services.repositories.page).to receive(:template_for).with(entry, nil).and_return(page)
+      allow(services.repositories.page).to receive(:template_for).with(entry, nil).and_return(page)
       allow(page).to receive(:to_liquid).and_return(drop)
     end
 
@@ -92,6 +101,21 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
 
       let(:source) { "{% path_to article, locale: 'fr' %}" }
       it { is_expected.to eq '/fr/mes-articles/bonjour-monde' }
+
+    end
+
+    context 'and a different template' do
+
+      let(:archive) { liquid_instance_double('ArticleTemplate', title: 'Template of an article', handle: 'article', localized_attributes: { fullpath: true }, fullpath: { en: 'my-archives/content_type_template', fr: 'mes-archives/content_type_template' }, content_entry: entry_drop.send(:_source), templatized?: true) }
+      let(:drop)    { Locomotive::Steam::Liquid::Drops::Page.new(archive) }
+
+      before do
+        allow(services.repositories.page).to receive(:template_for).with(entry, 'archives').and_return(archive)
+        allow(archive).to receive(:to_liquid).and_return(drop)
+      end
+
+      let(:source) { "{% path_to article, with: archives, locale: fr %}" }
+      it { is_expected.to eq '/fr/mes-archives/bonjour-monde' }
 
     end
 
