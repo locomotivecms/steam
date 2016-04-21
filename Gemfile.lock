@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    locomotivecms_steam (1.1.0.rc3)
+    locomotivecms_steam (1.1.0)
       RedCloth (~> 4.2.9)
       autoprefixer-rails (~> 6.3.3.1)
       chronic (~> 0.10.2)
@@ -175,7 +175,7 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
       nokogumbo (~> 1.4.1)
-    sass (3.4.21)
+    sass (3.4.22)
     simplecov (0.11.1)
       docile (~> 1.1.0)
       json (~> 1.8)
