@@ -20,6 +20,8 @@ The rendering stack used by both Wagon and Engine (WIP). It includes:
 
 ### Command line:
 
+*Warning*: For now, Steam is not aimed to be run standalone. The following is just a proof of concept.
+
 Display all the options:
 
     steam --help
@@ -36,9 +38,14 @@ Once launched, open your browser
 
     open localhost:8080
 
-### Inside a Rails application:
+### Inside Engine / Wagon:
 
-[TODO]
+[https://github.com/locomotivecms/engine/blob/master/lib/locomotive/steam_adaptor.rb](https://github.com/locomotivecms/engine/blob/master/lib/locomotive/steam_adaptor.rb)
+[https://github.com/locomotivecms/engine/blob/master/spec/dummy/config/routes.rb](https://github.com/locomotivecms/engine/blob/master/spec/dummy/config/routes.rb#L12)
+
+
+[https://github.com/locomotivecms/wagon/blob/master/lib/locomotive/wagon/commands/serve_command.rb](https://github.com/locomotivecms/wagon/blob/master/lib/locomotive/wagon/commands/serve_command.rb#L65)
+[https://github.com/locomotivecms/wagon/blob/master/lib/locomotive/wagon/commands/serve_command.rb](https://github.com/locomotivecms/wagon/blob/master/lib/locomotive/wagon/commands/serve_command.rb#L138)
 
 ## TODO
 
@@ -54,4 +61,4 @@ see the list in the issues section.
 
 ## License
 
-Copyright (c) 2015 NoCoffee. MIT Licensed, see LICENSE for details.
+Copyright (c) 2016 NoCoffee. MIT Licensed, see LICENSE for details.
