@@ -26,6 +26,10 @@ module Locomotive
         query { where(type: :file) }.all
       end
 
+      def dates_and_date_times
+        query { where(k(:type, :in) => %i(date date_time)) }.all
+      end
+
       def belongs_to
         query { where(type: :belongs_to) }.all
       end

@@ -53,7 +53,8 @@ module Locomotive::Steam
           services:       services,
           repositories:   services.repositories,
           logger:         Locomotive::Common::Logger,
-          live_editing:   !!env['steam.live_editing']
+          live_editing:   !!env['steam.live_editing'],
+          session:        request.session
         }
       end
 
@@ -71,7 +72,8 @@ module Locomotive::Steam
           'now'               => Time.zone.now,
           'today'             => Date.today,
           'mode'              => Locomotive::Steam.configuration.mode,
-          'wagon'             => Locomotive::Steam.configuration.mode == :test
+          'wagon'             => Locomotive::Steam.configuration.mode == :test,
+          'live_editing'      => !!env['steam.live_editing']
         }
       end
 
@@ -102,6 +104,7 @@ module Locomotive::Steam
           'ip_address'  => request.ip,
           'post?'       => request.post?,
           'base_url'    => request.base_url,
+          'user_agent'  => request.user_agent,
           'mounted_on'  => mounted_on
         }
       end

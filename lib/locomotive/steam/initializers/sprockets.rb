@@ -5,6 +5,8 @@ require 'compass'
 require 'autoprefixer-rails'
 require 'open3'
 
+require 'execjs'
+
 module Locomotive::Steam
 
   class YUICompressorRuntimeError < RuntimeError
@@ -65,6 +67,8 @@ module Locomotive::Steam
 
   class SprocketsEnvironment < ::Sprockets::Environment
 
+    attr_reader :steam_path
+
     def initialize(root, options = {})
       super(root)
 
@@ -75,6 +79,12 @@ module Locomotive::Steam
       install_yui_compressor(options)
 
       install_autoprefixer
+
+      context_class.class_eval do
+        def asset_path(path, options = {})
+          path
+        end
+      end
     end
 
     private

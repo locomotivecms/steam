@@ -20,6 +20,13 @@ module Locomotive::Steam
           entity
         end
 
+        def update(entity)
+          entity.tap do
+            serialized_entity = @mapper.serialize(entity)
+            @collection.find(_id: entity._id).update_one(serialized_entity)
+          end
+        end
+
         def inc(entity, attribute, amount = 1)
           entity.tap do
             @collection.find(_id: entity._id).update_one('$inc' => { attribute => amount })
@@ -29,7 +36,7 @@ module Locomotive::Steam
         end
 
         def delete(entity)
-          @collection.find(_id: entity._id).delete_one if entity._id
+          @collection.find(_id: entity._id).delete_one
         end
 
       end

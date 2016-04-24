@@ -45,6 +45,10 @@ module Locomotive::Steam
       entity
     end
 
+    def update(mapper, scope, entity)
+      entity
+    end
+
     def inc(mapper, entity, attribute, amount = 1)
       entity.tap do
         entity[attribute] ||= 0
@@ -62,6 +66,10 @@ module Locomotive::Steam
 
     def base_url(mapper, scope, entity = nil)
       ''
+    end
+
+    def make_id(value)
+      value
     end
 
     def count(mapper, scope, &block)

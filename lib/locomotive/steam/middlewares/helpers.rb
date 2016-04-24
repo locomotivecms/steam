@@ -37,6 +37,14 @@ module Locomotive::Steam
         path
       end
 
+      # make sure the location passed in parameter doesn't
+      # include the "mounted_on" parameter.
+      # If so, returns the location without the "mounted_on" string.
+      def make_local_path(location)
+        return location if mounted_on.blank?
+        location.gsub(Regexp.new('^' + mounted_on), '')
+      end
+
       def mounted_on
         request.env['steam.mounted_on']
       end

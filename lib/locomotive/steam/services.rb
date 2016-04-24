@@ -62,8 +62,16 @@ module Locomotive
           Steam::SnippetFinderService.new(repositories.snippet)
         end
 
+        register :action do
+          Steam::ActionService.new(current_site, email, content_entry)
+        end
+
+        register :content_entry do
+          Steam::ContentEntryService.new(repositories.content_type, repositories.content_entry, locale)
+        end
+
         register :entry_submission do
-          Steam::EntrySubmissionService.new(repositories.content_type, repositories.content_entry, locale)
+          Steam::EntrySubmissionService.new(content_entry)
         end
 
         register :liquid_parser do
@@ -104,6 +112,10 @@ module Locomotive
 
         register :textile do
           Steam::TextileService.new
+        end
+
+        register :email do
+          Steam::EmailService.new(page_finder, liquid_parser, asset_host, configuration.mode == :test)
         end
 
         register :cache do

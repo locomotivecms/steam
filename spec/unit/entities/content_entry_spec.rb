@@ -10,6 +10,21 @@ describe Locomotive::Steam::ContentEntry do
 
   before { content_entry.content_type = type }
 
+  describe '#change' do
+
+    let(:fields) { [instance_double('Field', name: :title, type: :string, required: true)] }
+
+    before do
+      allow(type).to receive(:fields_by_name).and_return({ title: fields.first })
+    end
+
+    subject { content_entry.change('title' => 'Hello world!') }
+
+    it { expect(subject.title).to eq('Hello world!') }
+    it { expect(subject._slug).to eq('hello-world') }
+
+  end
+
   describe '#valid?' do
 
     let(:fields) { [instance_double('Field', name: :title, type: :string, required: true)] }
@@ -81,6 +96,25 @@ describe Locomotive::Steam::ContentEntry do
       it { expect(subject['picture'].url).to eq '/assets/foo.png' }
 
     end
+
+  end
+
+  describe '#as_json' do
+
+    let(:fields)      { [instance_double('TitleField', name: :title, type: :string), instance_double('PictureField', name: :picture, type: :file, localized: true)] }
+    let(:attributes)  { { id: 42, title: 'Hello world', _slug: 'hello-world', picture: Locomotive::Steam::Models::I18nField.new(:picture, fr: 'foo.png', en: 'bar.png'), custom_fields_recipe: ['hello', 'world'], _type: 'Entry' } }
+    let(:decorated)   { Locomotive::Steam::Decorators::I18nDecorator.new(content_entry, :fr, :en) }
+
+    before do
+      allow(type).to receive(:fields_by_name).and_return({ title: fields.first, picture: fields.last })
+      allow(type).to receive(:persisted_field_names).and_return([:title, :picture])
+      allow(content_entry).to receive(:localized_attributes).and_return({ picture: true })
+      allow(content_entry).to receive(:base_url).and_return('/assets')
+    end
+
+    subject { decorated.as_json }
+
+    it { expect(subject['picture']['url']).to eq '/assets/foo.png' }
 
   end
 

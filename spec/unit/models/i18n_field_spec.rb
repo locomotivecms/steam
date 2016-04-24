@@ -22,4 +22,27 @@ describe Locomotive::Steam::Models::I18nField do
 
   end
 
+  describe '#dup' do
+
+    let(:translations) { { en: 'Hello world', fr: nil } }
+
+    subject { field.dup }
+
+    it 'gets a fresh copy of the translations' do
+      expect(subject[:en]).to eq 'Hello world'
+      expect(subject.translations.object_id).not_to eq field.translations.object_id
+    end
+
+  end
+
+  describe '#to_json' do
+
+    let(:translations) { { en: 'Hello world', fr: nil } }
+
+    subject { field.to_json }
+
+    it { is_expected.to eq("{\"en\":\"Hello world\",\"fr\":null}") }
+
+  end
+
 end

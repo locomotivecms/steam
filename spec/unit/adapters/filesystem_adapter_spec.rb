@@ -68,4 +68,14 @@ describe Locomotive::Steam::FilesystemAdapter do
 
   end
 
+  describe '#make_id' do
+
+    let(:id) { '42' }
+
+    subject { adapter.make_id(id) }
+
+    it { is_expected.to eq('42') }
+
+  end
+
 end

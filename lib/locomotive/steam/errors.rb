@@ -3,6 +3,9 @@ module Locomotive::Steam
   class NoSiteException < ::Exception
   end
 
+  class ActionException < ::Exception
+  end
+
   class RenderError < ::StandardError
 
     LINES_RANGE = 10
