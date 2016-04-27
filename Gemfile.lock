@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    locomotivecms_steam (1.1.0)
+    locomotivecms_steam (1.1.1)
       RedCloth (~> 4.2.9)
       autoprefixer-rails (~> 6.3.3.1)
       chronic (~> 0.10.2)
@@ -12,7 +12,7 @@ PATH
       httparty (~> 0.13.6)
       kramdown (~> 1.10.0)
       locomotivecms-solid (~> 4.0.1)
-      locomotivecms_common (~> 0.1.0)
+      locomotivecms_common (~> 0.2.0)
       mime-types (~> 2.6.1)
       mimetype-fu (~> 0.1.2)
       moneta (~> 0.8.0)
@@ -29,7 +29,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     RedCloth (4.2.9)
-    activesupport (4.2.5.2)
+    activesupport (4.2.6)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
@@ -107,8 +107,8 @@ GEM
     locomotivecms-liquid (4.0.0)
     locomotivecms-solid (4.0.1)
       locomotivecms-liquid (~> 4.0.0)
-    locomotivecms_common (0.1.0)
-      activesupport (~> 4.2.5.2)
+    locomotivecms_common (0.2.0)
+      activesupport (~> 4.2.6)
       attr_extras (~> 4.4.0)
       colorize
       stringex (~> 2.6.0)
