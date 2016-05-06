@@ -16,7 +16,8 @@ module Locomotive::Steam
         # log anyway
         log_site(site)
 
-        redirect_to_first_domain_if_enabled(site)
+        # redirect to the first domain and/or HTTPS if defined by the site
+        redirect_if_required(site)
       end
 
       private
@@ -40,9 +41,11 @@ module Locomotive::Steam
         end
       end
 
-      def redirect_to_first_domain_if_enabled(site)
-        if redirect_to_first_domain?(site)
-          klass = request.scheme == 'https' ? URI::HTTPS : URI::HTTP
+      def redirect_if_required(site)
+        return if env['steam.is_default_host']
+
+        if redirect_to_first_domain?(site) || redirect_to_https?(site)
+          klass = request.scheme == 'https' || redirect_to_https?(site) ? URI::HTTPS : URI::HTTP
           redirect_to klass.build(
             host:   site.domains.first,
             port:   [80, 443].include?(request.port) ? nil : request.port,
@@ -54,9 +57,13 @@ module Locomotive::Steam
       def redirect_to_first_domain?(site)
         # the site parameter can be an instance of Locomotive::Steam::Services::Defer and
         # so comparing just site may not be reliable.
-        !env['steam.is_default_host'] &&
         site.try(:redirect_to_first_domain) &&
         site.domains.first != request.host
+      end
+
+      def redirect_to_https?(site)
+        site.try(:redirect_to_https) &&
+        request.scheme != 'https'
       end
 
       def log_site(site)

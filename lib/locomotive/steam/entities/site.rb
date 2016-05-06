@@ -13,6 +13,7 @@ module Locomotive::Steam
         template_version:         nil,
         domains:                  [],
         redirect_to_first_domain: false,
+        redirect_to_https:        false,
         url_redirections:         [],
         private_access:           false,
         password:                 nil,

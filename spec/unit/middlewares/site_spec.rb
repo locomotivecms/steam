@@ -42,35 +42,78 @@ describe Locomotive::Steam::Middlewares::Site do
 
   end
 
-  describe 'redirection to the first domain' do
+  describe 'redirection' do
 
-    let(:redirect_to_first_domain) { false }
+    let(:redirect_to_first_domain)  { false }
+    let(:redirect_to_https)         { false }
     let(:url)  { 'http://acme.com' }
-    let(:site) { instance_double('SiteWithDomains', name: 'Acme', domains: ['www.acme.com', 'acme.com'], redirect_to_first_domain: redirect_to_first_domain) }
+    let(:site) { instance_double('SiteWithDomains', name: 'Acme', domains: ['www.acme.com', 'acme.com'], redirect_to_first_domain: redirect_to_first_domain, redirect_to_https: redirect_to_https) }
 
     before { expect(services).to receive(:current_site).and_return(site) }
 
-    it { is_expected.to eq [200, nil] }
+    describe 'redirection to https' do
 
-    describe 'option enabled' do
+      it { is_expected.to eq [200, nil] }
 
-      let(:redirect_to_first_domain) { true }
+      describe 'option enabled' do
 
-      it { is_expected.to eq [301, 'http://www.acme.com/'] }
+        let(:redirect_to_https) { true }
 
-      context 'first domain requested' do
+        it { is_expected.to eq [301, 'https://www.acme.com/'] }
 
-        let(:url) { 'http://www.acme.com' }
-        it { is_expected.to eq [200, nil] }
+        context 'https requested' do
+
+          let(:url) { 'https://www.acme.com' }
+          it { is_expected.to eq [200, nil] }
+
+        end
+
+        context 'requesting the default host' do
+
+          let(:is_default_host) { true }
+          it { is_expected.to eq [200, nil] }
+
+        end
 
       end
 
-      context 'requesting the default host' do
+    end
 
-        let(:is_default_host) { true }
-        it { is_expected.to eq [200, nil] }
+    describe 'redirection to the first domain' do
+
+      it { is_expected.to eq [200, nil] }
+
+      describe 'option enabled' do
+
+        let(:redirect_to_first_domain) { true }
+
+        it { is_expected.to eq [301, 'http://www.acme.com/'] }
+
+        context 'first domain requested' do
+
+          let(:url) { 'http://www.acme.com' }
+          it { is_expected.to eq [200, nil] }
+
+        end
+
+        context 'requesting the default host' do
+
+          let(:is_default_host) { true }
+          it { is_expected.to eq [200, nil] }
+
+        end
 
       end
+
+    end
+
+    describe 'redirection to both https and the first  domain' do
+
+      let(:redirect_to_https)         { true }
+      let(:redirect_to_first_domain)  { true }
+      let(:url)  { 'http://acme.com/foo/bar' }
+
+      it { is_expected.to eq [301, 'https://www.acme.com/foo/bar'] }
 
     end
 
