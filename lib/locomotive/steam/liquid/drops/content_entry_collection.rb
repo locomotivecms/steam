@@ -5,7 +5,7 @@ module Locomotive
 
         class ContentEntryCollection < ::Liquid::Drop
 
-          delegate :first, :last, :each, :each_with_index, :empty?, :any?, to: :collection
+          delegate :first, :last, :each, :each_with_index, :empty?, :any?, :map, to: :collection
 
           def initialize(content_type, repository = nil)
             @content_type = content_type

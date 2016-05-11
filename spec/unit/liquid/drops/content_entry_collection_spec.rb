@@ -32,6 +32,10 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntryCollection do
       it { expect(drop.last).to eq('b') }
     end
 
+    describe '#last' do
+      it { expect(drop.map(&:to_s)).to eq(['a', 'b']) }
+    end
+
     context 'with a scope' do
 
       let(:assigns) { { 'with_scope' => { 'visible' => true } } }
