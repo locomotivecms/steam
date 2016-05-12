@@ -6,7 +6,7 @@ module Locomotive::Steam
       def __load__
         key = @repository.k(:_id, :in)
 
-        @repository.local_conditions[key] = @entity[__target_key__]
+        @repository.local_conditions[key] = @entity[__target_key__] || []
 
         # use order_by from options as the default one for further queries
         @repository.local_conditions[:order_by] = @options[:order_by] unless @options[:order_by].blank?

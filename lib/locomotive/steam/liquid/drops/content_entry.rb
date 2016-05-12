@@ -65,7 +65,7 @@ module Locomotive
                 when :belongs_to
                   hash[name] = liquify_entry(@_source.send(name))._slug
                 when :many_to_many
-                  hash[name] = (@_source.send(name) || []).map { |e| liquify_entry(e)._slug }.compact
+                  hash[name] = (@_source.send(name) || []).all.map { |e| liquify_entry(e)._slug }.compact
                 when :file
                   hash[name] = hash["#{name}_url"] = file_field_to_url(hash[name.to_s]) if hash[name.to_s].present?
                 when :select

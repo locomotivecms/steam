@@ -100,9 +100,10 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
   describe '#as_json' do
 
-    let(:entry)       { instance_double('Article', _id: 42, localized_attributes: {}, content_type: type, title: 'Hello world', _label: 'Hello world', _slug: 'hello-world', _translated: false, seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description', created_at: 0, updated_at: 1, author: author, authors: [author]) }
+    let(:entry)       { instance_double('Article', _id: 42, localized_attributes: {}, content_type: type, title: 'Hello world', _label: 'Hello world', _slug: 'hello-world', _translated: false, seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description', created_at: 0, updated_at: 1, author: author, authors: authors) }
     let(:type)        { instance_double('Type', fields_by_name: { title: instance_double('StringField', type: :string ), author: instance_double('Author', type: :belongs_to), authors: instance_double('Author', type: :many_to_many), picture: instance_double('FileField', type: :file), category: instance_double('SelectField', type: :select) }) }
     let(:author)      { instance_double('Author', _slug: 'john-doe', localized_attributes: {}) }
+    let(:authors)     { instance_double('Authors', all: [author]) }
     let(:picture_field) { Locomotive::Steam::ContentEntry::FileField.new('foo.png', 'http://assets.dev', 0, 42) }
 
     before do
