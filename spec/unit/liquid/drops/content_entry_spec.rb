@@ -100,7 +100,9 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
   describe '#as_json' do
 
-    let(:type) { instance_double('Type', fields_by_name: { title: instance_double('StringField', type: :string ), picture: instance_double('FileField', type: :file), category: instance_double('SelectField', type: :select) }) }
+    let(:entry)       { instance_double('Article', _id: 42, localized_attributes: {}, content_type: type, title: 'Hello world', _label: 'Hello world', _slug: 'hello-world', _translated: false, seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description', created_at: 0, updated_at: 1, author: author, authors: [author]) }
+    let(:type)        { instance_double('Type', fields_by_name: { title: instance_double('StringField', type: :string ), author: instance_double('Author', type: :belongs_to), authors: instance_double('Author', type: :many_to_many), picture: instance_double('FileField', type: :file), category: instance_double('SelectField', type: :select) }) }
+    let(:author)      { instance_double('Author', _slug: 'john-doe', localized_attributes: {}) }
     let(:picture_field) { Locomotive::Steam::ContentEntry::FileField.new('foo.png', 'http://assets.dev', 0, 42) }
 
     before do
@@ -110,7 +112,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
     subject { drop.as_json }
 
-    it { is_expected.to eq('id' => 1, '_id' => 1, 'title' => 'Hello world', 'picture' => 'http://assets.dev/foo.png?42', 'picture_url' => 'http://assets.dev/foo.png?42', 'category_id' => 42, 'category' => 'Test') }
+    it { is_expected.to eq('id' => 1, '_id' => 1, 'title' => 'Hello world', 'picture' => 'http://assets.dev/foo.png?42', 'picture_url' => 'http://assets.dev/foo.png?42', 'category_id' => 42, 'category' => 'Test', 'author' => 'john-doe', 'authors' => ['john-doe']) }
 
   end
 

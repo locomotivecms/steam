@@ -107,11 +107,21 @@ describe Locomotive::Steam::Middlewares::Site do
 
     end
 
-    describe 'redirection to both https and the first  domain' do
+    describe 'redirection to both https and the first domain' do
 
       let(:redirect_to_https)         { true }
       let(:redirect_to_first_domain)  { true }
-      let(:url)  { 'http://acme.com/foo/bar' }
+      let(:url) { 'http://acme.com/foo/bar' }
+
+      it { is_expected.to eq [301, 'https://www.acme.com/foo/bar'] }
+
+    end
+
+    describe 'redirection to the first domain' do
+
+      let(:redirect_to_https)         { true }
+      let(:redirect_to_first_domain)  { true }
+      let(:url) { 'https://acme.com/foo/bar' }
 
       it { is_expected.to eq [301, 'https://www.acme.com/foo/bar'] }
 

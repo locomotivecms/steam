@@ -62,6 +62,10 @@ module Locomotive
 
               @_source.content_type.fields_by_name.each do |name, field|
                 case field.type
+                when :belongs_to
+                  hash[name] = liquify_entry(@_source.send(name))._slug
+                when :many_to_many
+                  hash[name] = (@_source.send(name) || []).map { |e| liquify_entry(e)._slug }.compact
                 when :file
                   hash[name] = hash["#{name}_url"] = file_field_to_url(hash[name.to_s]) if hash[name.to_s].present?
                 when :select
@@ -76,6 +80,10 @@ module Locomotive
           end
 
           protected
+
+          def liquify_entry(entry)
+            self.class.new(entry).tap { |drop| drop.context = @context }
+          end
 
           def file_field_to_url(field)
             field.to_liquid.tap { |drop| drop.context = @context }.url

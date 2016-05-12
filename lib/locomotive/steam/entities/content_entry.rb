@@ -76,19 +76,22 @@ module Locomotive::Steam
     end
 
     def to_hash
+      hash = {}
+
       # default attributes
       _attributes = %i(_id _slug _label _visible _position content_type_slug created_at updated_at)
 
       # dynamic attributes
       _attributes += content_type.persisted_field_names
 
-      _attributes.inject({}) do |hash, name|
+      _attributes.each do |name|
         hash[name.to_s] = send(name) rescue nil
-        hash
-      end.tap do |hash|
-        # errors?
-        hash['errors'] = self.errors.to_hash.stringify_keys unless self.errors.empty?
       end
+
+      # errors?
+      hash['errors'] = self.errors.to_hash.stringify_keys unless self.errors.empty?
+
+      hash
     end
 
     def to_liquid
