@@ -6,7 +6,6 @@ require_relative '../../../lib/locomotive/steam/middlewares/locale_redirection'
 
 describe Locomotive::Steam::Middlewares::LocaleRedirection do
 
-  let(:prefixed)        { false }
   let(:site)            { instance_double('Site', prefix_default_locale: prefixed, default_locale: :de, locales: %w(de fr)) }
   let(:url)             { 'http://models.example.com' }
   let(:app)             { ->(env) { [200, env, 'app'] } }
@@ -19,49 +18,19 @@ describe Locomotive::Steam::Middlewares::LocaleRedirection do
     env = env_for(url, 'steam.site' => site, 'steam.locale' => locale, 'steam.locale_in_path' => locale_in_path)
     env['steam.mounted_on'] = mounted_on
     env['steam.request']    = Rack::Request.new(env)
-    env['steam.path']       = env['steam.request'].path_info.gsub(/\A#{mounted_on}/, '')
+    env['steam.path']       = env['steam.request'].path_info.gsub(/\A#{mounted_on}/, '').gsub(/\A\/#{locale}/, '')
     code, env = middleware.call(env)
     [code, env['Location']]
   end
 
-  describe 'not prefixed by locale' do
+  describe 'prefix_default_locale is false' do
 
-    describe 'strip default locale from root path' do
-      let(:url) { 'http://models.example.com/de' }
-      it { is_expected.to eq [301, '/'] }
-    end
-
-    describe 'strip default locale' do
-      let(:url) { 'http://models.example.com/de/hello' }
-      it { is_expected.to eq [301, '/hello'] }
-    end
-
-    describe 'strip default locale from root path with query' do
-      let(:url) { 'http://models.example.com/de?this=is_a_param' }
-      it { is_expected.to eq [301, '/?this=is_a_param'] }
-    end
-
-    describe 'strip default locale from path with query' do
-      let(:url) { 'http://models.example.com/de/hello?this=is_a_param' }
-      it { is_expected.to eq [301, '/hello?this=is_a_param'] }
-    end
-
-    describe 'dont strip a non-default locale' do
-      let(:locale)  { 'fr' }
-      let(:url)     { 'http://models.example.com/fr/hello' }
-      it { is_expected.to eq [200, nil] }
-    end
-
-    describe 'dont redirect URL without locale' do
-      let(:locale)          { :de }
-      let(:locale_in_path)  { false }
-      let(:url) { 'http://models.example.com/hello' }
-      it { is_expected.to eq [200, nil] }
-    end
+    let(:prefixed) { false }
+    it { is_expected.to eq [200, nil] }
 
   end
 
-  describe 'prefixed by locale' do
+  describe 'prefix_default_locale is true' do
 
     let(:prefixed) { true }
 
