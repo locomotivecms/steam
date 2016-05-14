@@ -2,11 +2,12 @@ require 'spec_helper'
 
 describe Locomotive::Steam::UrlBuilderService do
 
-  let(:mounted_on)  { nil }
-  let(:request)     { instance_double('Request', env: { 'steam.mounted_on' => mounted_on }) }
-  let(:site)        { instance_double('Site', default_locale: 'en') }
-  let(:locale)      { 'en' }
-  let(:service)     { described_class.new(site, locale, request) }
+  let(:prefix_default)  { false }
+  let(:mounted_on)      { nil }
+  let(:request)         { instance_double('Request', env: { 'steam.mounted_on' => mounted_on }) }
+  let(:site)            { instance_double('Site', default_locale: 'en', prefix_default_locale: prefix_default) }
+  let(:locale)          { 'en' }
+  let(:service)         { described_class.new(site, locale, request) }
 
   describe '#url_for' do
 
@@ -15,6 +16,14 @@ describe Locomotive::Steam::UrlBuilderService do
     subject { service.url_for(page) }
 
     it { is_expected.to eq '/about-us' }
+
+    describe 'the prefix_default_locale site property is enabled' do
+
+      let(:prefix_default) { true }
+
+      it { is_expected.to eq '/en/about-us' }
+
+    end
 
     describe 'a locale different from the default one' do
 

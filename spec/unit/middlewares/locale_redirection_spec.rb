@@ -26,7 +26,20 @@ describe Locomotive::Steam::Middlewares::LocaleRedirection do
   describe 'prefix_default_locale is false' do
 
     let(:prefixed) { false }
-    it { is_expected.to eq [200, nil] }
+
+    describe 'locale is not part of the path' do
+
+      let(:locale_in_path)  { false }
+      it { is_expected.to eq [200, nil] }
+
+    end
+
+    describe 'for seo purpose redirect to the path without the locale' do
+
+      let(:url) { 'http://models.example.com/de/hello' }
+      it { is_expected.to eq [301, '/hello'] }
+
+    end
 
   end
 

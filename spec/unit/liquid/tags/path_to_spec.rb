@@ -2,10 +2,11 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Tags::PathTo do
 
-  let(:assigns)   { {} }
-  let(:services)  { Locomotive::Steam::Services.build_instance }
-  let(:site)      { instance_double('Site', locales: ['en'], default_locale: 'en') }
-  let(:context)   { ::Liquid::Context.new(assigns, {}, { services: services, site: site, locale: 'en' }) }
+  let(:prefix_default)  { false }
+  let(:assigns)         { {} }
+  let(:services)        { Locomotive::Steam::Services.build_instance }
+  let(:site)            { instance_double('Site', locales: ['en'], default_locale: 'en', prefix_default_locale: prefix_default) }
+  let(:context)         { ::Liquid::Context.new(assigns, {}, { services: services, site: site, locale: 'en' }) }
 
   subject { render_template(source, context) }
 
@@ -48,6 +49,13 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
 
       let(:source) { "{% path_to index, locale: 'fr' %}" }
       it { is_expected.to eq '/fr' }
+
+    end
+
+    context 'prefix_default_locale is true' do
+
+      let(:prefix_default) { true }
+      it { is_expected.to eq '/en/' }
 
     end
 

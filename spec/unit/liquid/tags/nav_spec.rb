@@ -19,17 +19,18 @@ describe 'Locomotive::Steam::Liquid::Tags::Nav' do
     ]
   end
 
-  let(:source)      { '{% nav site %}' }
-  let(:site)        { instance_double('Site', name: 'My portfolio', default_locale: 'en') }
-  let(:page)        { index }
-  let(:services)    { Locomotive::Steam::Services.build_instance }
-  let(:repository)  { services.repositories.page }
-  let(:assigns)     { {} }
-  let(:registers)   { { services: services, site: site, page: page } }
-  let(:context)     { ::Liquid::Context.new(assigns, {}, registers) }
-  let(:options)     { { services: services } }
+  let(:prefix_default)  { false }
+  let(:source)          { '{% nav site %}' }
+  let(:site)            { instance_double('Site', name: 'My portfolio', default_locale: 'en', prefix_default_locale: prefix_default) }
+  let(:page)            { index }
+  let(:services)        { Locomotive::Steam::Services.build_instance }
+  let(:repository)      { services.repositories.page }
+  let(:assigns)         { {} }
+  let(:registers)       { { services: services, site: site, page: page } }
+  let(:context)         { ::Liquid::Context.new(assigns, {}, registers) }
+  let(:options)         { { services: services } }
 
-  let(:output) { render_template(source, context, options) }
+  let(:output)          { render_template(source, context, options) }
 
   before { allow(services).to receive(:current_site).and_return(site) }
 
@@ -45,6 +46,13 @@ describe 'Locomotive::Steam::Liquid::Tags::Nav' do
       end
 
       it { is_expected.to eq %{<nav id="nav"><ul><li id="child-1-link" class="link first"><a href="/child-1">Child #1</a></li>\n<li id="child-2-link" class="link last"><a href="/child-2">Child #2</a></li></ul></nav>} }
+
+      context 'prefix_default_locale is true' do
+
+        let(:prefix_default) { true }
+        it { is_expected.to eq %{<nav id="nav"><ul><li id="child-1-link" class="link first"><a href="/en/child-1">Child #1</a></li>\n<li id="child-2-link" class="link last"><a href="/en/child-2">Child #2</a></li></ul></nav>} }
+
+      end
 
     end
 

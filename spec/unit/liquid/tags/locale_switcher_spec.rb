@@ -2,13 +2,14 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Tags::LocaleSwitcher do
 
-  let(:locale)      { 'en' }
-  let(:assigns)     { { 'page' => drop } }
-  let(:services)    { Locomotive::Steam::Services.build_instance }
-  let(:site)        { instance_double('Site', locales: %w(en fr), default_locale: 'en') }
-  let(:drop)        { Locomotive::Steam::Liquid::Drops::Page.new(page) }
-  let(:page)        { liquid_instance_double('Index', localized_attributes: { title: true, fullpath: true }, title: { en: 'Home', fr: 'Accueil' }, fullpath: { en: 'index', fr: 'index' }, templatized?: false) }
-  let(:context)     { ::Liquid::Context.new(assigns, {}, { services: services, site: site, locale: locale }) }
+  let(:locale)          { 'en' }
+  let(:assigns)         { { 'page' => drop } }
+  let(:prefix_default)  { false }
+  let(:services)        { Locomotive::Steam::Services.build_instance }
+  let(:site)            { instance_double('Site', locales: %w(en fr), default_locale: 'en', prefix_default_locale: prefix_default) }
+  let(:drop)            { Locomotive::Steam::Liquid::Drops::Page.new(page) }
+  let(:page)            { liquid_instance_double('Index', localized_attributes: { title: true, fullpath: true }, title: { en: 'Home', fr: 'Accueil' }, fullpath: { en: 'index', fr: 'index' }, templatized?: false) }
+  let(:context)         { ::Liquid::Context.new(assigns, {}, { services: services, site: site, locale: locale }) }
 
   subject { render_template(source, context) }
 
@@ -23,6 +24,13 @@ describe Locomotive::Steam::Liquid::Tags::LocaleSwitcher do
 
       let(:locale) { 'fr' }
       it { is_expected.to eq '<div id="locale-switcher"><a href="/" class="en">en</a> | <a href="/fr" class="fr current">fr</a></div>' }
+
+    end
+
+    context 'prefix_default_locale is true' do
+
+      let(:prefix_default) { true }
+      it { is_expected.to eq '<div id="locale-switcher"><a href="/en/" class="en current">en</a> | <a href="/fr" class="fr">fr</a></div>' }
 
     end
 

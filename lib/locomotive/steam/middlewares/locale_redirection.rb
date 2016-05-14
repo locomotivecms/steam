@@ -11,19 +11,29 @@ module Locomotive::Steam
       include Helpers
 
       def _call
-        if apply_redirection?
-          redirect_to path_with_default_locale
+        if url = redirect_url
+          redirect_to url
         end
       end
 
       protected
 
+      def redirect_url
+        if apply_redirection?
+          if site.prefix_default_locale
+            path_with_default_locale if locale_not_mentioned_in_path?
+          else
+            env['steam.path'] if default_locale? && locale_mentioned_in_path?
+          end
+        end
+      end
+
       def apply_redirection?
-        site.locales.size > 1 &&
-        site.prefix_default_locale &&
-        request.get? &&
-        env['PATH_INFO'] != '/sitemap.xml' &&
-        locale_not_mentioned_in_path?
+        site.locales.size > 1 && request.get? && env['PATH_INFO'] != '/sitemap.xml'
+      end
+
+      def default_locale?
+        locale.to_s == site.default_locale.to_s
       end
 
       def locale_mentioned_in_path?

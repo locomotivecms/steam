@@ -14,8 +14,11 @@ module Locomotive
           locale ||= current_locale
           same_locale = locale.to_sym == site.default_locale.to_sym
 
-          # locale
-          segments << locale unless same_locale
+          # if the prefix_default_locale is enabled, we need to
+          # add the locale no matter if the locale is the same as the default one
+          if site.prefix_default_locale || !same_locale
+            segments << locale
+          end
 
           # fullpath
           segments << sanitized_fullpath(page, same_locale)
