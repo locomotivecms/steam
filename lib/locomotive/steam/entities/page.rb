@@ -48,6 +48,10 @@ module Locomotive::Steam
       attributes[:fullpath].values.first == '404'
     end
 
+    def layout?
+      (attributes[:fullpath].values.first =~ Locomotive::Steam::IsLAYOUT) == 0
+    end
+
     def source
       self[:raw_template]
     end

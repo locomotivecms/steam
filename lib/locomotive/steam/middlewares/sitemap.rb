@@ -27,8 +27,8 @@ module Locomotive::Steam
       end
 
       def build_pages_to_xml
-        repositories.page.published.map do |page|
-          next if page.index? || page.not_found?
+        page_repository.published.map do |page|
+          next if page.index? || page.not_found? || page.layout?
 
           build_page_xml(page)
         end.flatten.join.strip
@@ -78,6 +78,10 @@ module Locomotive::Steam
 
       def repositories
         services.repositories
+      end
+
+      def page_repository
+        repositories.page
       end
 
       def url_for(page, locale = nil)

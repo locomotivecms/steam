@@ -13,13 +13,15 @@ require_relative      'steam/services'
 module Locomotive
   module Steam
 
-    FRONTMATTER_REGEXP = /^(?<yaml>(---\s*\n.*?\n?)^(---\s*$\n?))?(?<template>.*)/mo
+    FRONTMATTER_REGEXP = /^(?<yaml>(---\s*\n.*?\n?)^(---\s*$\n?))?(?<template>.*)/mo.freeze
 
     WILDCARD = 'content_type_template'.freeze
 
-    CONTENT_ENTRY_ENGINE_CLASS_NAME = /^Locomotive::ContentEntry(.*)$/o
+    CONTENT_ENTRY_ENGINE_CLASS_NAME = /^Locomotive::ContentEntry(.*)$/o.freeze
 
-    IsHTTP = /\Ahttps?:\/\//o
+    IsHTTP = /\Ahttps?:\/\//o.freeze
+
+    IsLAYOUT = /\Alayouts(\/|\z)/o.freeze
 
     class << self
       attr_writer   :configuration

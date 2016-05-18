@@ -33,6 +33,25 @@ describe Locomotive::Steam::Page do
 
   end
 
+  describe '#layout?' do
+
+    let(:attributes) { { fullpath: { en: 'foo/layouts' } } }
+
+    subject { page.layout? }
+    it { is_expected.to eq false }
+
+    context 'true if starting by layouts' do
+      let(:attributes) { { fullpath: { en: 'layouts/base' } } }
+      it { is_expected.to eq true }
+    end
+
+    context 'true if the root layouts page' do
+      let(:attributes) { { fullpath: { en: 'layouts' } } }
+      it { is_expected.to eq true }
+    end
+
+  end
+
   describe '#valid?' do
 
     subject { page.valid? }
