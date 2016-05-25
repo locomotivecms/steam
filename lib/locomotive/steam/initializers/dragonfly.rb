@@ -26,14 +26,12 @@ module Locomotive
             fetch_url_whitelist /.+/
           end
 
-          if ::Dragonfly.logger.nil?
-            ::Dragonfly.logger = Locomotive::Common::Logger.instance
-          end
+          ::Dragonfly.logger = Locomotive::Common::Logger
         end
 
         def find_imagemagick_commands
-          convert   = `which convert`.strip.presence || '/usr/local/bin/convert'
-          identify  = `which identify`.strip.presence || '/usr/local/bin/identify'
+          convert   = ENV['IMAGE_MAGICK_CONVERT'] || `which convert`.strip.presence || '/usr/local/bin/convert'
+          identify  = ENV['IMAGE_MAGICK_IDENTIFY'] || `which identify`.strip.presence || '/usr/local/bin/identify'
 
           if File.exists?(convert)
             { convert_command: convert, identify_command: identify }
