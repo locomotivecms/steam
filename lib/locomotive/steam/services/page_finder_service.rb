@@ -27,6 +27,10 @@ module Locomotive
 
       private
 
+      def decorate(&block)
+        super(Decorators::PageDecorator, &block)
+      end
+
       # Instead of hitting the DB each time we want a page from its handle,
       # just get all the handles at once and cache the result. (up to 20% boost)
       #

@@ -36,7 +36,7 @@ describe Locomotive::Steam::Server do
     context 'existing sitemap page' do
 
       let(:template)  { %{<?xml version="1.0" encoding="utf-8"?>OK</xml>} }
-      let(:page)      { instance_double('Page', liquid_source: template, templatized?: false, redirect_url: false, to_liquid: template, not_found?: false, response_type: 'application/xml') }
+      let(:page)      { instance_double('Page', liquid_source: template, templatized?: false, redirect?: false, to_liquid: template, not_found?: false, response_type: 'application/xml') }
       let(:env)       { { 'steam.page' => page } }
 
       it 'renders the existing sitemap page' do

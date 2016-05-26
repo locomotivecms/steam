@@ -72,30 +72,6 @@ describe Locomotive::Steam::Page do
     end
   end
 
-  describe '#redirect?' do
-
-    subject { page.redirect? }
-
-    it { is_expected.to eq false }
-
-    context 'redirect_url has been set' do
-
-      let(:attributes) { { redirect: nil, redirect_url: 'http://www.google.fr' } }
-
-      it { is_expected.to eq true }
-
-      context 'but redirect is set to false' do
-
-        let(:attributes) { { redirect: false, redirect_url: 'http://www.google.fr' } }
-
-        it { is_expected.to eq false }
-
-      end
-
-    end
-
-  end
-
   describe '#source' do
 
     let(:attributes) { { 'raw_template' => 'template code here' } }
