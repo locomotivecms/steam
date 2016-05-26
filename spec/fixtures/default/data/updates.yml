@@ -5,7 +5,9 @@
       en: john posted a new post
       fr: phrase FR
     date: 2009/11/16
-    category: General
+    category:
+      en: General
+      fr: Général
 - "Update #5":
     title:
       fr: "Mise a jour #5"

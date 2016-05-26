@@ -30,7 +30,7 @@ module Locomotive::Steam
     end
 
     def localized_names
-      fields.localized_names + select_fields.map(&:name)
+      fields.localized_names
     end
 
     def persisted_field_names

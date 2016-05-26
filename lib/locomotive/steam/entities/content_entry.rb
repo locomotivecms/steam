@@ -164,16 +164,17 @@ module Locomotive::Steam
     end
 
     def _cast_select(field)
-      _cast_convertor(:"#{field.name}_id") do |value|
-        field.select_options.find(value).try(:name)
+      _cast_convertor(:"#{field.name}_id", true) do |value, locale|
+        name = field.select_options.find(value).try(:name)
+        locale.nil? ? name : name.try(:[], locale)
       end
     end
 
-    def _cast_convertor(name, &block)
+    def _cast_convertor(name, nil_locale = false, &block)
       if (value = attributes[name]).respond_to?(:translations)
         value.apply(&block)
       else
-        yield(value)
+        nil_locale ? yield(value, nil) : yield(value)
       end
     end
 

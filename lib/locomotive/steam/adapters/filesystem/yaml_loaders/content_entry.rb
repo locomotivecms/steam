@@ -31,7 +31,15 @@ module Locomotive
 
             def modify_for_selects(attributes)
               content_type.select_fields.each do |field|
-                attributes[:"#{field.name}_id"] = attributes.delete(field.name.to_sym)
+                if (option = attributes.delete(field.name.to_sym)).is_a?(Hash)
+                  attributes[:"#{field.name}_id"] = option.inject({}) do |memo, (locale, name)|
+                    field.select_options.scope.locale = locale
+                    memo[locale] = field.select_options.by_name(name).try(:_id)
+                    memo
+                  end
+                else
+                  attributes[:"#{field.name}_id"] = option
+                end
               end
             end
 

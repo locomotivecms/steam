@@ -45,6 +45,23 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::ContentEntry do
 
     end
 
+    context 'a content type with a localized field' do
+
+      let(:options_scope) { instance_double('Scope', :locale= => true) }
+      let(:options)       { instance_double('SelectOptionsRepository', scope: options_scope) }
+      let(:field)         { instance_double('Field', name: 'category', type: :select, localized: true, select_options: options) }
+      let(:content_type)  { instance_double('Updates', slug: 'updates', select_fields: [field], association_fields: [], file_fields: []) }
+
+      it 'adds a new localized attribute for the foreign key' do
+        option = instance_double('Option', _id: 'General')
+        allow(options).to receive(:by_name).with('General').and_return(option)
+        allow(options).to receive(:by_name).with('Général').and_return(option)
+        expect(subject.last[:category_id]).to eq({ en: 'General', fr: 'General' })
+        expect(subject.last[:category]).to eq nil
+      end
+
+    end
+
     context 'a content type with a file field' do
 
       let(:field)         { instance_double('Field', name: 'cover', type: :file) }

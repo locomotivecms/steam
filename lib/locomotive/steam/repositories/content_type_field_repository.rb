@@ -58,7 +58,9 @@ module Locomotive
       end
 
       def localized_names
-        query { where(localized: true) }.all.map(&:name)
+        query { where(localized: true) }.all.map do |field|
+          field.type == :select ? [field.name, "#{field.name}_id"] : field.name
+        end.flatten
       end
 
       def default
