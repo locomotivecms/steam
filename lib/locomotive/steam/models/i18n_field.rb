@@ -31,7 +31,7 @@ module Locomotive::Steam
         @translations = (if translations.respond_to?(:fetch)
           translations
         else
-          Hash.new { translations }
+          Hash.new(translations)
         end).with_indifferent_access
       end
 
