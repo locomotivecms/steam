@@ -34,6 +34,13 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
 
   end
 
+  describe 'decode regexps with case-insensitive' do
+
+    let(:source) { "{% with_scope title: /like this/i %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+    it { expect(conditions['title']).to eq(/like this/i) }
+
+  end
+
   describe 'decode content entry' do
 
     let(:entry) {
@@ -68,6 +75,14 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
     let(:assigns) { { 'my_regexp' => '/^Hello World/' } }
     let(:source) { "{% with_scope title: my_regexp %}{% assign conditions = with_scope %}{% endwith_scope %}" }
     it { expect(conditions['title']).to eq(/^Hello World/) }
+
+  end
+
+  describe 'decode a regexp stored in a context variable, with case-insensitive' do
+
+    let(:assigns) { { 'my_regexp' => '/^hello world/i' } }
+    let(:source) { "{% with_scope title: my_regexp %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+    it { expect(conditions['title']).to eq(/^hello world/i) }
 
   end
 
