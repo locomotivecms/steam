@@ -23,6 +23,8 @@ module Spec
     end
 
     def run_server
+      require 'haml'
+
       output = ENV['STEAM_VERBOSE'] ? nil : File.join(default_fixture_site_path, 'log/steam.log')
       setup_common(output)
 

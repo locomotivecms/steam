@@ -41,7 +41,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'kramdown',               '~> 1.10.0'
   spec.add_dependency 'RedCloth',               '~> 4.2.9'
-  spec.add_dependency 'haml',                   '~> 4.0.6'
   spec.add_dependency 'mimetype-fu',            '~> 0.1.2'
   spec.add_dependency 'mime-types',             '~> 2.6.1'
   spec.add_dependency 'duktape',                '~> 1.3.0.6'

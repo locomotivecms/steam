@@ -11,6 +11,7 @@ group :development do
   # gem 'thin'
   gem 'puma'
   gem 'yui-compressor',     '~> 0.12.0'
+  gem 'haml',               '~> 4.0.6'
 
   gem 'rack-mini-profiler'
   gem 'flamegraph'
