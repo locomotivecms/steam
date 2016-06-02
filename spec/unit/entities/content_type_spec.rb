@@ -30,6 +30,19 @@ describe Locomotive::Steam::ContentType do
 
   end
 
+  describe '#localized_names' do
+
+    subject { content_type.localized_names }
+
+    before {
+      expect(repository).to receive(:localized_names).and_return([])
+      expect(repository).to receive(:selects).and_return([instance_double('CategoryField', name: 'category')])
+    }
+
+    it { expect(subject).to eq ['category'] }
+
+  end
+
   describe '#default' do
 
     subject { content_type.fields_with_default }

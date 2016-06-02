@@ -30,7 +30,8 @@ module Locomotive::Steam
     end
 
     def localized_names
-      fields.localized_names
+      # FIXME: select_fields ALWAYS returns I18nField even if the site is not localized
+      fields.localized_names + select_fields.map(&:name)
     end
 
     def persisted_field_names
