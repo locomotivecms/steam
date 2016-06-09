@@ -16,6 +16,10 @@ module Locomotive
         username, password = options.delete(:username), options.delete(:password)
         options[:basic_auth] = { username: username, password: password } if username
 
+        # authorization header ?
+        header_auth = options.delete(:header_auth)
+        options[:headers] = { 'Authorization' => header_auth } if header_auth
+
         perform_request_to(path, options)
       end
 
@@ -37,7 +41,10 @@ module Locomotive
 
         # sanitize the options
         options[:format]  = options[:format].gsub(/[\'\"]/, '').to_sym if options.has_key?(:format)
-        options[:headers] = { 'User-Agent' => 'LocomotiveCMS' } if options[:with_user_agent]
+        if options[:with_user_agent]
+          user_agent = { 'User-Agent' => 'LocomotiveCMS' }
+          options[:headers] ? options[:headers].merge!(user_agent) : options[:headers] = user_agent
+        end
 
         response        = self.class.get(path, options)
         parsed_response = response.parsed_response

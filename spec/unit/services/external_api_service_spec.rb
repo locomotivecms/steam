@@ -75,6 +75,16 @@ describe Locomotive::Steam::ExternalAPIService do
       end
     end
 
+    describe 'sets authorization header' do
+
+      let(:url)     { 'http://blog.locomotiveapp.org' }
+      let(:options) { { header_auth: 'letmein' } }
+      it do
+        expect(service.class).to receive(:get).with('/', { base_uri: 'http://blog.locomotiveapp.org', headers: { 'Authorization' => 'letmein' } }).and_return(response)
+        subject
+      end
+    end
+
   end
 
 end
