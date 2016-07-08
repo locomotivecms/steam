@@ -16,6 +16,22 @@ module Locomotive
             @_label ||= @_source._label
           end
 
+          # Returns the content_entry type's slug and entry slug
+          # as a means of expressing a unique object to fascilitate
+          # looking up a specific object. Intended to be used within
+          # a capture block
+          #
+          # Usage:
+          #
+          # {% capture selected_object %}
+          #   {{ contents.products.first.select }}
+          # {% endcapture %}
+          #
+          def select
+            "~" + @_source.content_type._id + "#" + _id
+          end
+          
+
           # Returns the next content for the parent content type.
           # If no content is found, nil is returned.
           #

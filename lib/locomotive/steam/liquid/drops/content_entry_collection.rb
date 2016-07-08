@@ -11,6 +11,10 @@ module Locomotive
             @content_type = content_type
             @repository   = repository
           end
+          
+          def find(conditions)
+            repository.find(conditions)
+          end
 
           def all
             collection.map do |entry|
