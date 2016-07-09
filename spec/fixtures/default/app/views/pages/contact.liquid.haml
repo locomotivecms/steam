@@ -13,6 +13,11 @@ position: 4
     Ut imperdiet velit eu metus semper tristique. Vivamus risus nisi, tincidunt et euismod a, auctor pretium eros. Vestibulum sed magna et velit pulvinar euismod. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed velit quis nisl blandit vulputate id non tortor. Mauris nec placerat massa. Vivamus sed odio non ligula pharetra pretium. Ut convallis, purus et lobortis suscipit, mauris orci ullamcorper lectus, nec vulputate turpis mauris sed augue. Maecenas faucibus ultricies nisl, non ullamcorper justo bibendum nec. Duis vitae mauris condimentum risus commodo mattis vel sed libero. Fusce diam elit, porta id vestibulum ut, aliquet mattis neque.
   {% endeditable_long_text %}
 
+{% if message.errors %}
+.text
+  %p Form with errors
+{% endif %}
+
 %form#contactform{ :name => 'contact', :action => '{{ contents.messages.public_submission_url }}.json', :method => 'post' }
   / %input{ type: 'hidden', name: 'success_callback', value: '/events' }
   / %input{ type: 'hidden', name: 'error_callback', value: '/contact' }

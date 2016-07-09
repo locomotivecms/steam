@@ -70,13 +70,21 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
   describe '#errors' do
 
-    let(:errors) { instance_double('Errors', messages: { title: ['not_blank'] }) }
+    let(:errors) { instance_double('Errors', messages: { title: ['not_blank'] }, blank?: false) }
 
     before do
-      expect(entry).to receive(:errors).and_return(errors)
+      allow(entry).to receive(:errors).and_return(errors)
     end
 
     it { expect(subject.errors).to eq('title' => ['not_blank']) }
+
+    context 'no errors' do
+
+      let(:errors) { instance_double('Errors', blank?: true) }
+
+      it { expect(subject.errors).to eq(false) }
+
+    end
 
   end
 

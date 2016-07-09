@@ -5,6 +5,12 @@ position: 5
 
 {% block content %}
 
+{% if message.errors %}
+.text
+  %p Form with errors
+{% endif %}
+
+
 %p Thank you {{ message.name }} !
 
 #events.unit.size2of3

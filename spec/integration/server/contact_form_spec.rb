@@ -78,6 +78,10 @@ describe 'ContactForm' do
           expect(response.status).to eq 200
         end
 
+        it 'displays a global error message' do
+          expect(response.body.to_s).to include "Form with errors"
+        end
+
         it 'displays errors' do
           expect(response.body.to_s).to include "can't be blank"
         end
@@ -102,6 +106,10 @@ describe 'ContactForm' do
 
         it 'returns a success status' do
           expect(response.status).to eq 200
+        end
+
+        it "doesn't display a global error message" do
+          expect(response.body.to_s).not_to include "Form with errors"
         end
 
         it 'displays a success message' do

@@ -43,7 +43,11 @@ module Locomotive
           end
 
           def errors
-            @_source.errors.messages.to_hash.stringify_keys
+            if @_source.errors.blank?
+              false
+            else
+              @_source.errors.messages.to_hash.stringify_keys
+            end
           end
 
           def before_method(meth)
