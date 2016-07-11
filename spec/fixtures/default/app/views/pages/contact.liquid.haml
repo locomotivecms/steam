@@ -22,6 +22,8 @@ position: 4
   / %input{ type: 'hidden', name: 'success_callback', value: '/events' }
   / %input{ type: 'hidden', name: 'error_callback', value: '/contact' }
 
+  %input{ type: 'hidden', name: 'some_variable', value: '42' }
+
   %p
     %label{ :for => 'name' } Name
     %input{ :type => 'text', :id => 'name', :name => 'content[name]', :placeholder => 'First and last name', :tabindex => '1', required: 'required', value: '{{ message.name }}' }

@@ -138,6 +138,7 @@ describe 'ContactForm' do
     let(:url) { '/events' }
     let(:params) { {
       'content_type_slug' => 'messages',
+      'some_variable'     => '42',
       'entry' => { 'name' => 'John', 'email' => 'j@doe.net', 'message' => 'Bla bla' } } }
     let(:response) { post_contact_form(url, params) }
     let(:status) { response.status }
@@ -166,6 +167,10 @@ describe 'ContactForm' do
 
       it 'displays a success message' do
         expect(response.body.to_s).to include 'Thank you John'
+      end
+
+      it 'stores hidden fields from the form' do
+        expect(response.body.to_s).to include 'Some variable: 42'
       end
 
     end

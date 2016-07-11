@@ -11,6 +11,7 @@ module Locomotive::Steam
       ENTRY_SUBMISSION_REGEXP = /^\/entry_submissions\/(\w+)/o
       SUBMITTED_TYPE_PARAM    = 'submitted_type_slug'
       SUBMITTED_PARAM         = 'submitted_entry_slug'
+      CONTENT_TYPE_PARAM      = 'content_type_slug'
 
       def _call
         # we didn't go through the locale middleware yet,
@@ -72,8 +73,26 @@ module Locomotive::Steam
       end
 
       def entry_to_query_string(entry)
-        type, slug = entry.content_type_slug, entry._slug
-        "#{SUBMITTED_TYPE_PARAM}=#{type}&#{SUBMITTED_PARAM}=#{slug}"
+        service_params = [
+          services.csrf_protection.field,
+          CONTENT_TYPE_PARAM,
+          SUBMITTED_TYPE_PARAM,
+          SUBMITTED_PARAM,
+          'success_callback',
+          'error_callback',
+          'content',
+          'entry'
+        ]
+
+        [].tap do |list|
+          params.each do |key, value|
+            next if service_params.include?(key)
+            list << "#{key}=#{value}"
+          end
+
+          list << "#{SUBMITTED_TYPE_PARAM}=#{entry.content_type_slug}"
+          list << "#{SUBMITTED_PARAM}=#{entry._slug}"
+        end.join('&')
       end
 
       def with_locale(&block)
@@ -109,8 +128,8 @@ module Locomotive::Steam
       # or from the presence of the content_type_slug param (model_form tag).
       #
       def get_content_type_slug
-        if request.post? && (request.path_info =~ ENTRY_SUBMISSION_REGEXP || params[:content_type_slug])
-          $1 || params[:content_type_slug]
+        if request.post? && (request.path_info =~ ENTRY_SUBMISSION_REGEXP || params[CONTENT_TYPE_PARAM])
+          $1 || params[CONTENT_TYPE_PARAM]
         end
       end
 
