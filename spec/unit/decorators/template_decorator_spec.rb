@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'haml'
 
 describe Locomotive::Steam::Decorators::TemplateDecorator do
 

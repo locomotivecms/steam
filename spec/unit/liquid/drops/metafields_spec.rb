@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Drops::Metafields do
 
-  let(:metafields)  { { 'my_namespace' => { 'analytics_id' => { 'default' => '42' }, 'street' => { 'en' => '7 Albert Camus Alley', 'fr' => '7 allée Albert Camus' } } } }
-  let(:schema)      { [ { 'name' => 'my_namespace', fields: [{ name: 'analytics_id', position: 1 }, { name: 'street', localized: true, position: 0 }, { name: 'country', :position => 2 }] }].as_json }
+  let(:metafields)  { { 'my_namespace' => { 'visible' => { 'default' => '1' }, 'analytics_id' => { 'default' => '42' }, 'street' => { 'en' => '7 Albert Camus Alley', 'fr' => '7 allée Albert Camus' } } } }
+  let(:schema)      { [ { 'name' => 'my_namespace', fields: [{ name: 'analytics_id', position: 1 }, { name: 'street', localized: true, position: 0 }, { name: 'country', :position => 2 }, { name: 'visible', type: 'boolean', position: 3 }] }].as_json }
   let(:site)        { instance_double('Site', metafields: metafields, metafields_schema: schema) }
   let(:context)     { ::Liquid::Context.new({}, {}, { locale: 'en' }) }
   let(:drop)        { described_class.new(site).tap { |d| d.context = context } }
@@ -13,13 +13,13 @@ describe Locomotive::Steam::Liquid::Drops::Metafields do
     let(:namespace) { drop.before_method(:my_namespace).tap { |d| d.context = context } }
 
     it 'gives the number of the fields' do
-      expect(namespace.size).to eq 3
+      expect(namespace.size).to eq 4
     end
 
     it 'iterates over the fields and keeps the order' do
       list = []
       namespace.each { |el| list << el['name'] }
-      expect(list).to eq(['street', 'analytics_id', 'country'])
+      expect(list).to eq(['street', 'analytics_id', 'country', 'visible'])
     end
 
   end
@@ -46,6 +46,37 @@ describe Locomotive::Steam::Liquid::Drops::Metafields do
 
       end
 
+      context 'the field is a boolean' do
+
+        let(:boolean) { true }
+        let(:metafields) { { 'my_namespace' => { 'visible' => { 'default' => boolean } } } }
+
+        subject { namespace.before_method(:visible) }
+
+        it { is_expected.to eq true }
+
+        context '"true" is considered as true' do
+          let(:boolean) { 'true' }
+          it { is_expected.to eq true }
+        end
+
+        context '"1" is considered as true' do
+          let(:boolean) { '1' }
+          it { is_expected.to eq true }
+        end
+
+        context '"false" is considered as false' do
+          let(:boolean) { 'false' }
+          it { is_expected.to eq false }
+        end
+
+        context '"0" is considered as false' do
+          let(:boolean) { '0' }
+          it { is_expected.to eq false }
+        end
+
+      end
+
       context 'not a localized field' do
 
         context 'the value exists' do
@@ -62,8 +93,6 @@ describe Locomotive::Steam::Liquid::Drops::Metafields do
           end
 
         end
-
-
 
         context "the value doesn't exist" do
 
