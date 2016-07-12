@@ -8,9 +8,7 @@ describe Locomotive::Steam::Middlewares::Renderer do
 
   let(:app) { ->(env) { [200, env, 'app'] }}
 
-  let :middleware do
-    Locomotive::Steam::Middlewares::Renderer.new(app)
-  end
+  let(:middleware) { described_class.new(app) }
 
   describe 'missing 404 page' do
 
@@ -21,7 +19,7 @@ describe Locomotive::Steam::Middlewares::Renderer do
       middleware.call env_for('http://www.example.com', { 'steam.page' => nil, 'steam.locale' => locale, 'steam.site' => site })
     end
 
-    specify 'return 200' do
+    specify 'return 404' do
       code, headers, response = subject
       expect(code).to eq(404)
       expect(response).to eq(["Your 404 page is missing. Please create it."])

@@ -26,11 +26,21 @@ module Locomotive::Steam
       protected
 
       def fetch_page
-        services.page_finder.match(path).tap do |pages|
+        page = page_finder.match(path).tap do |pages|
           if pages.size > 1
             self.log "Found multiple pages: #{pages.map(&:title).join(', ')}"
           end
-        end.first || services.page_finder.find('404')
+        end.first
+
+        if page && (page.published? || page.not_found? || live_editing?)
+          page
+        else
+          page_finder.find('404')
+        end
+      end
+
+      def page_finder
+        services.page_finder
       end
 
     end

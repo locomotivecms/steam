@@ -61,6 +61,10 @@ module Locomotive::Steam::Middlewares
       @params ||= self.request.params.with_indifferent_access
     end
 
+    def live_editing?
+      !!env['steam.live_editing']
+    end
+
   end
 
 end
