@@ -53,6 +53,8 @@ module Locomotive::Steam
       def build_templatized_page_xml(page, locale)
         content_type = repositories.content_type.find(page.content_type_id)
 
+        return nil unless build_templatized_page_xml?(page, content_type, locale)
+
         repositories.content_entry.with(content_type).all.map do |entry|
           _entry = Locomotive::Steam::Decorators::I18nDecorator.new(entry, locale)
 
@@ -86,6 +88,15 @@ module Locomotive::Steam
 
       def url_for(page, locale = nil)
         services.url_builder.url_for(page, locale)
+      end
+
+      def build_templatized_page_xml?(page, content_type, locale)
+        return true if content_type.localized? || default_locale == locale
+
+        # does the templatized page have the same source
+        # (liquid template) as in the default locale?
+        # If so, no need to add a xml entry for this page
+        !page.source.blank?
       end
 
       def base_url

@@ -34,6 +34,10 @@ module Locomotive::Steam
       fields.localized_names + select_fields.map(&:name)
     end
 
+    def localized?
+      !fields.localized_names.blank?
+    end
+
     def persisted_field_names
       [].tap do |names|
         fields_by_name.each do |name, field|

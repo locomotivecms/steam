@@ -43,6 +43,27 @@ describe Locomotive::Steam::ContentType do
 
   end
 
+
+  describe '#localized?' do
+
+    let(:names) { [] }
+
+    before { expect(repository).to receive(:localized_names).and_return(names) }
+
+    subject { content_type.localized? }
+
+    it { is_expected.to eq false }
+
+    context 'with one localized field' do
+
+      let(:names) { ['title'] }
+
+      it { is_expected.to eq true }
+
+    end
+
+  end
+
   describe '#default' do
 
     subject { content_type.fields_with_default }
