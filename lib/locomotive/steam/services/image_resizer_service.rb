@@ -6,7 +6,7 @@ module Locomotive
       attr_accessor_initialize :resizer, :asset_path
 
       def resize(source, geometry)
-        return nil if disabled? || geometry.blank?
+        return get_url_or_path(source) if disabled? || geometry.blank?
 
         if file = fetch_file(source)
           file.thumb(geometry).url
