@@ -20,6 +20,12 @@ module Locomotive
 
           SYMBOL_OPERATORS_REGEXP = /(\w+\.(#{OPERATORS.join('|')})){1}\s*\:/o
 
+          REGEX_OPTIONS = {
+            'i' => Regexp::IGNORECASE,
+            'm' => Regexp::MULTILINE,
+            'x' => Regexp::EXTENDED
+          }
+
           # register the tag
           tag_name :with_scope
 
@@ -54,7 +60,12 @@ module Locomotive
           def cast_value(value)
             case value
             when Array then value.map { |_value| cast_value(_value) }
-            when /^\/[^\/]*\/$/ then Regexp.new(value[1..-2])
+            when /^\/([^\/]*)\/([imx]+)?$/
+              _value, options_str = $1, $2
+              options = options_str.blank? ? nil : options_str.split('').uniq.inject(0) do |_options, letter|
+                _options |= REGEX_OPTIONS[letter]
+              end
+              Regexp.new(_value, options)
             else
               value.respond_to?(:_id) ? value.send(:_source) : value
             end
