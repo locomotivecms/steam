@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'mongo',      '~> 2.2.3'
   spec.add_development_dependency 'origin',     '~> 2.1.1'
 
-  spec.add_dependency 'nokogiri',               '~> 1.6.7.2'
+  spec.add_dependency 'nokogiri',               '~> 1.6.8'
   spec.add_dependency 'sanitize',               '~> 4.0.1'
   spec.add_dependency 'morphine',               '~> 0.1.1'
   spec.add_dependency 'httparty',               '~> 0.13.6'
@@ -40,7 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'autoprefixer-rails',     '~> 6.3.3.1'
 
   spec.add_dependency 'kramdown',               '~> 1.10.0'
-  spec.add_dependency 'RedCloth',               '~> 4.2.9'
+  spec.add_dependency 'RedCloth',               '~> 4.3.2'
   spec.add_dependency 'mimetype-fu',            '~> 0.1.2'
   spec.add_dependency 'mime-types',             '~> 2.6.1'
   spec.add_dependency 'duktape',                '~> 1.3.0.6'

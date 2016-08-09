@@ -13,7 +13,7 @@ group :development do
   gem 'yui-compressor',     '~> 0.12.0'
   gem 'haml',               '~> 4.0.6'
 
-  gem 'rack-mini-profiler'
+  gem 'rack-mini-profiler', '~> 0.10.1'
   gem 'flamegraph'
   gem 'stackprof' # ruby 2.1+ only
   gem 'memory_profiler'
