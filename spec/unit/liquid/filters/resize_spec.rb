@@ -29,6 +29,23 @@ describe Locomotive::Steam::Liquid::Filters::Resize do
 
       it { is_expected.to match /\/steam\/dynamic\/.*\/240px-Metropolitan_railway_steam_locomotive_2781022036.png/ }
 
+      describe 'when imagemagick is not available' do
+
+        let(:input) {
+          double('image from liquid', url: 'http://upload.wikimedia.org/wikipedia/en/thumb/b/b5/Metropolitan_railway_steam_locomotive_2781022036.png/240px-Metropolitan_railway_steam_locomotive_2781022036.png')
+        }
+
+        before do
+          image_resizer = @context.registers[:services].image_resizer
+          allow(image_resizer).to receive(:disabled?).and_return(true)
+        end
+
+        it 'returns the original url without resizing' do
+          is_expected.to eq 'http://upload.wikimedia.org/wikipedia/en/thumb/b/b5/Metropolitan_railway_steam_locomotive_2781022036.png/240px-Metropolitan_railway_steam_locomotive_2781022036.png'
+        end
+
+      end
+
     end
 
   end
