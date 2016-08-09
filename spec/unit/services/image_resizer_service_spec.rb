@@ -14,7 +14,7 @@ describe Locomotive::Steam::ImageResizerService do
     subject { service.resize(input, geometry) }
 
     describe 'no resizer' do
-      it { is_expected.to eq nil }
+      it { is_expected.to eq 'http://upload.wikimedia.org/wikipedia/en/thumb/b/b5/Metropolitan_railway_steam_locomotive_2781022036.png/240px-Metropolitan_railway_steam_locomotive_2781022036.png' }
     end
 
     describe 'DragonFly' do
@@ -23,12 +23,12 @@ describe Locomotive::Steam::ImageResizerService do
 
       describe 'no imagemagick' do
         before { expect(resizer.plugins).to receive(:[]).with(:imagemagick).and_return(nil) }
-        it { is_expected.to eq nil }
+        it { is_expected.to eq 'http://upload.wikimedia.org/wikipedia/en/thumb/b/b5/Metropolitan_railway_steam_locomotive_2781022036.png/240px-Metropolitan_railway_steam_locomotive_2781022036.png' }
       end
 
       describe 'no geometry' do
         let(:geometry) { '' }
-        it { is_expected.to eq nil }
+        it { is_expected.to eq 'http://upload.wikimedia.org/wikipedia/en/thumb/b/b5/Metropolitan_railway_steam_locomotive_2781022036.png/240px-Metropolitan_railway_steam_locomotive_2781022036.png' }
       end
 
       it { is_expected.to match /\/steam\/dynamic\/.*\/240px-Metropolitan_railway_steam_locomotive_2781022036.png/ }
