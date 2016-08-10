@@ -31,7 +31,7 @@ module Locomotive
             ::Liquid::StandardFilters::InputIterator.new(input).map do |e|
               e = e.call if e.is_a?(Proc)
 
-              if property == "to_liquid".freeze
+              if property == 'to_liquid'.freeze
                 e
               elsif property == 'to_f'.freeze
                 e.to_f

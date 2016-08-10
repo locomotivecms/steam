@@ -29,6 +29,10 @@ describe Locomotive::Steam::Server do
       is_expected.to include('<li>A song template</li>')
     end
 
+    it 'lists all the pages from the site liquid drop' do
+      is_expected.to include('<!-- TEST -->About Us - Music - Store - Contact Us - Events - Basic page - A sample contest - Various uses of the with_scope tag - Grunge leaders - Tags - Unlisted pages - Archives - All the pages - Layouts - Songs<!-- TEST -->')
+    end
+
     describe 'with wrapper' do
 
       subject { get '/tags/nav'; last_response.body }

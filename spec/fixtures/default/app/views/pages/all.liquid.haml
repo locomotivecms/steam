@@ -10,4 +10,7 @@ published: true
 <li>{{ page.title }}</li>
 {% endfor %}
 </ul>
+
+<!-- TEST -->{{ site.index.children | map: 'title' | join: " - " }}<!-- TEST -->
+
 {% endblock %}
