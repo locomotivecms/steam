@@ -116,7 +116,7 @@ GEM
     mini_portile2 (2.1.0)
     minitest (5.9.0)
     moneta (0.8.0)
-    mongo (2.2.5)
+    mongo (2.2.7)
       bson (~> 4.0)
     morphine (0.1.1)
     multi_json (1.12.0)
@@ -126,7 +126,7 @@ GEM
       pkg-config (~> 1.1.7)
     nokogumbo (1.4.9)
       nokogiri
-    origin (2.1.1)
+    origin (2.2.0)
     pkg-config (1.1.7)
     pony (1.11)
       mail (>= 2.0)
@@ -205,8 +205,8 @@ DEPENDENCIES
   json_spec (~> 1.1.4)
   locomotivecms_steam!
   memory_profiler
-  mongo (~> 2.2.3)
-  origin (~> 2.1.1)
+  mongo (~> 2.2.7)
+  origin (~> 2.2.0)
   pry-byebug (~> 3.3.0)
   puma
   rack-mini-profiler (~> 0.10.1)
