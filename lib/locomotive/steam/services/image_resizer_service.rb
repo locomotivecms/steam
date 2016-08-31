@@ -9,7 +9,11 @@ module Locomotive
         return get_url_or_path(source) if disabled? || geometry.blank?
 
         if file = fetch_file(source)
-          file.thumb(geometry).url
+          /(?<size>[^q]*)(?:q(?<quality>\d+))?/ =~ geometry
+
+          transformed_file = file.thumb(size)
+          transformed_file = transformed_file.convert("-auto-orient -quality #{quality}") if quality.present?
+          transformed_file.url
         else
           Locomotive::Common::Logger.error "Unable to resize on the fly: #{source.inspect}"
           nil
