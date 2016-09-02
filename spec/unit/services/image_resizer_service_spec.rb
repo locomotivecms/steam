@@ -68,6 +68,15 @@ describe Locomotive::Steam::ImageResizerService do
 
       end
 
+      describe 'additional filters' do
+        let(:input)  { '/sites/42/theme/images/banner.png' }
+        let (:filters) { [{"quality" => 70, "auto_orient" => true, "filters" => "-swirl 180"}] }
+
+        subject { service.resize(input, geometry, filters) }
+
+        it { is_expected.to match /\/steam\/dynamic\/.*\/banner.png/ }
+      end
+
     end
 
   end
