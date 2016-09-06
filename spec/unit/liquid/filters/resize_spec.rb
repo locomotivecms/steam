@@ -58,29 +58,40 @@ describe Locomotive::Steam::Liquid::Filters::Resize do
       end
 
       it 'handles quality' do
-        resize(input, geometry, { "quality" => 70 })
-        expect(@image_resizer).to have_received(:resize).with(input, geometry, "-quality 70")
+        resize(input, geometry, { 'quality' => 70 })
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-quality 70')
       end
 
       it 'handles auto_orient' do
-        resize(input, geometry, { "auto_orient" => true })
-        expect(@image_resizer).to have_received(:resize).with(input, geometry, "-auto-orient")
+        resize(input, geometry, { 'auto_orient' => true })
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-auto-orient')
       end
 
       it "doesn't auto_orient if false" do
-        resize(input, geometry, { "auto_orient" => false })
-        expect(@image_resizer).to have_received(:resize).with(input, geometry, "")
+        resize(input, geometry, { 'auto_orient' => false })
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '')
       end
 
       it 'handles optimize' do
-        resize(input, geometry, { "optimize" => 75 })
-        expect(@image_resizer).to have_received(:resize).with(input, geometry, "-quality 75 -strip -interlace Plane")
+        resize(input, geometry, { 'optimize' => 75 })
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-quality 75 -strip -interlace Plane')
       end
 
       it 'handles multiple and custom filters' do
-        resize(input, geometry, { "quality" => 60, "filters" => "-sepia-tone 80%" })
-        expect(@image_resizer).to have_received(:resize).with(input, geometry, "-quality 60 -sepia-tone 80%")
+        resize(input, geometry, { 'quality' => 60, 'filters' => '-sepia-tone 80%' })
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-quality 60 -sepia-tone 80%')
       end
+
+      it 'handles progressive display' do
+        resize(input, geometry, { 'progressive' => true })
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-interlace Plane')
+      end
+
+      it 'handles strip' do
+        resize(input, geometry, { 'strip' => true })
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-strip')
+      end
+
     end
 
   end
