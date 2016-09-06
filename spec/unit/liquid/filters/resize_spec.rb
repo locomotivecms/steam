@@ -48,6 +48,52 @@ describe Locomotive::Steam::Liquid::Filters::Resize do
 
     end
 
+    describe 'additional filters' do
+      let(:geometry) { '30x40#' }
+      subject {}
+
+      before do
+        @context.registers[:services].image_resizer = instance_spy('ImageResizerService')
+        @image_resizer = @context.registers[:services].image_resizer
+      end
+
+      it 'handles quality' do
+        resize(input, geometry, { 'quality' => 70 })
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-quality 70')
+      end
+
+      it 'handles auto_orient' do
+        resize(input, geometry, { 'auto_orient' => true })
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-auto-orient')
+      end
+
+      it "doesn't auto_orient if false" do
+        resize(input, geometry, { 'auto_orient' => false })
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '')
+      end
+
+      it 'handles optimize' do
+        resize(input, geometry, { 'optimize' => 75 })
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-quality 75 -strip -interlace Plane')
+      end
+
+      it 'handles multiple and custom filters' do
+        resize(input, geometry, { 'quality' => 60, 'filters' => '-sepia-tone 80%' })
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-quality 60 -sepia-tone 80%')
+      end
+
+      it 'handles progressive display' do
+        resize(input, geometry, { 'progressive' => true })
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-interlace Plane')
+      end
+
+      it 'handles strip' do
+        resize(input, geometry, { 'strip' => true })
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-strip')
+      end
+
+    end
+
   end
 
 end
