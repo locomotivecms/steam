@@ -65,6 +65,13 @@ describe Locomotive::Steam::AssetHostService do
 
     end
 
+    context 'the source is an empty string' do
+
+      let(:source) { '' }
+      it { is_expected.to eq '' }
+
+    end
+
   end
 
   describe 'the host is a block' do

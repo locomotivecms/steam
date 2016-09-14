@@ -12,7 +12,7 @@ module Locomotive
       end
 
       def compute(source, timestamp = nil)
-        return source if source.nil?
+        return source if source.blank?
 
         timestamp ||= (site.try(:template_version) || site.try(:updated_at)).to_i
 

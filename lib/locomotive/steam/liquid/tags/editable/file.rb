@@ -59,7 +59,7 @@ module Locomotive
               end
 
               # in the live editing mode, tag all the images with their editable path (block + slug)
-              if editable?(context)
+              if editable?(context) && !url.blank?
                 url = url + (url.include?('?') ? '&' : '?') + 'editable-path=' + @path
               end
 
