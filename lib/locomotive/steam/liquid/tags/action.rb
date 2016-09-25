@@ -38,7 +38,7 @@ module Locomotive
 
           def render(context)
             Locomotive::Common::Logger.info "[action] executing #{@description}"
-            service(context).run(super, context['params'], context)
+            service(context).run(super, safe_params(context), context)
             ''
           end
 
@@ -46,6 +46,24 @@ module Locomotive
 
           def service(context)
             context.registers[:services].action
+          end
+
+          def safe_params(context)
+            return {} if context['params'].blank?
+
+            context['params'].dup.tap do |params|
+              # Tempfile can't be converted in Duktape for obvious reasons
+              replace_tempfile(params)
+            end
+          end
+
+          def replace_tempfile(hash)
+            hash.each do |key, value|
+              case value
+              when Tempfile then hash[key] = value.path
+              when Hash     then replace_tempfile(value)
+              end
+            end
           end
 
         end

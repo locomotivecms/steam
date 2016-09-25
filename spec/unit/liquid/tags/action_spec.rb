@@ -18,6 +18,15 @@ describe Locomotive::Steam::Liquid::Tags::Action do
 
     it { subject; expect(context['foo']).to eq 42.0 }
 
+    describe 'uploaded file' do
+
+      let(:assigns) { { 'params' => { 'my_file' => { 'tempfile' => Tempfile.new('my_file') } } } }
+      let(:source)  { '{% action "uploaded file" %}setProp("path", params.my_file.tempfile);{% endaction %}' }
+
+      it { subject; expect(context['path']).to match /\/my_file/ }
+
+    end
+
   end
 
 end
