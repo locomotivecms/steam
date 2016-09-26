@@ -52,7 +52,11 @@ module Locomotive::Steam
     end
 
     def make_id(id)
-      BSON::ObjectId.from_string(id)
+      begin
+        BSON::ObjectId.from_string(id)
+      rescue BSON::ObjectId::Invalid
+        false
+      end
     end
 
     def base_url(mapper, scope, entity = nil)

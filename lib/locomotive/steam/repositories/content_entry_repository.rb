@@ -22,8 +22,12 @@ module Locomotive
         default_attribute :content_type, -> (repository) { repository.content_type }
       end
 
-      # this is the starting point of all the next methods
+      # this is the starting point of all the next methods.
+      # type can be either an instance of the ContentTypeRepository class
+      # or the id of a content type.
       def with(type)
+        type = self.content_type_repository.find(type) if type.is_a?(String)
+
         self.content_type = type # used for creating the scope
         self.scope.context[:content_type] = type
 
@@ -131,9 +135,13 @@ module Locomotive
       end
 
       def prepare_conditions(*conditions)
-        _conditions = Conditions.new(adapter, conditions.first, self.content_type.fields).prepare
+        _conditions = Conditions.new(conditions.first, self.content_type.fields, simple_clone).prepare
 
         super({ _visible: true }, _conditions)
+      end
+
+      def simple_clone
+        self.class.new(self.adapter, self.site, self.locale, self.content_type_repository)
       end
 
       def add_localized_fields_to_mapper(mapper)
@@ -185,10 +193,10 @@ module Locomotive
 
       class Conditions
 
-        def initialize(adapter, conditions = {}, fields)
-          @adapter    = adapter
+        def initialize(conditions = {}, fields, target_repository)
           @conditions = conditions.try(:with_indifferent_access) || {}
           @fields, @operators = fields, {}
+          @target_repository = target_repository
 
           @conditions.each do |name, value|
             _name, operator = name.to_s.split('.')
@@ -206,10 +214,10 @@ module Locomotive
           _prepare(@fields.dates_and_date_times) { |field, value| value_to_date(value, field.type) }
 
           # belongs_to
-          _prepare(@fields.belongs_to) { |field, value| value_to_id(value) }
+          _prepare(@fields.belongs_to) { |field, value| value_to_id(value, field.target_id) }
 
           # many_to_many
-          _prepare(@fields.many_to_many) { |field, value| values_to_ids(value) }
+          _prepare(@fields.many_to_many) { |field, value| values_to_ids(value, field.target_id) }
 
           @conditions
         end
@@ -237,16 +245,31 @@ module Locomotive
           end
         end
 
-        def value_to_id(value)
+        def values_to_ids(value, target_id)
+          [*value].map { |_value| value_to_id(_value, target_id) }
+        end
+
+        def value_to_id(value, target_id)
           _value = if value.is_a?(Hash)
             value['_id'] || value[:_id]
           elsif value.respond_to?(:each) # array
-            values_to_ids(value)
+            values_to_ids(value, target_id)
           else
             value.respond_to?(:_id) ? value._id : value
           end
 
-          @adapter.make_id(_value)
+          if (id = @target_repository.adapter.make_id(_value)) == false
+            slug_to_id(value, target_id)
+          else
+            id
+          end
+        end
+
+        def slug_to_id(slug, target_id)
+          if _repository = @target_repository.with(target_id)
+            _entry = _repository.first { where(_slug: slug).only(:_id) }
+            _entry.try(:_id)
+          end
         end
 
         def value_to_date(value, type)
@@ -257,10 +280,6 @@ module Locomotive
             value
           end
           type == :date ? _value.to_date : _value.to_datetime
-        end
-
-        def values_to_ids(value)
-          [*value].map { |_value| value_to_id(_value) }
         end
 
       end

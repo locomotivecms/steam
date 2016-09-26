@@ -407,7 +407,7 @@ describe Locomotive::Steam::ContentEntryRepository do
     context 'belongs_to fields' do
 
       let(:value)       { 42 }
-      let(:field)       { instance_double('BelongsToField', name: 'person', persisted_name: 'person_id') }
+      let(:field)       { instance_double('BelongsToField', name: 'person', persisted_name: 'person_id', target_id: '42') }
       let(:_fields)     { instance_double('Fields', selects: [], belongs_to: [field], many_to_many: [], dates_and_date_times: []) }
       let(:conditions)  { { 'person' => value } }
 
@@ -450,7 +450,7 @@ describe Locomotive::Steam::ContentEntryRepository do
     context 'many_to_many fields' do
 
       let(:value)       { 42 }
-      let(:field)       { instance_double('ManyToManyField', name: 'tags', persisted_name: 'tag_ids') }
+      let(:field)       { instance_double('ManyToManyField', name: 'tags', persisted_name: 'tag_ids', target_id: '42') }
       let(:_fields)     { instance_double('Fields', selects: [], belongs_to: [], many_to_many: [field], dates_and_date_times: []) }
       let(:conditions)  { { 'tags.in' => value } }
 

@@ -7,11 +7,13 @@ describe Locomotive::Steam::ContentEntryRepository do
 
   shared_examples_for 'a repository' do
 
-    let(:site)            { Locomotive::Steam::Site.new(_id: site_id, locales: %w(en fr nb)) }
-    let(:locale)          { :en }
-    let(:type_repository) { Locomotive::Steam::ContentTypeRepository.new(adapter, site, locale) }
-    let(:repository)      { described_class.new(adapter, site, locale, type_repository).with(type) }
-    let(:type)            { type_repository.by_slug('bands') }
+    let(:site)              { Locomotive::Steam::Site.new(_id: site_id, locales: %w(en fr nb)) }
+    let(:locale)            { :en }
+    let(:type_repository)   { Locomotive::Steam::ContentTypeRepository.new(adapter, site, locale) }
+    let(:repository)        { described_class.new(adapter, site, locale, type_repository).with(type) }
+    let(:type)              { type_repository.by_slug('bands') }
+    let(:target_type)       { type_repository.by_slug('songs') }
+    let(:target_repository) { described_class.new(adapter, site, locale, type_repository).with(target_type) }
 
     describe '#all' do
       subject { repository.all }
@@ -55,6 +57,11 @@ describe Locomotive::Steam::ContentEntryRepository do
       it { expect(subject.map { |entry| entry[:name] }).to eq(['Alice in Chains', 'Pearl Jam']) }
     end
 
+    describe 'filter by a belongs_to field' do
+      subject { target_repository.all(band: 'the-who') }
+      it { expect(subject.map { |entry| entry[:title] }).to eq(['Song #5', 'Song #6']) }
+    end
+
     describe '#group_by_select_option' do
       subject { repository.group_by_select_option(:kind) }
       it { expect(subject.map { |h| h[:name] }).to eq(%w(grunge rock country)) }
@@ -73,9 +80,8 @@ describe Locomotive::Steam::ContentEntryRepository do
 
     describe '#create' do
 
-      let(:type) { type_repository.by_slug('songs') }
-      let(:attributes) { { title: 'Jeremy', band: 'pearl-jam', short_description: '"Jeremy" is a song by the American rock band Pearl Jam' } }
-      let(:entry) { repository.with(type).build(attributes) }
+      let(:attributes) { { title: 'Jeremy', band_id: 'pearl-jam', short_description: '"Jeremy" is a song by the American rock band Pearl Jam' } }
+      let(:entry) { repository.with(target_type).build(attributes) }
 
       subject { repository.create(entry) }
 
@@ -89,7 +95,7 @@ describe Locomotive::Steam::ContentEntryRepository do
     describe '#inc' do
 
       let(:type) { type_repository.by_slug('songs') }
-      let(:attributes) { { title: 'Jeremy', band: 'pearl-jam', short_description: '"Jeremy" is a song by the American rock band Pearl Jam', views: 41 } }
+      let(:attributes) { { title: 'Jeremy', band_id: 'pearl-jam', short_description: '"Jeremy" is a song by the American rock band Pearl Jam', views: 41 } }
       let(:entry) { repository.with(type).build(attributes) }
 
       before { repository.create(entry) }
