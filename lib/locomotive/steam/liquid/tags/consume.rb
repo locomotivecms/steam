@@ -72,7 +72,7 @@ module Locomotive
                 Locomotive::Common::Logger.info "[consume] #{@url.inspect} / #{@api_options.inspect}"
 
                 context.scopes.last[@name] = service(context).consume(@url, @api_options)
-              rescue Timeout::Error
+              rescue Timeout::Error, Errno::ETIMEDOUT
                 context.scopes.last[@name] = last_response(context)
               end
 

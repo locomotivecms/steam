@@ -50,7 +50,7 @@ module Locomotive
         parsed_response = response.parsed_response
 
         if response.code == 200
-          HashConverter.to_underscore parsed_response
+          HashConverter.to_underscore(parsed_response)
         else
           Locomotive::Common::Logger.error "[WebService] consumed #{path}, #{options.inspect}, response = #{response.inspect}"
           nil
