@@ -33,7 +33,9 @@ module Locomotive::Steam
       # - the type of response asked by the browser (html or json)
       #
       def navigation_behavior(entry)
-        if entry.errors.empty?
+        if entry.nil?
+          raise 'TODO'
+        elsif entry.errors.empty?
           navigation_success(entry)
         else
           navigation_error(entry)
@@ -74,7 +76,7 @@ module Locomotive::Steam
 
       def entry_to_query_string(entry)
         service_params = [
-          services.csrf_protection.field,
+          csrf_field,
           CONTENT_TYPE_PARAM,
           SUBMITTED_TYPE_PARAM,
           SUBMITTED_PARAM,
@@ -139,7 +141,7 @@ module Locomotive::Steam
       #
       #
       def create_entry(slug)
-        if entry = services.entry_submission.submit(slug, entry_attributes)
+        if entry = entry_submission.submit(slug, entry_attributes)
           entry
         else
           raise %{Unknown content type "#{slug}" or public_submission_enabled property not true}
@@ -150,7 +152,7 @@ module Locomotive::Steam
       #
       def fetch_entry
         if (type_slug = params[SUBMITTED_TYPE_PARAM]) && (slug = params[SUBMITTED_PARAM])
-          if entry = services.entry_submission.find(type_slug, slug)
+          if entry = entry_submission.find(type_slug, slug)
             store_in_liquid(entry)
           end
         end
@@ -163,12 +165,20 @@ module Locomotive::Steam
       # @return [ Array ] The rack response depending on the validation status and the requested format
       #
       def json_response(entry, status = 200)
-        json = services.entry_submission.to_json(entry)
+        json = entry_submission.to_json(entry)
         render_response(json, status, 'application/json')
       end
 
       def entry_attributes
         HashConverter.to_sym(params[:entry] || params[:content] || {})
+      end
+
+      def entry_submission
+        services.entry_submission
+      end
+
+      def csrf_field
+        services.csrf_protection.field
       end
 
     end
