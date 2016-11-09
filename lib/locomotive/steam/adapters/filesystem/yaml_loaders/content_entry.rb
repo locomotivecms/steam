@@ -23,6 +23,7 @@ module Locomotive
                   modify_for_selects(_attributes)
                   modify_for_associations(_attributes)
                   modify_for_files(_attributes)
+                  modify_for_passwords(_attributes)
 
                   list << _attributes
                 end
@@ -53,6 +54,13 @@ module Locomotive
                 else
                   value['default'] = file_size(path)
                 end
+              end
+            end
+
+            def modify_for_passwords(attributes)
+              content_type.password_fields.each do |field|
+                uncrypted_password = attributes.delete(field.name.to_sym)
+                attributes[:"#{field.name}_hash"] = BCrypt::Password.create(uncrypted_password)
               end
             end
 

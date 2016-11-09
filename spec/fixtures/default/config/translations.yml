@@ -1,3 +1,11 @@
 powered_by:
   en: Powered by
   fr: Propulsé par
+
+auth_wrong_credentials:
+  en: Your email and/or password are incorrect
+  fr: Votre email et/ou mot de passe sont incorrects
+
+auth_signed_out:
+  en: You've been signed out
+  fr: Vous avez été déconnecté(e)

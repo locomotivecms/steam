@@ -26,12 +26,14 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'morphine',               '~> 0.1.1'
   spec.add_dependency 'httparty',               '~> 0.13.6'
   spec.add_dependency 'chronic',                '~> 0.10.2'
+  spec.add_dependency 'bcrypt',                 '~> 3.1.11'
 
   spec.add_dependency 'rack-rewrite',           '~> 1.5.1'
   spec.add_dependency 'rack-cache',             '~> 1.6.1'
   spec.add_dependency 'dragonfly',              '~> 1.0.12'
   spec.add_dependency 'moneta',                 '~> 0.8.0'
   spec.add_dependency 'rack_csrf',              '~> 2.5.0'
+  spec.add_dependency 'warden',                 '~> 1.2.6'
 
   spec.add_dependency 'sprockets',              '~> 3.5.2'
   spec.add_dependency 'sass',                   '~> 3.4.21'

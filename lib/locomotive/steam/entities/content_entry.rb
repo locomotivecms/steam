@@ -1,4 +1,5 @@
 require 'chronic'
+require 'bcrypt'
 
 module Locomotive::Steam
 
@@ -129,6 +130,12 @@ module Locomotive::Steam
 
     def _cast_float(field)
       _cast_convertor(field.name, &:to_f)
+    end
+
+    def _cast_password(field)
+      _cast_convertor(:"#{field.name}_hash") do |value|
+        value.blank? ? nil : BCrypt::Password.new(value)
+      end
     end
 
     def _cast_file(field)

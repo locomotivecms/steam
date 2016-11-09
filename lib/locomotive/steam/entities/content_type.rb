@@ -8,6 +8,7 @@ module Locomotive::Steam
     def_delegator :fields, :associations, :association_fields
     def_delegator :fields, :selects, :select_fields
     def_delegator :fields, :files, :file_fields
+    def_delegator :fields, :passwords, :password_fields
     def_delegator :fields, :default, :fields_with_default
 
     def initialize(attributes = {})

@@ -38,7 +38,7 @@ module Locomotive::Steam
           # don't accept a non localized entry in a locale other than the default one
           return nil if type.localized_names.count == 0 && locale.to_s != default_locale.to_s
 
-          decorate(content_entry_repository.with(type).by_slug(slug))
+          decorate_entry(content_entry_repository.with(type).by_slug(slug))
         else
           nil
         end
@@ -54,11 +54,6 @@ module Locomotive::Steam
 
       def page_not_found
         services.page_finder.find('404')
-      end
-
-      def decorate(entry)
-        return nil if entry.nil?
-        Locomotive::Steam::Decorators::I18nDecorator.new(entry, locale, default_locale)
       end
 
     end
