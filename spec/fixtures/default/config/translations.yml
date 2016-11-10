@@ -9,3 +9,11 @@ auth_wrong_credentials:
 auth_signed_out:
   en: You've been signed out
   fr: Vous avez été déconnecté(e)
+
+auth_wrong_email:
+  en: Your email is unknown
+  fr: Votre email est inconnu
+
+auth_reset_password_instructions_sent:
+  en: "The instructions for changing your password have been emailed to you"
+  fr: "Les instructions pour modifier votre mot de passe viennent de vous être envoyées"

@@ -79,7 +79,7 @@ module Locomotive
         end
 
         register :url_builder do
-          Steam::UrlBuilderService.new(current_site, locale, request)
+          Steam::UrlBuilderService.new(current_site, locale, request, page_finder)
         end
 
         register :theme_asset_url do
@@ -116,6 +116,10 @@ module Locomotive
 
         register :email do
           Steam::EmailService.new(page_finder, liquid_parser, asset_host, configuration.mode == :test)
+        end
+
+        register :auth do
+          Steam::AuthService.new(content_entry, email)
         end
 
         register :cache do

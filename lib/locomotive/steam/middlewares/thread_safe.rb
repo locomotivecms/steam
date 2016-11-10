@@ -74,6 +74,16 @@ module Locomotive::Steam::Middlewares
       Locomotive::Steam::Decorators::I18nDecorator.new(entry, locale, default_locale)
     end
 
+    def default_liquid_context
+      ::Liquid::Context.new({ 'site' => site.to_liquid }, {}, {
+        request:        request,
+        locale:         locale,
+        site:           site,
+        services:       services,
+        repositories:   services.repositories
+      }, true)
+    end
+
   end
 
 end

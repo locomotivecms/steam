@@ -56,6 +56,22 @@ module Locomotive
         end
       end
 
+      def update_decorated_entry(decorated_entry, attributes)
+        with_repository(decorated_entry.content_type) do |_repository|
+          entry = decorated_entry.__getobj__
+
+          puts clean_attributes(attributes).inspect
+
+          entry.change(clean_attributes(attributes))
+
+          _repository.update(entry)
+
+          logEntryOperation(decorated_entry.content_type.slug, decorated_entry)
+
+          decorated_entry
+        end
+      end
+
       def delete(type_slug, id_or_slug)
         with_repository(type_slug) do |_repository|
           entry = _repository.by_slug(id_or_slug) || _repository.find(id_or_slug)

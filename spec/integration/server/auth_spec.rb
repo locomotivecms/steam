@@ -90,6 +90,51 @@ describe 'Authentication' do
 
   end
 
+  describe 'forgot password action' do
+
+    let(:email) { '' }
+
+    let(:params) { {
+      auth_action:                'forgot_password',
+      auth_content_type:          'accounts',
+      auth_id_field:              'email',
+      auth_id:                    email,
+      auth_reset_password_url:    'http://acme.com/account/reset-password',
+      auth_callback:              '/account/sign-in',
+      auth_email_from:            'support@acme.com',
+      auth_email_handle:          'reset_password_instructions',
+      auth_email_smtp_address:    'smtp.nowhere.net',
+      auth_email_smtp_user_name:  'jane',
+      auth_email_smtp_password:   'easyone'
+    } }
+
+    it 'renders the forgot password page with an error message' do
+      forgot_password
+      expect(last_response.status).to eq 200
+      expect(last_response.body).to include 'Forgot your password'
+      expect(last_response.body).to include 'Your email is unknown'
+    end
+
+    context 'with an known email' do
+
+      let(:email) { 'john@doe.net' }
+
+      it 'sends an email to the account' do
+        forgot_password
+        expect(last_response.status).to eq 200
+        expect(last_response.body).to include "The instructions for changing your password have been emailed to you"
+      end
+
+    end
+
+    def forgot_password(follow_redirect = false)
+      post '/account/forgot-password', params
+      follow_redirect! if follow_redirect
+      last_response
+    end
+
+  end
+
 end
 
 
