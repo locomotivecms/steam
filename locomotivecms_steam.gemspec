@@ -33,7 +33,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dragonfly',              '~> 1.0.12'
   spec.add_dependency 'moneta',                 '~> 0.8.0'
   spec.add_dependency 'rack_csrf',              '~> 2.5.0'
-  spec.add_dependency 'warden',                 '~> 1.2.6'
 
   spec.add_dependency 'sprockets',              '~> 3.5.2'
   spec.add_dependency 'sass',                   '~> 3.4.21'

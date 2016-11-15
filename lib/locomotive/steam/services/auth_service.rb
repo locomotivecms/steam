@@ -3,6 +3,9 @@ module Locomotive
 
     class AuthService
 
+      MIN_PASSWORD_LENGTH   = 6
+      RESET_TOKEN_LIFETIME  = 6 * 3600 # 6 hours in seconds
+
       attr_accessor_initialize :entries, :email_service
 
       def find_authenticated_resource(type, id)
@@ -32,16 +35,40 @@ module Locomotive
         else
           entries.update_decorated_entry(entry, {
             '_auth_reset_token'   => SecureRandom.hex,
-            '_auth_reset_sent_at' => Time.zone.now
+            '_auth_reset_sent_at' => Time.zone.now.iso8601
           })
 
-          context['reset_password_url'] = options.reset_password_url + '?token=' + entry['_auth_reset_token']
+          context['reset_password_url'] = options.reset_password_url + '?auth_reset_token=' + entry['_auth_reset_token']
           context[options.type.singularize] = entry
 
           send_reset_password_instructions(options, context)
 
           :reset_password_instructions_sent
         end
+      end
+
+      def reset_password(options)
+        return :invalid_token       if options.reset_token.blank?
+        return :password_too_short  if options.password.to_s.size < MIN_PASSWORD_LENGTH
+
+        entry = entries.all(options.type, '_auth_reset_token' => options.reset_token).first
+
+        if entry
+          sent_at = Time.parse(entry[:_auth_reset_sent_at]).to_i
+          now = Time.zone.now.to_i - RESET_TOKEN_LIFETIME
+
+          if sent_at >= now
+            entries.update_decorated_entry(entry, {
+              "#{options.password_field}_hash" => BCrypt::Password.create(options.password),
+              '_auth_reset_token'   => nil,
+              '_auth_reset_sent_at' => nil
+            })
+
+            return [:password_reset, entry]
+          end
+        end
+
+        :invalid_token
       end
 
       private

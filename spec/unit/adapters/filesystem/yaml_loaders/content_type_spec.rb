@@ -15,10 +15,10 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::ContentType do
     subject { loader.load(scope).sort { |a, b| a[:slug] <=> b[:slug] } }
 
     it 'tests various stuff' do
-      expect(subject.size).to eq 5
-      expect(subject.first[:slug]).to eq('bands')
-      expect(subject.first[:entries_custom_fields].size).to eq 5
-      expect(subject.first[:entries_custom_fields].first[:position]).to eq 0
+      expect(subject.size).to eq 6
+      expect(subject[1][:slug]).to eq('bands')
+      expect(subject[1][:entries_custom_fields].size).to eq 5
+      expect(subject[1][:entries_custom_fields].first[:position]).to eq 0
     end
 
   end

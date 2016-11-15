@@ -14,7 +14,7 @@ describe Locomotive::Steam::PageRepository do
     describe '#all' do
       let(:conditions) { {} }
       subject { repository.all(conditions) }
-      it { expect(subject.size).to eq 26 }
+      it { expect(subject.size).to eq 33 }
 
       context 'with conditions' do
         let(:conditions) { { fullpath: 'index', 'slug.ne' => '404' } }
@@ -34,7 +34,7 @@ describe Locomotive::Steam::PageRepository do
 
     describe '#only_handle_and_fullpath' do
       subject { repository.only_handle_and_fullpath }
-      it { expect(subject.size).to eq 3 }
+      it { expect(subject.size).to eq 8 }
     end
 
     describe '#by_fullpath' do
@@ -78,7 +78,7 @@ describe Locomotive::Steam::PageRepository do
     describe '#children_of' do
       let(:page) { repository.root }
       subject { repository.children_of(page) }
-      it { expect(subject.size).to eq 15 }
+      it { expect(subject.size).to eq 17 }
     end
 
     describe '#editable_element_for' do

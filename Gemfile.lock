@@ -26,7 +26,6 @@ PATH
       sanitize (~> 4.0.1)
       sass (~> 3.4.21)
       sprockets (~> 3.5.2)
-      warden (~> 1.2.6)
 
 GEM
   remote: https://rubygems.org/
@@ -189,8 +188,6 @@ GEM
     tins (1.12.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    warden (1.2.6)
-      rack (>= 1.0)
     yui-compressor (0.12.0)
 
 PLATFORMS

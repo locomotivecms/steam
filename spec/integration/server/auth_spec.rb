@@ -109,7 +109,7 @@ describe 'Authentication' do
     } }
 
     it 'renders the forgot password page with an error message' do
-      forgot_password
+      post '/account/forgot-password', params
       expect(last_response.status).to eq 200
       expect(last_response.body).to include 'Forgot your password'
       expect(last_response.body).to include 'Your email is unknown'
@@ -120,17 +120,73 @@ describe 'Authentication' do
       let(:email) { 'john@doe.net' }
 
       it 'sends an email to the account' do
-        forgot_password
+        post '/account/forgot-password', params
         expect(last_response.status).to eq 200
         expect(last_response.body).to include "The instructions for changing your password have been emailed to you"
       end
 
     end
 
-    def forgot_password(follow_redirect = false)
-      post '/account/forgot-password', params
-      follow_redirect! if follow_redirect
-      last_response
+  end
+
+  describe 'reset password action' do
+
+    let(:token) { '' }
+    let(:new_password) { 'newone!' }
+
+    let(:params) { {
+      auth_action:                'reset_password',
+      auth_content_type:          'accounts',
+      auth_password_field:        'password',
+      auth_password:              new_password,
+      auth_reset_token:           token,
+      auth_callback:              '/account/me'
+    } }
+
+    it 'renders the reset password page with an error message' do
+      post '/account/reset-password', params
+      expect(last_response.status).to eq 200
+      expect(last_response.body).to include 'Change your password'
+      expect(last_response.body).to include 'The reset token is not valid anymore'
+    end
+
+    context 'with an expired token' do
+
+      let(:token) { '420000000000001' }
+
+      it 'renders the reset password page with an error message' do
+        post '/account/reset-password', params
+        expect(last_response.status).to eq 200
+        expect(last_response.body).to include 'Change your password'
+        expect(last_response.body).to include 'The reset token is not valid anymore'
+      end
+
+    end
+
+    context 'with a valid token' do
+
+      let(:token) { '420000000000000' }
+
+      it 'sends an email to the account' do
+        post '/account/reset-password', params
+        expect(last_response.status).to eq 301
+        follow_redirect!
+        expect(last_response.body).to include "My name is Jane and I'm logged in!"
+      end
+
+      context 'with a too short password' do
+
+        let(:new_password) { 'short' }
+
+        it 'renders the reset password page with an error message' do
+          post '/account/reset-password', params
+          expect(last_response.status).to eq 200
+          expect(last_response.body).to include 'Change your password'
+          expect(last_response.body).to include 'Your password is too short'
+        end
+
+      end
+
     end
 
   end

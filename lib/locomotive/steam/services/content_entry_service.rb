@@ -60,8 +60,6 @@ module Locomotive
         with_repository(decorated_entry.content_type) do |_repository|
           entry = decorated_entry.__getobj__
 
-          puts clean_attributes(attributes).inspect
-
           entry.change(clean_attributes(attributes))
 
           _repository.update(entry)

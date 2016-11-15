@@ -3,15 +3,9 @@ module Locomotive
 
     class UrlBuilderService
 
-      attr_accessor_initialize :site, :current_locale, :request, :page_finder
-
-      def absolute_url_for(page, locale = nil)
-        request.base_url + url_for(page, locale)
-      end
+      attr_accessor_initialize :site, :current_locale, :request
 
       def url_for(page, locale = nil)
-        page = page_finder.by_handle(page) if page.is_a?(String)
-
         prefix(_url_for(page, locale))
       end
 

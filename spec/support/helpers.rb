@@ -4,7 +4,7 @@ module Spec
   module Helpers
 
     def mongodb_site_id
-      BSON::ObjectId.from_string('561030e287f6431555000006')
+      BSON::ObjectId.from_string('5829ff6487f64359474164a1')
     end
 
     def reset!

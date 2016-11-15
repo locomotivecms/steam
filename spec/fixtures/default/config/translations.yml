@@ -17,3 +17,11 @@ auth_wrong_email:
 auth_reset_password_instructions_sent:
   en: "The instructions for changing your password have been emailed to you"
   fr: "Les instructions pour modifier votre mot de passe viennent de vous être envoyées"
+
+auth_invalid_token:
+  en: "The reset token is not valid anymore"
+  fr: "Le token de re-initialisation du mot de passe n'est plus valide"
+
+auth_password_too_short:
+  en: "Your password is too short"
+  fr: "Votre mot de passe est trop court"

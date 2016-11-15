@@ -55,6 +55,19 @@ module Locomotive::Steam
         append_message(status)
       end
 
+      def reset_password(options)
+        return if authenticated?
+
+        status, entry = services.auth.reset_password(options)
+
+        if status == :password_reset
+          store_authenticated(entry)
+          redirect_to options.callback || mounted_on
+        end
+
+        append_message(status)
+      end
+
       def load_authenticated_entry
         entry_type = request.session[:authenticated_entry_type]
         entry_id   = request.session[:authenticated_entry_id]
@@ -127,6 +140,10 @@ module Locomotive::Steam
 
         def reset_password_url
           params[:auth_reset_password_url]
+        end
+
+        def reset_token
+          params[:auth_reset_token]
         end
 
         def from
