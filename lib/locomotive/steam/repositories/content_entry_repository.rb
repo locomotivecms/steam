@@ -57,7 +57,7 @@ module Locomotive
       end
 
       def find(id)
-        conditions, _ = conditions_without_order_by(_id: id)
+        conditions, _ = conditions_without_order_by(_id: self.adapter.make_id(id))
         first { where(conditions) }
       end
 

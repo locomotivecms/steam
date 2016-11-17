@@ -85,13 +85,17 @@ module Locomotive::Steam
       def store_authenticated(entry)
         type = entry ? entry.content_type.slug : request.session[:authenticated_entry_type]
 
-        request.session[:authenticated_entry_type]  = type
-        request.session[:authenticated_entry_id]    = entry.try(:_id)
+        request.session[:authenticated_entry_type]  = type.to_s
+        request.session[:authenticated_entry_id]    = entry.try(:_id).to_s
+
+        log "[Auth] authenticated #{type.to_s.singularize} ##{entry.try(:_id).to_s}"
 
         liquid_assigns["current_#{type.singularize}"] = entry
       end
 
       def append_message(message)
+        log "[Auth] status message = #{message.inspect}"
+
         message ||= 'error'
         liquid_assigns["auth_#{message}"] = "auth_#{message}"
       end
