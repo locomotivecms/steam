@@ -30,7 +30,7 @@ describe Locomotive::Steam::Server do
     end
 
     it 'lists all the pages from the site liquid drop' do
-      is_expected.to include('<!-- TEST -->About Us - Music - Store - Contact Us - Events - Basic page - A sample contest - Various uses of the with_scope tag - Grunge leaders - Tags - Unlisted pages - Archives - Account - All the pages - Emails - Layouts - Songs<!-- TEST -->')
+      is_expected.to include('<!-- TEST -->A sample contest - About Us - Account - All the pages - Archives - Basic page - Contact Us - Emails - Events - Grunge leaders - Layouts - Music - Songs - Store - Tags - Unlisted pages - Various uses of the with_scope tag<!-- TEST -->')
     end
 
     describe 'with wrapper' do
