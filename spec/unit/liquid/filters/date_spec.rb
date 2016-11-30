@@ -157,4 +157,215 @@ describe Locomotive::Steam::Liquid::Filters::Date do
 
   end
 
+  describe '#end_of_year' do
+
+    let(:input) { date }
+    subject { end_of_year(input) }
+
+    describe 'with a date' do
+      it { is_expected.to eq Date.parse('2007/12/31') }
+    end
+
+    describe 'with a datetime' do
+      let(:input) { date_time }
+      it { is_expected.to eq Time.zone.parse('2007/12/31 23:59:59.999999999') }
+    end
+
+    describe 'with a string' do
+      let(:input) { '2007/06/29' }
+      it { is_expected.to eq Time.zone.parse('2007/12/31 23:59:59.999999999') }
+    end
+
+    describe 'with a bad input' do
+      let(:input) { 'not a date' }
+      it { is_expected.to eq '' }
+    end
+  end
+
+  describe '#beginning_of_year' do
+
+    let(:input) { date }
+    subject { beginning_of_year(input) }
+
+    describe 'with a date' do
+      it { is_expected.to eq Date.parse('2007/01/01') }
+    end
+
+    describe 'with a datetime' do
+      let(:input) { date_time }
+      it { is_expected.to eq Time.zone.parse('2007/01/01 00:00:00.000000000') }
+    end
+
+    describe 'with a string' do
+      let(:input) { '2007/06/29' }
+      it { is_expected.to eq Time.zone.parse('2007/01/01 00:00:00.000000000') }
+    end
+
+    describe 'with a bad input' do
+      let(:input) { 'not a date' }
+      it { is_expected.to eq '' }
+    end
+  end
+
+  describe '#end_of_month' do
+
+    let(:input) { date }
+    subject { end_of_month(input) }
+
+    describe 'with a date' do
+      it { is_expected.to eq Date.parse('2007/06/30') }
+    end
+
+    describe 'with a datetime' do
+      let(:input) { date_time }
+      it { is_expected.to eq Time.zone.parse('2007/06/30 23:59:59.999999999') }
+    end
+
+    describe 'with a string' do
+      let(:input) { '2007/06/29' }
+      it { is_expected.to eq Time.zone.parse('2007/06/30 23:59:59.999999999') }
+    end
+
+    describe 'with a bad input' do
+      let(:input) { 'not a date' }
+      it { is_expected.to eq '' }
+    end
+  end
+
+  describe '#beginning_of_month' do
+
+    let(:input) { date }
+    subject { beginning_of_month(input) }
+
+    describe 'with a date' do
+      it { is_expected.to eq Date.parse('2007/06/01') }
+    end
+
+    describe 'with a datetime' do
+      let(:input) { date_time }
+      it { is_expected.to eq Time.zone.parse('2007/06/01 00:00:00.000000000') }
+    end
+
+    describe 'with a string' do
+      let(:input) { '2007/06/29' }
+      it { is_expected.to eq Time.zone.parse('2007/06/01 00:00:00.000000000') }
+    end
+
+    describe 'with a bad input' do
+      let(:input) { 'not a date' }
+      it { is_expected.to eq '' }
+    end
+  end
+
+  describe '#end_of_week' do
+
+    let(:input) { date }
+    subject { end_of_week(input) }
+
+    describe 'with a date' do
+      it { is_expected.to eq Date.parse('2007/07/01') }
+    end
+
+    describe 'with a datetime' do
+      let(:input) { date_time }
+      it { is_expected.to eq Time.zone.parse('2007/07/01 23:59:59.999999999') }
+    end
+
+    describe 'with a string' do
+      let(:input) { '2007/06/29' }
+      it { is_expected.to eq Time.zone.parse('2007/07/01 23:59:59.999999999') }
+    end
+
+    describe 'with a bad input' do
+      let(:input) { 'not a date' }
+      it { is_expected.to eq '' }
+    end
+  end
+
+  describe '#beginning_of_week' do
+
+    let(:input) { date }
+    subject { beginning_of_week(input) }
+
+    describe 'with a date' do
+      it { is_expected.to eq Date.parse('2007/06/25') }
+    end
+
+    describe 'with a datetime' do
+      let(:input) { date_time }
+      it { is_expected.to eq Time.zone.parse('2007/06/25 00:00:00.000000000') }
+    end
+
+    describe 'with a string' do
+      let(:input) { '2007/06/29' }
+      it { is_expected.to eq Time.zone.parse('2007/06/25 00:00:00.000000000') }
+    end
+
+    describe 'with a bad input' do
+      let(:input) { 'not a date' }
+      it { is_expected.to eq '' }
+    end
+  end
+
+  describe '#end_of_day' do
+
+    let(:input) { date }
+    subject { end_of_day(input) }
+
+    describe 'with a date' do
+      it { is_expected.to eq Time.zone.parse('2007/06/29 23:59:59.999999999') }
+    end
+
+    describe 'with a datetime' do
+      let(:input) { date_time }
+      it { is_expected.to eq Time.zone.parse('2007/06/29 23:59:59.999999999') }
+    end
+
+    describe 'with a string' do
+      let(:input) { '2007/06/29' }
+      it { is_expected.to eq Time.zone.parse('2007/06/29 23:59:59.999999999') }
+    end
+
+    describe 'with a bad input' do
+      let(:input) { 'not a date' }
+      it { is_expected.to eq '' }
+    end
+  end
+
+  describe '#beginning_of_day' do
+
+    let(:input) { date }
+    subject { beginning_of_day(input) }
+
+    describe 'with a date' do
+      it { is_expected.to eq Time.zone.parse('2007/06/29 00:00:00.000000000') }
+    end
+
+    describe 'with a datetime' do
+      let(:input) { date_time }
+      it { is_expected.to eq Time.zone.parse('2007/06/29 00:00:00.000000000') }
+    end
+
+    describe 'with a string' do
+      let(:input) { '2007/06/29' }
+      it { is_expected.to eq Time.zone.parse('2007/06/29 00:00:00.000000000') }
+    end
+
+    describe 'with a bad input' do
+      let(:input) { 'not a date' }
+      it { is_expected.to eq '' }
+    end
+  end
+
+  describe '#adjust_date' do
+
+    let(:input) { date }
+    let(:adjustment) { 1 }
+    let(:unit) { 'month' }
+    subject { adjust_date(input, adjustment, unit) }
+
+    it { is_expected.to eq Date.parse('2007/07/29') }
+
+  end
+
 end
