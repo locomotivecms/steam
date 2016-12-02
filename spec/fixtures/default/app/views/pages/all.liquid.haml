@@ -11,6 +11,6 @@ published: true
 {% endfor %}
 </ul>
 
-<!-- TEST -->{{ site.index.children | map: 'title' | join: " - " }}<!-- TEST -->
+<!-- TEST -->{{ site.index.children | map: 'title' | sort | join: " - " }}<!-- TEST -->
 
 {% endblock %}
