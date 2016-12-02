@@ -366,6 +366,14 @@ describe Locomotive::Steam::Liquid::Filters::Date do
 
     it { is_expected.to eq Date.parse('2007/07/29') }
 
+    context 'unit is not a valid value (month, year, day, etc.)' do
+
+      let(:unit) { 'foo' }
+
+      it { is_expected.to eq Date.parse('2007/06/29') }
+
+    end
+
   end
 
 end
