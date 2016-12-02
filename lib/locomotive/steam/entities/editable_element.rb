@@ -20,6 +20,10 @@ module Locomotive::Steam
       self[:source].blank? ? self.content : self[:source]
     end
 
+    def content
+      self[:source].blank? ? self[:content] : self[:source]
+    end
+
     def format
       self[:format] || 'html' # only editable_text elements
     end
