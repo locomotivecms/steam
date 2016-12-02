@@ -163,10 +163,12 @@ module Locomotive::Steam
         end
 
         def smtp
+          namespace = site.metafields[params[:auth_email_smtp_namespace]] || 'smtp'
+
           {
-            address:    params[:auth_email_smtp_address],
-            user_name:  params[:auth_email_smtp_user_name],
-            password:   params[:auth_email_smtp_password]
+            address:    namespace[params[:auth_email_smtp_address_alias] || 'address'],
+            user_name:  namespace[params[:auth_email_smtp_user_name_alias] || 'user_name'],
+            password:   namespace[params[:auth_email_smtp_password_alias] || 'password']
           }
         end
 
