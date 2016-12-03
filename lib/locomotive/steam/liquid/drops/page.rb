@@ -30,7 +30,14 @@ module Locomotive
           end
 
           def breadcrumbs
-            @breadcrumbs ||= liquify(*repository.ancestors_of(@_source))
+            return @breadcrumbs if @breadcrumbs
+
+            # remove the last one and replace it by the current instance
+            # which may have a valid reference to a content entry (if templatized)
+            pages = liquify(*repository.ancestors_of(@_source))
+            pages.pop
+
+            @breadcrumbs = pages + [self]
           end
 
           def children

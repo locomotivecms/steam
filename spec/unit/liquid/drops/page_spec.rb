@@ -46,13 +46,14 @@ describe Locomotive::Steam::Liquid::Drops::Page do
 
   describe '#breadcrumbs' do
 
-    let(:ancestors) { [instance_double('ParentPage', to_liquid: { 'title' => 'Parent' })] }
+    let(:ancestors) { [instance_double('ParentPage', to_liquid: { 'title' => 'Parent' }), page] }
 
     before do
+      expect(page).to receive(:to_liquid).and_return(drop)
       allow(services.repositories.page).to receive(:ancestors_of).with(page).and_return(ancestors)
     end
 
-    it { expect(subject.breadcrumbs).to eq([{ 'title' => 'Parent' }]) }
+    it { expect(subject.breadcrumbs.map { |p| p['title'] }).to eq(['Parent', 'Index']) }
 
   end
 
