@@ -6,7 +6,7 @@ module Locomotive
         class Snippet < ::Liquid::Include
 
           def parse(tokens)
-            ActiveSupport::Notifications.instrument("steam.parse.include", page: options[:page], name: @template_name)
+            ActiveSupport::Notifications.instrument('steam.parse.include', page: options[:page], name: @template_name)
 
             # look for editable elements
             name = evaluate_snippet_name
@@ -17,6 +17,8 @@ module Locomotive
 
           def render(context)
             @template_name = evaluate_snippet_name(context)
+            # @options doesn't include the page key if cache is on
+            @options[:page] = context.registers[:page]
             super
           end
 
