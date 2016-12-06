@@ -17,7 +17,7 @@ module Locomotive::Steam
       def _call
         load_authenticated_entry
 
-        auth_options = AuthOptions.new(params)
+        auth_options = AuthOptions.new(site, params)
 
         return unless auth_options.valid?
 
@@ -104,10 +104,10 @@ module Locomotive::Steam
 
         ACTIONS = %w(sign_in sign_out forgot_password reset_password)
 
-        attr_reader :params
+        attr_reader :site, :params
 
-        def initialize(params)
-          @params = params
+        def initialize(site, params)
+          @site, @params = site, params
         end
 
         def valid?
@@ -163,10 +163,17 @@ module Locomotive::Steam
         end
 
         def smtp
-          namespace = site.metafields[params[:auth_email_smtp_namespace]] || 'smtp'
+          name = params[:auth_email_smtp_namespace] || 'smtp'
+          namespace = site.metafields.try(:[], name)
+
+          if namespace.blank?
+            Locomotive::Common::Logger.error "[Auth] Missing SMTP settings in the Site metafields. Namespace: #{name}".light_red
+            return {}
+          end
 
           {
             address:    namespace[params[:auth_email_smtp_address_alias] || 'address'],
+            port:       namespace[params[:auth_email_smtp_port_alias] || 'port'],
             user_name:  namespace[params[:auth_email_smtp_user_name_alias] || 'user_name'],
             password:   namespace[params[:auth_email_smtp_password_alias] || 'password']
           }

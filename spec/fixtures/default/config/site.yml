@@ -32,3 +32,8 @@ metafields:
   github:
     api_url: https://api.github.com/repos/vmg/redcarpet/issues?state=closed
     expires_in: 42
+  smtp:
+    address: localhost
+    port: 25
+    user_name: user
+    password: password
