@@ -228,6 +228,16 @@ describe Locomotive::Steam::ContentEntry do
       it { is_expected.to eq({ en: 'Category #1', fr: 'Categorie #1' }) }
     end
 
+    context 'a json' do
+      let(:field_type)  { :json }
+      let(:value)       { '{"foo":42}' }
+      it { is_expected.to eq({ 'foo' => 42 }) }
+      context 'localized' do
+        let(:value) { build_i18n_field(en: { 'foo' => 42 }, fr: '[1, 2, 3]') }
+        it { expect(subject.translations).to eq('en' => { 'foo' => 42 }, 'fr' => [1, 2, 3]) }
+      end
+    end
+
   end
 
   def build_i18n_field(translations = {})
