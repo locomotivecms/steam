@@ -4,7 +4,7 @@ module Locomotive
     class AuthService
 
       MIN_PASSWORD_LENGTH   = 6
-      RESET_TOKEN_LIFETIME  = 6 * 3600 # 6 hours in seconds
+      RESET_TOKEN_LIFETIME  = 1 * 3600 # 6 hours in seconds
 
       attr_accessor_initialize :entries, :email_service
 
@@ -31,7 +31,7 @@ module Locomotive
         entry = entries.all(options.type, options.id_field => options.id).first
 
         if entry.nil?
-          :wrong_email
+          :"wrong_#{options.id_field}"
         else
           entries.update_decorated_entry(entry, {
             '_auth_reset_token'   => SecureRandom.hex,
@@ -43,7 +43,7 @@ module Locomotive
 
           send_reset_password_instructions(options, context)
 
-          :reset_password_instructions_sent
+          :"reset_#{options.password_field}_instructions_sent"
         end
       end
 
@@ -64,7 +64,7 @@ module Locomotive
               '_auth_reset_sent_at' => nil
             })
 
-            return [:password_reset, entry]
+            return [:"#{options.password_field}_reset", entry]
           end
         end
 
