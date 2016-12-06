@@ -29,6 +29,10 @@ module Locomotive::Steam::Middlewares
       @services ||= env.fetch('steam.services')
     end
 
+    def repositories
+      @repositories ||= services.repositories
+    end
+
     def request
       @request ||= env.fetch('steam.request')
     end
@@ -63,6 +67,21 @@ module Locomotive::Steam::Middlewares
 
     def live_editing?
       !!env['steam.live_editing']
+    end
+
+    def decorate_entry(entry)
+      return nil if entry.nil?
+      Locomotive::Steam::Decorators::I18nDecorator.new(entry, locale, default_locale)
+    end
+
+    def default_liquid_context
+      ::Liquid::Context.new({ 'site' => site.to_liquid }, {}, {
+        request:        request,
+        locale:         locale,
+        site:           site,
+        services:       services,
+        repositories:   services.repositories
+      }, true)
     end
 
   end

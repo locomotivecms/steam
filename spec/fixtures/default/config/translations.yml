@@ -1,3 +1,27 @@
 powered_by:
   en: Powered by
   fr: Propulsé par
+
+auth_wrong_credentials:
+  en: Your email and/or password are incorrect
+  fr: Votre email et/ou mot de passe sont incorrects
+
+auth_signed_out:
+  en: You've been signed out
+  fr: Vous avez été déconnecté(e)
+
+auth_wrong_email:
+  en: Your email is unknown
+  fr: Votre email est inconnu
+
+auth_reset_password_instructions_sent:
+  en: "The instructions for changing your password have been emailed to you"
+  fr: "Les instructions pour modifier votre mot de passe viennent de vous être envoyées"
+
+auth_invalid_token:
+  en: "The reset token is not valid anymore"
+  fr: "Le token de re-initialisation du mot de passe n'est plus valide"
+
+auth_password_too_short:
+  en: "Your password is too short"
+  fr: "Votre mot de passe est trop court"

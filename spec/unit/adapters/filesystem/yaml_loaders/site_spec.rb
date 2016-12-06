@@ -19,7 +19,7 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Site do
       subject { loader.load(nil).first[:metafields_schema] }
 
       it 'loads the full schema' do
-        expect(subject.count).to eq 3
+        expect(subject.count).to eq 4
       end
 
     end

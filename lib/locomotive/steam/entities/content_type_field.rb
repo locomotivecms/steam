@@ -66,6 +66,7 @@ module Locomotive::Steam
       when :belongs_to, :select then "#{name}_id"
       when :many_to_many        then "#{name.singularize}_ids"
       when :has_many            then nil
+      when :password            then nil
       else name
       end
     end

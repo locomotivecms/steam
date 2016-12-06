@@ -1,0 +1,15 @@
+---
+title: Account profile
+listed: false
+published: true
+handle: me
+---
+{% extends 'index' %}
+
+{% block content %}
+
+{% if current_account %}
+  <p>My name is {{ current_account.name }} and I'm logged in!</p>
+{% endif %}
+
+{% endblock %}

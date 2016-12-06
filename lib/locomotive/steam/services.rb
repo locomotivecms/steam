@@ -118,6 +118,10 @@ module Locomotive
           Steam::EmailService.new(page_finder, liquid_parser, asset_host, configuration.mode == :test)
         end
 
+        register :auth do
+          Steam::AuthService.new(content_entry, email)
+        end
+
         register :cache do
           Steam::NoCacheService.new
         end
