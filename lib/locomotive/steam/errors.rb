@@ -6,6 +6,10 @@ module Locomotive::Steam
   class ActionException < ::Exception
   end
 
+  class RedirectionException < ::Exception
+    alias url message
+  end
+
   class RenderError < ::StandardError
 
     LINES_RANGE = 10

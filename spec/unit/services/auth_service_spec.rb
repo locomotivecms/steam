@@ -71,6 +71,33 @@ describe Locomotive::Steam::AuthService do
       expect(liquid_context['reset_password_url']).to eq '/reset-password?auth_reset_token=42a'
     end
 
+    context 'no email template' do
+
+      let(:_auth_options) { default_auth_options.merge(email_handle: nil) }
+      let(:auth_options)  { instance_double('AuthOptions', _auth_options) }
+
+      it 'also sends the instructions by email with a default email template' do
+        allow(SecureRandom).to receive(:hex).and_return('42a')
+        entry = build_account('easyone', '42a')
+        expect(entries).to receive(:all).with('accounts', { 'email' => 'john@doe.net' }).and_return([entry])
+        expect(entries).to receive(:update_decorated_entry)
+        expect(emails).to receive(:send_email).with({
+          from:         'contact@acme.org',
+          to:           'john@doe.net',
+          subject:      'Instructions for changing your password',
+          body:         (<<-EMAIL
+Hi,
+To reset your password please follow the link below: /reset-password?auth_reset_token=42a.
+Thanks!
+EMAIL
+          ),
+          smtp:         {} }, liquid_context)
+        is_expected.to eq :reset_password_instructions_sent
+        expect(liquid_context['reset_password_url']).to eq '/reset-password?auth_reset_token=42a'
+      end
+
+    end
+
   end
 
   describe '#reset_password' do
