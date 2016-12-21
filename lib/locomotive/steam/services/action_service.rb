@@ -20,9 +20,10 @@ module Locomotive
         allEntries
         findEntry
         createEntry
-        updateEntry)
+        updateEntry
+        callAPI)
 
-      attr_accessor_initialize :site, :email, :content_entry_service
+      attr_accessor_initialize :site, :email, :content_entry_service, :api_service
 
       def run(script, params = {}, liquid_context)
         context = Duktape::Context.new
@@ -84,6 +85,10 @@ module Locomotive
 
       def update_entry_lambda(liquid_context)
         -> (type, id_or_slug, attributes) { content_entry_service.update(type, id_or_slug, attributes, true) }
+      end
+
+      def call_api_lambda(liquid_context)
+        -> (method, url, options) { api_service.consume(url, (options || {}).with_indifferent_access.merge(method: method)) }
       end
 
     end

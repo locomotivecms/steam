@@ -6,7 +6,8 @@ describe Locomotive::Steam::ActionService do
   let(:site)          { instance_double('Site', as_json: site_hash ) }
   let(:email_service) { instance_double('EmailService') }
   let(:entry_service) { instance_double('ContentService') }
-  let(:service)       { described_class.new(site, email_service, entry_service) }
+  let(:api_service)   { instance_double('ExternalAPIService') }
+  let(:service)       { described_class.new(site, email_service, entry_service, api_service) }
 
   describe '#run' do
 
@@ -161,6 +162,25 @@ describe Locomotive::Steam::ActionService do
             'to'      => 'estelle@locomotivecms.com',
             'from'    => 'did@locomotivecms.com',
             'subject' => 'Happy Easter' }, context)
+          subject
+        end
+
+      end
+
+      describe 'callAPI' do
+
+        let(:script) { "callAPI('POST', 'https://api.stripe.com/v1/charges', { username: 'abcdefghij', data: { token: '123456789' } })" }
+
+        it 'forwards the action to the external api service' do
+          expect(api_service).to receive(:consume).with(
+            'https://api.stripe.com/v1/charges', {
+              method: 'POST',
+              username: 'abcdefghij',
+              data: {
+                token: '123456789'
+              }
+            }
+          )
           subject
         end
 

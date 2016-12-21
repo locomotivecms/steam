@@ -63,7 +63,7 @@ module Locomotive
         end
 
         register :action do
-          Steam::ActionService.new(current_site, email, content_entry)
+          Steam::ActionService.new(current_site, email, content_entry, external_api)
         end
 
         register :content_entry do

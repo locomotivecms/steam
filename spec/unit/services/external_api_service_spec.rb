@@ -85,6 +85,28 @@ describe Locomotive::Steam::ExternalAPIService do
       end
     end
 
+    describe 'calls an API' do
+
+      let(:url)     { 'https://api.stripe.com/v1/charges' }
+      let(:options) {
+        {
+          method:   'POST',
+          data:     { email: 'John Doe', source: '1234567', plan: 'monthly' },
+          username: 'abcdefghijkl'
+        }
+      }
+
+      it do
+        expect(service.class).to receive(:post).with('/v1/charges', {
+          base_uri: 'https://api.stripe.com',
+          body: { email: 'John Doe', source: '1234567', plan: 'monthly' },
+          basic_auth: { username: 'abcdefghijkl', password: nil }
+        }).and_return(response)
+        subject
+      end
+
+    end
+
   end
 
 end
