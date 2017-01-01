@@ -13,7 +13,7 @@ nl:
 
   errors:
     messages:
-      blank: "kan ikke være blank"
+      blank: "mag niet leeg zijn"
 
   number:
     format:
