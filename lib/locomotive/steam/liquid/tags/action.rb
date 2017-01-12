@@ -38,7 +38,12 @@ module Locomotive
 
           def render(context)
             Locomotive::Common::Logger.info "[action] executing #{@description}"
-            service(context).run(super, safe_params(context), context)
+            begin
+              service(context).run(super, safe_params(context), context)
+            rescue Locomotive::Steam::ActionError => e
+              e.action = @description
+              raise e
+            end
             ''
           end
 

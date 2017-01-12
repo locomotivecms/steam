@@ -37,7 +37,12 @@ module Locomotive::Steam
 
       def parse_and_render_liquid
         document = services.liquid_parser.parse(page)
-        document.render(liquid_context)
+        begin
+          document.render(liquid_context)
+        rescue Locomotive::Steam::ParsingRenderingError => e
+          e.file = page.template_path if e.file.blank?
+          raise e
+        end
       end
 
       def liquid_context

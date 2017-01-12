@@ -36,11 +36,12 @@ module Locomotive
           }
         JS
 
-        # puts script.inspect # DEBUG
-
-        context.exec_string script
-
-        context.call_prop('locomotiveAction', site.as_json, params)
+        begin
+          context.exec_string script
+          context.call_prop('locomotiveAction', site.as_json, params)
+        rescue Exception => e
+          raise Locomotive::Steam::ActionError.new(e, script)
+        end
       end
 
       private

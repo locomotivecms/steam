@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Locomotive::Steam::RenderError do
+describe Locomotive::Steam::ParsingRenderingError do
 
   let(:message)   { 'Wrong syntax' }
   let(:file)      { 'template.liquid.haml' }
@@ -13,7 +13,7 @@ describe Locomotive::Steam::RenderError do
 
     subject { error.code_lines }
 
-    it { is_expected.to eq [[5, 'f'], [6, 'g'], [7, 'h'], [8, 'i'], [9, 'j'], [10, 'k'], [11, 'l'], [12, 'm'], [13, 'n'], [14, 'o'], [15, 'p']] }
+    it { is_expected.to eq [[5, 'e'], [6, 'f'], [7, 'g'], [8, 'h'], [9, 'i'], [10, 'j'], [11, 'k'], [12, 'l'], [13, 'm'], [14, 'n'], [15, 'o']] }
 
   end
 

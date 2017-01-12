@@ -12,6 +12,15 @@ describe Locomotive::Steam::Liquid::Tags::Action do
 
   subject { render_template(source, context) }
 
+  describe 'parsing' do
+
+    describe 'raises an error if the syntax is incorrect' do
+      let(:source) { '{% action %}{% endaction %}' }
+      it { expect { subject }.to raise_exception(Liquid::SyntaxError) }
+    end
+
+  end
+
   describe 'rendering' do
 
     it { is_expected.to eq '' }

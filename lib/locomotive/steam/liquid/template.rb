@@ -21,7 +21,9 @@ module Locomotive
 
           def parse(source, options = {})
             template = new
-            template.parse(source, options)
+            template.parse(source, options.merge({
+              line_numbers: true
+            }))
           end
 
         end

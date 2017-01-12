@@ -21,6 +21,30 @@ describe Locomotive::Steam::ActionService do
 
     it { is_expected.to eq 2.0 }
 
+    describe 'deal with exceptions' do
+
+      context 'wrong syntax' do
+
+        let(:script) { 'a +/ b * var;' }
+
+        it 'raises a meaningful exception' do
+          expect { subject }.to raise_error(Locomotive::Steam::ActionError, "eof or line terminator while parsing regexp (line 2)")
+        end
+
+      end
+
+      context 'other error' do
+
+        let(:script) { 'a.b' }
+
+        it 'raises a meaningful exception' do
+          expect { subject }.to raise_error(Locomotive::Steam::ActionError, "identifier 'a' undefined")
+        end
+
+      end
+
+    end
+
     describe 'with params' do
 
       let(:params)  { { 'foo' => 'hello' } }

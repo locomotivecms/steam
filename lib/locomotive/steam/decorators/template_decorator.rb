@@ -38,7 +38,7 @@ module Locomotive
           begin
             Haml::Engine.new(source).render
           rescue Haml::SyntaxError => e
-            raise Steam::RenderError.new(e.message, template_path, source, e.line, e.backtrace)
+            raise Steam::RenderError.new(e, template_path, source)
           end
         end
 

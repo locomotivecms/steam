@@ -22,7 +22,11 @@ module Locomotive
 
       def _parse(object, options = {})
         # Note: the template must not be parsed here
-        Locomotive::Steam::Liquid::Template.parse(object.liquid_source, options)
+        begin
+          Locomotive::Steam::Liquid::Template.parse(object.liquid_source, options)
+        rescue ::Liquid::Error => e
+          raise Locomotive::Steam::RenderError.new(e, object.template_path, object.liquid_source)
+        end
       end
 
     end

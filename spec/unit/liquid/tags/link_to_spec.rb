@@ -20,7 +20,7 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
     context 'unknown tag' do
 
       let(:source) { '{% link_to index %}{% endbar %}{% endlink_to %}' }
-      it { expect { subject }.to raise_error("Liquid syntax error: Unknown tag 'endbar'") }
+      it { expect { subject }.to raise_error("Liquid syntax error (line 1): Unknown tag 'endbar'") }
 
     end
 

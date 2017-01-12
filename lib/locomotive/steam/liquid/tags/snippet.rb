@@ -19,7 +19,13 @@ module Locomotive
             @template_name = evaluate_snippet_name(context)
             # @options doesn't include the page key if cache is on
             @options[:page] = context.registers[:page]
-            super
+
+            begin
+              super
+            rescue Locomotive::Steam::ParsingRenderingError => e
+              e.file = @template_name + ' [Snippet]'
+              raise e
+            end
           end
 
           private
