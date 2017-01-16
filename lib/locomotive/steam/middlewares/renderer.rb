@@ -67,7 +67,8 @@ module Locomotive::Steam
         _default_liquid_assigns.merge(
           _locale_liquid_assigns.merge(
             _request_liquid_assigns.merge(
-              _steam_liquid_assigns)))
+              _http_actions_liquid_assigns.merge(
+                _steam_liquid_assigns))))
       end
 
       def _default_liquid_assigns
@@ -108,10 +109,19 @@ module Locomotive::Steam
           'ip_address'  => request.ip,
           'mounted_on'  => mounted_on,
           'path'        => request.path,
-          'post?'       => request.post?,
           'referer'     => request.referer,
           'url'         => request.url,
           'user_agent'  => request.user_agent,
+        }
+      end
+
+      def _http_actions_liquid_assigns
+        {
+          'head?'    => request.head?,
+          'get?'    => request.get?,
+          'post?'   => request.post?,
+          'put?'    => request.put?,
+          'delete?' => request.delete?
         }
       end
 
