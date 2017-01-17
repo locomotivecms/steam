@@ -39,20 +39,13 @@ module Locomotive
             @context = context
 
             unless authenticated_entry = context["current_#{@content_type_slug.singularize}"]
-              raise Locomotive::Steam::RedirectionException.new(page_url)
+              services.page_redirection.redirect_to(@page_handle, locale)
             end
+
             ''
           end
 
           private
-
-          def page_url
-            if page = services.page_finder.by_handle(@page_handle)
-              services.url_builder.url_for(page, locale)
-            else
-
-            end
-          end
 
           def locale
             @context.registers[:locale]

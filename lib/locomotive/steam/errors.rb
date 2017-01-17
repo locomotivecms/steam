@@ -4,7 +4,14 @@ module Locomotive::Steam
   end
 
   class RedirectionException < ::Exception
-    alias url message
+
+    attr_reader :url
+
+    def initialize(url)
+      @url = url
+      super("Redirect to #{url}")
+    end
+
   end
 
   class ParsingRenderingError < ::StandardError

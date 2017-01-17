@@ -63,7 +63,7 @@ module Locomotive
         end
 
         register :action do
-          Steam::ActionService.new(current_site, email, content_entry, external_api)
+          Steam::ActionService.new(current_site, email, content_entry: content_entry, api: external_api, redirection: page_redirection)
         end
 
         register :content_entry do
@@ -80,6 +80,10 @@ module Locomotive
 
         register :url_builder do
           Steam::UrlBuilderService.new(current_site, locale, request)
+        end
+
+        register :page_redirection do
+          Steam::PageRedirectionService.new(page_finder, url_builder)
         end
 
         register :theme_asset_url do

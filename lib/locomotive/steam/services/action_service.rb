@@ -11,6 +11,8 @@ module Locomotive
 
     class ActionService
 
+      SERVICES = %w(content_entry api redirection)
+
       BUILT_IN_FUNCTIONS = %w(
         getProp
         setProp
@@ -21,9 +23,10 @@ module Locomotive
         findEntry
         createEntry
         updateEntry
-        callAPI)
+        callAPI
+        redirectTo)
 
-      attr_accessor_initialize :site, :email, :content_entry_service, :api_service
+      attr_accessor_initialize :site, :email, :services
 
       def run(script, params = {}, liquid_context)
         context = Duktape::Context.new
@@ -39,12 +42,18 @@ module Locomotive
         begin
           context.exec_string script
           context.call_prop('locomotiveAction', site.as_json, params)
+        rescue Locomotive::Steam::RedirectionException
+          raise
         rescue Exception => e
           raise Locomotive::Steam::ActionError.new(e, script)
         end
       end
 
       private
+
+      SERVICES.each do |name|
+        define_method(:"#{name}_service") { self.services[:"#{name}"] }
+      end
 
       def define_built_in_functions(context, liquid_context)
         BUILT_IN_FUNCTIONS.each do |name|
@@ -90,6 +99,10 @@ module Locomotive
 
       def call_api_lambda(liquid_context)
         -> (method, url, options) { api_service.consume(url, (options || {}).with_indifferent_access.merge(method: method)) }
+      end
+
+      def redirect_to_lambda(liquid_context)
+        -> (page_handle, locale = nil) { redirection_service.redirect_to(page_handle, locale) }
       end
 
     end

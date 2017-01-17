@@ -7,7 +7,8 @@ describe Locomotive::Steam::ActionService do
   let(:email_service) { instance_double('EmailService') }
   let(:entry_service) { instance_double('ContentService') }
   let(:api_service)   { instance_double('ExternalAPIService') }
-  let(:service)       { described_class.new(site, email_service, entry_service, api_service) }
+  let(:redirection_service) { instance_double('PageRedirectionService') }
+  let(:service)       { described_class.new(site, email_service, content_entry: entry_service, api: api_service, redirection: redirection_service) }
 
   describe '#run' do
 
@@ -206,6 +207,17 @@ describe Locomotive::Steam::ActionService do
             }
           )
           subject
+        end
+
+      end
+
+      describe 'redirectTo' do
+
+        let(:script) { "redirectTo('about-us');" }
+
+        it 'stops the rendering process and redirects the user to another page' do
+          expect(redirection_service).to receive(:redirect_to).with('about-us', nil).and_raise(Locomotive::Steam::RedirectionException.new('/about-us'))
+          expect { subject }.to raise_exception(Locomotive::Steam::RedirectionException, 'Redirect to /about-us')
         end
 
       end
