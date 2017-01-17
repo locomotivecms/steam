@@ -106,6 +106,7 @@ module Locomotive::Steam
         {
           'base_url'    => request.base_url,
           'fullpath'    => request.fullpath,
+          'http_method' => request.request_method,
           'ip_address'  => request.ip,
           'mounted_on'  => mounted_on,
           'path'        => request.path,

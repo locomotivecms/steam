@@ -37,6 +37,16 @@ describe Locomotive::Steam::Liquid::Tags::Snippet do
 
     it { is_expected.to eq 'Locomotive built by NoCoffee' }
 
+    context 'rendering error (action) found in the snippet' do
+
+      let(:snippet) { instance_double('Snippet', template: nil, :template= => nil, liquid_source: '{% action "Hello world" %}a.b(+}{% endaction %}') }
+
+      it 'raises ParsingRenderingError' do
+        expect { subject }.to raise_exception(Locomotive::Steam::ParsingRenderingError)
+      end
+
+    end
+
   end
 
 end
