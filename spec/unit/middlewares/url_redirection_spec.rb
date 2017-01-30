@@ -7,7 +7,7 @@ require_relative '../../../lib/locomotive/steam/middlewares/url_redirection'
 describe Locomotive::Steam::Middlewares::UrlRedirection do
 
   let(:redirections)    { [] }
-  let(:site)            { instance_double('Site', url_redirections: redirections) }
+  let(:site)            { instance_double('Site', _id: 42, url_redirections: redirections) }
   let(:url)             { 'http://models.example.com' }
   let(:locomotive_path) { nil }
   let(:app)             { ->(env) { [200, env, 'app'] } }
@@ -51,6 +51,25 @@ describe Locomotive::Steam::Middlewares::UrlRedirection do
         let(:url) { 'http://models.example.com/content.HOME.HOME.WELCOME.DEU.GER.html' }
 
         it { is_expected.to eq [301, '/bar'] }
+
+      end
+
+      describe 'let the parent app know about the redirection when it happens' do
+
+        let(:events) { [] }
+
+        before {
+          @subscriber = ActiveSupport::Notifications.subscribe('steam.serve.url_redirection') do |name, start, finish, id, payload|
+            events << payload[:url]
+          end
+        }
+
+        after { ActiveSupport::Notifications.unsubscribe(@subscriber) }
+
+        it 'emits an event' do
+          subject
+          expect(events).to eq ['/foo.php']
+        end
 
       end
 
