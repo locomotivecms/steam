@@ -53,6 +53,21 @@ describe Locomotive::Steam::AssetHostService do
 
   end
 
+  describe 'the host with prefix' do
+
+    let(:host) { 'http://somewhere.net/other/' }
+    let(:source) { '/sites/42/assets/1/banner.png' }
+    it { is_expected.to eq 'http://somewhere.net/other/sites/42/assets/1/banner.png' }
+
+    describe 'also with https' do
+
+      let(:host) { 'https://somewhere.net/other/' }
+      it { is_expected.to eq 'https://somewhere.net/other/sites/42/assets/1/banner.png' }
+
+    end
+
+  end
+
   describe 'the host is a string' do
 
     let(:host) { 'http://assets.locomotivecms.com' }
