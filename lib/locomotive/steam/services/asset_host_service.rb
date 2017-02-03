@@ -18,12 +18,17 @@ module Locomotive
 
         return add_timestamp_suffix(source, timestamp) if source =~ Steam::IsHTTP
 
-        url = self.host ? URI.join(host, source).to_s : source
+        url = self.host ? build_url(host, source) : source
 
         add_timestamp_suffix(url, timestamp)
       end
 
       private
+
+      def build_url(host, source)
+        clean_source = source.sub(/\A^\//, '')
+        URI.join(host, clean_source).to_s
+      end
 
       def build_host(host, request, site)
         if host
