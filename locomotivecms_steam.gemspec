@@ -34,11 +34,12 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'moneta',                 '~> 0.8.0'
   spec.add_dependency 'rack_csrf',              '~> 2.5.0'
 
-  spec.add_dependency 'sprockets',              '~> 3.5.2'
-  spec.add_dependency 'sass',                   '~> 3.4.21'
+  spec.add_dependency 'sprockets',              '~> 3.7.1'
+  spec.add_dependency 'sass',                   '~> 3.4.23'
+  spec.add_dependency 'uglifier',               '~> 3.0.4'
   spec.add_dependency 'coffee-script',          '~> 2.4.1'
   spec.add_dependency 'compass',                '~> 1.0.3'
-  spec.add_dependency 'autoprefixer-rails',     '~> 6.3.3.1'
+  spec.add_dependency 'autoprefixer-rails',     '~> 6.7.2'
 
   spec.add_dependency 'kramdown',               '~> 1.10.0'
   spec.add_dependency 'RedCloth',               '~> 4.3.2'
