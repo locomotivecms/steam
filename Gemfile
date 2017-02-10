@@ -8,9 +8,9 @@ group :development do
   # gem 'locomotivecms_models', '~> 0.0.1', path: '../models'
   # gem 'locomotivecms_models', '0.0.1.pre.alpha'
   # gem 'locomotivecms-liquid', path: '/Users/didier/Documents/LocomotiveCMS/gems/liquid'
+  # gem 'duktape', path: '/Users/didier/Documents/NoCoffee/ProjectsX/duktape.rb'
   # gem 'thin'
   gem 'puma'
-  gem 'yui-compressor',     '~> 0.12.0'
   gem 'haml',               '~> 4.0.6'
 
   gem 'rack-mini-profiler', '~> 0.10.1'

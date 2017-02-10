@@ -18,21 +18,21 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler',    '~> 1.7'
   spec.add_development_dependency 'rake',       '~> 10.4.2'
 
-  spec.add_development_dependency 'mongo',      '~> 2.2.7'
-  spec.add_development_dependency 'origin',     '~> 2.2.0'
+  spec.add_development_dependency 'mongo',      '~> 2.4.1'
+  spec.add_development_dependency 'origin',     '~> 2.3.0'
 
-  spec.add_dependency 'nokogiri',               '~> 1.6.8'
-  spec.add_dependency 'sanitize',               '~> 4.0.1'
+  spec.add_dependency 'nokogiri',               '~> 1.7.0.1'
+  spec.add_dependency 'sanitize',               '~> 4.4.0'
   spec.add_dependency 'morphine',               '~> 0.1.1'
-  spec.add_dependency 'httparty',               '~> 0.13.6'
+  spec.add_dependency 'httparty',               '~> 0.14.0'
   spec.add_dependency 'chronic',                '~> 0.10.2'
   spec.add_dependency 'bcrypt',                 '~> 3.1.11'
 
   spec.add_dependency 'rack-rewrite',           '~> 1.5.1'
-  spec.add_dependency 'rack-cache',             '~> 1.6.1'
-  spec.add_dependency 'dragonfly',              '~> 1.0.12'
+  spec.add_dependency 'rack-cache',             '~> 1.7.0'
+  spec.add_dependency 'rack_csrf',              '~> 2.6.0'
+  spec.add_dependency 'dragonfly',              '~> 1.1.1'
   spec.add_dependency 'moneta',                 '~> 0.8.0'
-  spec.add_dependency 'rack_csrf',              '~> 2.5.0'
 
   spec.add_dependency 'sprockets',              '~> 3.7.1'
   spec.add_dependency 'sass',                   '~> 3.4.23'
@@ -41,7 +41,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'compass',                '~> 1.0.3'
   spec.add_dependency 'autoprefixer-rails',     '~> 6.7.2'
 
-  spec.add_dependency 'kramdown',               '~> 1.10.0'
+  spec.add_dependency 'kramdown',               '~> 1.13.2'
   spec.add_dependency 'RedCloth',               '~> 4.3.2'
   spec.add_dependency 'mimetype-fu',            '~> 0.1.2'
   spec.add_dependency 'mime-types',             '~> 2.6.1'
