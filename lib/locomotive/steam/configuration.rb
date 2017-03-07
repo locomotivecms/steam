@@ -65,7 +65,7 @@ module Locomotive
       attr_accessor :asset_path
 
       # If java is installed and if this option is enabled,
-      # then YUI::JavaScriptCompressor and YUI::CssCompressor are used to minify the css and the javascript.
+      # then Uglifier and Sass are used to minify the javascript and the css.
       #
       # default: false
       #
