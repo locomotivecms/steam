@@ -28,7 +28,7 @@ module Locomotive::Steam
 
       def build_pages_to_xml
         page_repository.published.map do |page|
-          next if page.index? || page.not_found? || page.layout?
+          next if page.index? || page.not_found? || page.layout? || !page.listed?
 
           build_page_xml(page)
         end.flatten.join.strip
