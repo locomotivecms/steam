@@ -53,6 +53,10 @@ module Locomotive::Steam::Middlewares
       @liquid_assigns ||= env.fetch('steam.liquid_assigns')
     end
 
+    def locales
+      site.locales
+    end
+
     def default_locale
       site.default_locale
     end

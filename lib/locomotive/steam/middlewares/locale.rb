@@ -28,7 +28,7 @@ module Locomotive::Steam
       protected
 
       def extract_locale
-        _locale = params[:locale] || default_locale
+        _locale = locale_from_params || default_locale
         _path   = request.path_info
 
         if _path =~ /^\/(#{site.locales.join('|')})+(\/|$)/
@@ -42,6 +42,10 @@ module Locomotive::Steam
 
         env['steam.path']   = _path
         env['steam.locale'] = services.locale = _locale
+      end
+
+      def locale_from_params
+        locales.include?(params[:locale]) ? params[:locale] : nil
       end
 
     end
