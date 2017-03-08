@@ -28,7 +28,7 @@ module Locomotive::Steam
 
       def build_pages_to_xml
         page_repository.published.map do |page|
-          next if page.index? || page.not_found? || page.layout? || !page.listed?
+          next if page.index? || page.not_found? || page.layout? || (!page.templatized? && !page.listed?)
 
           build_page_xml(page)
         end.flatten.join.strip
@@ -56,6 +56,8 @@ module Locomotive::Steam
         return nil unless build_templatized_page_xml?(page, content_type, locale)
 
         repositories.content_entry.with(content_type).all.map do |entry|
+          next unless entry.visible? # only visible content entry
+
           _entry = Locomotive::Steam::Decorators::I18nDecorator.new(entry, locale)
 
           next if _entry._label.blank? # should be translated
