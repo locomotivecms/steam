@@ -98,7 +98,7 @@ module Locomotive
       end
 
       def call_api_lambda(liquid_context)
-        -> (method, url, options) { api_service.consume(url, (options || {}).with_indifferent_access.merge(method: method)) }
+        -> (method, url, options) { api_service.consume(url, (options || {}).with_indifferent_access.merge(method: method), true) }
       end
 
       def redirect_to_lambda(liquid_context)

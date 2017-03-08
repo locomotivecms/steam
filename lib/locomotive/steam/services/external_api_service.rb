@@ -16,7 +16,7 @@ module Locomotive
       # - header_auth
       # - with_user_agent
       #
-      def consume(url, options = {})
+      def consume(url, options = {}, with_status = false)
         base_uri, path = extract_base_uri_and_path(url)
 
         method = (options[:method] || 'GET').to_s.downcase
@@ -24,7 +24,11 @@ module Locomotive
         _options = build_httpparty_options(options, method)
         _options[:base_uri] = base_uri
 
-        perform_request_to(method, path, _options)
+        if with_status
+          verbose_perform_request_to(method, path, _options)
+        else
+          perform_request_to(method, path, _options)
+        end
       end
 
       private
@@ -74,6 +78,17 @@ module Locomotive
           Locomotive::Common::Logger.error "[WebService] consumed [#{method.to_s.upcase}] #{path}, #{options.inspect}, response = #{response.inspect}"
           nil
         end
+      end
+
+      def verbose_perform_request_to(method, path, options)
+        response        = self.class.send(method.to_sym, path, options)
+        parsed_response = response.parsed_response
+        {
+          status: response.code,
+          data:   HashConverter.to_underscore(parsed_response)
+        }
+      rescue Exception => e
+        { status: nil, error: e.message }
       end
 
     end

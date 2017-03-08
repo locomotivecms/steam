@@ -204,7 +204,7 @@ describe Locomotive::Steam::ActionService do
               data: {
                 token: '123456789'
               }
-            }
+            }, true
           )
           subject
         end

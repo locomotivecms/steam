@@ -15,6 +15,15 @@ describe Locomotive::Steam::ExternalAPIService do
 
     it { expect(subject.size).to_not eq 0 }
 
+    context 'returns the status too' do
+
+      subject { service.consume(url, options, true) }
+
+      it { expect(subject[:status]).to eq 200 }
+      it { expect(subject[:data].size).to_not eq 0 }
+
+    end
+
   end
 
 end
