@@ -29,7 +29,7 @@ describe Locomotive::Steam::ActionService do
         let(:script) { 'a +/ b * var;' }
 
         it 'raises a meaningful exception' do
-          expect { subject }.to raise_error(Locomotive::Steam::ActionError, "eof or line terminator while parsing regexp (line 2)")
+          expect { subject }.to raise_error(Locomotive::Steam::ActionError, "eof or line terminator in regexp (line 2)")
         end
 
       end
