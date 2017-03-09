@@ -61,4 +61,4 @@ see the list in the issues section.
 
 ## License
 
-Copyright (c) 2016 NoCoffee. MIT Licensed, see LICENSE for details.
+Copyright (c) 2017 NoCoffee. MIT Licensed, see LICENSE for details.
