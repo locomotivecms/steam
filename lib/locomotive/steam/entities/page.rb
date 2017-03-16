@@ -33,6 +33,7 @@ module Locomotive::Steam
     def listed?; !!listed; end
     def published?; !!published; end
     def templatized?; !!templatized; end
+    def redirect?; redirect.nil? ? !redirect_url.blank? : redirect; end
 
     def content_type_id
       self.target_klass_name =~ Locomotive::Steam::CONTENT_ENTRY_ENGINE_CLASS_NAME
