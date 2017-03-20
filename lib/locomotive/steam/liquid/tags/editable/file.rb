@@ -55,7 +55,28 @@ module Locomotive
             def apply_transformation(url, context)
               # resize image with the image_resizer service?
               if (format = @element_options[:resize]).present?
-                url = context.registers[:services].image_resizer.resize(url, format) || url
+                options = []
+
+                @element_options.each do |k, v|
+                  options << case k.to_sym
+                  when :quality
+                    "-quality #{v}"
+                  when :optimize # Shortcut helper to set quality, progressive and strip
+                    "-quality #{v} -strip -interlace Plane"
+                  when :auto_orient
+                    "-auto-orient" if v.downcase == "true"
+                  when :strip
+                    "-strip" if v.downcase == "true"
+                  when :progressive
+                    "-interlace Plane" if v.downcase == "true"
+                  when :filters
+                    v
+                  else
+                    next
+                  end
+                end
+
+                url = context.registers[:services].image_resizer.resize(url, format, options.join(' ')) || url
               end
 
               # in the live editing mode, tag all the images with their editable path (block + slug)

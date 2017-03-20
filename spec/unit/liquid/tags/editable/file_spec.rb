@@ -75,6 +75,8 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
     let(:services)    { Locomotive::Steam::Services.build_instance }
     let(:context)     { ::Liquid::Context.new({}, {}, { page: page, services: services, live_editing: live_editing }) }
 
+    before { @context = context }
+
     before { allow(services).to receive(:current_site).and_return(nil) }
 
     before { allow(services.editable_element).to receive(:find).and_return(element) }
@@ -141,6 +143,62 @@ describe Locomotive::Steam::Liquid::Tags::Editable::File do
 
         it { is_expected.to eq '<span class="locomotive-block-anchor" data-element-id="header" style="visibility: hidden"></span>/steam/dynamic/W1siZnUiLCJodHRwOi8vd3d3LnBsYWNlaG9sZC5pdC81MDB4NTAwIl0sWyJwIiwidGh1bWIiLCI1MDB4MTAwIyJdXQ/1c79f4581f33aae4/500x500?editable-path=header--banner' }
 
+      end
+    end
+
+    context 'additional image filters' do
+      let(:geometry) { '30x40#' }
+      let(:input) { 'http://www.placehold.it/500x500' }
+      let(:source) { "{%% block header %%}{%% editable_file banner, hint: 'some text', resize: '#{geometry}', %{filter} %%}#{input}{%% endeditable_file %%}{%% endblock %%}" }
+
+      before do
+        @context.registers[:services].image_resizer = instance_spy('ImageResizerService')
+        @image_resizer = @context.registers[:services].image_resizer
+      end
+
+      it 'handles quality' do
+        render_template(source % {filter: "quality: 70"}, context, options)
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-quality 70')
+      end
+
+      it 'handles auto_orient' do
+        render_template(source % {filter: "auto_orient: true"}, context, options)
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-auto-orient')
+      end
+
+      it "doesn't auto_orient if false" do
+        render_template(source % {filter: "auto_orient: false"}, context, options)
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '')
+      end
+
+      it 'handles optimize' do
+        render_template(source % {filter: "optimize: 75"}, context, options)
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-quality 75 -strip -interlace Plane')
+      end
+
+      it 'handles multiple and custom filters' do
+        render_template(source % {filter: "quality: 60, filters: '-sepia-tone 80%'"}, context, options)
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-quality 60 -sepia-tone 80%')
+      end
+
+      it 'handles progressive display' do
+        render_template(source % {filter: "progressive: true"}, context, options)
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-interlace Plane')
+      end
+
+      it 'doesn\'t progressive display if false' do
+        render_template(source % {filter: "progressive: false"}, context, options)
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '')
+      end
+
+      it 'handles strip' do
+        render_template(source % {filter: "strip: true"}, context, options)
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '-strip')
+      end
+
+      it 'doesn\'t strip if false' do
+        render_template(source % {filter: "strip: false"}, context, options)
+        expect(@image_resizer).to have_received(:resize).with(input, geometry, '')
       end
 
     end
