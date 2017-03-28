@@ -68,6 +68,25 @@ describe Locomotive::Steam::ImageResizerService do
 
       end
 
+      describe 'nil file' do
+        let(:geometry) { '' }
+        let(:input)  { nil }
+
+        it { is_expected.to eq nil }
+      end
+
+      describe 'nil hash file' do
+        let(:input) { { 'url' => nil } }
+
+        it { is_expected.to eq nil }
+      end
+
+      describe 'nil object file' do
+        let(:input)  { instance_double('UploadedFile', url: nil) }
+
+        it { is_expected.to eq nil }
+      end
+
       describe 'additional filters' do
         let(:input)  { '/sites/42/theme/images/banner.png' }
         let (:filters) { [{"quality" => 70, "auto_orient" => true, "filters" => "-swirl 180"}] }
