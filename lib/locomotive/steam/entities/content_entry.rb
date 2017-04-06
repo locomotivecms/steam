@@ -80,7 +80,12 @@ module Locomotive::Steam
       hash = {}
 
       # default attributes
-      _attributes = %i(_id _slug _label _visible _position content_type_slug created_at updated_at)
+      _attributes = %i(_id _slug _visible _position content_type_slug created_at updated_at)
+
+      # stack level too deep raised if the _label field is an association (belongs_to, ...etc)
+      unless content_type.fields_by_name[content_type.label_field_name].is_relationship?
+        _attributes << :_label
+      end
 
       # dynamic attributes
       _attributes += content_type.persisted_field_names

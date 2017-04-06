@@ -72,7 +72,7 @@ describe Locomotive::Steam::ContentEntry do
 
   describe '#to_hash' do
 
-    let(:fields)      { [instance_double('TitleField', name: :title, type: :string), instance_double('PictureField', name: :picture, type: :file, localized: true)] }
+    let(:fields)      { [instance_double('TitleField', name: :title, type: :string, is_relationship?: false), instance_double('PictureField', name: :picture, type: :file, localized: true)] }
     let(:attributes)  { { id: 42, title: 'Hello world', _slug: 'hello-world', picture: Locomotive::Steam::Models::I18nField.new(:picture, fr: 'foo.png', en: 'bar.png'), custom_fields_recipe: ['hello', 'world'], _type: 'Entry' } }
 
     subject { content_entry.to_hash }
@@ -101,7 +101,7 @@ describe Locomotive::Steam::ContentEntry do
 
   describe '#as_json' do
 
-    let(:fields)      { [instance_double('TitleField', name: :title, type: :string), instance_double('PictureField', name: :picture, type: :file, localized: true)] }
+    let(:fields)      { [instance_double('TitleField', name: :title, type: :string, is_relationship?: false), instance_double('PictureField', name: :picture, type: :file, localized: true)] }
     let(:attributes)  { { id: 42, title: 'Hello world', _slug: 'hello-world', picture: Locomotive::Steam::Models::I18nField.new(:picture, fr: 'foo.png', en: 'bar.png'), custom_fields_recipe: ['hello', 'world'], _type: 'Entry' } }
     let(:decorated)   { Locomotive::Steam::Decorators::I18nDecorator.new(content_entry, :fr, :en) }
 
