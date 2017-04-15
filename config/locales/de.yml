@@ -35,10 +35,6 @@ de:
     abbr_month_names: [~, Jan., Feb., Mär., Apr., Mai, Juni, Juli, Aug., Sept., Okt., Nov., Dez.]
     order: [ day, month, year ]
 
-  pagination:
-    previous: "&laquo; Zurück"
-    next: "Vor &raquo;"
-
   time:
     formats:
       default: "%d %B %Y %H:%M"
