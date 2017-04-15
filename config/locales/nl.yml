@@ -4,12 +4,15 @@ nl:
       en: Engels
       de: Duits
       fr: Frans
+      pl: Pools
       pt-BR: "Braziliaans Portugees"
       it: Italiaans
       nl: Nederlands
       nb: Noors
+      es: Spaans
       ru: Russisch
       et: Estlands
+      el: Grieks
 
   errors:
     messages:

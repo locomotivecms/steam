@@ -1,0 +1,154 @@
+el:
+  locomotive:
+    locales:
+      en: Αγγλικά
+      de: Γερμανικά
+      fr: Γαλλικά
+      pl: Πολωνικά
+      pt-BR: "Πορτογαλικά Βραζιλίας"
+      it: Ιταλικά
+      nl: Ολλανδικά
+      nb: Νορβηγικά
+      es: Ισπανικά
+      ru: Ρώσικα
+      et: Εσθονιακά
+      el: Ελληνικά
+
+  errors:
+    messages:
+      blank: "Δεν μπορεί να είναι κενό"
+
+  pagination:
+    previous: "&laquo; Προηγούμενο"
+    next: "Επόμενο &raquo;"
+
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%e-%b"
+      long: "%e-%B-%Y"
+      long_ordinal: "%e de %B de %Y"
+      only_day: "%e"
+
+    day_names: [Κυριακή, Δευτέρα, Τρίτη, Τετάρτη, Πέμπτη, Παρασκευή, Σάββατο]
+    abbr_day_names: [Κυρ, Δε, Τρ, Τετ, Πεμ, Παρ, Σαβ]
+    month_names: [~, Ιανουάριος, Φεβρουάριος, Μάρτιος, Απρίλιος, Μάιος, Ιούνιος, Ιούλιος, Αύγουστος, Σεπτέπμβριος, Οκτώβριος, Νοέμβριος, Δεκέμβριος]
+    abbr_month_names: [~, Ιαν., Φεβ., Μαρ., Απρ., Μάι., Ιούν., Ιούλ., Αυγ., Σεπτ., Οκτ., Νοε., Δεκ.]
+    order: [ day, month, year ]
+
+  time:
+    formats:
+      default: "%d %B %Y %H:%M"
+      time: "%H:%M"
+      short: "%d %b %H:%M"
+      long: "%A %d %B %Y %H:%M:%S %Z"
+      long_ordinal: "%A %d %B %Y %H:%M:%S %Z"
+      only_second: "%S"
+    am: "πμ"
+    pm: "μμ"
+
+  datetime:
+    distance_in_words:
+      half_a_minute: 'μισό λεπτό'
+      less_than_x_seconds:
+        one: 'λιγότερο από ένα δευτερόλεπτο'
+        other: 'λιγότερο από %{count} δευτερόλεπτα'
+      x_seconds:
+        one: 'ένα δευτερόλεπτο'
+        other: '%{count} δευτερόλεπτα'
+      less_than_x_minutes:
+        one: 'λιγότερο από ένα λεπτό'
+        other: 'λιγότερο από %{count} λεπτά'
+      x_minutes:
+        one: 'ένα λεπτό'
+        other: '%{count} λεπτά'
+      about_x_hours:
+        one: 'περίπου μία ώρα'
+        other: 'περίπου %{count} ώρες'
+      x_days:
+        one: 'μία μέρα'
+        other: '%{count} μέρες'
+      about_x_months:
+        one: 'περίπου ένας μήνας'
+        other: 'περίπου %{count} μήνες'
+      x_months:
+        one: 'ένας μήνας'
+        other: '%{count} μήνες'
+      almost_x_years:
+        one: 'σχεδόν ένα έτος'
+        other: 'σχεδόν %{count} χρόνια'
+      about_x_years:
+        one: 'περίπου ένα έτος'
+        other: 'περίπου %{count} χρόνια'
+      over_x_years:
+        one: 'πάνω από ένα έτος'
+        other: 'πάνω από %{count} χρόνια'
+    prompts:
+      second: "δευτερόλεπτο"
+      minute: "λεπτό"
+      hour: "ώρα"
+      day: "μέρα"
+      month: "μήνας"
+      year: "έτος"
+
+  number:
+    format:
+      precision: 2
+      separator: '.'
+      delimiter: ','
+    currency:
+      format:
+        unit: '€'
+        format: '%n %u'
+        separator: "."
+        delimiter: ","
+        precision: 2
+    percentage:
+      format:
+        delimiter: ""
+    precision:
+      format:
+        delimiter: ""
+    human:
+      format:
+        delimiter: ""
+        precision: 1
+        significant: true
+        strip_insignificant_zeros: true
+      storage_units:
+        # Storage units output formatting.
+        # %u is the storage unit, %n is the number (default: 2 MB)
+        format: "%n %u"
+        units:
+          byte:
+            one: "Byte"
+            other: "Bytes"
+          kb: "KB"
+          mb: "MB"
+          gb: "GB"
+          tb: "TB"
+      decimal_units:
+        format: "%n %u"
+        units:
+          unit: ""
+          thousand: χίλια
+          million:
+            one: εκατομμύριο
+            others: εκατομμύρια
+          billion:
+            one: δισεκατομμύριο
+            others: δισεκατομμύρια
+          trillion:
+            one: τρισεκατομμύριο
+            others: τρισεκατομμύρια
+          quadrillion:
+            one: τετράκις εκατομμύριο
+            others: τετράκις εκατομμύρια
+
+  support:
+    array:
+      sentence_connector: 'και'
+      skip_last_comma: true
+      words_connector: ", "
+      two_words_connector: " και "
+      last_word_connector: " και "
