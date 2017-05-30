@@ -98,4 +98,19 @@ describe Locomotive::Steam::Site do
 
   end
 
+  describe '#asset_host' do
+
+    subject { site.asset_host }
+
+    it { is_expected.to eq nil }
+
+    context 'not blank' do
+
+      let(:attributes) { { asset_host: 'http://asset.dev' } }
+      it { is_expected.to eq 'http://asset.dev' }
+
+    end
+
+  end
+
 end
