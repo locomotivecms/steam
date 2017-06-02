@@ -35,7 +35,29 @@ module Locomotive::Steam
       def redirect_url
         return false if site.url_redirections.nil? || site.url_redirections.size == 0
 
-        site.url_redirections.to_h[requested_url]
+        redirections_hash = site.url_redirections.to_h
+
+        redirections_hash[requested_url] || find_dynamic_url_redirection(redirections_hash)
+      end
+
+      def find_dynamic_url_redirection(redirections_hash)
+        number_of_segments = requested_url.split('/').size
+
+        # attempt to find the first dynamic route which matches
+        redirections_hash.each do |route, redirection|
+          # a little bit of optimization
+          next unless route.include?(':') && route.split('/').size == number_of_segments
+
+          _regexp = route.gsub(/:([^\/]+)/, "(?<\\1>[^\/]+)").gsub('/', '\/')
+
+          if matches = Regexp.new(_regexp).match(requested_url)
+            matches.names.each { |n| redirection.gsub!(":#{n}", matches[n]) }
+
+            return redirection
+          end
+        end
+
+        false
       end
 
     end

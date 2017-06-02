@@ -54,6 +54,15 @@ describe Locomotive::Steam::Middlewares::UrlRedirection do
 
       end
 
+      describe 'url matching a pattern' do
+
+        let(:redirections) { [['/old_images/:file', '/images/old/:file']] }
+        let(:url) { 'http://models.example.com/old_images/cat.png' }
+
+        it { is_expected.to eq [301, '/images/old/cat.png'] }
+
+      end
+
       describe 'let the parent app know about the redirection when it happens' do
 
         let(:events) { [] }
