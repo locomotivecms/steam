@@ -83,7 +83,7 @@ module Locomotive::Steam
           end
 
           def slugify(id, label, dataset, locale = nil)
-            base, index = label.permalink(false), nil
+            base, index = label.to_s.permalink(false), nil
             _slugify = -> (i) { [base, i].compact.join('-') }
 
             while !is_slug_unique?(id, _slugify.call(index), dataset, locale)

@@ -39,6 +39,19 @@ describe Locomotive::Steam::ContentEntryRepository do
 
     end
 
+    describe 'including also the not visible entries' do
+
+      let(:entries) { [
+        { content_type_id: 1, _position: 0, _label: 'Update #1', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General' },
+        { content_type_id: 1, _position: 1, _label: 'Update #2 [HIDDEN]', title: { fr: 'Mise a jour #1' }, text: { en: 'added some free stuff', fr: 'phrase FR' }, date: '2009/05/12', category: 'General', _visible: false }
+      ] }
+
+      let(:conditions) { { _visible: nil } }
+
+      it { expect(subject.size).to eq 2 }
+
+    end
+
   end
 
   describe '#build' do

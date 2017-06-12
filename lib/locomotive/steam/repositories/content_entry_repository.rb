@@ -137,7 +137,15 @@ module Locomotive
       def prepare_conditions(*conditions)
         _conditions = Conditions.new(conditions.first, self.content_type.fields, simple_clone).prepare
 
-        super({ _visible: true }, _conditions)
+        super(_conditions).tap do |final_conditions|
+          # skip the default visible condition (_visible: true) by just passing nil
+          skip_visible = final_conditions.stringify_keys.fetch('_visible', true).nil?
+
+          # clean it
+          final_conditions.delete(:_visible) || final_conditions.delete('_visible')
+
+          final_conditions[:_visible] = true unless skip_visible
+        end
       end
 
       def simple_clone
