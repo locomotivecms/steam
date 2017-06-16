@@ -8,6 +8,76 @@ describe 'Authentication' do
     run_server
   end
 
+  describe 'sign up action' do
+
+    it 'renders the form' do
+      get '/account/sign-up'
+      expect(last_response.body).to include '/account/sign-up'
+    end
+
+    describe 'press the sign up button' do
+
+      let(:params) { {
+        auth_action:          'sign_up',
+        auth_content_type:    'accounts',
+        auth_id_field:        'email',
+        auth_password_field:  'password',
+        auth_callback:        '/account/me',
+        auth_entry: {
+          name:                   'Chris Cornell',
+          email:                  'chris@soundgarden.band',
+          password:               'easyone',
+          password_confirmation:  'easyone'
+        }
+      } }
+
+      it 'redirects to the callback' do
+        sign_up(params)
+        expect(last_response.status).to eq 301
+        expect(last_response.location).to eq '/account/me'
+      end
+
+      it 'displays the profile page as described in the params' do
+        params[:auth_entry][:email] = 'chris.cornell@soundgarden.band'
+        sign_up(params, true)
+        expect(last_response.body).to include "My name is Chris Cornell and I'm logged in!"
+      end
+
+      context 'wrong parameters' do
+
+        let(:params) { {
+          auth_action:          'sign_up',
+          auth_content_type:    'accounts',
+          auth_id_field:        'email',
+          auth_password_field:  'password',
+          auth_callback:        '/account/me',
+          auth_entry: {
+            name:                   'Chris Cornell',
+            email:                  'chris@soundgarden.band',
+            password:               'easyone',
+            password_confirmation:  'easyone2'
+          }
+        } }
+
+        it 'renders the sign up page with an error message' do
+          sign_up(params)
+          expect(last_response.status).to eq 200
+          expect(last_response.body).to include '/account/sign-up'
+          expect(last_response.body).to include "Your password doesn't match the confirmation"
+        end
+
+      end
+
+      def sign_up(params, follow_redirect = false)
+        post '/account/sign-up', params
+        follow_redirect! if follow_redirect
+        last_response
+      end
+
+    end
+
+  end
+
   describe 'sign in action' do
 
     it 'renders the form' do

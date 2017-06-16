@@ -2,6 +2,7 @@ module Locomotive::Steam
   module Middlewares
 
     # Process all the authentication actions:
+    # - sign up
     # - sign in
     # - new reset password
     # - reset password
@@ -25,6 +26,21 @@ module Locomotive::Steam
       end
 
       private
+
+      def sign_up(options)
+        return if authenticated?
+
+        status, entry = services.auth.sign_up(options, default_liquid_context)
+
+        if status == :entry_created
+          store_authenticated(entry)
+          redirect_to options.callback || mounted_on
+        else
+          liquid_assigns['auth_entry'] = entry
+        end
+
+        append_message(status)
+      end
 
       def sign_in(options)
         return if authenticated?
@@ -102,7 +118,7 @@ module Locomotive::Steam
 
       class AuthOptions
 
-        ACTIONS = %w(sign_in sign_out forgot_password reset_password)
+        ACTIONS = %w(sign_up sign_in sign_out forgot_password reset_password)
 
         attr_reader :site, :params
 
@@ -131,7 +147,7 @@ module Locomotive::Steam
         end
 
         def id
-          params[:auth_id]
+          params[:auth_entry].try(:[], id_field) || params[:auth_id]
         end
 
         def password
@@ -160,6 +176,14 @@ module Locomotive::Steam
 
         def email_handle
           params[:auth_email_handle]
+        end
+
+        def disable_email
+          [1, 'true', true].include?(params[:auth_disable_email])
+        end
+
+        def entry
+          params[:auth_entry]
         end
 
         def smtp

@@ -84,7 +84,7 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::ContentEntry do
       end
 
       it 'stores the size of the file in multiple locales' do
-        expect(subject[1][:cover_size]).to eq('en' => 14768, 'fr' => 165883)
+        expect(subject[1][:cover_size]).to eq('en' => 14768, 'fr' => 165883, 'nb' => 165883)
       end
 
 

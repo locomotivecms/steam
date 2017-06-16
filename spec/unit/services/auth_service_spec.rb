@@ -2,9 +2,10 @@ require 'spec_helper'
 
 describe Locomotive::Steam::AuthService do
 
-  let(:entries) { instance_double('ContentService') }
-  let(:emails)  { instance_double('EmailService') }
-  let(:service) { described_class.new(entries, emails) }
+  let(:entries)         { instance_double('ContentService') }
+  let(:emails)          { instance_double('EmailService') }
+  let(:service)         { described_class.new(entries, emails) }
+  let(:liquid_context)  { {} }
 
   let(:default_auth_options) { {
     type:               'accounts',
@@ -21,6 +22,126 @@ describe Locomotive::Steam::AuthService do
   } }
 
   let(:auth_options) { instance_double('AuthOptions', default_auth_options) }
+
+  describe '#sign_up' do
+
+    let(:errors)                { [] }
+    let(:entry_attributes)      { { fullname: 'Chris Cornell', band: 'Soundgarden', email: 'chris@soundgarden.band', password: 'easyone', password_confirmation:  'easyone' } }
+    let(:entry)                 { instance_double('Account', errors: errors) }
+    let(:email_disabled)        { false }
+    let(:default_auth_options)  { {
+      type:                   'accounts',
+      id_field:               'email',
+      id:                     'chris@soundgarden.band',
+      password_field:         'password',
+      from:                   'no-reply@acme.org',
+      subject:                'Your account has been created',
+      email_handle:           'account-created',
+      smtp:                   {},
+      disable_email:          email_disabled,
+      entry:                  entry_attributes
+    } }
+
+    subject { service.sign_up(auth_options, liquid_context) }
+
+    context 'the entry has errors' do
+
+      let(:errors) { [:invalid_password] }
+
+      it 'returns invalid_entry and the entry' do
+        expect(entries).to receive(:create).with('accounts', {
+          fullname:               'Chris Cornell',
+          band:                   'Soundgarden',
+          email:                  'chris@soundgarden.band',
+          password:               'easyone',
+          password_confirmation:  'easyone'
+        }).and_return(entry)
+        is_expected.to eq [:invalid_entry, entry]
+      end
+
+    end
+
+    it "returns both :created and the entry if it was able to create it (+ send email)" do
+      expect(entries).to receive(:create).with('accounts', {
+        fullname:               'Chris Cornell',
+        band:                   'Soundgarden',
+        email:                  'chris@soundgarden.band',
+        password:               'easyone',
+        password_confirmation:  'easyone'
+      }).and_return(entry)
+      expect(emails).to receive(:send_email).with({
+        from:         'no-reply@acme.org',
+        to:           'chris@soundgarden.band',
+        subject:      'Your account has been created',
+        page_handle:  'account-created',
+        smtp:         {} }, liquid_context)
+      is_expected.to eq [:entry_created, entry]
+    end
+
+    context 'email is disabled' do
+
+      let(:email_disabled) { true }
+
+      it "doesn't send a notification email" do
+        allow(entries).to receive(:create).and_return(entry)
+        expect(emails).to_not receive(:send_email)
+        is_expected.to eq [:entry_created, entry]
+      end
+
+    end
+
+    describe Locomotive::Steam::AuthService::ContentEntryAuth do
+
+      let(:repository)  { instance_double('FieldRepository', all: nil, required: []) }
+      let(:type)        { instance_double('ContentType', slug: 'accounts', label_field_name: :title, fields: repository, fields_by_name: {}) }
+      let(:attributes)  { { password: 'easyone', password_confirmation: 'easyone' } }
+      let(:content_entry) { Locomotive::Steam::ContentEntry.new(attributes).tap { |e| e.content_type = type } }
+
+      before { content_entry.extend(described_class) }
+
+      describe '#valid?' do
+
+        before { content_entry[:_password_field] = 'password' }
+
+        subject { content_entry.valid? }
+
+        it { is_expected.to eq true }
+
+        it 'encrypts the password since there is no error' do
+          expect(BCrypt::Password).to receive(:create).with('easyone').and_return('42a')
+          subject
+          expect(content_entry[:password_hash]).to eq '42a'
+          expect(content_entry.attributes[:password]).to eq nil
+          expect(content_entry.attributes[:password_confirmation]).to eq nil
+        end
+
+        context 'the password is less than 6 characters' do
+
+          let(:attributes) { { password: 'easy', password_confirmation: 'easy' } }
+
+          it 'returns false' do
+            is_expected.to eq false
+            expect(content_entry.errors[:password]).to eq([:password_too_short])
+          end
+
+        end
+
+        context "the password doesn't match the confirmation" do
+
+          let(:attributes) { { password: 'easyone', password_confirmation: 'oneeasy' } }
+
+          it 'returns false' do
+            is_expected.to eq false
+            expect(content_entry.errors[:password]).to eq([:password_different_from_confirmation])
+          end
+
+        end
+
+      end
+
+    end
+
+  end
 
   describe '#sign_in' do
 
@@ -47,8 +168,6 @@ describe Locomotive::Steam::AuthService do
 
   describe '#forgot_password' do
 
-    let(:liquid_context) { {} }
-
     subject { service.forgot_password(auth_options, liquid_context) }
 
     it 'returns :wrong_email if no entry matches the email' do
@@ -57,7 +176,6 @@ describe Locomotive::Steam::AuthService do
     end
 
     it 'sends the instructions by email if an entry matches the email' do
-      allow(SecureRandom).to receive(:hex).and_return('42a')
       entry = build_account('easyone', '42a')
       expect(entries).to receive(:all).with('accounts', { 'email' => 'john@doe.net' }).and_return([entry])
       expect(entries).to receive(:update_decorated_entry)
@@ -77,7 +195,6 @@ describe Locomotive::Steam::AuthService do
       let(:auth_options)  { instance_double('AuthOptions', _auth_options) }
 
       it 'also sends the instructions by email with a default email template' do
-        allow(SecureRandom).to receive(:hex).and_return('42a')
         entry = build_account('easyone', '42a')
         expect(entries).to receive(:all).with('accounts', { 'email' => 'john@doe.net' }).and_return([entry])
         expect(entries).to receive(:update_decorated_entry)

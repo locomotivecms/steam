@@ -45,7 +45,7 @@ describe Locomotive::Steam::ContentEntryService do
 
       let(:site_id)   { mongodb_site_id }
       let(:adapter)   { Locomotive::Steam::MongoDBAdapter.new(database: 'steam_test', hosts: ['127.0.0.1:27017']) }
-      let(:entry_id)  { BSON::ObjectId.from_string('5829ffa087f6435971756881') }
+      let(:entry_id)  { BSON::ObjectId.from_string('5943b4dd87f6430cf23b814d') }
 
       describe '#create' do
         subject { service.create('messages', { name: 'John', email: 'john@doe.net', message: 'Hello world!' }) }

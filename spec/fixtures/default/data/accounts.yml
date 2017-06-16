@@ -3,7 +3,7 @@
     password: 'easyone'
 
 - "Jane":
-    email: 'john@doe.net'
+    email: 'jane@doe.net'
     password: 'anotherone'
     _auth_reset_token: '420000000000000'
     _auth_reset_sent_at: '2020-01-01T15:00:00.000Z'

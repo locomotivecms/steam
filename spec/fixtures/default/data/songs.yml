@@ -11,6 +11,7 @@
     cover:
       en: /samples/asset_collections/cover.jpg
       fr: /samples/photo_2.jpg
+      nb: /samples/photo_2.jpg
     band: pearl-jam
 - "Song #3":
     duration: "6:28"

@@ -12,6 +12,22 @@ module Locomotive
         entries.find(type, id)
       end
 
+      def sign_up(options, context)
+        entry = entries.create(options.type, options.entry) do |_entry|
+          _entry.extend(ContentEntryAuth)
+          _entry[:_password_field] = options.password_field.to_sym
+        end
+
+        if entry.errors.empty?
+          ActiveSupport::Notifications.instrument('steam.auth.signup', entry: entry)
+
+          context[options.type.singularize] = entry
+          send_welcome_email(options, context)
+        end
+
+        [entry.errors.empty? ? :entry_created : :invalid_entry, entry]
+      end
+
       def sign_in(options)
         entry = entries.all(options.type, options.id_field => options.id).first
 
@@ -73,17 +89,31 @@ module Locomotive
 
       private
 
+      def send_welcome_email(options, context)
+        return if options.disable_email
+
+        send_email options, context, <<-EMAIL
+Hi,
+You've been successfully registered.
+Thanks!
+EMAIL
+      end
+
       def send_reset_password_instructions(options, context)
+        send_email options, context, <<-EMAIL
+Hi,
+To reset your password please follow the link below: #{context['reset_password_url']}.
+Thanks!
+EMAIL
+      end
+
+      def send_email(options, context, default_body)
         email_options = { from: options.from, to: options.id, subject: options.subject, smtp: options.smtp }
 
         if options.email_handle
           email_options[:page_handle] = options.email_handle
         else
-          email_options[:body] = <<-EMAIL
-Hi,
-To reset your password please follow the link below: #{context['reset_password_url']}.
-Thanks!
-EMAIL
+          email_options[:body] = default_body
         end
 
         email_service.send_email(email_options, context)
@@ -97,6 +127,43 @@ EMAIL
         res = 0
         b.each_byte { |byte| res |= byte ^ l.shift }
         res == 0
+      end
+
+      # Module inject to the content entry to enable
+      # related authentication methods.
+      #
+      module ContentEntryAuth
+
+        def valid?
+          super
+
+          name          = self[:_password_field]
+          password      = self[name]
+          confirmation  = self["#{name}_confirmation"]
+
+          if password.to_s.size < Locomotive::Steam::AuthService::MIN_PASSWORD_LENGTH
+            self.errors.add(name, :password_too_short)
+          end
+
+          if !password.blank? && password != confirmation
+            self.errors.add(name, :password_different_from_confirmation)
+          end
+
+          set_password(password) if self.errors.empty?
+
+          self.errors.empty?
+        end
+
+        private
+
+        def set_password(password)
+          self[:"#{self[:_password_field]}_hash"] = BCrypt::Password.create(password)
+
+          name = self.attributes.delete(:_password_field)
+
+          self.attributes.delete_if { |_name| _name == name || _name == "#{name}_confirmation" }
+        end
+
       end
 
     end

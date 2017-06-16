@@ -15,7 +15,7 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Translation do
     subject { loader.load(scope) }
 
     it 'tests various stuff' do
-      expect(subject.size).to eq 7
+      expect(subject.size).to eq 8
       expect(subject.first[:key]).to eq('powered_by')
       expect(subject.first[:values]).to eq({ 'en' => 'Powered by', 'fr' => 'Propulsé par' })
     end

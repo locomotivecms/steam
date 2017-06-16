@@ -13,7 +13,7 @@ describe Locomotive::Steam::TranslationRepository do
 
     describe '#all' do
       subject { repository.all }
-      it { expect(subject.size).to eq 7 }
+      it { expect(subject.size).to eq 8 }
     end
 
     describe '#by_key' do

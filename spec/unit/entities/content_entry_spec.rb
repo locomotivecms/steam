@@ -116,6 +116,15 @@ describe Locomotive::Steam::ContentEntry do
 
     it { expect(subject['picture']['url']).to eq '/assets/foo.png' }
 
+    context 'includes a non dynamic attribute' do
+
+      it "doesn't add it to the output" do
+        content_entry['author'] = 'John Doe'
+        expect(subject['author']).to eq nil
+      end
+
+    end
+
   end
 
   describe 'dynamic attributes' do

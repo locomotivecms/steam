@@ -28,6 +28,9 @@ module Locomotive
       def create(type_slug, attributes, as_json = false)
         with_repository(type_slug) do |_repository|
           entry = _repository.build(clean_attributes(attributes))
+
+          yield(entry) if block_given?
+
           decorated_entry = i18n_decorate { entry }
 
           if validate(_repository, decorated_entry)
