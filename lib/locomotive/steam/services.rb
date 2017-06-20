@@ -123,7 +123,7 @@ module Locomotive
         end
 
         register :auth do
-          Steam::AuthService.new(content_entry, email)
+          Steam::AuthService.new(current_site, content_entry, email)
         end
 
         register :cache do

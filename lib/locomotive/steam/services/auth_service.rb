@@ -6,7 +6,7 @@ module Locomotive
       MIN_PASSWORD_LENGTH   = 6
       RESET_TOKEN_LIFETIME  = 1 * 3600 # 6 hours in seconds
 
-      attr_accessor_initialize :entries, :email_service
+      attr_accessor_initialize :site, :entries, :email_service
 
       def find_authenticated_resource(type, id)
         entries.find(type, id)
@@ -19,7 +19,7 @@ module Locomotive
         end
 
         if entry.errors.empty?
-          ActiveSupport::Notifications.instrument('steam.auth.signup', entry: entry)
+          ActiveSupport::Notifications.instrument('steam.auth.signup', site: site, entry: entry)
 
           context[options.type.singularize] = entry
           send_welcome_email(options, context)
