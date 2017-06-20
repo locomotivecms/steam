@@ -133,7 +133,7 @@ module Locomotive
         # fields marked as unique
         content_type_repository.look_for_unique_fields(entry.content_type).each do |name, _|
           if _repository.exists?(name => entry.send(name))
-            entry.errors.add(name, :unique)
+            entry.errors.add(name, :taken)
           end
         end
 

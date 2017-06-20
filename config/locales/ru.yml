@@ -15,7 +15,14 @@ ru:
 
   errors:
     messages:
-      blank: "can not be blank"
+      blank: не может быть пустым
+      taken: уже существует
+      confirmation: не совпадает со значением поля %{attribute}
+      too_short:
+        few: недостаточной длины (не может быть меньше %{count} символов)
+        many: недостаточной длины (не может быть меньше %{count} символов)
+        one: недостаточной длины (не может быть меньше %{count} символа)
+        other: недостаточной длины (не может быть меньше %{count} символа)
 
   pagination:
     previous: "&laquo; Предыдущая"

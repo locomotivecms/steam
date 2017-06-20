@@ -52,6 +52,10 @@ module Locomotive::Steam
       (self[:label_field_name] || fields.first.name).to_sym
     end
 
+    def field_label_of(name)
+      fields_by_name[name].label.downcase
+    end
+
     def order_by
       name = self[:order_by] == 'manually' ? '_position' : self[:order_by]
 

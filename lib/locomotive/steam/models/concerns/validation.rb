@@ -36,16 +36,15 @@ module Locomotive
               add(attribute, :blank) if value.blank?
             end
 
-            def add(attribute, message)
-              (@messages[attribute] ||= []) << generate_message(message)
+            def add(attribute, message, options = {})
+              (@messages[attribute] ||= []) << generate_message(message, options)
             end
 
-            def generate_message(message)
-              case message
-              when :blank, :unique then I18n.t(message, scope: 'errors.messages')
-              else
-                message
-              end
+            def generate_message(message, options = {})
+              I18n.t(message, {
+                scope:    'errors.messages',
+                default:  message
+              }.merge(options))
             end
 
           end

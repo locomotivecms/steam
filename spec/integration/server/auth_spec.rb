@@ -63,7 +63,7 @@ describe 'Authentication' do
           sign_up(params)
           expect(last_response.status).to eq 200
           expect(last_response.body).to include '/account/sign-up'
-          expect(last_response.body).to include "Your password doesn't match the confirmation"
+          expect(last_response.body).to include "doesn't match password"
         end
 
       end

@@ -16,6 +16,11 @@ it:
   errors:
     messages:
       blank: "non può essere lasciato in bianco"
+      taken: è già presente
+      confirmation: non coincide con %{attribute}
+      too_short:
+        one: è troppo corto (il minimo è 1 carattere)
+        other: è troppo corto (il minimo è %{count} caratteri)
 
   pagination:
     previous: "&laquo; Precedente"

@@ -16,6 +16,13 @@ pl:
   errors:
     messages:
       blank: "nie może być puste"
+      taken: zostało już zajęte
+      confirmation: nie zgadza się z polem %{attribute}
+      too_short:
+        few: jest za krótkie (przynajmniej %{count} znaki)
+        many: jest za krótkie (przynajmniej %{count} znaków)
+        one: jest za krótkie (przynajmniej jeden znak)
+        other: jest za krótkie (przynajmniej %{count} znaków)
 
   date:
     formats:

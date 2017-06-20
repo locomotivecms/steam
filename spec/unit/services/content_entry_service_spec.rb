@@ -48,7 +48,7 @@ describe Locomotive::Steam::ContentEntryService do
 
         before do
           allow(entry_repository).to receive(:exists?).with(title: 'Hello world').and_return(true)
-          expect(entry.errors).to receive(:add).with(:title, :unique).and_return(true)
+          expect(entry.errors).to receive(:add).with(:title, :taken).and_return(true)
         end
 
         it { is_expected.to eq false }

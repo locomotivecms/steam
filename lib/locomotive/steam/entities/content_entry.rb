@@ -64,6 +64,10 @@ module Locomotive::Steam
       self[content_type.label_field_name]
     end
 
+    def _label_of(name)
+      content_type.field_label_of(name)
+    end
+
     def localized_attributes
       @localized_attributes.tap do |hash|
         if hash && hash.has_key?(content_type.label_field_name.to_sym)

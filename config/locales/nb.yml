@@ -20,6 +20,9 @@ nb:
   errors:
     messages:
       blank: "kan ikke være blank"
+      taken: er allerede i bruk
+      confirmation: er ikke lik %{attribute}
+      too_short: er for kort (minimum %{count} tegn)
 
   pagination:
     previous: "&laquo; Previous"

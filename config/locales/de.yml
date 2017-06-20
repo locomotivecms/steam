@@ -16,6 +16,11 @@ de:
   errors:
     messages:
       blank: "leer"
+      taken: ist bereits vergeben
+      confirmation: stimmt nicht mit %{attribute} überein
+      too_short:
+        one: ist zu kurz (weniger als 1 Zeichen)
+        other: ist zu kurz (weniger als %{count} Zeichen)
 
   pagination:
     previous: "&laquo; Zurück"

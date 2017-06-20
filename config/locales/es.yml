@@ -16,6 +16,11 @@ es:
   errors:
     messages:
       blank: "no puede estar en blanco"
+      taken: ya está en uso
+      confirmation: no coincide
+      too_short:
+        one: "es demasiado corto (1 carácter mínimo)"
+        other: "es demasiado corto (%{count} caracteres mínimo)"
 
   pagination:
     previous: "&laquo; Anterior"

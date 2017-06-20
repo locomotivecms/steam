@@ -121,18 +121,19 @@ describe Locomotive::Steam::AuthService do
 
           it 'returns false' do
             is_expected.to eq false
-            expect(content_entry.errors[:password]).to eq([:password_too_short])
+            expect(content_entry.errors[:password]).to eq(['is too short (minimum is 6 characters)'])
           end
 
         end
 
         context "the password doesn't match the confirmation" do
 
-          let(:attributes) { { password: 'easyone', password_confirmation: 'oneeasy' } }
+          let(:type)        { instance_double('ContentType', slug: 'accounts', label_field_name: :title, fields: repository, fields_by_name: {}, field_label_of: 'password') }
+          let(:attributes)  { { password: 'easyone', password_confirmation: 'oneeasy' } }
 
           it 'returns false' do
             is_expected.to eq false
-            expect(content_entry.errors[:password]).to eq([:password_different_from_confirmation])
+            expect(content_entry.errors[:password_confirmation]).to eq(["doesn't match password"])
           end
 
         end

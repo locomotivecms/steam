@@ -34,12 +34,15 @@ handle: sign_up
     <div class="form-group">
       <label for="auth-password">Password</label>
       {% if auth_entry.errors.password.size > 0 %}
-      <span class="inline-error">{{ 'auth_' | append: auth_entry.errors.password.first | translate }}</span>
+      <span class="inline-error">{{ auth_entry.errors.password.first }}</span>
       {% endif %}
       <input type="password" name="auth_entry[password]" class="form-control" id="auth-password" placeholder="Password">
     </div>
     <div class="form-group">
       <label for="auth-password">Password confirmation</label>
+      {% if auth_entry.errors.password_confirmation.size > 0 %}
+      <span class="inline-error">{{ auth_entry.errors.password_confirmation.first }}</span>
+      {% endif %}
       <input type="password" name="auth_entry[password_confirmation]" class="form-control" id="auth-password" placeholder="Password confirmation">
     </div>
     <button type="submit" class="btn btn-default">Create account</button>

@@ -17,7 +17,11 @@ fr:
   errors:
     messages:
       blank: "doit être rempli(e)"
-      unique: "doit être unique"
+      taken: n'est pas disponible
+      confirmation: "ne concorde pas avec %{attribute}"
+      too_short:
+        one: est trop court (au moins un caractère)
+        other: est trop court (au moins %{count} caractères)
 
   pagination:
     previous: "&laquo; Précédent"

@@ -142,11 +142,11 @@ EMAIL
           confirmation  = self["#{name}_confirmation"]
 
           if password.to_s.size < Locomotive::Steam::AuthService::MIN_PASSWORD_LENGTH
-            self.errors.add(name, :password_too_short)
+            self.errors.add(name, :too_short, count: Locomotive::Steam::AuthService::MIN_PASSWORD_LENGTH)
           end
 
           if !password.blank? && password != confirmation
-            self.errors.add(name, :password_different_from_confirmation)
+            self.errors.add("#{name}_confirmation", :confirmation, attribute: self._label_of(name))
           end
 
           set_password(password) if self.errors.empty?

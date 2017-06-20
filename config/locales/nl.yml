@@ -14,6 +14,11 @@ nl:
   errors:
     messages:
       blank: "mag niet leeg zijn"
+      taken: is al in gebruik
+      confirmation: komt niet overeen met %{attribute}
+      too_short:
+        one: is te kort (minimaal %{count} teken)
+        other: is te kort (minimaal %{count} tekens)
 
   number:
     format:

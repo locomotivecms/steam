@@ -16,6 +16,11 @@ pt-BR:
   errors:
     messages:
       blank: "não pode ficar em branco"
+      taken: já está em uso
+      confirmation: não é igual a %{attribute}
+      too_short:
+        one: 'é muito curto (mínimo: 1 caracter)'
+        other: 'é muito curto (mínimo: %{count} caracteres)'
 
   date:
     formats:

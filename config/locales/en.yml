@@ -27,7 +27,11 @@ en:
       session_assign: "Syntax Error in 'session_assign' - Valid syntax: session_assign [var] = [source]"
     messages:
       blank: "can't be blank"
-      unique: "must be unique"
+      taken: "must be unique"
+      confirmation: doesn't match %{attribute}
+      too_short:
+        one: is too short (minimum is 1 character)
+        other: is too short (minimum is %{count} characters)
 
   pagination:
     previous: "&laquo; Previous"

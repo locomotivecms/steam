@@ -30,6 +30,13 @@ describe Locomotive::Steam::ContentType do
 
   end
 
+  describe '#field_label_of' do
+
+    subject { content_type.field_label_of(:title) }
+    it { is_expected.to eq 'title' }
+
+  end
+
   describe '#localized_names' do
 
     subject { content_type.localized_names }

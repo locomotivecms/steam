@@ -16,6 +16,9 @@ et:
   errors:
     messages:
       blank: "tühi"
+      taken: on juba võetud
+      confirmation: ei vasta kinnitusele
+      too_short: on liiga lühike (miinimum on %{count} tähemärki)
 
   pagination:
     previous: "&laquo; Eelmine"
