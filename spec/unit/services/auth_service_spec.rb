@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Locomotive::Steam::AuthService do
 
   let(:site)            { instance_double('CurrentSite') }
-  let(:entries)         { instance_double('ContentService') }
+  let(:entries)         { instance_double('ContentService', locale: 'en') }
   let(:emails)          { instance_double('EmailService') }
   let(:service)         { described_class.new(site, entries, emails) }
   let(:liquid_context)  { {} }

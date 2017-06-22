@@ -30,7 +30,7 @@ module Locomotive::Steam
       def sign_up(options)
         return if authenticated?
 
-        status, entry = services.auth.sign_up(options, default_liquid_context)
+        status, entry = services.auth.sign_up(options, default_liquid_context, request)
 
         if status == :entry_created
           store_authenticated(entry)

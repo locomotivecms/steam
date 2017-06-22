@@ -12,14 +12,19 @@ module Locomotive
         entries.find(type, id)
       end
 
-      def sign_up(options, context)
+      def sign_up(options, context, request = nil)
         entry = entries.create(options.type, options.entry) do |_entry|
           _entry.extend(ContentEntryAuth)
           _entry[:_password_field] = options.password_field.to_sym
         end
 
         if entry.errors.empty?
-          ActiveSupport::Notifications.instrument('steam.auth.signup', site: site, entry: entry)
+          ActiveSupport::Notifications.instrument('steam.auth.signup',
+            site:     site,
+            entry:    entry,
+            locale:   entries.locale,
+            request:  request
+          )
 
           context[options.type.singularize] = entry
           send_welcome_email(options, context)
