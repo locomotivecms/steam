@@ -179,7 +179,7 @@ module Locomotive::Steam
         end
 
         def disable_email
-          [1, 'true', true].include?(params[:auth_disable_email])
+          [1, '1', 'true', true].include?(params[:auth_disable_email])
         end
 
         def entry
