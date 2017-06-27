@@ -4,7 +4,7 @@ describe Locomotive::Steam::Liquid::Drops::Site do
 
   let(:services)  { Locomotive::Steam::Services.build_instance }
   let(:context)   { ::Liquid::Context.new({}, {}, { services: services }) }
-  let(:site)      { instance_double('Site', name: 'Locomotive', domains: ['acme.org'], seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description', localized_attributes: {}) }
+  let(:site)      { instance_double('Site', name: 'Locomotive', domains: ['acme.org'], seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description', localized_attributes: {}, asset_host: 'http://asset.dev') }
   let(:drop)      { described_class.new(site).tap { |d| d.context = context } }
 
   subject { drop }
@@ -15,6 +15,7 @@ describe Locomotive::Steam::Liquid::Drops::Site do
     expect(subject.meta_keywords).to eq 'keywords'
     expect(subject.meta_description).to eq 'description'
     expect(subject.domains).to eq ['acme.org']
+    expect(subject.asset_host).to eq 'http://asset.dev'
   end
 
   describe '#index' do

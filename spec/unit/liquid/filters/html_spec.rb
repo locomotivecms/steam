@@ -5,7 +5,8 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   include Locomotive::Steam::Liquid::Filters::Base
   include Locomotive::Steam::Liquid::Filters::Html
 
-  let(:site)          { instance_double('Site', _id: 42)}
+  let(:asset_host)    { nil }
+  let(:site)          { instance_double('Site', _id: 42, asset_host: asset_host) }
   let(:services)      { Locomotive::Steam::Services.build_instance }
   let(:context)       { instance_double('Context', registers: { services: services }) }
 
@@ -205,6 +206,10 @@ describe Locomotive::Steam::Liquid::Filters::Html do
     expect(javascript_tag('https://cdn.example.com/trash/main.js', ['defer:defer'])).to eq(result)
   end
 
+  it 'returns an image url for a given theme file without parameters' do
+    expect(theme_image_url('foo.jpg')).to eq "/sites/42/theme/images/foo.jpg"
+  end
+
   it 'returns an image tag for a given theme file without parameters' do
     expect(theme_image_tag('foo.jpg')).to eq "<img src=\"/sites/42/theme/images/foo.jpg\" >"
   end
@@ -243,6 +248,58 @@ describe Locomotive::Steam::Liquid::Filters::Html do
   </embed>
 </object>
     }.strip)
+  end
+
+  context 'asset_host' do
+    let(:asset_host)    { 'http://asset.dev' }
+
+    it 'returns an url for a stylesheet file with respect to URL-parameters' do
+      result = "http://asset.dev/sites/42/theme/stylesheets/main.css?v=42"
+      expect(stylesheet_url('main.css?v=42')).to eq(result)
+      expect(stylesheet_url('main?v=42')).to eq(result)
+    end
+
+    it 'returns a link tag for a stylesheet file' do
+      result = "<link href=\"http://asset.dev/sites/42/theme/stylesheets/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
+      expect(stylesheet_tag('main.css')).to eq(result)
+      expect(stylesheet_tag('main')).to eq(result)
+      expect(stylesheet_tag(nil)).to eq('')
+    end
+
+    it 'returns a link tag for a stylesheet file with folder' do
+      result = "<link href=\"http://asset.dev/sites/42/theme/stylesheets/trash/main.css\" media=\"screen\" rel=\"stylesheet\" type=\"text/css\" />"
+      expect(stylesheet_tag('trash/main.css')).to eq(result)
+    end
+
+    it 'returns an url for a javascript file with respect to URL-parameters' do
+      expect(javascript_url('main.js?v=42')).to eq "http://asset.dev/sites/42/theme/javascripts/main.js?v=42"
+    end
+
+    it 'returns a script tag for a javascript file' do
+      result = %{<script src="http://asset.dev/sites/42/theme/javascripts/main.js" type="text/javascript" ></script>}
+      expect(javascript_tag('main.js')).to eq(result)
+      expect(javascript_tag('main')).to eq(result)
+      expect(javascript_tag(nil)).to eq('')
+    end
+
+    it 'returns a script tag for a javascript file with folder' do
+      result = %{<script src="http://asset.dev/sites/42/theme/javascripts/trash/main.js" type="text/javascript" ></script>}
+      expect(javascript_tag('trash/main.js')).to eq(result)
+      expect(javascript_tag('trash/main')).to eq(result)
+    end
+
+    it 'returns an image url for a given theme file without parameters' do
+      expect(theme_image_url('foo.jpg')).to eq "http://asset.dev/sites/42/theme/images/foo.jpg"
+    end
+
+    it 'returns an image tag for a given theme file without parameters' do
+      expect(theme_image_tag('foo.jpg')).to eq "<img src=\"http://asset.dev/sites/42/theme/images/foo.jpg\" >"
+    end
+
+    it 'returns an image tag for a given theme file with size' do
+      expect(theme_image_tag('foo.jpg', 'width:100', 'height:100')).to eq("<img src=\"http://asset.dev/sites/42/theme/images/foo.jpg\" height=\"100\" width=\"100\" >")
+    end
+
   end
 
   class EngineThemeAsset < Locomotive::Steam::ThemeAssetRepository

@@ -31,7 +31,9 @@ module Locomotive
       end
 
       def build_host(host, request, site)
-        if host
+        if site && site.try(:asset_host) && !site.asset_host.empty?
+          site.asset_host =~ Steam::IsHTTP ? site.asset_host : "https://#{site.asset_host}"
+        elsif host
           if host.respond_to?(:call)
             host.call(request, site)
           else

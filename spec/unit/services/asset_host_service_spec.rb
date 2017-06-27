@@ -91,9 +91,9 @@ describe Locomotive::Steam::AssetHostService do
 
   describe 'the host is a block' do
 
-    let(:request)     { instance_double('Request', ssl: true) }
-    let(:site)        { instance_double('Site', cdn: true) }
-    let(:host) { ->(request, site) { site.cdn ? "http#{request.ssl ? 's' : ''}://assets.locomotivecms.com" : nil } }
+    let(:request) { instance_double('Request', ssl: true) }
+    let(:site)    { instance_double('Site', cdn: true) }
+    let(:host)    { ->(request, site) { site.cdn ? "http#{request.ssl ? 's' : ''}://assets.locomotivecms.com" : nil } }
 
     it { is_expected.to eq 'https://assets.locomotivecms.com/sites/42/assets/1/banner.png' }
 
@@ -110,6 +110,30 @@ describe Locomotive::Steam::AssetHostService do
       it { is_expected.to eq '/sites/42/assets/1/banner.png' }
 
     end
+
+  end
+
+  describe 'the site has an asset host' do
+
+    let(:site) { instance_double('Site', asset_host: 'asset.dev') }
+    let(:host) { 'http://assets.locomotivecms.com' }
+
+    it { is_expected.to eq 'https://asset.dev/sites/42/assets/1/banner.png' }
+
+    context 'with the protocol' do
+
+      let(:site) { instance_double('Site', asset_host: 'http://asset.dev') }
+      it { is_expected.to eq 'http://asset.dev/sites/42/assets/1/banner.png' }
+
+    end
+
+    context 'with an empty string' do
+
+      let(:site) { instance_double('Site', asset_host: '') }
+      it { is_expected.to eq 'http://assets.locomotivecms.com/sites/42/assets/1/banner.png' }
+
+    end
+
 
   end
 

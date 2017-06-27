@@ -18,7 +18,8 @@ module Locomotive::Steam
         private_access:           false,
         password:                 nil,
         metafields_schema:        {},
-        metafields:               nil
+        metafields:               nil,
+        asset_host:               nil
       }.merge(attributes))
     end
 
