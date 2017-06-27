@@ -3,12 +3,10 @@ module Locomotive
 
     class AssetHostService
 
-      attr_reader :request, :site, :host
+      attr_reader :request, :site
 
-      def initialize(request, site, host)
-        @request, @site = request, site
-
-        @host = build_host(host, request, site)
+      def initialize(request, site, default_host)
+        @request, @site, @default_host = request, site, default_host
       end
 
       def compute(source, timestamp = nil)
@@ -23,25 +21,25 @@ module Locomotive
         add_timestamp_suffix(url, timestamp)
       end
 
+      def host
+        return @host if @host
+
+        @host = if site.try(:asset_host).present?
+          build_host_with_protocol(site.asset_host)
+        elsif @default_host.respond_to?(:call)
+          @default_host.call(request, site)
+        elsif @default_host.present?
+          build_host_with_protocol(@default_host)
+        else
+          nil
+        end
+      end
+
       private
 
       def build_url(host, source)
         clean_source = source.sub(/\A^\//, '')
         URI.join(host, clean_source).to_s
-      end
-
-      def build_host(host, request, site)
-        if site && site.try(:asset_host) && !site.asset_host.empty?
-          site.asset_host =~ Steam::IsHTTP ? site.asset_host : "https://#{site.asset_host}"
-        elsif host
-          if host.respond_to?(:call)
-            host.call(request, site)
-          else
-            host =~ Steam::IsHTTP ? host : "https://#{host}"
-          end
-        else
-          nil
-        end
       end
 
       def add_timestamp_suffix(source, timestamp)
@@ -50,6 +48,10 @@ module Locomotive
         else
           "#{source}?#{timestamp}"
         end
+      end
+
+      def build_host_with_protocol(host)
+        host =~ Steam::IsHTTP ? host : "https://#{host}"
       end
 
     end
