@@ -12,6 +12,7 @@ es:
       es: Español
       ru: Ruso
       et: Estonio
+      el: Griego
 
   errors:
     messages:

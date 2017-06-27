@@ -12,6 +12,7 @@ en:
       es: Spanish
       ru: Russian
       et: Estonian
+      el: Greek
 
   errors:
     syntax:

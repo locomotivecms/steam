@@ -12,6 +12,7 @@ de:
       es: Spanisch
       ru: Russisch
       et: Estnisch
+      el: Griechisch
 
   errors:
     messages:
@@ -39,10 +40,6 @@ de:
     month_names: [~, Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember]
     abbr_month_names: [~, Jan., Feb., Mär., Apr., Mai, Juni, Juli, Aug., Sept., Okt., Nov., Dez.]
     order: [ day, month, year ]
-
-  pagination:
-    previous: "&laquo; Zurück"
-    next: "Vor &raquo;"
 
   time:
     formats:
