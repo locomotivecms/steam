@@ -19,13 +19,7 @@ module Locomotive
         end
 
         if entry.errors.empty?
-          ActiveSupport::Notifications.instrument('steam.auth.signup',
-            site:     site,
-            entry:    entry,
-            locale:   entries.locale,
-            request:  request
-          )
-
+          notify(:signed_up, entry, request)
           context[options.type.singularize] = entry
           send_welcome_email(options, context)
         end
@@ -33,7 +27,7 @@ module Locomotive
         [entry.errors.empty? ? :entry_created : :invalid_entry, entry]
       end
 
-      def sign_in(options)
+      def sign_in(options, request)
         entry = entries.all(options.type, options.id_field => options.id).first
 
         if entry
@@ -41,10 +35,19 @@ module Locomotive
           password        = ::BCrypt::Engine.hash_secret(options.password, entry.send(options.password_field).try(:salt))
           same_password   = secure_compare(password, hashed_password)
 
-          return [:signed_in, entry] if same_password
+          if same_password
+            notify(:signed_in, entry, request)
+            return [:signed_in, entry]
+          end
         end
 
         :wrong_credentials
+      end
+
+      def sign_out(entry, request)
+        notify(:signed_out, entry, request)
+
+        :signed_out
       end
 
       # options is an instance of the AuthOptions class
@@ -132,6 +135,15 @@ EMAIL
         res = 0
         b.each_byte { |byte| res |= byte ^ l.shift }
         res == 0
+      end
+
+      def notify(action, entry, request)
+        ActiveSupport::Notifications.instrument("steam.auth.#{action}",
+          site:     site,
+          entry:    entry,
+          locale:   entries.locale,
+          request:  request
+        )
       end
 
       # Module inject to the content entry to enable

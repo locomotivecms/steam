@@ -45,7 +45,7 @@ module Locomotive::Steam
       def sign_in(options)
         return if authenticated?
 
-        status, entry = services.auth.sign_in(options)
+        status, entry = services.auth.sign_in(options, request)
 
         if status == :signed_in
           store_authenticated(entry)
@@ -57,6 +57,8 @@ module Locomotive::Steam
 
       def sign_out(options)
         return unless authenticated?
+
+        services.auth.sign_out(load_authenticated_entry, request)
 
         store_authenticated(nil)
 

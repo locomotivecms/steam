@@ -147,7 +147,7 @@ describe Locomotive::Steam::AuthService do
 
   describe '#sign_in' do
 
-    subject { service.sign_in(auth_options) }
+    subject { service.sign_in(auth_options, nil) }
 
     it 'returns :wrong_credentials if no entry matches the email' do
       expect(entries).to receive(:all).with('accounts', { 'email' => 'john@doe.net' }).and_return([])
