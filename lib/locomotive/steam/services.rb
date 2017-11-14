@@ -126,6 +126,10 @@ module Locomotive
           Steam::AuthService.new(current_site, content_entry, email)
         end
 
+        register :auth_ldap do
+          Steam::AuthLdapService.new(current_site, content_entry)
+        end
+
         register :cache do
           Steam::NoCacheService.new
         end
