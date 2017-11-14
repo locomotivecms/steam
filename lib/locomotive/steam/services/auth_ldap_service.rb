@@ -45,9 +45,9 @@ module Locomotive
         ldap.port = config['ldap_port']
         ldap.auth config['ldap_dn'], config['ldap_password']
         result = ldap.bind_as(
-          :base => config['ldap_base'],
-          :filter => "(mail=#{email})",
-          :password => password
+          base: config['ldap_base'],
+          filter: "(mail=#{email})",
+          password: password
         )
       end
 

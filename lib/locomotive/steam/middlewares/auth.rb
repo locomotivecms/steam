@@ -11,6 +11,8 @@ module Locomotive::Steam
     # It is also in charge to load the current authenticated resource
     # from the session and put it in the liquid context.
     #
+    PROVIDER = %w(ldap)
+
     class Auth < ThreadSafe
 
       include Helpers
@@ -120,8 +122,8 @@ module Locomotive::Steam
 
       def auth_service
         provider = site.metafields[:auth_provider]
-        if provider
-          @auth_service ||= services.send("auth_#{provider[:type]}")
+        if provider && PROVIDER.include?(provider[:type])
+          @auth_service ||= services.send(:"auth_#{provider[:type]}")
         else
           @auth_service ||= services.auth
         end
@@ -129,7 +131,7 @@ module Locomotive::Steam
 
       class AuthOptions
 
-        attr_reader :site, :params, :service
+        attr_reader :site, :params
 
         def initialize(site, params)
           @site, @params = site, params
