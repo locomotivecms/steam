@@ -40,8 +40,10 @@ module Locomotive::Steam
       end
 
       def blank?
-        @translations.blank? ||
-        @translations.values.all? { |v| v.blank? }
+        @translations.default.blank? && (
+          @translations.blank? ||
+          @translations.values.all? { |v| v.blank? }
+        )
       end
 
       def apply(&block)

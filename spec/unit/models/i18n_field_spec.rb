@@ -20,6 +20,14 @@ describe Locomotive::Steam::Models::I18nField do
 
     end
 
+    context 'with a single value' do
+
+      let(:translations) { 'Hello world' }
+
+      it { is_expected.to eq false }
+
+    end
+
   end
 
   describe '#dup' do
