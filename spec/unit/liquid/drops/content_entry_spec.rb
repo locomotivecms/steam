@@ -108,30 +108,38 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
   describe '#to_hash' do
 
-    let(:entry)       { instance_double('Article', _id: 42, localized_attributes: {}, content_type: type, title: 'Hello world', _label: 'Hello world', _slug: 'hello-world', _translated: false, seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description', created_at: 0, updated_at: 1, author: author) }
-    let(:type)        { instance_double('Type', fields_by_name: { title: instance_double('StringField', type: :string ), author: instance_double('Author', type: :belongs_to), picture: instance_double('FileField', type: :file), category: instance_double('SelectField', type: :select) }) }
-    let(:picture_field) { Locomotive::Steam::ContentEntry::FileField.new('foo.png', 'http://assets.dev', 0, 42) }
+    describe 'belong_to content type' do
 
-    before do
-      allow(entry).to receive(:to_hash).and_return({ '_id' => 1, 'title' => 'Hello world', 'picture' => picture_field, 'category_id' => 42 })
-      allow(entry).to receive(:category).and_return('Test')
-    end
+      let(:entry)       { instance_double('Article', _id: 42, localized_attributes: {}, content_type: type, title: 'Hello world', _label: 'Hello world', _slug: 'hello-world', _translated: false, seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description', created_at: 0, updated_at: 1, author: author) }
+      let(:type)        { instance_double('Type', fields_by_name: { title: instance_double('StringField', type: :string ), author: instance_double('Author', type: :belongs_to), picture: instance_double('FileField', type: :file), category: instance_double('SelectField', type: :select) }) }
+      let(:author)      { instance_double('Author', _slug: 'john-doe', localized_attributes: {}) }
+      let(:picture_field) { Locomotive::Steam::ContentEntry::FileField.new('foo.png', 'http://assets.dev', 0, 42) }
 
-    subject { drop.to_hash.stringify_keys }
+      before do
+        allow(entry).to receive(:category).and_return('Test')
+      end
 
-    context 'belongs to content type is not nil' do
+      subject { drop.to_hash.stringify_keys }
 
-      let(:author) { instance_double('Author', _slug: 'john-doe', localized_attributes: {}) }
+      context 'corresponding hash value for id is not nil' do
 
-      it { is_expected.to eq('id' => 1, '_id' => 1, 'title' => 'Hello world', 'picture' => 'http://assets.dev/foo.png?42', 'picture_url' => 'http://assets.dev/foo.png?42', 'category_id' => 42, 'category' => 'Test', 'author' => 'john-doe') }
+        before do
+          allow(entry).to receive(:to_hash).and_return({ '_id' => 1, 'title' => 'Hello world', 'picture' => picture_field, 'category_id' => 42, 'author_id' => 64 })
+        end
 
-    end
+        it { is_expected.to eq('id' => 1, '_id' => 1, 'title' => 'Hello world', 'picture' => 'http://assets.dev/foo.png?42', 'picture_url' => 'http://assets.dev/foo.png?42', 'category_id' => 42, 'category' => 'Test', 'author_id' => 64, 'author' => 'john-doe') }
 
-    context 'belongs to content type is nil' do
+      end
 
-      let(:author) { nil }
+      context 'corresponding hash value for id is nil' do
 
-      it { is_expected.to eq('id' => 1, '_id' => 1, 'title' => 'Hello world', 'picture' => 'http://assets.dev/foo.png?42', 'picture_url' => 'http://assets.dev/foo.png?42', 'category_id' => 42, 'category' => 'Test', 'author' => nil) }
+        before do
+          allow(entry).to receive(:to_hash).and_return({ '_id' => 1, 'title' => 'Hello world', 'picture' => picture_field, 'category_id' => 42 })
+        end
+
+        it { is_expected.to eq('id' => 1, '_id' => 1, 'title' => 'Hello world', 'picture' => 'http://assets.dev/foo.png?42', 'picture_url' => 'http://assets.dev/foo.png?42', 'category_id' => 42, 'category' => 'Test') }
+
+      end
 
     end
 
@@ -146,13 +154,13 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
     let(:picture_field) { Locomotive::Steam::ContentEntry::FileField.new('foo.png', 'http://assets.dev', 0, 42) }
 
     before do
-      allow(entry).to receive(:to_hash).and_return({ '_id' => 1, 'title' => 'Hello world', 'picture' => picture_field, 'category_id' => 42 })
+      allow(entry).to receive(:to_hash).and_return({ '_id' => 1, 'title' => 'Hello world', 'picture' => picture_field, 'category_id' => 42, 'author_id' => 64 })
       allow(entry).to receive(:category).and_return('Test')
     end
 
     subject { drop.as_json }
 
-    it { is_expected.to eq('id' => 1, '_id' => 1, 'title' => 'Hello world', 'picture' => 'http://assets.dev/foo.png?42', 'picture_url' => 'http://assets.dev/foo.png?42', 'category_id' => 42, 'category' => 'Test', 'author' => 'john-doe', 'authors' => ['john-doe']) }
+    it { is_expected.to eq('id' => 1, '_id' => 1, 'title' => 'Hello world', 'picture' => 'http://assets.dev/foo.png?42', 'picture_url' => 'http://assets.dev/foo.png?42', 'category_id' => 42, 'category' => 'Test', 'author_id' => 64, 'author' => 'john-doe', 'authors' => ['john-doe']) }
 
   end
 
