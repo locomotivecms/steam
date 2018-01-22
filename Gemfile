@@ -12,7 +12,7 @@ group :development do
   # gem 'duktape', github: 'judofyr/duktape.rb', ref: '20ef6a5'
   # gem 'thin'
   gem 'puma'
-  gem 'haml',               '~> 4.0.6'
+  gem 'haml',               '~> 5.0.4'
 
   gem 'rack-mini-profiler', '~> 0.10.1'
   gem 'flamegraph'
@@ -21,15 +21,15 @@ group :development do
 end
 
 group :test do
-  gem 'rspec',              '~> 3.4.0'
-  gem 'json_spec',          '~> 1.1.4'
+  gem 'rspec',              '~> 3.7.0'
+  gem 'json_spec',          '~> 1.1.5'
   gem 'i18n-spec',          '~> 0.6.0'
 
-  gem 'timecop',            '~> 0.8.0'
+  gem 'timecop',            '~> 0.9.1'
 
   gem 'pry-byebug',         '~> 3.3.0'
 
-  gem 'rack-test',          '~> 0.6.3'
+  gem 'rack-test',          '~> 0.8.2'
 
   gem 'codeclimate-test-reporter',  '~> 0.4.7',   require: false
   gem 'coveralls',                  '~> 0.8.1',   require: false
