@@ -1,3 +1,4 @@
+require 'pry'
 require_relative 'memory'
 
 require_relative 'filesystem/simple_cache_store'
@@ -5,8 +6,12 @@ require_relative 'filesystem/simple_cache_store'
 require_relative 'filesystem/yaml_loader'
 require_relative_all 'filesystem/yaml_loaders'
 
+# require_relative 'filesystem/json_loader'
+# require_relative_all 'filesystem/json_loaders'
+
 require_relative 'filesystem/sanitizer'
 require_relative_all 'filesystem/sanitizers'
+
 
 module Locomotive::Steam
 
@@ -23,7 +28,8 @@ module Locomotive::Steam
 
     register(:yaml_loaders)  { build_yaml_loaders }
     register(:sanitizers)    { build_sanitizers }
-
+    # register(:json_loaders)  { build_json_loaders }
+    
     def all(mapper, scope)
       memoized_dataset(mapper, scope)
     end
@@ -116,15 +122,22 @@ module Locomotive::Steam
     end
 
     def build_yaml_loaders
-      %i(sites pages content_types content_entries snippets translations theme_assets).inject({}) do |memo, name|
+      %i(sites pages content_types content_entries snippets sections translations theme_assets).inject({}) do |memo, name|
         memo[name] = build_klass('YAMLLoaders', name).new(site_path)
         memo
       end
     end
 
+    # def build_json_loaders
+    #   %i(sections).inject({}) do |memo, name|
+    #     memo[name] = build_klass('JSONLoaders', name).new(site_path)
+    #     memo
+    #   end
+    # end
+
     def build_sanitizers
       hash = Hash.new { build_klass('Sanitizers', :simple).new }
-      %i(sites pages content_types content_entries snippets).inject(hash) do |memo, name|
+      %i(sites pages content_types content_entries snippets sections).inject(hash) do |memo, name|
         memo[name] = build_klass('Sanitizers', name).new
         memo
       end
@@ -142,5 +155,3 @@ module Locomotive::Steam
   end
 
 end
-
-
