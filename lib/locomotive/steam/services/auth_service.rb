@@ -5,8 +5,13 @@ module Locomotive
 
       MIN_PASSWORD_LENGTH   = 6
       RESET_TOKEN_LIFETIME  = 1 * 3600 # 6 hours in seconds
+      ACTIONS = %w(sign_up sign_in sign_out forgot_password reset_password)
 
       attr_accessor_initialize :site, :entries, :email_service
+
+      def valid_action?(options)
+        ACTIONS.include?(options.action)
+      end
 
       def find_authenticated_resource(type, id)
         entries.find(type, id)

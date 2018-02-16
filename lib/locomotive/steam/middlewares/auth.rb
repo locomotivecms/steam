@@ -11,6 +11,8 @@ module Locomotive::Steam
     # It is also in charge to load the current authenticated resource
     # from the session and put it in the liquid context.
     #
+    PROVIDER = %w(ldap)
+
     class Auth < ThreadSafe
 
       include Helpers
@@ -20,7 +22,7 @@ module Locomotive::Steam
 
         auth_options = AuthOptions.new(site, params)
 
-        return unless auth_options.valid?
+        return unless auth_service.valid_action?(auth_options)
 
         send(:"#{auth_options.action}", auth_options)
       end
@@ -30,7 +32,7 @@ module Locomotive::Steam
       def sign_up(options)
         return if authenticated?
 
-        status, entry = services.auth.sign_up(options, default_liquid_context, request)
+        status, entry = auth_service.sign_up(options, default_liquid_context, request)
 
         if status == :entry_created
           store_authenticated(entry)
@@ -45,7 +47,7 @@ module Locomotive::Steam
       def sign_in(options)
         return if authenticated?
 
-        status, entry = services.auth.sign_in(options, request)
+        status, entry = auth_service.sign_in(options, request)
 
         if status == :signed_in
           store_authenticated(entry)
@@ -58,7 +60,7 @@ module Locomotive::Steam
       def sign_out(options)
         return unless authenticated?
 
-        services.auth.sign_out(load_authenticated_entry, request)
+        auth_service.sign_out(load_authenticated_entry, request)
 
         store_authenticated(nil)
 
@@ -68,7 +70,7 @@ module Locomotive::Steam
       def forgot_password(options)
         return if authenticated?
 
-        status = services.auth.forgot_password(options, default_liquid_context)
+        status = auth_service.forgot_password(options, default_liquid_context)
 
         append_message(status)
       end
@@ -76,7 +78,7 @@ module Locomotive::Steam
       def reset_password(options)
         return if authenticated?
 
-        status, entry = services.auth.reset_password(options)
+        status, entry = auth_service.reset_password(options)
 
         if status == :password_reset
           store_authenticated(entry)
@@ -90,7 +92,7 @@ module Locomotive::Steam
         entry_type = request.session[:authenticated_entry_type]
         entry_id   = request.session[:authenticated_entry_id]
 
-        if entry = services.auth.find_authenticated_resource(entry_type, entry_id)
+        if entry = auth_service.find_authenticated_resource(entry_type, entry_id)
           env['authenticated_entry'] = entry
           liquid_assigns["current_#{entry_type.singularize}"] = entry
         end
@@ -118,18 +120,21 @@ module Locomotive::Steam
         liquid_assigns["auth_#{message}"] = "auth_#{message}"
       end
 
-      class AuthOptions
+      def auth_service
+        provider = site.metafields[:auth_provider]
+        if provider && PROVIDER.include?(provider[:type])
+          @auth_service ||= services.send(:"auth_#{provider[:type]}")
+        else
+          @auth_service ||= services.auth
+        end
+      end
 
-        ACTIONS = %w(sign_up sign_in sign_out forgot_password reset_password)
+      class AuthOptions
 
         attr_reader :site, :params
 
         def initialize(site, params)
           @site, @params = site, params
-        end
-
-        def valid?
-          ACTIONS.include?(action)
         end
 
         def action
