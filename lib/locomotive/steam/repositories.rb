@@ -45,8 +45,10 @@ module Locomotive
         name = ((options || {})[:name] || :filesystem).to_s
         begin
           require_relative "adapters/#{name.downcase}"
-        rescue LoadError
+        rescue LoadError => e
           puts 'Not a Steam built-in adapter'
+          puts e.inspect
+          puts e.backtrace
         end
         klass = "Locomotive::Steam::#{name.camelize}Adapter".constantize
         klass.new(options)

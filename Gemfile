@@ -27,7 +27,7 @@ group :test do
 
   gem 'timecop',            '~> 0.9.1'
 
-  gem 'pry-byebug',         '~> 3.3.0'
+  # gem 'pry-byebug',         '~> 3.3.0'
 
   gem 'rack-test',          '~> 0.8.2'
 
@@ -36,5 +36,5 @@ group :test do
 end
 
 platform :ruby do
-  ruby '2.3.3'
+  ruby '2.4.3'
 end

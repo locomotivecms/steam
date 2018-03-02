@@ -53,7 +53,7 @@ describe Locomotive::Steam::Liquid::Filters::Misc do
     context 'from an integer' do
 
       subject { random(4) }
-      it { is_expected.to be_a_kind_of(Fixnum) }
+      it { is_expected.to be_a_kind_of(Integer) }
       it { is_expected.to satisfy { |n| n >=0 && n < 4 } }
 
     end
@@ -61,7 +61,7 @@ describe Locomotive::Steam::Liquid::Filters::Misc do
     context 'from a string' do
 
       subject { random('4') }
-      it { is_expected.to be_a_kind_of(Fixnum) }
+      it { is_expected.to be_a_kind_of(Integer) }
       it { is_expected.to satisfy { |n| n >=0 && n < 4 } }
 
     end
@@ -70,7 +70,7 @@ describe Locomotive::Steam::Liquid::Filters::Misc do
 
   it 'returns a random number' do
     random_number = random(4)
-    expect(random_number.class).to eq Fixnum
+    expect(random_number.class).to eq Integer
   end
 
   describe '#map' do

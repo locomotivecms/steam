@@ -41,6 +41,10 @@ module Locomotive::Steam
         @repository.send(name, *args, &block)
       end
 
+      def respond_to_missing?(name, include_private = false)
+        @repository.respond_to?(name) || super
+      end
+
     end
 
   end
