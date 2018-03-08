@@ -11,6 +11,7 @@ group :development do
   # gem 'duktape', path: '/Users/didier/Documents/NoCoffee/ProjectsX/duktape.rb'
   # gem 'duktape', github: 'judofyr/duktape.rb', ref: '20ef6a5'
   # gem 'thin'
+
   gem 'puma'
   gem 'haml',               '~> 5.0.4'
 
@@ -36,5 +37,5 @@ group :test do
 end
 
 platform :ruby do
-  ruby '2.4.3'
+  ruby '2.5.0'
 end

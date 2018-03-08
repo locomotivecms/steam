@@ -4,7 +4,7 @@ Gem::Specification.new do |spec|
   spec.name          = 'locomotivecms_steam'
   spec.version       = Locomotive::Steam::VERSION
   spec.authors       = ['Didier Lafforgue', 'Rodrigo Alvarez', 'Arnaud Sellenet', 'Joel Azemar']
-  spec.email         = ['did@locomotivecms.com', 'papipo@gmail.com', 'arnaud@sellenet.fr', 'joel.azemar@gmail.com']
+  spec.email         = ['didier@nocoffee.fr', 'papipo@gmail.com', 'arnaud@sellenet.fr', 'joel.azemar@gmail.com']
   spec.description   = %q{The LocomotiveCMS Steam is the rendering stack used by both Wagon and Engine}
   spec.summary       = %q{The LocomotiveCMS Steam is the rendering stack used by both Wagon and Engine}
   spec.homepage      = 'https://github.com/locomotivecms/steam'
@@ -15,16 +15,16 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency 'bundler',    '~> 1.7'
-  spec.add_development_dependency 'rake',       '~> 10.4.2'
+  spec.add_development_dependency 'bundler',    '~> 1.16.1'
+  spec.add_development_dependency 'rake',       '~> 12.3.0'
 
   spec.add_development_dependency 'mongo',      '~> 2.5.1'
   spec.add_development_dependency 'origin',     '~> 2.3.1'
 
-  spec.add_dependency 'nokogiri',               '~> 1.8.1'
-  spec.add_dependency 'sanitize',               '~> 4.5.0'
+  spec.add_dependency 'nokogiri',               '~> 1.8.2'
+  spec.add_dependency 'sanitize',               '~> 4.6.0'
   spec.add_dependency 'morphine',               '~> 0.1.1'
-  spec.add_dependency 'httparty',               '~> 0.15.6'
+  spec.add_dependency 'httparty',               '~> 0.16.0'
   spec.add_dependency 'chronic',                '~> 0.10.2'
   spec.add_dependency 'bcrypt',                 '~> 3.1.11'
 
@@ -49,7 +49,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'pony',                   '~> 1.12'
 
   spec.add_dependency 'locomotivecms-solid',      '~> 4.0.1'
-  spec.add_dependency 'locomotivecms_common',     '~> 0.2.0'
+  spec.add_dependency 'locomotivecms_common',     '~> 0.3.0'
 
   spec.required_ruby_version = '>= 2.0'
 end

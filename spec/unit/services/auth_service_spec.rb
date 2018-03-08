@@ -228,10 +228,12 @@ EMAIL
 
   describe '#reset_password' do
 
+    let(:request) { instance_double('Request') }
     let(:_auth_options) { default_auth_options }
     let(:auth_options) { instance_double('AuthOptions', _auth_options) }
 
-    subject { service.reset_password(auth_options) }
+
+    subject { service.reset_password(auth_options, request) }
 
     context 'no auth token' do
 
