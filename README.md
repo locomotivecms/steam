@@ -14,7 +14,7 @@ The rendering stack used by both Wagon and Engine (WIP). It includes:
 ## Installation [WIP]
 
     gem install thin
-    gem install locomotivecms_steam --pre
+    gem install locomotivecms_steam
 
 ## Usage
 
@@ -61,4 +61,4 @@ see the list in the issues section.
 
 ## License
 
-Copyright (c) 2017 NoCoffee. MIT Licensed, see LICENSE for details.
+Copyright (c) 2018 NoCoffee. MIT Licensed, see MIT-LICENSE for details.

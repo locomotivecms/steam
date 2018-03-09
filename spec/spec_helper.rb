@@ -1,12 +1,18 @@
+# require 'simplecov'
+# require 'codeclimate-test-reporter'
+# require 'coveralls'
+# require 'simplecov'
+# require 'coveralls'
+
 require 'simplecov'
-require 'codeclimate-test-reporter'
 require 'coveralls'
 
+
 SimpleCov.start do
-  formatter SimpleCov::Formatter::MultiFormatter.new([
-    SimpleCov::Formatter::HTMLFormatter,
-    CodeClimate::TestReporter::Formatter,
-    Coveralls::SimpleCov::Formatter])
+  # formatter SimpleCov::Formatter::MultiFormatter.new([
+  #   SimpleCov::Formatter::HTMLFormatter,
+  #   CodeClimate::TestReporter::Formatter,
+  #   Coveralls::SimpleCov::Formatter])
 
   add_filter 'config/'
   add_filter 'example/'
