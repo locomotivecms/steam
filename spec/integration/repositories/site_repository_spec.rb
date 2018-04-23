@@ -9,11 +9,6 @@ describe Locomotive::Steam::SiteRepository do
 
   shared_examples_for 'a repository' do
 
-    describe '#all' do
-      subject { repository.all }
-      it { expect(subject.size).to eq 1 }
-    end
-
     describe '#query' do
       subject { repository.query { where(handle: 'sample') }.first }
       it { expect(subject.name).to eq 'Sample site' }
@@ -32,6 +27,11 @@ describe Locomotive::Steam::SiteRepository do
 
     it_behaves_like 'a repository'
 
+    describe '#all' do
+      subject { repository.all }
+      it { expect(subject.size).to eq 2 }
+    end
+
   end
 
   context 'Filesystem' do
@@ -39,6 +39,11 @@ describe Locomotive::Steam::SiteRepository do
     let(:adapter) { Locomotive::Steam::FilesystemAdapter.new(default_fixture_site_path) }
 
     it_behaves_like 'a repository'
+
+    describe '#all' do
+      subject { repository.all }
+      it { expect(subject.size).to eq 1 }
+    end
 
   end
 
