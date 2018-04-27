@@ -1,12 +1,10 @@
 module Locomotive
   module Steam
-    class SnippetRepository
+    class SectionRepository
 
       include Models::Repository
 
-      mapping :snippets, entity: Snippet do
-        localized_attributes :template_path, :template, :source
-      end
+      mapping :sections, entity: Section
 
       def by_slug(slug)
         first { where(slug: slug) }

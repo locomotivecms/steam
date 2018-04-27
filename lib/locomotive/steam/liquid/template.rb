@@ -1,7 +1,6 @@
 module Locomotive
   module Steam
     module Liquid
-
       class Template < ::Liquid::Template
 
         # When we render a Locomotive template, we need to know what are
@@ -18,18 +17,14 @@ module Locomotive
         end
 
         class << self
-
           def parse(source, options = {})
             template = new
             template.parse(source, options.merge({
               line_numbers: true
             }))
           end
-
         end
-
       end
-
     end
   end
 end

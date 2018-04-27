@@ -62,6 +62,10 @@ module Locomotive
           Steam::SnippetFinderService.new(repositories.snippet)
         end
 
+        register :section_finder do
+          Steam::SectionFinderService.new(repositories.section)
+        end
+
         register :action do
           Steam::ActionService.new(current_site, email, content_entry: content_entry, api: external_api, redirection: page_redirection)
         end
