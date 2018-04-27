@@ -26,9 +26,7 @@ module Locomotive
           def default_locale
             repository.site.default_locale
           end
-
         end
-
       end
     end
   end

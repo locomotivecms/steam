@@ -1,0 +1,55 @@
+---
+{
+  "name": "header",
+  "static": true,
+  "category": "header",
+  "class": "section-header",
+  "settings":
+  [
+    {
+      "id": "brand",
+      "type": "text",
+      "label": "Text to display in the header",
+      "default": "Header"
+    }
+  ],
+  "default":
+  {
+    "settings":
+    {
+      "brand": "MY COMPANY"
+    },
+    "blocks":
+    [
+      {
+        "type": "link",
+        "settings":
+        {
+          "label": "Link #1",
+          "url": "https://www.nocoffee.fr",
+          "new_tab": "true"
+        }
+      },
+      {
+        "type": "link",
+        "settings":
+        {
+          "label": "Link #2",
+          "url": "https://www.nocoffee.fr",
+          "new_tab": "true"
+        }
+      }
+    ]
+  }
+}
+---
+<h1> {{ section.settings.brand }} </h1>
+<ul>
+  {% for block in section.blocks %}
+    <li>
+      <a href="{{ block.settings.url }}" target="{% if block.settings.new_tab %}_blank{% endif %}">
+        {{ block.settings.label }}
+      </a>
+    </li>
+  {% endfor %}
+</ul>

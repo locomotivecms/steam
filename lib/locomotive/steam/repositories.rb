@@ -25,6 +25,10 @@ module Locomotive
         SnippetRepository.new(adapter, current_site, locale)
       end
 
+      register :section do
+        SectionRepository.new(adapter, current_site, locale)
+      end
+
       register :content_type do
         ContentTypeRepository.new(adapter, current_site, locale)
       end

@@ -1,5 +1,4 @@
 require 'spec_helper'
-
 require_relative '../../../lib/locomotive/steam/adapters/filesystem.rb'
 
 describe Locomotive::Steam::SnippetRepository do
@@ -31,7 +30,5 @@ describe Locomotive::Steam::SnippetRepository do
       it { expect(subject[:template_path][:fr]).to eq 'simple.yml' }
 
     end
-
   end
-
 end
