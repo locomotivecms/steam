@@ -4,7 +4,7 @@ require 'bundler/gem_tasks'
 
 require 'rake'
 require 'rspec'
-
+require 'pry'
 # === Gems install tasks ===
 Bundler::GemHelper.install_tasks
 

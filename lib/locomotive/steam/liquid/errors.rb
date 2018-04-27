@@ -5,6 +5,8 @@ module Locomotive
 
       class SnippetNotFound < ::Liquid::Error; end
 
+      class SectionNotFound < ::Liquid::Error; end
+
       class PageNotTranslated < ::Liquid::Error; end
     end
   end

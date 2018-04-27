@@ -3,11 +3,13 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
+  gem 'pry'
+  gem 'pry-byebug'
   # gem 'locomotivecms_common', github: 'locomotivecms/common', ref: '257047b'
-  # gem 'locomotivecms_common', path: '../common'
+  gem 'locomotivecms_common', path: '../common'
   # gem 'locomotivecms_models', '~> 0.0.1', path: '../models'
   # gem 'locomotivecms_models', '0.0.1.pre.alpha'
-  # gem 'locomotivecms-liquid', path: '/Users/didier/Documents/LocomotiveCMS/gems/liquid'
+  gem 'locomoticecms_solid', path: '../solid'
   # gem 'duktape', path: '/Users/didier/Documents/NoCoffee/ProjectsX/duktape.rb'
   # gem 'duktape', github: 'judofyr/duktape.rb', ref: '20ef6a5'
   # gem 'thin'
