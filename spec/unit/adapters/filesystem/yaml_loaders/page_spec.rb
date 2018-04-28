@@ -15,7 +15,7 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Page do
     subject { loader.load(scope).sort { |a, b| a[:_fullpath] <=> b[:_fullpath] } }
 
     it 'tests various stuff' do
-      expect(subject.size).to eq 34
+      expect(subject.size).to eq 35
       expect(subject.first[:title]).to eq(en: 'Page not found', fr: 'Page non trouvée')
       expect(subject[23][:is_layout]).to eq true
       expect(subject[23][:listed]).to eq false
