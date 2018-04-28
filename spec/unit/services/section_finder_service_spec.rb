@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe Locomotive::Steam::SectionFinderService do
 
-  let(:repository) { instance_double('SectionRepository') }
-  let(:site) { instance_double('Site', _id: 1, default_locale: :en, locales: [:en, :fr])
-  let(:section) { instance_double('Section') }
-  let(:slug) { 'header' }
+  let(:repository)  { instance_double('SectionRepository') }
+  let(:site)        { instance_double('Site', _id: 1, default_locale: :en, locales: [:en, :fr]) }
+  let(:section)     { instance_double('Section') }
+  let(:slug)        { 'header' }
 
-  let(:finder) { described_class.new repository }
+  let(:finder) { described_class.new(repository) }
 
   before do
     allow(repository).to receive(:by_slug).and_return(section)
@@ -20,8 +20,9 @@ describe Locomotive::Steam::SectionFinderService do
 
     subject { finder.find(slug) }
 
-    it { is_expected.to respond_with section }
+    it { is_expected.to eq(section) }
 
   end
+
 end
 

@@ -14,7 +14,7 @@ describe Locomotive::Steam::PageRepository do
     describe '#all' do
       let(:conditions) { {} }
       subject { repository.all(conditions) }
-      it { expect(subject.size).to eq 34 }
+      it { expect(subject.size).to eq 35 }
 
       context 'with conditions' do
         let(:conditions) { { fullpath: 'index', 'slug.ne' => '404' } }
