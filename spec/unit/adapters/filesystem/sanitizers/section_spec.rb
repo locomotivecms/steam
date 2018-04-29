@@ -18,7 +18,20 @@ describe Locomotive::Steam::Adapters::Filesystem::Sanitizers::Section do
   describe '#apply_to_entity' do
     subject { sanitizer.apply_to_entity(entity) }
     it 'sanitize entity' do
-      expect(entity).to receive(:definition=).with(hash_including({"name" => 'header'}))
+      expect(entity).to receive(:definition=).with(hash_including({ 'name' => 'header' }))
+      expect(entity).to receive(:template=).with((<<-LIQUID
+<h1> {{ section.settings.brand }} </h1>
+<ul>
+  {% for block in section.blocks %}
+    <li>
+      <a href="{{ block.settings.url }}" target="{% if block.settings.new_tab %}_blank{% endif %}">
+        {{ block.settings.label }}
+      </a>
+    </li>
+  {% endfor %}
+</ul>
+LIQUID
+      ).gsub /^$\n/, '')
       expect(entity).to receive(:[]=).with(:site_id, 1)
       subject
     end

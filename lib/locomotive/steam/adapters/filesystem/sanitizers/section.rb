@@ -14,11 +14,14 @@ module Locomotive::Steam
           private
 
           def parse_json(entity)
-            json_formatter = /^---(?<json>(\s*\n.*?\n?))^---/mo
-            file_path = entity.template_path
-            file_content = File.read(file_path)
-            json = file_content.match(json_formatter)
-            entity.definition = JSON.parse(json[:json])
+            content = File.read(entity.template_path)
+
+            if match = content.match(JSON_FRONTMATTER_REGEXP)
+              json, template = match[:json], match[:template]
+
+              entity.definition = JSON.parse(json)
+              entity.template   = template
+            end
           end
         end
       end

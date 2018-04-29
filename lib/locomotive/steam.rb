@@ -13,7 +13,8 @@ require_relative      'steam/services'
 module Locomotive
   module Steam
 
-    FRONTMATTER_REGEXP = /^(?<yaml>(---\s*\n.*?\n?)^(---\s*$\n?))?(?<template>.*)/mo.freeze
+    FRONTMATTER_REGEXP      = /^(?<yaml>(---\s*\n.*?\n?)^(---\s*$\n?))?(?<template>.*)/mo.freeze
+    JSON_FRONTMATTER_REGEXP = /^---\s*\n(?<json>(.*?\n?))?^(---\s*$\n?)(?<template>.*)/mo.freeze
 
     WILDCARD = 'content_type_template'.freeze
 

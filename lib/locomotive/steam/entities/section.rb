@@ -5,8 +5,8 @@ module Locomotive::Steam
 
     def initialize(attributes = {})
       super({
-        template: nil,
-        source:   nil,
+        template:   nil,
+        source:     nil,
         definition: nil
       }.merge(attributes))
     end
