@@ -20,8 +20,6 @@ module Locomotive::Steam
             json, template = match[:json], match[:template]
             entity.definition = JSON.parse(json)
             entity.template   = template
-          rescue JSON::ParserError
-            raise_parsing_error(entity, content)
           end
 
           def raise_parsing_error(entity, content)
