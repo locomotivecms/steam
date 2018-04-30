@@ -4,7 +4,8 @@ module Locomotive
       module Drops
         class Site < I18nBase
 
-          delegate :name, :handle, :domains, :seo_title, :meta_keywords, :meta_description, :asset_host, to: :@_source
+          delegate :name, :handle, :domains, :seo_title, :meta_keywords,
+            :meta_description, :asset_host, :sections, to: :@_source
 
           def index
             @index ||= repository.root.to_liquid

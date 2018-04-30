@@ -5,12 +5,27 @@ module Locomotive
         class Section < ::Liquid::Include
 
           def render(context)
-            @template_name = evaluate_snippet_name(context)
             # @options doesn't include the page key if cache is on
             @options[:page] = context.registers[:page]
-            if find_section(context).definition[:default]
-              context['section'] = find_section(context).definition[:default] # | mongoDB content if exists
+
+            # 1. get the name/slug of the section
+            @template_name = evaluate_snippet_name(context)
+
+            # 2. get the section
+            section = find_section(context)
+
+            # 3. because it's considered as a static section, go get the content from
+            # the current site. If it doesn't exist, use the default attribute of
+            # the section
+            section_content = context["site"].sections[@template_name]
+
+            if section_content.blank?
+              section_content = section.definition[:default] || {}
             end
+
+            # 4. enhance the context by setting the "section" variable
+            context['section'] = section_content
+
             begin
               super
             rescue Locomotive::Steam::ParsingRenderingError => e
