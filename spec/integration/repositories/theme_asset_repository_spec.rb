@@ -11,7 +11,7 @@ describe Locomotive::Steam::ThemeAssetRepository do
   context 'MongoDB' do
 
     let(:site_id) { mongodb_site_id }
-    let(:adapter) { Locomotive::Steam::MongoDBAdapter.new(database: 'steam_test', hosts: ['127.0.0.1:27017']) }
+    let(:adapter) { Locomotive::Steam::MongoDBAdapter.new(database: mongodb_database, hosts: ['127.0.0.1:27017']) }
 
     describe '#all' do
       subject { repository.all }
@@ -26,7 +26,7 @@ describe Locomotive::Steam::ThemeAssetRepository do
     describe '#checksums' do
       subject { repository.checksums }
       it { expect(subject.size).to eq 16 }
-      it { expect(subject['stylesheets/application.css']).to eq 'f06835e254f0d1b8363aae754525c723' }
+      it { expect(subject['stylesheets/application.css']).to eq '15161ceeb93a9d26027a8a38862be47b' }
     end
 
   end

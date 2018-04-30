@@ -70,7 +70,7 @@ EOF
     it_should_behave_like 'pagination' do
 
       let(:site_id)   { mongodb_site_id }
-      let(:adapter)   { Locomotive::Steam::MongoDBAdapter.new(database: 'steam_test', hosts: ['127.0.0.1:27017']) }
+      let(:adapter)   { Locomotive::Steam::MongoDBAdapter.new(database: mongodb_database, hosts: ['127.0.0.1:27017']) }
 
     end
 

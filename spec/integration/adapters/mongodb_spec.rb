@@ -4,7 +4,7 @@ require_relative '../../../lib/locomotive/steam/adapters/mongodb.rb'
 
 describe Locomotive::Steam::MongoDBAdapter do
 
-  let(:adapter) { Locomotive::Steam::MongoDBAdapter.new(database: 'steam_test', hosts: ['127.0.0.1:27017'], min_pool_size: 2, max_pool_size: 5) }
+  let(:adapter) { Locomotive::Steam::MongoDBAdapter.new(database: mongodb_database, hosts: ['127.0.0.1:27017'], min_pool_size: 2, max_pool_size: 5) }
 
   before(:all) do
     described_class.disconnect_session

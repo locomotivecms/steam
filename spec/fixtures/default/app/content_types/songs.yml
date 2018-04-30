@@ -15,7 +15,7 @@ fields:
     label: Cover
     type: file
     required: false
-    #localized: true # required when pushing the site with Wagon
+    # localized: true # required when pushing the site with Wagon
 - short_description:
     type: text
     text_formatting: html

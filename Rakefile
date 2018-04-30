@@ -28,8 +28,8 @@ namespace :mongodb do
         `mv #{dump_path} #{db_path}`
       end
 
-      `mongo steam_test --eval "db.dropDatabase()"`
-      `mongorestore -d steam_test #{db_path}`
+      `mongo steam_test_1_4_x --eval "db.dropDatabase()"`
+      `mongorestore -d steam_test_1_4_x #{db_path}`
 
       puts "Done! Update now the spec/support/helpers.rb file by setting the new id of the site returned by the mongodb_site_id method"
     end

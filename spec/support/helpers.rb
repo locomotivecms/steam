@@ -3,8 +3,12 @@ require 'locomotive/common'
 module Spec
   module Helpers
 
+    def mongodb_database
+      'steam_test_1_4_x'
+    end
+
     def mongodb_site_id
-      BSON::ObjectId.from_string('5943b49287f6430cadd748a3')
+      BSON::ObjectId.from_string('5ae73303e051bb4f2bcbeefa')
     end
 
     def reset!
