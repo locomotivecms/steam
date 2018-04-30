@@ -6,8 +6,8 @@ describe Locomotive::Steam::Liquid::Tags::GoogleAnalytics do
 
   subject { render_template(source) }
 
-  it { is_expected.to include "ga('create', '42', 'auto')" }
-  it { is_expected.to include "ga('send', 'pageview')" }
+  it { is_expected.to include %{<script async src="https://www.googletagmanager.com/gtag/js?id=42"></script>} }
+  it { is_expected.to include "gtag('config', '42');" }
 
   describe 'raises an error if the syntax is incorrect' do
     let(:source) { '{% google_analytics %}' }
