@@ -17,7 +17,7 @@ module Locomotive
             # 3. because it's considered as a static section, go get the content from
             # the current site. If it doesn't exist, use the default attribute of
             # the section
-            section_content = context["site"].sections[@template_name]
+            section_content = context['site']&.sections&.fetch(@template_name, nil) #context["site"].sections[@template_name]
 
             if section_content.blank?
               section_content = section.definition[:default] || {}
