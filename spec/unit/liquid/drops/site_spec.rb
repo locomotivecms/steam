@@ -4,13 +4,14 @@ describe Locomotive::Steam::Liquid::Drops::Site do
 
   let(:services)  { Locomotive::Steam::Services.build_instance }
   let(:context)   { ::Liquid::Context.new({}, {}, { services: services }) }
-  let(:site)      { instance_double('Site', name: 'Locomotive', domains: ['acme.org'], seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description', localized_attributes: {}, asset_host: 'http://asset.dev') }
+  let(:site)      { instance_double('Site', handle: 'locomotive', name: 'Locomotive', domains: ['acme.org'], seo_title: 'seo title', meta_keywords: 'keywords', meta_description: 'description', localized_attributes: {}, asset_host: 'http://asset.dev') }
   let(:drop)      { described_class.new(site).tap { |d| d.context = context } }
 
   subject { drop }
 
   it 'gives access to general attributes' do
     expect(subject.name).to eq 'Locomotive'
+    expect(subject.handle).to eq 'locomotive'
     expect(subject.seo_title).to eq 'seo title'
     expect(subject.meta_keywords).to eq 'keywords'
     expect(subject.meta_description).to eq 'description'
