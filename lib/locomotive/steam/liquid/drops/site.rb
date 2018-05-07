@@ -5,7 +5,7 @@ module Locomotive
         class Site < I18nBase
 
           delegate :name, :handle, :domains, :seo_title, :meta_keywords,
-            :meta_description, :asset_host, :sections, to: :@_source
+            :meta_description, :asset_host, :sections_content, to: :@_source
 
           def index
             @index ||= repository.root.to_liquid

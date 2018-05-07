@@ -7,7 +7,10 @@ describe Locomotive::Steam::Liquid::Tags::Section do
   let(:source)    { "Locomotive {% section header %}" }
   let(:context)   { ::Liquid::Context.new({}, {}, { services: services }) }
 
-  before { allow(finder).to receive(:find).and_return(section) }
+  before do
+    allow(finder).to receive(:find).and_return(section)
+    
+  end
 
   describe 'rendering' do
 
