@@ -287,7 +287,7 @@ module Locomotive
           else
             value
           end
-          type == :date ? _value.to_date : _value.to_datetime
+          type == :date ? _value&.to_date : _value&.to_datetime
         end
 
       end

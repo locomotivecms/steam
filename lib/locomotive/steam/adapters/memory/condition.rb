@@ -22,16 +22,17 @@ module Locomotive::Steam
           entry_value = entry_value(entry)
 
           adapt_operator!(entry_value)
+
           case @operator
           when :==        then entry_value == @value
           when :eq        then entry_value == @value
           when :ne        then entry_value != @value
           when :neq       then entry_value != @value
           when :matches   then @value =~ entry_value
-          when :gt        then entry_value > @value
-          when :gte       then entry_value >= @value
-          when :lt        then entry_value < @value
-          when :lte       then entry_value <= @value
+          when :gt        then entry_value && entry_value > @value
+          when :gte       then entry_value && entry_value >= @value
+          when :lt        then entry_value && entry_value < @value
+          when :lte       then entry_value && entry_value <= @value
           when :size      then entry_value.size == @value
           when :all       then array_contains?([*@value], entry_value)
           when :in, :nin  then value_is_in_entry_value?(entry_value)
