@@ -1,4 +1,3 @@
-require 'pry'
 module Locomotive
   module Steam
     module Liquid
