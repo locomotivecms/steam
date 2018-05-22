@@ -5,7 +5,7 @@ module Locomotive
         class Section < ::Liquid::Include
 
           def parse(tokens)
-            ActiveSupport::Notifications.instrument('steam.parse.section', name: @template_name)
+            ActiveSupport::Notifications.instrument('steam.parse.section', name: evaluate_section_name)
           end
 
           def render(context)
@@ -21,10 +21,10 @@ module Locomotive
             # 3. because it's considered as a static section, go get the content from
             # the current site. If it doesn't exist, use the default attribute of
             # the section
-            section_content = context['site']&.sections_content&.fetch(@template_name, nil) #context["site"].sections[@template_name]
+            section_content = context['site']&.sections_content&.fetch(@template_name, nil)
 
             if section_content.blank?
-              section_content = section.definition[:default] || {}
+              section_content = section.definition[:default] || { settings: {}, blocks: [] }
             end
 
             # 4. enhance the context by setting the "section" variable
