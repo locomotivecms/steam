@@ -42,7 +42,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
 
     subject { render_template(source, context) }
 
-    context 'no blocks' do
+    context 'no block' do
 
       let(:liquid_source) { %(built by <a>\n\t<strong>{{ section.settings.brand }}</strong></a>) }
 
@@ -99,3 +99,4 @@ describe Locomotive::Steam::Liquid::Tags::Section do
   end
 
 end
+
