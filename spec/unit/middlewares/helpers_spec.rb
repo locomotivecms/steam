@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-require_relative '../../../lib/locomotive/steam/middlewares/helpers'
+require_relative '../../../lib/locomotive/steam/middlewares/concerns/helpers'
 
 describe Locomotive::Steam::Middlewares::Helpers do
 

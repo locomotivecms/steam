@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 require_relative '../../../lib/locomotive/steam/middlewares/thread_safe'
-require_relative '../../../lib/locomotive/steam/middlewares/helpers'
+require_relative '../../../lib/locomotive/steam/middlewares/concerns/helpers'
+require_relative '../../../lib/locomotive/steam/middlewares/concerns/liquid_context'
 require_relative '../../../lib/locomotive/steam/middlewares/renderer'
 
 describe Locomotive::Steam::Middlewares::Renderer do

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 require_relative '../../../lib/locomotive/steam/middlewares/thread_safe'
-require_relative '../../../lib/locomotive/steam/middlewares/helpers'
+require_relative '../../../lib/locomotive/steam/middlewares/concerns/helpers'
 require_relative '../../../lib/locomotive/steam/middlewares/sitemap'
 
 describe Locomotive::Steam::Middlewares::Sitemap do

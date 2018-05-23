@@ -9,24 +9,39 @@ describe Locomotive::Steam::Liquid::Tags::Section do
 
   before do
     allow(finder).to receive(:find).and_return(section)
-    
   end
 
   describe 'rendering' do
 
-    let(:section) { instance_double(
-      'Section',
-      liquid_source: 'built by NoCoffee',
-      definition: {
-        default: 'some default JSON'
-      }
-    )}
- 
     subject { render_template(source, context) }
 
-    it { is_expected.to eq 'Locomotive built by NoCoffee' }
-    context 'rendering error (action) found in the section' do
+    shared_examples "works normally" do
+      specify { is_expected.to eq 'Locomotive built by NoCoffee' }
+    end
 
+    context 'with simple example' do
+      let(:section) { instance_double(
+        'Section',
+        liquid_source: 'built by NoCoffee',
+        definition: {
+          default: 'some default JSON'
+        }
+      )}
+      
+      it_behaves_like 'works normally'
+    end
+    
+    context 'with empty definition' do
+      let(:section) { instance_double(
+        'Section',
+        liquid_source: 'built by NoCoffee',
+        definition: {}
+      )}
+      it_behaves_like 'works normally'
+    end
+
+
+    context 'rendering error (action) found in the section' do
       let(:section) { instance_double(
         'section',
         liquid_source: '{% action "Hello world" %}a.b(+}{% endaction %}',
@@ -41,3 +56,4 @@ describe Locomotive::Steam::Liquid::Tags::Section do
     end
   end
 end
+
