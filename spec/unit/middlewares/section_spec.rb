@@ -12,7 +12,7 @@ describe Locomotive::Steam::Middlewares::Section do
   let(:env)            { env_for(url, 'steam.site' => site) }
 
   let(:site)           { instance_double('Site', default_locale: 'en', locales: ['en'], to_liquid: '') }
-  let(:section)        { instance_double('Section', definition: {}, liquid_source: 'Here some HTML') }
+  let(:section)        { instance_double('Section', type: 'fancy_section', definition: {}, liquid_source: 'Here some HTML') }
   let(:section_finder) { instance_double('SectionFinderService') }
   let(:repositories)   { instance_double('Repositories')}
 
@@ -37,7 +37,7 @@ describe Locomotive::Steam::Middlewares::Section do
   end
 
   it 'works' do
-    is_expected.to eq [200, {"Content-Type"=>"text/html"}, ['Here some HTML']]
+    is_expected.to eq [200, {"Content-Type"=>"text/html"}, [%(<div id="locomotive-section-fancy_section" class="locomotive-section ">Here some HTML</div>)]]
   end
 
 end

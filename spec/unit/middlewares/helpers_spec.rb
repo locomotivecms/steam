@@ -2,9 +2,9 @@ require 'spec_helper'
 
 require_relative '../../../lib/locomotive/steam/middlewares/concerns/helpers'
 
-describe Locomotive::Steam::Middlewares::Helpers do
+describe Locomotive::Steam::Middlewares::Concerns::Helpers do
 
-  let(:middleware)  { Class.new { include Locomotive::Steam::Middlewares::Helpers } }
+  let(:middleware)  { Class.new { include Locomotive::Steam::Middlewares::Concerns::Helpers } }
   let(:instance)    { middleware.new }
 
   describe '#make_local_path' do
