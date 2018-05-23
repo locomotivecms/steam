@@ -11,7 +11,7 @@ describe Locomotive::Steam::Middlewares::Section do
   let(:url)            { 'http://example.com/_sections/header' }
   let(:env)            { env_for(url, 'steam.site' => site) }
 
-  let(:site)           { instance_double('Site', default_locale: 'en', locales: ['en'], to_liquid: '') }
+  let(:site)           { instance_double('Site', default_locale: 'en', locales: ['en'], sections_content: {}, to_liquid: '') }
   let(:section)        { instance_double('Section', type: 'fancy_section', definition: {}, liquid_source: 'Here some HTML') }
   let(:section_finder) { instance_double('SectionFinderService') }
   let(:repositories)   { instance_double('Repositories')}
@@ -24,10 +24,11 @@ describe Locomotive::Steam::Middlewares::Section do
                         }
 
   before do
-    env['steam.page'] = nil
-    env['steam.services'] = services
-    env['steam.locale'] = :en
-    env['steam.request'] = Rack::Request.new(env)
+    env['steam.page']           = nil
+    env['steam.services']       = services
+    env['steam.locale']         = :en
+    env['steam.request']        = Rack::Request.new(env)
+    env['steam.liquid_assigns'] = {}
     allow(section_finder).to receive(:find).with('header').and_return(section)
   end
 

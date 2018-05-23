@@ -2,6 +2,8 @@ module Locomotive::Steam
   module Middlewares
     module Concerns::LiquidContext
 
+      private
+
       def liquid_context
         ::Liquid::Context.new(liquid_assigns, {}, liquid_registers, true)
       end
@@ -42,13 +44,13 @@ module Locomotive::Steam
 
       def _steam_liquid_assigns
         {
-          'site'          => nil,
-          'page'          => nil,
+          'site'          => site.to_liquid,
+          'page'          => page.to_liquid,
           'models'        => Locomotive::Steam::Liquid::Drops::ContentTypes.new,
           'contents'      => Locomotive::Steam::Liquid::Drops::ContentTypes.new,
           'current_user'  => {},
           'session'       => Locomotive::Steam::Liquid::Drops::SessionProxy.new,
-        }
+        }.merge(env['steam.liquid_assigns'])
       end
 
       def _locale_liquid_assigns

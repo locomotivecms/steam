@@ -54,6 +54,7 @@ module Locomotive::Steam
         [
           Middlewares::DefaultEnv,
           Middlewares::Site,
+          Middlewares::Section,
           Middlewares::Logging,
           Middlewares::UrlRedirection,
           Middlewares::Robots,
