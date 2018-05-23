@@ -15,7 +15,8 @@ module Locomotive::Steam
       private
 
       def get_section_id(path_info)
-        path_info.match(/^\/_sections\/(?<section_id>[a-z0-9]+$)/)['section_id']
+        matchs = path_info.match(/^\/_sections\/(?<section_id>[a-z0-9]+$)/)
+        matchs['section_id'] if matchs
       end
 
       def section_finder
