@@ -6,7 +6,7 @@ module Locomotive::Steam
     #
     class Page < ThreadSafe
 
-      include Helpers
+      include Concerns::Helpers
 
       def _call
         return env['steam.page'] if env['steam.page']

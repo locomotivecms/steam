@@ -3,8 +3,8 @@ module Locomotive::Steam
 
     class Renderer < ThreadSafe
 
-      include Helpers
-      include LiquidContext
+      include Concerns::Helpers
+      include Concerns::LiquidContext
 
       def _call
         if page

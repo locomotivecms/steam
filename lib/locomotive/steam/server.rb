@@ -67,8 +67,7 @@ module Locomotive::Steam
           Middlewares::Path,
           Middlewares::Page,
           Middlewares::Sitemap,
-          Middlewares::TemplatizedPage,
-          Middlewares::Section
+          Middlewares::TemplatizedPage
         ]
       end
 

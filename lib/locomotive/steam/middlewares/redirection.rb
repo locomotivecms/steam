@@ -8,7 +8,7 @@ module Locomotive::Steam
     #
     class Redirection < ThreadSafe
 
-      include Helpers
+      include Concerns::Helpers
 
       def _call
         begin

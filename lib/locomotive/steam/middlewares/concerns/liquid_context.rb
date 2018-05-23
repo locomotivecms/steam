@@ -1,6 +1,6 @@
 module Locomotive::Steam
   module Middlewares
-    module LiquidContext
+    module Concerns::LiquidContext
 
       def liquid_context
         ::Liquid::Context.new(liquid_assigns, {}, liquid_registers, true)

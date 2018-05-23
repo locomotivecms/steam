@@ -9,7 +9,7 @@ module Locomotive::Steam
     #
     class UrlRedirection < ThreadSafe
 
-      include Helpers
+      include Concerns::Helpers
 
       def _call
         if url = redirect_url

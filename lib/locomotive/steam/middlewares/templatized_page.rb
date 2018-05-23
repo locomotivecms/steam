@@ -3,7 +3,7 @@ module Locomotive::Steam
 
     class TemplatizedPage < ThreadSafe
 
-      include Helpers
+      include Concerns::Helpers
 
       def _call
         if page && page.templatized?

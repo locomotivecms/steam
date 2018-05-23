@@ -3,7 +3,7 @@ module Locomotive::Steam
 
     class Sitemap < ThreadSafe
 
-      include Helpers
+      include Concerns::Helpers
 
       def _call
         if env['PATH_INFO'] == '/sitemap.xml' && (page.nil? || page.not_found?)

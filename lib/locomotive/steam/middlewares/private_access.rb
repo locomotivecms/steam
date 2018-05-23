@@ -8,7 +8,7 @@ module Locomotive::Steam
     #
     class PrivateAccess < ThreadSafe
 
-      include Helpers
+      include Concerns::Helpers
 
       def _call
         return if env['steam.private_access_disabled']

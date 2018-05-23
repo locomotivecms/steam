@@ -6,7 +6,7 @@ module Locomotive::Steam
     #
     class Site < ThreadSafe
 
-      include Helpers
+      include Concerns::Helpers
 
       def _call
         site = find_site

@@ -13,7 +13,7 @@ module Locomotive::Steam
     #
     class Locale < ThreadSafe
 
-      include Helpers
+      include Concerns::Helpers
 
       def _call
         locale = extract_locale

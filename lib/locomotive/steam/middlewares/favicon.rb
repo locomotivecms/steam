@@ -5,7 +5,7 @@ module Locomotive::Steam
 
       attr_accessor_initialize :app
 
-      include Helpers
+      include Concerns::Helpers
 
       def call(env)
         if env['PATH_INFO'] == '/favicon.ico'
