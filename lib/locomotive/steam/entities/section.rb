@@ -5,6 +5,7 @@ module Locomotive::Steam
 
     def initialize(attributes = {})
       super({
+        slug:       nil,
         template:   nil,
         source:     nil,
         definition: nil
@@ -14,5 +15,10 @@ module Locomotive::Steam
     def source
       self[:template]
     end
+
+    def type
+      self[:slug]
+    end
+
   end
 end
