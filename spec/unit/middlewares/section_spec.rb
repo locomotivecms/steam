@@ -7,16 +7,17 @@ require_relative '../../../lib/locomotive/steam/middlewares/section'
 
 describe Locomotive::Steam::Middlewares::Section do
 
-  let(:app)            { ->(env) { [200, env, 'app'] }}
-  let(:url)            { 'http://example.com/_sections/header' }
-  let(:env)            { env_for(url, 'steam.site' => site) }
+  let(:app)             { ->(env) { [200, env, 'app'] }}
+  let(:url)             { 'http://example.com/_sections/header' }
+  let(:env)             { env_for(url, 'steam.site' => site) }
 
-  let(:site)           { instance_double('Site', default_locale: 'en', locales: ['en'], sections_content: {}, to_liquid: '') }
-  let(:section)        { instance_double('Section', type: 'fancy_section', definition: {}, liquid_source: 'Here some HTML') }
-  let(:section_finder) { instance_double('SectionFinderService') }
-  let(:repositories)   { instance_double('Repositories')}
+  let(:drop)            { liquid_instance_double('SiteDrop', sections_content: {}) }
+  let(:site)            { instance_double('Site', default_locale: 'en', locales: ['en'], to_liquid: drop) }
+  let(:section)         { instance_double('Section', type: 'fancy_section', definition: {}, liquid_source: 'Here some HTML') }
+  let(:section_finder)  { instance_double('SectionFinderService') }
+  let(:repositories)    { instance_double('Repositories')}
 
-  let(:services)       { instance_double(
+  let(:services)        { instance_double(
                           'Services',
                           section_finder: section_finder,
                           repositories: repositories,

@@ -20,7 +20,7 @@ module Locomotive
             section = find_section(context)
 
             # 3. since it's considered as static, get the content from the current site.
-            section_content = context.registers[:site]&.sections_content&.fetch(@section_type, nil)
+            section_content = context['site']&.sections_content&.fetch(@section_type, nil)
 
             # 4. enhance the context by setting the "section" variable
             context['section'] = Locomotive::Steam::Liquid::Drops::Section.new(
