@@ -77,7 +77,7 @@ module Locomotive
             # are we inside a block?
             if matches && variable_name = matches[:name]
               block = @context[variable_name]
-              prefix += "-block.#{@context['forloop.index0']}"
+              prefix += "-block.#{block.id}"
             end
 
             # only string and text inputs can synced

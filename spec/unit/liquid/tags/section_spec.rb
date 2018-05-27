@@ -29,7 +29,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
       ],
       default: {
         settings: { brand: 'NoCoffee', image: 'foo.png' },
-        blocks: [{ id: 1, type: 'menu_item', settings: { title: 'Home', image: 'foo.png' } }] }
+        blocks: [{ id: 42, type: 'menu_item', settings: { title: 'Home', image: 'foo.png' } }] }
     }.deep_stringify_keys }
 
     let(:section) { instance_double(
@@ -70,7 +70,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
 
       let(:liquid_source) { '{% for foo in section.blocks %}<a href="/">{{ foo.settings.title }}</a>{% endfor %}' }
 
-      it { is_expected.to eq 'Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header"><a href="/" data-locomotive-editor-setting="section-header-block.0.title">Home</a></div>' }
+      it { is_expected.to eq 'Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header"><a href="/" data-locomotive-editor-setting="section-header-block.42.title">Home</a></div>' }
 
       context 'with a non string type input' do
 

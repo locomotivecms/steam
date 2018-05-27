@@ -19,10 +19,17 @@ module Locomotive
             # 2. get the section
             section = find_section(context)
 
-            # 3. since it's considered as static, get the content from the current site.
-            section_content = context['site']&.sections_content&.fetch(@section_type, nil)
+            # 3. if the tag is called by the Section middleware, use the content
+            # from the request.
+            section_content = context.registers[:_section_content]
 
-            # 4. enhance the context by setting the "section" variable
+            # 4. since it's considered as static and if no content, get the
+            # content from the current site.
+            section_content ||= context['site']&.sections_content&.fetch(@section_type, nil)
+
+            puts section_content.inspect
+
+            # 5. enhance the context by setting the "section" variable
             context['section'] = Locomotive::Steam::Liquid::Drops::Section.new(
               section,
               section_content

@@ -17,7 +17,7 @@ module Locomotive::Steam
           services:       services,
           repositories:   services.repositories,
           logger:         Locomotive::Common::Logger,
-          live_editing:   !!env['steam.live_editing'],
+          live_editing:   live_editing?,
           session:        request.session
         }
       end
