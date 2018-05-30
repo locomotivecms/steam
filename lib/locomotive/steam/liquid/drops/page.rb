@@ -4,7 +4,8 @@ module Locomotive
       module Drops
         class Page < I18nBase
 
-          delegate :position, :fullpath, :depth, :seo_title, :meta_keywords, :meta_description, :redirect_url, :handle, to: :@_source
+          delegate :position, :fullpath, :depth, :sections_content, :redirect_url, :handle, to: :@_source
+          delegate :seo_title, :meta_keywords, :meta_description, to: :@_source
           delegate :listed?, :published?, :redirect?, :is_layout?, :templatized?, to: :@_source
 
           def title

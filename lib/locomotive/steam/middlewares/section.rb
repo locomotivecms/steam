@@ -6,7 +6,7 @@ module Locomotive::Steam
       include Concerns::LiquidContext
 
       def _call
-        if section_type = get_section_type(env['PATH_INFO'])
+        if section_type = get_section_type
           html = render(section_type)
           render_response(html, 200)
         end
@@ -14,9 +14,8 @@ module Locomotive::Steam
 
       private
 
-      def get_section_type(path_info)
-        matchs = path_info.match(/^\/_sections\/(?<section_type>[a-z0-9]+$)/)
-        matchs['section_type'] if matchs
+      def get_section_type
+        request.get_header('HTTP_LOCOMOTIVE_SECTION_TYPE')
       end
 
       def section_finder

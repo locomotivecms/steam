@@ -8,7 +8,7 @@ require_relative '../../../lib/locomotive/steam/middlewares/section'
 describe Locomotive::Steam::Middlewares::Section do
 
   let(:app)             { ->(env) { [200, env, 'app'] }}
-  let(:url)             { 'http://example.com/_sections/header' }
+  let(:url)             { 'http://example.com/foo/bar' }
   let(:env)             { env_for(url, 'steam.site' => site) }
 
   let(:drop)            { liquid_instance_double('SiteDrop', sections_content: { 'header' => { 'settings' => { 'name' => 'HTML' } } }) }
@@ -30,6 +30,7 @@ describe Locomotive::Steam::Middlewares::Section do
     env['steam.locale']         = :en
     env['steam.liquid_assigns'] = {}
     env['steam.request']        = Rack::Request.new(env)
+    env['steam.request'].add_header('HTTP_LOCOMOTIVE_SECTION_TYPE', 'header')
     allow(section_finder).to receive(:find).with('header').and_return(section)
   end
 
@@ -42,7 +43,7 @@ describe Locomotive::Steam::Middlewares::Section do
     is_expected.to eq [
       200,
       { "Content-Type" => "text/html" },
-      [%(<div id="locomotive-section-fancy_section" class="locomotive-section ">Here some HTML</div>)]
+      [%(<div id="locomotive-section-fancy_section" class="locomotive-section">Here some HTML</div>)]
     ]
   end
 
@@ -58,7 +59,7 @@ describe Locomotive::Steam::Middlewares::Section do
       is_expected.to eq [
         200,
         { "Content-Type" => "text/html" },
-        [%(<div id="locomotive-section-fancy_section" class="locomotive-section ">Here some modified HTML</div>)]
+        [%(<div id="locomotive-section-fancy_section" class="locomotive-section">Here some modified HTML</div>)]
       ]
     end
 

@@ -97,7 +97,7 @@ module Locomotive
 
           def text_inputs(settings)
             settings.map do |input|
-              %w(string text).include?(input['type']) ? input['id'] : nil
+              %w(text textarea).include?(input['type']) ? input['id'] : nil
             end.compact
           end
 

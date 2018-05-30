@@ -18,12 +18,12 @@ describe Locomotive::Steam::Liquid::Tags::Section do
       type:  'header',
       class: 'my-awesome-header',
       settings: [
-        { id: 'brand', type: 'string', label: 'Brand' },
+        { id: 'brand', type: 'text', label: 'Brand' },
         { id: 'image', type: 'image_picker' }
       ],
       blocks: [
         { type: 'menu_item', settings: [
-          { id: 'title', type: 'string' },
+          { id: 'title', type: 'text' },
           { id: 'image', type: 'image_picker' }
         ]}
       ],
@@ -72,7 +72,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
 
       it { is_expected.to eq 'Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header"><a href="/" data-locomotive-editor-setting="section-header-block.42.title">Home</a></div>' }
 
-      context 'with a non string type input' do
+      context 'with a non text type input' do
 
         let(:liquid_source) { '{% for foo in section.blocks %}<a>{{ foo.settings.image }}</a>{% endfor %}' }
 
@@ -87,6 +87,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
       let(:live_editing)  { false }
       let(:liquid_source) { '{% action "Hello world" %}a.b(+}{% endaction %}' }
       let(:section)       { instance_double('section',
+        name:           'Hero',
         liquid_source:  liquid_source,
         definition:     { settings: [], blocks: [] }
       )}

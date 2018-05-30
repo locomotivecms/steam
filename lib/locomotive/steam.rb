@@ -21,7 +21,6 @@ module Locomotive
     CONTENT_ENTRY_ENGINE_CLASS_NAME   = /^Locomotive::ContentEntry(.*)$/o.freeze
 
     SECTIONS_SETTINGS_VARIABLE_REGEXP = /^\s*([a-z]+\.)?settings\.(?<id>.*)\s*$/o.freeze
-    # SECTIONS_SETTINGS_TAG_REGEXP      = /(?<tag><[^\>]+>)\s*\z/mo.freeze
     SECTIONS_BLOCK_FORLOOP_REGEXP     = /(?<name>.+)-section\.blocks$/o.freeze
 
     IsHTTP    = /\Ahttps?:\/\//o.freeze
