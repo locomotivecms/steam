@@ -44,6 +44,8 @@ module Locomotive::Steam::Liquid::Tags::Concerns
       previous_node = nil
       new_nodelist  = []
 
+      return if root.nodelist.blank?
+
       root.nodelist.each_with_index do |node, index|
         if node.is_a?(::Liquid::Variable) && previous_node.is_a?(::Liquid::Token)
           matches = node.raw.match(Locomotive::Steam::SECTIONS_SETTINGS_VARIABLE_REGEXP)

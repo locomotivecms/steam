@@ -21,6 +21,7 @@ module Locomotive::Steam
         raw_template:       nil,
         source:             nil,
         editable_elements:  {},
+        sections_content:   [],
         redirect:           nil,
         redirect_url:       {},
         redirect_type:      nil,
