@@ -15,7 +15,7 @@ module Locomotive
           def render(context)
             section_contents = context['page']&.sections_content || []
 
-            section_contents.each_with_index.map do |content, index|
+            html = section_contents.each_with_index.map do |content, index|
               # find the liquid source of the section
               section = find_section(context, content['type'])
 
@@ -28,7 +28,9 @@ module Locomotive
               template = build_template(section)
 
               render_section(context, template, section, content)
-            end
+            end.join
+
+            %(<div class="locomotive-sections">#{html}</div>)
           end
 
           private

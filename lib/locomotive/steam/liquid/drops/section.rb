@@ -18,6 +18,10 @@ module Locomotive
             @content['id'] || @section.type
           end
 
+          def type
+            @section.type
+          end
+
           def settings
             @content['settings']
           end
@@ -59,6 +63,11 @@ module Locomotive
             @block['settings']
           end
 
+          def locomotive_attributes
+            value = "section-#{@context['section'].id}-block-#{id}";
+            %(data-locomotive-block="#{value}")
+          end
+
         end
 
         # Required to allow the sync between the Locomotive editor
@@ -92,6 +101,11 @@ module Locomotive
 
           def is_text?(id, block)
             settings = block ? block_settings(block['type']) : section_settings
+
+            # can happen if the developer forgets to assign a type to
+            # the default blocks
+            return false if settings.blank?
+
             text_inputs(settings).include?(id)
           end
 

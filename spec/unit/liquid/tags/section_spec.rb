@@ -46,13 +46,13 @@ describe Locomotive::Steam::Liquid::Tags::Section do
 
       let(:liquid_source) { %(built by <a>\n\t<strong>{{ section.settings.brand }}</strong></a>) }
 
-      it { is_expected.to eq %(Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header">built by <a>\n\t<strong data-locomotive-editor-setting="section-header.brand">NoCoffee</strong></a></div>) }
+      it { is_expected.to eq %(Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header" data-locomotive-section-type="header">built by <a>\n\t<strong data-locomotive-editor-setting="section-header.brand">NoCoffee</strong></a></div>) }
 
       context 'with a non string type input' do
 
         let(:liquid_source) { 'built by <strong>{{ section.settings.image }}</strong>' }
 
-        it { is_expected.to eq 'Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header">built by <strong>foo.png</strong></div>' }
+        it { is_expected.to eq 'Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header" data-locomotive-section-type="header">built by <strong>foo.png</strong></div>' }
 
       end
 
@@ -60,7 +60,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
 
         let(:live_editing) { false }
 
-        it { is_expected.to eq %(Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header">built by <a>\n\t<strong>NoCoffee</strong></a></div>) }
+        it { is_expected.to eq %(Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header" data-locomotive-section-type="header">built by <a>\n\t<strong>NoCoffee</strong></a></div>) }
 
       end
 
@@ -70,13 +70,13 @@ describe Locomotive::Steam::Liquid::Tags::Section do
 
       let(:liquid_source) { '{% for foo in section.blocks %}<a href="/">{{ foo.settings.title }}</a>{% endfor %}' }
 
-      it { is_expected.to eq 'Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header"><a href="/" data-locomotive-editor-setting="section-header-block.42.title">Home</a></div>' }
+      it { is_expected.to eq 'Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header" data-locomotive-section-type="header"><a href="/" data-locomotive-editor-setting="section-header-block.42.title">Home</a></div>' }
 
       context 'with a non text type input' do
 
         let(:liquid_source) { '{% for foo in section.blocks %}<a>{{ foo.settings.image }}</a>{% endfor %}' }
 
-        it { is_expected.to eq 'Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header"><a>foo.png</a></div>' }
+        it { is_expected.to eq 'Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header" data-locomotive-section-type="header"><a>foo.png</a></div>' }
 
       end
 

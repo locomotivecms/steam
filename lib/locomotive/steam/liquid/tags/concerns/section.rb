@@ -27,12 +27,14 @@ module Locomotive::Steam::Liquid::Tags::Concerns
       end
 
       context.stack do
-        html = template.render(context)
+        html    = template.render(context)
+        section = context['section']
 
-        tag_id    = "locomotive-section-#{context['section'].id}"
-        tag_class = ['locomotive-section', context['section'].css_class].compact.join(' ')
+        tag_id    = %(id="locomotive-section-#{section.id}")
+        tag_class = %(class="#{['locomotive-section', section.css_class].compact.join(' ')}")
+        tag_data  = %(data-locomotive-section-type="#{section.type}")
 
-        %(<div id="#{tag_id}" class="#{tag_class}">#{html}</div>)
+        %(<div #{tag_id} #{tag_class} #{tag_data}>#{html}</div>)
       end
     end
 

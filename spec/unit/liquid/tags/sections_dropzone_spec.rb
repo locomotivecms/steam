@@ -20,7 +20,7 @@ describe Locomotive::Steam::Liquid::Tags::SectionsDropzone do
       let(:content) { [] }
 
       it 'renders an empty string' do
-        is_expected.to eq ''
+        is_expected.to eq '<div class="locomotive-sections"></div>'
       end
 
     end
@@ -67,12 +67,14 @@ describe Locomotive::Steam::Liquid::Tags::SectionsDropzone do
 
       it 'renders the list of sections' do
         is_expected.to eq <<-HTML
-          <div id="locomotive-section-0" class="locomotive-section">
-            <h1 data-locomotive-editor-setting="section-0.title">Hello world</h1>
-          </div>
-          <div id="locomotive-section-1" class="locomotive-section">
-            <p data-locomotive-editor-setting="section-1-block.0.title">Slide 1</p>
-            <p data-locomotive-editor-setting="section-1-block.1.title">Slide 2</p>
+          <div class="locomotive-sections">
+            <div id="locomotive-section-0" class="locomotive-section" data-locomotive-section-type="hero">
+              <h1 data-locomotive-editor-setting="section-0.title">Hello world</h1>
+            </div>
+            <div id="locomotive-section-1" class="locomotive-section" data-locomotive-section-type="slideshow">
+              <p data-locomotive-editor-setting="section-1-block.0.title">Slide 1</p>
+              <p data-locomotive-editor-setting="section-1-block.1.title">Slide 2</p>
+            </div>
           </div>
         HTML
         .strip.gsub(/\n\s+/, '')
@@ -84,12 +86,14 @@ describe Locomotive::Steam::Liquid::Tags::SectionsDropzone do
 
         it 'renders the list of sections' do
           is_expected.to eq <<-HTML
-            <div id="locomotive-section-0" class="locomotive-section">
-              <h1>Hello world</h1>
-            </div>
-            <div id="locomotive-section-1" class="locomotive-section">
-              <p>Slide 1</p>
-              <p>Slide 2</p>
+            <div class="locomotive-sections">
+              <div id="locomotive-section-0" class="locomotive-section" data-locomotive-section-type="hero">
+                <h1>Hello world</h1>
+              </div>
+              <div id="locomotive-section-1" class="locomotive-section" data-locomotive-section-type="slideshow">
+                <p>Slide 1</p>
+                <p>Slide 2</p>
+              </div>
             </div>
           HTML
           .strip.gsub(/\n\s+/, '')
