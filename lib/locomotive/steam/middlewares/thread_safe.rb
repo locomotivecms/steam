@@ -66,7 +66,13 @@ module Locomotive::Steam::Middlewares
     end
 
     def params
-      @params ||= self.request.params.with_indifferent_access
+      req = self.request
+      if req.content_type == 'application/json' && (req.post? || req.put?)
+        req.body.rewind
+        @params ||= JSON.parse(req.body.read).with_indifferent_access
+      else
+        @params ||= req.params.with_indifferent_access
+      end
     end
 
     def live_editing?
