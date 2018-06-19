@@ -23,13 +23,17 @@ pt-BR:
         one: 'é muito curto (mínimo: 1 caracter)'
         other: 'é muito curto (mínimo: %{count} caracteres)'
 
-  date:
-    formats:
-      default: "%d/%m/%Y"
-
   pagination:
     previous: "&laquo; Anterior"
     next: "Próximo &raquo;"
+
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%e %b"
+      long: "%e %B %Y"
+      long_ordinal: "%e %B %Y"
+      only_day: "%e"
 
   date:
     formats:
@@ -115,26 +119,52 @@ pt-BR:
 
 
   number:
-    format:
-      precision: 3
-      separator: ','
-      delimiter: '. '
     currency:
       format:
+        delimiter: ! '.'
+        format: ! '%u %n'
+        precision: 2
+        separator: ','
+        significant: false
+        strip_insignificant_zeros: false
         unit: 'R$'
-        precision: 2
-        format: '%n %u'
+    format:
+      delimiter: ! '.'
+      precision: 3
+      separator: ','
+      significant: false
+      strip_insignificant_zeros: false
     human:
-      format:
-        precision: 2
-      storage_units:
-        format: '%n %u'
+      decimal_units:
+        format: ! '%n %u'
         units:
-          byte: 'Byte'
+          billion: Bilhão
+          million: Milhão
+          quadrillion: Quadrilhão
+          thousand: Mil
+          trillion: Trilhão
+          unit: ''
+      format:
+        delimiter: ''
+        precision: 3
+        significant: true
+        strip_insignificant_zeros: true
+      storage_units:
+        format: ! '%n %u'
+        units:
+          byte:
+            one: Byte
+            other: Bytes
           kb: 'Kb'
           mb: 'Mb'
           gb: 'Gb'
           tb: 'Tb'
+    percentage:
+      format:
+        delimiter: ''
+    precision:
+      format:
+        delimiter: ''
 
   support:
     array:
