@@ -17,6 +17,7 @@ module Locomotive::Steam
 
       def _call
         locale = extract_locale
+        session['locale'] = locale
 
         log "Detecting locale #{locale.upcase}"
 
@@ -28,7 +29,7 @@ module Locomotive::Steam
       protected
 
       def extract_locale
-        _locale = locale_from_params || default_locale
+        _locale = locale_from_params || locale_from_session || locale_from_header || default_locale
         _path   = request.path_info
 
         if _path =~ /^\/(#{site.locales.join('|')})+(\/|$)/
@@ -44,10 +45,24 @@ module Locomotive::Steam
         env['steam.locale'] = services.locale = _locale
       end
 
-      def locale_from_params
-        locales.include?(params[:locale]) ? params[:locale] : nil
+      def locale_from_header
+        request.accept_language.lazy
+          .sort { |a, b| b[1] <=> a[1] }
+          .map  { |lang, _| lang[0..1].to_sym }
+          .find { |lang| locales.include?(lang) }
       end
 
+      def locale_from_session
+        session['locale'] && session['locale'].to_sym
+      end
+
+      def locale_from_params
+        params[:locale] && locales.include?(params[:locale].to_sym) ? params[:locale].to_sym : nil
+      end
+
+      def session
+        env['rack.session']
+      end
     end
   end
 end
