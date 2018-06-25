@@ -42,6 +42,14 @@ describe Locomotive::Steam::Middlewares::Locale do
 
         it { is_expected.to eq [:fr, :fr] }
 
+        context 'with url path' do
+
+          let(:url) { 'http://models.example.com/werkzeug' }
+
+          it { is_expected.to eq [:de, :de] }
+
+        end
+
       end
 
     end
