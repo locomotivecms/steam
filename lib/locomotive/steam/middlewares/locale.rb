@@ -16,8 +16,7 @@ module Locomotive::Steam
       include Helpers
 
       def _call
-        locale = extract_locale
-        session['locale'] = locale
+        session['locale'] = locale = extract_locale
 
         log "Detecting locale #{locale.upcase}"
 
@@ -53,16 +52,13 @@ module Locomotive::Steam
       end
 
       def locale_from_session
-        session['locale'] && session['locale'].to_sym
+        session['locale']&.to_sym
       end
 
       def locale_from_params
         params[:locale] && locales.include?(params[:locale].to_sym) ? params[:locale].to_sym : nil
       end
 
-      def session
-        env['rack.session']
-      end
     end
   end
 end

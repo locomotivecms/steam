@@ -23,7 +23,7 @@ describe Locomotive::Steam::Middlewares::Locale do
     env['steam.request']  = Rack::Request.new(env)
     env['steam.services'] = services
     code, env = middleware.call(env)
-    env['steam.locale']
+    [env['steam.locale'], session['locale'].to_sym]
   end
 
   describe 'no locale defined in the path' do
@@ -31,18 +31,27 @@ describe Locomotive::Steam::Middlewares::Locale do
     describe 'first connexion' do
 
       context 'without accept-language header' do
-        it { is_expected.to eq :de }
-       end
+
+        it { is_expected.to eq [:de, :de] }
+
+      end
 
       context 'with accept-language header' do
+
         let(:accept_language) { 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7' }
-        it { is_expected.to eq :fr }
+
+        it { is_expected.to eq [:fr, :fr] }
+
       end
+
     end
 
     context 'user with session, use it' do
+
       let(:session) { {'locale' => 'en'} }
-      it { is_expected.to eq :en }
+
+      it { is_expected.to eq [:en, :en] }
+
     end
 
   end
@@ -53,7 +62,7 @@ describe Locomotive::Steam::Middlewares::Locale do
 
       let(:url) { 'http://models.example.com?locale=' }
 
-      it { is_expected.to eq :de }
+      it { is_expected.to eq [:de, :de] }
 
     end
 
@@ -61,7 +70,7 @@ describe Locomotive::Steam::Middlewares::Locale do
 
       let(:url) { 'http://models.example.com?locale=en' }
 
-      it { is_expected.to eq :en }
+      it { is_expected.to eq [:en, :en] }
 
     end
 
@@ -69,11 +78,9 @@ describe Locomotive::Steam::Middlewares::Locale do
 
       let(:url) { 'http://models.example.com?locale=onload' }
 
-      it { is_expected.to eq :de }
+      it { is_expected.to eq [:de, :de] }
 
     end
 
-
   end
-
 end

@@ -45,6 +45,10 @@ module Locomotive::Steam
         site.default_locale
       end
 
+      def session
+        env['rack.session']
+      end
+
       def live_editing?
         !!env['steam.live_editing']
       end
