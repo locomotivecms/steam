@@ -59,9 +59,9 @@ module Locomotive::Steam
         return @params if @params.present?
 
         if json? && (request.post? || request.put?)
+          request.body.rewind
           @params = JSON.parse(request.body.read) rescue nil
         end
-
         @params = (@params || request.params).with_indifferent_access
       end
 
