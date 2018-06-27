@@ -56,13 +56,17 @@ module Locomotive::Steam
       # if this is a JSON request with a JSON body, try to parse it
       # if we are unable to parse it, fallback to the original params
       def params
+        @params = env['steam.params']
+
         return @params if @params.present?
 
         if json? && (request.post? || request.put?)
           @params = JSON.parse(request.body.read) rescue nil
+
+          request.body.rewind # leave the body as it was before we touched it
         end
 
-        @params = (@params || request.params).with_indifferent_access
+        @params = env['steam.params'] = (@params || request.params).with_indifferent_access
       end
 
       #= Useful getters =
