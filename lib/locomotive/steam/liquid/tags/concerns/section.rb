@@ -75,7 +75,7 @@ module Locomotive::Steam::Liquid::Tags::Concerns
         previous_node = node
       end
 
-      root.instance_variable_set(:@nodelist, new_nodelist)
+      (root.instance_variable_get(:@body) || root).instance_variable_set(:@nodelist, new_nodelist)
     end
 
     def wrapped_around_tag?(index, nodelist)

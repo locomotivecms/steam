@@ -48,6 +48,15 @@ describe Locomotive::Steam::Liquid::Tags::Section do
 
       it { is_expected.to eq %(Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header" data-locomotive-section-type="header">built by <a>\n\t<strong data-locomotive-editor-setting="section-header.brand">NoCoffee</strong></a></div>) }
 
+      context 'capturing the setting in a liquid variable' do
+
+        let(:liquid_source) { %({% capture brand %}<strong class="bold">{{ section.settings.brand }}</strong>{% endcapture %}built by <a>\n\t{{ brand }}</a>) }
+
+        it { is_expected.to eq %(Locomotive <div id="locomotive-section-header" class="locomotive-section my-awesome-header" data-locomotive-section-type="header">built by <a>\n\t<strong class="bold" data-locomotive-editor-setting="section-header.brand">NoCoffee</strong></a></div>) }
+
+      end
+
+
       context 'with a non string type input' do
 
         let(:liquid_source) { 'built by <strong>{{ section.settings.image }}</strong>' }
