@@ -33,11 +33,11 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
 
     let(:settings)  { [{ 'id' => 'link', 'type' => 'url' }] }
 
-    subject { drop.before_method(:link) }
+    subject { drop.before_method(:link).to_s }
 
     describe 'url to a simple page' do
 
-      let(:content)   { { 'link' => { 'type' => 'page', 'value' => 42 } } }
+      let(:content)   { { 'link' => { 'type' => 'page', 'value' => 42, 'new_window' => true } } }
       let(:page)      { instance_double('Page') }
 
       it 'returns the url to the page' do
