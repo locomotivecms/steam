@@ -41,7 +41,7 @@ describe Locomotive::Steam::Liquid::Tags::SectionsDropzone do
       ] }
 
       let(:hero_source) { %(<h1>{{ section.settings.title }}</h1>) }
-      let(:slideshow_source) { %({% for block in section.blocks %}<p>{{ block.settings.title }}</p>{% endfor %}) }
+      let(:slideshow_source) { %({% for block in section.blocks %}<div {{ block.locomotive_attributes }}><p>{{ block.settings.title }}</p></div>{% endfor %}) }
 
       let(:hero_section) {
         instance_double('Hero',
@@ -72,8 +72,8 @@ describe Locomotive::Steam::Liquid::Tags::SectionsDropzone do
               <h1 data-locomotive-editor-setting="section-0.title">Hello world</h1>
             </div>
             <div id="locomotive-section-1" class="locomotive-section" data-locomotive-section-type="slideshow">
-              <p data-locomotive-editor-setting="section-1-block.0.title">Slide 1</p>
-              <p data-locomotive-editor-setting="section-1-block.1.title">Slide 2</p>
+              <div data-locomotive-block="section-1-block-0"><p data-locomotive-editor-setting="section-1-block.0.title">Slide 1</p></div>
+              <div data-locomotive-block="section-1-block-1"><p data-locomotive-editor-setting="section-1-block.1.title">Slide 2</p></div>
             </div>
           </div>
         HTML
@@ -91,8 +91,8 @@ describe Locomotive::Steam::Liquid::Tags::SectionsDropzone do
                 <h1>Hello world</h1>
               </div>
               <div id="locomotive-section-1" class="locomotive-section" data-locomotive-section-type="slideshow">
-                <p>Slide 1</p>
-                <p>Slide 2</p>
+                <div ><p>Slide 1</p></div>
+                <div ><p>Slide 2</p></div>
               </div>
             </div>
           HTML

@@ -22,7 +22,7 @@ module Locomotive
 
     SECTIONS_SETTINGS_VARIABLE_REGEXP = /^\s*([a-z]+\.)?settings\.(?<id>.*)\s*$/o.freeze
     SECTIONS_BLOCK_FORLOOP_REGEXP     = /(?<name>.+)-section\.blocks$/o.freeze
-    SECTIONS_LINK_TARGET_REGEXP       = /[^\"]+\/#link_target=(?<link>[^\"]+)/mo.freeze
+    SECTIONS_LINK_TARGET_REGEXP       = /[^\"]+\/_locomotive-link\/(?<link>[^\"]+)/mo.freeze
 
     IsHTTP    = /\Ahttps?:\/\//o.freeze
 

@@ -31,8 +31,12 @@ module Locomotive
           end
 
           def locomotive_attributes
-            value = "section-#{@context['section'].id}-block-#{id}";
-            %(data-locomotive-block="#{value}")
+            if @context.registers[:live_editing]
+              value = "section-#{@context['section'].id}-block-#{id}"
+              %(data-locomotive-block="#{value}")
+            else
+              ''
+            end
           end
 
         end

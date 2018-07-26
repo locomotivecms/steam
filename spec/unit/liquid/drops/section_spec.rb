@@ -9,8 +9,11 @@ describe Locomotive::Steam::Liquid::Drops::Section do
 
   describe 'text type setting' do
 
+    let(:url_finder) { instance_double('UrlFinder', decode_urls_for: 'Hello world') }
     let(:settings) { [{ 'id' => 'title', 'type' => 'text' }] }
     let(:content) { { 'settings' => { 'title' => 'Hello world' } } }
+
+    before { expect(drop.settings).to receive(:url_finder).and_return(url_finder) }
 
     subject { drop.settings.before_method(:title) }
 

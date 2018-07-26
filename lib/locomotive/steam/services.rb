@@ -86,6 +86,10 @@ module Locomotive
           Steam::UrlBuilderService.new(current_site, locale, request)
         end
 
+        register :url_finder do
+          Steam::UrlFinderService.new(url_builder, page_finder, content_entry)
+        end
+
         register :page_redirection do
           Steam::PageRedirectionService.new(page_finder, url_builder)
         end

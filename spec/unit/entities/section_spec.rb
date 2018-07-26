@@ -20,4 +20,10 @@ describe Locomotive::Steam::Section do
     it { is_expected.to eq({ 'name' => 'aName' }) }
   end
 
+  describe '#type' do
+    let(:attributes) { { slug: 'hero' } }
+    subject { section.type }
+    it { is_expected.to eq 'hero' }
+  end
+
 end
