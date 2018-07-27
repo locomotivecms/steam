@@ -21,24 +21,22 @@ module Locomotive
       #
       # will return: ['/', true]
       #
-      def url_for(value)
-        return [value, false] if value.is_a?(String)
+      def url_for(resource)
+        return [resource, false] if resource.is_a?(String)
 
-        _value  = value || {}
-        page    = find_page(_value['type'], _value['value'])
+        _resource = resource || {}
+        page      = find_page(_resource['type'], _resource['value'])
 
         [
-          page ? url_builder.url_for(page) : _value['value'],
-          _value['new_window'] || false
+          page ? url_builder.url_for(page) : _resource['value'],
+          _resource['new_window'] || false
         ]
       end
 
       # Same behavior as for url_for except the parameter is a
       # JSON string encoded in Base64
       def decode_url_for(encoded_value)
-        decoded_value  = Base64.decode64(encoded_value)
-        value          = JSON.parse(decoded_value)
-        url_for(value)
+        url_for(decode_link(encoded_value))
       end
 
       # Apply the decode_url_for method for each link of a text
@@ -46,6 +44,12 @@ module Locomotive
         text.gsub(Locomotive::Steam::SECTIONS_LINK_TARGET_REGEXP) do
           decode_url_for($~[:link])[0]
         end
+      end
+
+      # Decode a link
+      def decode_link(encoded_value)
+        decoded_value = Base64.decode64(encoded_value)
+        JSON.parse(decoded_value)
       end
 
       private
