@@ -83,7 +83,7 @@ module Locomotive
         end
 
         register :url_builder do
-          Steam::UrlBuilderService.new(current_site, locale, request)
+          Steam::UrlBuilderService.new(current_site, locale, request&.env&.fetch('steam.mounted_on', nil))
         end
 
         register :url_finder do

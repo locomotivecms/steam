@@ -4,10 +4,9 @@ describe Locomotive::Steam::UrlBuilderService do
 
   let(:prefix_default)  { false }
   let(:mounted_on)      { nil }
-  let(:request)         { instance_double('Request', env: { 'steam.mounted_on' => mounted_on }) }
   let(:site)            { instance_double('Site', default_locale: 'en', prefix_default_locale: prefix_default) }
   let(:locale)          { 'en' }
-  let(:service)         { described_class.new(site, locale, request) }
+  let(:service)         { described_class.new(site, locale, mounted_on) }
 
   describe '#url_for' do
 
