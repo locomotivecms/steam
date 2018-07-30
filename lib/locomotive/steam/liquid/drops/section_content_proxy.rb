@@ -41,7 +41,7 @@ module Locomotive
         class SectionUrlField < ::Liquid::Drop
 
           def initialize(url, new_window = false)
-            @url, @new_window = url, new_window
+            @url, @new_window = url || '#', new_window
           end
 
           def new_window

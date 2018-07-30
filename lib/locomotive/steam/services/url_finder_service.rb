@@ -41,6 +41,8 @@ module Locomotive
 
       # Apply the decode_url_for method for each link of a text
       def decode_urls_for(text)
+        return text if text.blank?
+
         text.gsub(Locomotive::Steam::SECTIONS_LINK_TARGET_REGEXP) do
           decode_url_for($~[:link])[0]
         end

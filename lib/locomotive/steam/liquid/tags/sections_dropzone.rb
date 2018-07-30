@@ -9,7 +9,10 @@ module Locomotive
           include Concerns::Section
 
           def parse(tokens)
-            ActiveSupport::Notifications.instrument('steam.parse.sections_dropzone')
+            ActiveSupport::Notifications.instrument('steam.parse.sections_dropzone', {
+              page:   options[:page],
+              block:  current_inherited_block_name
+            })
           end
 
           def render(context)
@@ -43,6 +46,10 @@ module Locomotive
           def build_template(section)
             # TODO: add some cache here (useful if there are sections with the same type)
             ::Liquid::Template.parse(section.liquid_source, @options)
+          end
+
+          def current_inherited_block_name
+            options[:inherited_blocks].try(:[], :nested).try(:last).try(:name)
           end
 
         end
