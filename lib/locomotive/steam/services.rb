@@ -15,6 +15,14 @@ module Locomotive
         end
       end
 
+      # Used to get an easy access to some of the services (url_builder)
+      # without passing a request
+      def self.build_simple_instance(site)
+        Instance.new(nil).tap do |instance|
+          instance.current_site = site
+        end
+      end
+
       class Defer < SimpleDelegator
         def initialize(&block)
           @constructor = block

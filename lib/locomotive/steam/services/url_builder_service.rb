@@ -39,11 +39,6 @@ module Locomotive
 
       private
 
-      # def mounted_on
-      #   return if request.nil?
-      #   request.env['steam.mounted_on']
-      # end
-
       def sanitized_fullpath(page, same_locale)
         path = page.fullpath
 
