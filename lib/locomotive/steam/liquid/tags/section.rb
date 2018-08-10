@@ -6,6 +6,16 @@ module Locomotive
 
           include Concerns::Section
 
+          def initialize(tag_name, markup, options)
+            if markup =~ /(#{::Liquid::VariableSignature}+)(\s*,.+)?/o
+              @section_type, _options = $1, $2
+              @raw_section_options = parse_options_from_string(_options)
+            else
+              self.wrong_syntax!
+            end
+            super
+          end
+
           def parse(tokens)
             ActiveSupport::Notifications.instrument('steam.parse.section', name: evaluate_section_name)
           end
@@ -15,8 +25,10 @@ module Locomotive
             @options[:page] = context.registers[:page]
 
             # get the type/slug of the section
-            @section_type   = evaluate_section_name(context)
-            @template_name  = "sections-#{@section_type}"
+            @section_options  = interpolate_options(@raw_section_options, context)
+            @section_type     = evaluate_section_name(context)
+            @template_name    = "sections-#{@section_type}"
+            @section_id       = @section_type + (@section_options[:id].nil? ? '' : "-#{@section_options[:id]}")
 
             section   = find_section(context)
             template  = load_cached_partial(context)
@@ -25,10 +37,11 @@ module Locomotive
             # from the request.
             content = context.registers[:_section_content]
 
-            # since it's considered as static and if no content, get the
-            # content from the current site.
-            content ||= context['site']&.sections_content&.fetch(@section_type, nil)
+            content ||= context['page']&.sections_content&.fetch(@section_id, nil)
 
+            if @section_id && !content.nil?
+              content['id'] = @section_id
+            end
             render_section(context, template, section, content)
           end
 
