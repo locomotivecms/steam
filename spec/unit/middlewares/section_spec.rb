@@ -11,9 +11,11 @@ describe Locomotive::Steam::Middlewares::Section do
   let(:url)             { 'http://example.com/foo/bar' }
   let(:env)             { env_for(url, 'steam.site' => site) }
 
-  let(:drop)            { liquid_instance_double('SiteDrop', sections_content: { 'header' => { 'settings' => { 'name' => 'HTML' } } }) }
-  let(:site)            { instance_double('Site', default_locale: 'en', locales: ['en'], to_liquid: drop) }
-  let(:section)         { instance_double('Section', type: 'fancy_section', definition: {}, liquid_source: 'Here some {{ section.settings.name }}') }
+  let(:site_drop)       { liquid_instance_double('SiteDrop', sections_content: { 'header' => { 'settings' => { 'name' => 'this should not be rendered in middleware' } } }) }
+  let(:page_drop)       { liquid_instance_double('PageDrop', sections_content: { 'header' => { 'settings' => { 'name' => 'this should not be rendered in middleware' } } }) }
+  let(:site)            { instance_double('Site', default_locale: 'en', locales: ['en'], to_liquid: site_drop) }
+  let(:page)            { instance_double('Page', default_locale: 'en', locales: ['en'], to_liquid: page_drop) }
+  let(:section)         { instance_double('Section', type: 'header', definition: {}, liquid_source: 'Here some {{ section.settings.name }}') }
   let(:section_finder)  { instance_double('SectionFinderService') }
   let(:repositories)    { instance_double('Repositories')}
 
@@ -25,7 +27,7 @@ describe Locomotive::Steam::Middlewares::Section do
                         }
 
   before do
-    env['steam.page']           = nil
+    env['steam.page']           = page
     env['steam.services']       = services
     env['steam.locale']         = :en
     env['steam.liquid_assigns'] = {}
@@ -43,7 +45,7 @@ describe Locomotive::Steam::Middlewares::Section do
     is_expected.to eq [
       200,
       { "Content-Type" => "text/html" },
-      [%(<div id="locomotive-section-fancy_section" class="locomotive-section" data-locomotive-section-type="fancy_section">Here some HTML</div>)]
+      [%(<div id="locomotive-section-header" class="locomotive-section" data-locomotive-section-type="header">Here some </div>)]
     ]
   end
 
@@ -59,7 +61,7 @@ describe Locomotive::Steam::Middlewares::Section do
       is_expected.to eq [
         200,
         { "Content-Type" => "text/html" },
-        [%(<div id="locomotive-section-fancy_section" class="locomotive-section" data-locomotive-section-type="fancy_section">Here some modified HTML</div>)]
+        [%(<div id="locomotive-section-header" class="locomotive-section" data-locomotive-section-type="header">Here some modified HTML</div>)]
       ]
     end
 
