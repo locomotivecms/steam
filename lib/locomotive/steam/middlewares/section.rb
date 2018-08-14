@@ -28,7 +28,7 @@ module Locomotive::Steam
       end
 
       def liquid_source(section_type)
-        "{% section '#{section_type}', id: #{section_type} %}" #todo add id
+        "{% section '#{section_type}' %}"
       end
 
       def liquid_registers

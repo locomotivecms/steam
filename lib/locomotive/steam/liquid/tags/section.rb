@@ -10,10 +10,10 @@ module Locomotive
             if markup =~ /(#{::Liquid::VariableSignature}+)(\s*,.+)?/o
               @section_type, _options = $1, $2
               @raw_section_options = parse_options_from_string(_options)
+              super
             else
-              self.wrong_syntax!
+              raise ::Liquid::SyntaxError.new("Syntax Error in 'section' - Valid syntax: section section_type, id: '<string>' (id is optional)")
             end
-            super
           end
 
           def parse(tokens)
@@ -37,7 +37,7 @@ module Locomotive
             # from the request.
             content = context.registers[:_section_content]
 
-            content ||= context['page']&.sections_content&.fetch(@section_id, nil)
+            content ||= find_section_content(context)
 
             if @section_id && !content.nil?
               content['id'] = @section_id
@@ -55,6 +55,10 @@ module Locomotive
 
           def find_section(context)
             context.registers[:services].section_finder.find(@section_type)
+          end
+
+          def find_section_content(context)
+            context['page']&.sections_content&.fetch(@section_id, nil)
           end
 
           def evaluate_section_name(context = nil)

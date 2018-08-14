@@ -11,11 +11,24 @@ describe Locomotive::Steam::Liquid::Tags::Section do
   let(:assigns)       { { 'page' => page } }
   let(:context)       { ::Liquid::Context.new(assigns, {}, { services: services, live_editing: live_editing }) }
 
-  before do
-    allow(finder).to receive(:find).and_return(section)
+  describe 'parsing' do
+
+    subject { parse_template(source) }
+
+    describe 'raises an error if the syntax is incorrect' do
+      let(:source) { 'Locomotive {% section %}' }
+      it { expect { subject }.to raise_exception(Liquid::SyntaxError) }
+    end
+
   end
 
   describe 'rendering' do
+
+    before do
+      allow(finder).to receive(:find).and_return(section)
+    end
+
+    subject { render_template(source, context) }
 
     let(:definition) { {
       type:  'header',
@@ -42,8 +55,6 @@ describe Locomotive::Steam::Liquid::Tags::Section do
       liquid_source:  liquid_source,
       definition:     definition,
     )}
-
-    subject { render_template(source, context) }
 
     context 'no block' do
 
@@ -170,92 +181,6 @@ describe Locomotive::Steam::Liquid::Tags::Section do
             '</div>' }
         end
       end
-
-
-    #   context 'with multiple sections' do
-    #     context 'without ids' do
-    #       let(:source)        { 'Locomotive {% section header %} {% section header %}' }
-
-    #       let(:content) {
-    #         {
-    #           header: {
-    #             settings: { brand: 'Locomotive' },
-    #             blocks: []
-    #           },
-    #           header_1: {
-    #             settings: { brand: 'MyBrand'}
-    #           }
-    #         }
-    #       }
-    #       it { is_expected.to eq 'Locomotive '\
-    #         '<div id="locomotive-section-header_0"'\
-    #         ' class="locomotive-section my-awesome-header"'\
-    #         ' data-locomotive-section-type="header">'\
-    #           'built by '\
-    #           '<strong data-locomotive-editor-setting="section-header.brand">'\
-    #             'Locomotive'\
-    #           '</strong>'\
-    #         '</div>'\
-
-    #         '<div id="locomotive-section-header_1"'\
-    #         ' class="locomotive-section my-awesome-header"'\
-    #         ' data-locomotive-section-type="header">'\
-    #           'built by '\
-    #           '<strong data-locomotive-editor-setting="section-header.brand">'\
-    #             'MyBrand'\
-    #           '</strong>'\
-    #         '</div>' }
-    #     end
-
-    #     context 'with one id' do
-    #       let(:source) { "Locomotive {% section header, id: 'my_header' %} {% section header %} {% section header %}"}
-    #       let(:content) {
-    #         {
-    #           my_header: {
-    #             settings: { brand: 'my_header' },
-    #             blocks: []
-    #           },
-    #           header: {
-    #             settings: { brand: 'header_0'},
-    #             blocks: []
-    #           },
-    #           header_1: {
-    #             settings: { brand: 'header_1'},
-    #             blocks: []
-    #           }
-    #         }
-    #       }
-
-    #       it { is_expected.to eq 'Locomotive '\
-    #         '<div id="locomotive-section-header-my_header"'\
-    #         ' class="locomotive-section my-awesome-header"'\
-    #         ' data-locomotive-section-type="header">'\
-    #           ' built by '\
-    #           '<strong data-locomotive-editor-setting="section-header.brand">'\
-    #             'my_header'\
-    #           '</strong>'\
-    #         '</div>'\
-
-    #         '<div id="locomotive-section-header"'\
-    #         ' class="locomotive-section my-awesome-header"'\
-    #         ' data-locomotive-section-type="header">'\
-    #           ' built by '\
-    #           '<strong data-locomotive-editor-setting="section-header.brand">'\
-    #             'header_0'\
-    #           '</strong>'\
-    #         '</div>'\
-
-    #         '<div id="locomotive-section-header_1"'\
-    #         ' class="locomotive-section my-awesome-header"'\
-    #         ' data-locomotive-section-type="header">'\
-    #           ' built by '\
-    #           '<strong data-locomotive-editor-setting="section-header.brand">'\
-    #             'header_1'\
-    #           '</strong>'\
-    #         '</div>' }
-
-    #     end
-    #   end
     end
 
 
