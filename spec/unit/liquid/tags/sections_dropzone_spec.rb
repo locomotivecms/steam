@@ -6,7 +6,7 @@ describe Locomotive::Steam::Liquid::Tags::SectionsDropzone do
   let(:finder)        { services.section_finder }
   let(:source)        { '{% sections_dropzone %}' }
   let(:live_editing)  { true }
-  let(:page)          { liquid_instance_double('Page', sections_content: content) }
+  let(:page)          { liquid_instance_double('Page', sections_dropzone_content: content) }
   let(:assigns)       { { 'page' => page } }
   let(:registers)     { { services: services, live_editing: live_editing } }
   let(:context)       { ::Liquid::Context.new(assigns, {}, registers) }

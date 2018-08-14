@@ -39,7 +39,7 @@ module Locomotive::Steam
         if (data = request.body.read).present?
           JSON.parse(data)['section_content']
         else
-          nil
+          {}
         end
       end
 

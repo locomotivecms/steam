@@ -16,9 +16,9 @@ module Locomotive
           end
 
           def render(context)
-            section_contents = context['page']&.sections_content || []
+            sections_dropzone_contents = context['page']&.sections_dropzone_content || []
 
-            html = section_contents.each_with_index.map do |content, index|
+            html = sections_dropzone_contents.each_with_index.map do |content, index|
               # find the liquid source of the section
               section = find_section(context, content['type'])
 
