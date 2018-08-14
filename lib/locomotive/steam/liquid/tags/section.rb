@@ -28,7 +28,6 @@ module Locomotive
             @section_options  = interpolate_options(@raw_section_options, context)
             @section_type     = evaluate_section_name(context)
             @template_name    = "sections-#{@section_type}"
-            @section_id       = @section_type + (@section_options[:id].nil? ? '' : "-#{@section_options[:id]}")
 
             section   = find_section(context)
             template  = load_cached_partial(context)
@@ -37,11 +36,9 @@ module Locomotive
             # from the request.
             content = context.registers[:_section_content]
 
+            # if no content from the middleware, go get it from the page
             content ||= find_section_content(context)
 
-            if @section_id && !content.nil?
-              content['id'] = @section_id
-            end
             render_section(context, template, section, content)
           end
 
@@ -58,7 +55,11 @@ module Locomotive
           end
 
           def find_section_content(context)
-            context['page']&.sections_content&.fetch(@section_id, nil)
+            section_id = @section_type + (@section_options[:id] ? "-#{@section_options[:id]}" : '')
+
+            context['page']&.sections_content&.fetch(section_id, nil).tap do |content|
+              content['id'] = section_id if content
+            end
           end
 
           def evaluate_section_name(context = nil)

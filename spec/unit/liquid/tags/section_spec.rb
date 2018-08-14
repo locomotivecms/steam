@@ -7,9 +7,10 @@ describe Locomotive::Steam::Liquid::Tags::Section do
   let(:source)        { 'Locomotive {% section header %}' }
   let(:live_editing)  { true }
   let(:content)       { {} }
+  let(:alt_content)   { nil }
   let(:page)          { liquid_instance_double('Page', sections_content: content)}
   let(:assigns)       { { 'page' => page } }
-  let(:context)       { ::Liquid::Context.new(assigns, {}, { services: services, live_editing: live_editing }) }
+  let(:context)       { ::Liquid::Context.new(assigns, {}, { services: services, live_editing: live_editing, _section_content: alt_content }) }
 
   describe 'parsing' do
 
@@ -138,6 +139,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
       let(:liquid_source) { 'built by <strong>{{ section.settings.brand }}</strong>' }
 
       context 'with on section' do
+
         context 'with simple type' do
           let(:content) {
             {
@@ -159,7 +161,8 @@ describe Locomotive::Steam::Liquid::Tags::Section do
             '</div>' }
         end
 
-        context 'with id' do
+        context 'with an id passed as an option' do
+
           let(:source) { 'Locomotive {% section header, id: "my_header" %}'}
           let(:content) {
             {
@@ -180,6 +183,29 @@ describe Locomotive::Steam::Liquid::Tags::Section do
               '</strong>'\
             '</div>' }
         end
+
+        context 'with an id within the content' do
+          let(:source)      { 'Locomotive {% section header %}'}
+          let(:alt_content) {
+            {
+              id: 42,
+              settings: { brand: 'Locomotive' },
+              blocks:   []
+            }.deep_stringify_keys
+          }
+
+          it { is_expected.to eq 'Locomotive '\
+            '<div id="locomotive-section-42" '\
+            'class="locomotive-section my-awesome-header" '\
+            'data-locomotive-section-type="header">'\
+              'built by '\
+              '<strong data-locomotive-editor-setting="section-42.brand">'\
+                'Locomotive'\
+              '</strong>'\
+            '</div>' }
+
+        end
+
       end
     end
 
