@@ -8,8 +8,8 @@ module Locomotive
       # Entity mapping
       mapping :pages, entity: Page do
         localized_attributes :title, :slug, :permalink,
-          :source, :raw_template, :sections_content,
-          :template_path, :redirect_url, :fullpath,
+          :source, :raw_template, :template_path, :redirect_url, :fullpath,
+          :sections_content, :sections_dropzone_content,
           :seo_title, :meta_description, :meta_keywords
 
         embedded_association :editable_elements, EditableElementRepository

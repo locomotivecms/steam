@@ -4,9 +4,10 @@ module Locomotive
       module Drops
         class Page < I18nBase
 
-          delegate :position, :fullpath, :depth, :sections_content, :redirect_url, :handle, to: :@_source
+          delegate :position, :fullpath, :depth, :redirect_url, :handle, to: :@_source
           delegate :seo_title, :meta_keywords, :meta_description, to: :@_source
           delegate :listed?, :published?, :redirect?, :is_layout?, :templatized?, to: :@_source
+          delegate :sections_content, :sections_dropzone_content, to: :@_source
 
           def title
             title =  @_source.templatized? ? @context['entry'].try(:_label) : nil

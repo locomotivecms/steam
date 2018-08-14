@@ -8,26 +8,27 @@ module Locomotive::Steam
 
     def initialize(attributes)
       super({
-        handle:             nil,
-        listed:             false,
-        published:          true,
-        templatized:        false,
-        cache_enabled:      true,
-        fullpath:           {},
-        response_type:      nil,
-        content_type:       nil,
-        target_klass_name:  nil,
-        position:           99,
-        raw_template:       nil,
-        source:             nil,
-        editable_elements:  {},
-        sections_content:   [],
-        redirect:           nil,
-        redirect_url:       {},
-        redirect_type:      nil,
-        parent_id:          nil,
-        parent_ids:         nil,
-        updated_at:         Time.zone.now
+        handle:                     nil,
+        listed:                     false,
+        published:                  true,
+        templatized:                false,
+        cache_enabled:              true,
+        fullpath:                   {},
+        response_type:              nil,
+        content_type:               nil,
+        target_klass_name:          nil,
+        position:                   99,
+        raw_template:               nil,
+        source:                     nil,
+        editable_elements:          {},
+        sections_content:           {},
+        sections_dropzone_content:  [],
+        redirect:                   nil,
+        redirect_url:               {},
+        redirect_type:              nil,
+        parent_id:                  nil,
+        parent_ids:                 nil,
+        updated_at:                 Time.zone.now
       }.merge(attributes))
     end
 

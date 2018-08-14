@@ -140,9 +140,11 @@ module Locomotive::Steam
           end
 
           def transform_sections_content(page, locale)
-            if content = page[:sections_content][locale]
-              return unless content.is_a?(String)
-              page[:sections_content][locale] = JSON.parse(content)
+            [:sections_dropzone_content, :sections_content].each do |name|
+              if content = page[name][locale]
+                return unless content.is_a?(String)
+                page[name][locale] = JSON.parse(content)
+              end
             end
           end
 
