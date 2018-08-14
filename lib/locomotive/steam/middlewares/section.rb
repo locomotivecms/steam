@@ -1,3 +1,5 @@
+puts "CALLED IN ====> steam/middlewares/section.rb"
+
 module Locomotive::Steam
   module Middlewares
     class Section < ThreadSafe

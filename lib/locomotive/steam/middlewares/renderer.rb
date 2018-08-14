@@ -1,3 +1,5 @@
+puts "CALLED IN ====> steam/middlewares/renderer.rb"
+
 module Locomotive::Steam
   module Middlewares
 

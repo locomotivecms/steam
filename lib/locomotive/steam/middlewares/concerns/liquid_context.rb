@@ -1,3 +1,5 @@
+puts "LOADING LIQUID CONTEXT"
+
 module Locomotive::Steam
   module Middlewares
     module Concerns::LiquidContext
