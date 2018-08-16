@@ -12,6 +12,9 @@ module Locomotive::Steam::Liquid::Tags::Concerns
           content
         )
 
+        # assign an id if specified in the context
+        context['section'].id = context['section_id'] if context['section_id']
+
         begin
           _render(context, template)
         rescue Locomotive::Steam::ParsingRenderingError => e

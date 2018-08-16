@@ -14,6 +14,10 @@ module Locomotive
             end
           end
 
+          def id=(id)
+            @content['id'] = id
+          end
+
           def id
             @content['id'] || @section.type
           end

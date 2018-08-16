@@ -5,6 +5,10 @@ module Locomotive
       module Tags
         class StaticSection < Locomotive::Steam::Liquid::Tags::Section
 
+          def parse(tokens)
+            ActiveSupport::Notifications.instrument('steam.parse.static_section', name: evaluate_section_name)
+          end
+
           private
 
           def find_section_content(context)

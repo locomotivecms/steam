@@ -166,7 +166,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
           let(:source) { 'Locomotive {% section header, id: "my_header" %}'}
           let(:content) {
             {
-              'header-my_header': {
+              'my_header': {
                 settings: { brand: 'Locomotive' },
                 blocks:   []
               }
@@ -174,11 +174,11 @@ describe Locomotive::Steam::Liquid::Tags::Section do
           }
 
           it { is_expected.to eq 'Locomotive '\
-            '<div id="locomotive-section-header-my_header" '\
+            '<div id="locomotive-section-my_header" '\
             'class="locomotive-section my-awesome-header" '\
             'data-locomotive-section-type="header">'\
               'built by '\
-              '<strong data-locomotive-editor-setting="section-header-my_header.brand">'\
+              '<strong data-locomotive-editor-setting="section-my_header.brand">'\
                 'Locomotive'\
               '</strong>'\
             '</div>' }

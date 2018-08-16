@@ -7,7 +7,7 @@ module Locomotive
           include Concerns::Section
 
           def initialize(tag_name, markup, options)
-            if markup =~ /(#{::Liquid::VariableSignature}+)(\s*,.+)?/o
+            if markup =~ /(#{::Liquid::QuotedString}|#{::Liquid::VariableSignature}+)\s*,*(.*)?/o
               @section_type, _options = $1, $2
               @raw_section_options = parse_options_from_string(_options)
               super
@@ -39,7 +39,10 @@ module Locomotive
             # if no content from the middleware, go get it from the page
             content ||= find_section_content(context)
 
-            render_section(context, template, section, content)
+            context.stack do
+              context['section_id'] = @section_options[:id].presence
+              render_section(context, template, section, content)
+            end
           end
 
           private
@@ -55,11 +58,8 @@ module Locomotive
           end
 
           def find_section_content(context)
-            section_id = @section_type + (@section_options[:id] ? "-#{@section_options[:id]}" : '')
-
-            context['page']&.sections_content&.fetch(section_id, nil).tap do |content|
-              content['id'] = section_id if content
-            end
+            section_id = @section_options[:id].presence || @section_type
+            context['page']&.sections_content&.fetch(section_id, nil)
           end
 
           def evaluate_section_name(context = nil)
