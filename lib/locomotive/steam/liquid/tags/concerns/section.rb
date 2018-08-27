@@ -13,7 +13,7 @@ module Locomotive::Steam::Liquid::Tags::Concerns
         )
 
         # assign an id if specified in the context
-        context['section'].id = context['section_id'] if context['section_id']
+        context['section'].id ||= context['section_id'] if context['section_id'].present?
 
         begin
           _render(context, template)
@@ -90,6 +90,26 @@ module Locomotive::Steam::Liquid::Tags::Concerns
       return false unless next_node.is_a?(::Liquid::Token)
 
       (previous_node =~ /\>\s*\z/).present? && (next_node =~ /\A\s*\</).present?
+    end
+
+    def notify_on_parsing(type, source: :page, is_dropzone: false, key: nil, id: nil, label: nil, placement: nil)
+      ActiveSupport::Notifications.instrument('steam.parse.section', {
+        attributes: {
+          type:         type,
+          source:       source,
+          id:           id,
+          key:          key,
+          is_dropzone:  is_dropzone,
+          label:        label,
+          placement:    placement
+        },
+        page:   options[:page],
+        block:  current_inherited_block_name
+      })
+    end
+
+    def current_inherited_block_name
+      options[:inherited_blocks].try(:[], :nested).try(:last).try(:name)
     end
 
   end

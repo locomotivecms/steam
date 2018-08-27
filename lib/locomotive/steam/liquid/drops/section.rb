@@ -14,12 +14,13 @@ module Locomotive
             end
           end
 
-          def id=(id)
-            @content['id'] = id
+          # FIXME: id acts as the domID to build HTML tags
+          def id
+            @content['id']
           end
 
-          def id
-            @content['id'] || @section.type
+          def id=(id)
+            @content['id'] = id
           end
 
           def type

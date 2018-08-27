@@ -62,31 +62,31 @@ describe Locomotive::Steam::Liquid::Tags::Section do
       let(:liquid_source) { %(built by <a>\n\t<strong>{{ section.settings.brand }}</strong></a>) }
 
       it { is_expected.to eq 'Locomotive'\
-        ' <div id="locomotive-section-header"'\
+        ' <div id="locomotive-section-page-header"'\
         ' class="locomotive-section my-awesome-header"'\
         ' data-locomotive-section-type="header">'\
-          'built by <a>' + %(\n\t) + '<strong data-locomotive-editor-setting="section-header.brand">NoCoffee</strong></a>'\
+          'built by <a>' + %(\n\t) + '<strong data-locomotive-editor-setting="section-page-header.brand">NoCoffee</strong></a>'\
         '</div>' }
+
       context 'capturing the setting in a liquid variable' do
 
         let(:liquid_source) { %({% capture brand %}<strong class="bold">{{ section.settings.brand }}</strong>{% endcapture %}built by <a>\n\t{{ brand }}</a>) }
 
         it { is_expected.to eq 'Locomotive'\
-          ' <div id="locomotive-section-header"'\
+          ' <div id="locomotive-section-page-header"'\
           ' class="locomotive-section my-awesome-header"'\
           ' data-locomotive-section-type="header">'\
-            'built by <a>' + %(\n\t) + '<strong class="bold" data-locomotive-editor-setting="section-header.brand">NoCoffee</strong></a>'\
+            'built by <a>' + %(\n\t) + '<strong class="bold" data-locomotive-editor-setting="section-page-header.brand">NoCoffee</strong></a>'\
           '</div>' }
 
       end
-
 
       context 'with a non string type input' do
 
         let(:liquid_source) { 'built by <strong>{{ section.settings.image }}</strong>' }
 
         it { is_expected.to eq 'Locomotive'\
-          ' <div id="locomotive-section-header"'\
+          ' <div id="locomotive-section-page-header"'\
           ' class="locomotive-section my-awesome-header"'\
           ' data-locomotive-section-type="header">'\
             'built by <strong>foo.png</strong>'\
@@ -99,7 +99,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
         let(:live_editing) { false }
 
         it { is_expected.to eq 'Locomotive '\
-          '<div id="locomotive-section-header"'\
+          '<div id="locomotive-section-page-header"'\
           ' class="locomotive-section my-awesome-header"'\
           ' data-locomotive-section-type="header">'\
             'built by <a>' + %(\n\t) + '<strong>NoCoffee</strong></a>'\
@@ -114,10 +114,10 @@ describe Locomotive::Steam::Liquid::Tags::Section do
       let(:liquid_source) { '{% for foo in section.blocks %}<a href="/">{{ foo.settings.title }}</a>{% endfor %}' }
 
       it { is_expected.to eq 'Locomotive'\
-        ' <div id="locomotive-section-header"'\
+        ' <div id="locomotive-section-page-header"'\
         ' class="locomotive-section my-awesome-header"'\
         ' data-locomotive-section-type="header">'\
-          '<a href="/" data-locomotive-editor-setting="section-header-block.42.title">Home</a>'\
+          '<a href="/" data-locomotive-editor-setting="section-page-header-block.42.title">Home</a>'\
         '</div>' }
 
       context 'with a non text type input' do
@@ -125,7 +125,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
         let(:liquid_source) { '{% for foo in section.blocks %}<a>{{ foo.settings.image }}</a>{% endfor %}' }
 
         it { is_expected.to eq 'Locomotive'\
-          ' <div id="locomotive-section-header"'\
+          ' <div id="locomotive-section-page-header"'\
           ' class="locomotive-section my-awesome-header"'\
           ' data-locomotive-section-type="header">'\
             '<a>foo.png</a>'\
@@ -151,11 +151,11 @@ describe Locomotive::Steam::Liquid::Tags::Section do
           }
 
           it { is_expected.to eq 'Locomotive '\
-            '<div id="locomotive-section-header"'\
+            '<div id="locomotive-section-page-header"'\
             ' class="locomotive-section my-awesome-header"'\
             ' data-locomotive-section-type="header">'\
               'built by '\
-              '<strong data-locomotive-editor-setting="section-header.brand">'\
+              '<strong data-locomotive-editor-setting="section-page-header.brand">'\
                 'Locomotive'\
               '</strong>'\
             '</div>' }
@@ -174,11 +174,11 @@ describe Locomotive::Steam::Liquid::Tags::Section do
           }
 
           it { is_expected.to eq 'Locomotive '\
-            '<div id="locomotive-section-my_header" '\
+            '<div id="locomotive-section-page-my_header" '\
             'class="locomotive-section my-awesome-header" '\
             'data-locomotive-section-type="header">'\
               'built by '\
-              '<strong data-locomotive-editor-setting="section-my_header.brand">'\
+              '<strong data-locomotive-editor-setting="section-page-my_header.brand">'\
                 'Locomotive'\
               '</strong>'\
             '</div>' }
@@ -188,18 +188,18 @@ describe Locomotive::Steam::Liquid::Tags::Section do
           let(:source)      { 'Locomotive {% section header %}'}
           let(:alt_content) {
             {
-              id: 42,
+              id: 'site-header',
               settings: { brand: 'Locomotive' },
               blocks:   []
             }.deep_stringify_keys
           }
 
           it { is_expected.to eq 'Locomotive '\
-            '<div id="locomotive-section-42" '\
+            '<div id="locomotive-section-site-header" '\
             'class="locomotive-section my-awesome-header" '\
             'data-locomotive-section-type="header">'\
               'built by '\
-              '<strong data-locomotive-editor-setting="section-42.brand">'\
+              '<strong data-locomotive-editor-setting="section-site-header.brand">'\
                 'Locomotive'\
               '</strong>'\
             '</div>' }

@@ -68,12 +68,12 @@ describe Locomotive::Steam::Liquid::Tags::SectionsDropzone do
       it 'renders the list of sections' do
         is_expected.to eq <<-HTML
           <div class="locomotive-sections">
-            <div id="locomotive-section-0" class="locomotive-section" data-locomotive-section-type="hero">
-              <h1 data-locomotive-editor-setting="section-0.title">Hello world</h1>
+            <div id="locomotive-section-dropzone-0" class="locomotive-section" data-locomotive-section-type="hero">
+              <h1 data-locomotive-editor-setting="section-dropzone-0.title">Hello world</h1>
             </div>
-            <div id="locomotive-section-1" class="locomotive-section" data-locomotive-section-type="slideshow">
-              <div data-locomotive-block="section-1-block-0"><p data-locomotive-editor-setting="section-1-block.0.title">Slide 1</p></div>
-              <div data-locomotive-block="section-1-block-1"><p data-locomotive-editor-setting="section-1-block.1.title">Slide 2</p></div>
+            <div id="locomotive-section-dropzone-1" class="locomotive-section" data-locomotive-section-type="slideshow">
+              <div data-locomotive-block="section-dropzone-1-block-0"><p data-locomotive-editor-setting="section-dropzone-1-block.0.title">Slide 1</p></div>
+              <div data-locomotive-block="section-dropzone-1-block-1"><p data-locomotive-editor-setting="section-dropzone-1-block.1.title">Slide 2</p></div>
             </div>
           </div>
         HTML
@@ -87,10 +87,10 @@ describe Locomotive::Steam::Liquid::Tags::SectionsDropzone do
         it 'renders the list of sections' do
           is_expected.to eq <<-HTML
             <div class="locomotive-sections">
-              <div id="locomotive-section-0" class="locomotive-section" data-locomotive-section-type="hero">
+              <div id="locomotive-section-dropzone-0" class="locomotive-section" data-locomotive-section-type="hero">
                 <h1>Hello world</h1>
               </div>
-              <div id="locomotive-section-1" class="locomotive-section" data-locomotive-section-type="slideshow">
+              <div id="locomotive-section-dropzone-1" class="locomotive-section" data-locomotive-section-type="slideshow">
                 <div ><p>Slide 1</p></div>
                 <div ><p>Slide 2</p></div>
               </div>

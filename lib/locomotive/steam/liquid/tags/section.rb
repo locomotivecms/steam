@@ -9,15 +9,21 @@ module Locomotive
           def initialize(tag_name, markup, options)
             if markup =~ /(#{::Liquid::QuotedString}|#{::Liquid::VariableSignature}+)\s*,*(.*)?/o
               @section_type, _options = $1, $2
-              @raw_section_options = parse_options_from_string(_options)
+              raw_options       = parse_options_from_string(_options)
+              @section_options  = interpolate_options(raw_options, {})
               super
             else
-              raise ::Liquid::SyntaxError.new("Syntax Error in 'section' - Valid syntax: section section_type, id: '<string>' (id is optional)")
+              raise ::Liquid::SyntaxError.new("Syntax Error in 'section' - Valid syntax: section section_type, id: '<string>', placement: 'top|bottom' (id and placement are optional)")
             end
           end
 
           def parse(tokens)
-            ActiveSupport::Notifications.instrument('steam.parse.section', name: evaluate_section_name)
+            notify_on_parsing(evaluate_section_name,
+              id:         "page-#{@section_options[:id] || evaluate_section_name}",
+              key:        @section_options[:id] || evaluate_section_name,
+              label:      @section_options[:label],
+              placement:  @section_options[:placement]&.to_sym
+            )
           end
 
           def render(context)
@@ -25,7 +31,7 @@ module Locomotive
             @options[:page] = context.registers[:page]
 
             # get the type/slug of the section
-            @section_options  = interpolate_options(@raw_section_options, context)
+            # @section_options  = interpolate_options(@raw_section_options, context)
             @section_type     = evaluate_section_name(context)
             @template_name    = "sections-#{@section_type}"
 
@@ -40,12 +46,16 @@ module Locomotive
             content ||= find_section_content(context)
 
             context.stack do
-              context['section_id'] = @section_options[:id].presence
+              set_section_dom_id(context)
               render_section(context, template, section, content)
             end
           end
 
           private
+
+          def set_section_dom_id(context)
+            context['section_id'] = "page-#{@section_options[:id] || @section_type}"
+          end
 
           def read_template_from_file_system(context)
             section = find_section(context)
