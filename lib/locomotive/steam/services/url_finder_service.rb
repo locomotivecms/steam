@@ -24,11 +24,11 @@ module Locomotive
       def url_for(resource)
         return [resource, false] if resource.is_a?(String)
 
-        _resource = resource || {}
-        page      = find_page(_resource['type'], _resource['value'])
+        _resource   = resource || {}
+        page_or_url = find_page(_resource['type'], _resource['value']) || page_finder.find('404')
 
         [
-          page ? url_builder.url_for(page) : _resource['value'],
+          page_or_url.is_a?(String) ? page_or_url : url_builder.url_for(page_or_url),
           _resource['new_window'] || false
         ]
       end
@@ -74,6 +74,8 @@ module Locomotive
             # attach the template to the content entry
             _page.content_entry = entry
           end
+        when '_external'
+          value
         else
           nil
         end

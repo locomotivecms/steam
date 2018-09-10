@@ -20,7 +20,7 @@ describe Locomotive::Steam::UrlFinderService do
 
     context 'value is a link to an external site' do
 
-      let(:value) { { 'type' => 'external', 'value' => 'https://www.locomotivecms.com', 'new_window' => true } }
+      let(:value) { { 'type' => '_external', 'value' => 'https://www.locomotivecms.com', 'new_window' => true } }
       it { is_expected.to eq(['https://www.locomotivecms.com', true]) }
 
     end
@@ -30,12 +30,29 @@ describe Locomotive::Steam::UrlFinderService do
       let(:page)  { instance_double('Page') }
       let(:value) { { 'type' => 'page', 'value' => 42, 'new_window' => true } }
 
-      before do
-        expect(page_finder).to receive(:find_by_id).with(42).and_return(page)
-        expect(url_builder).to receive(:url_for).with(page).and_return('/')
+      context 'the page exists' do
+
+        before do
+          expect(page_finder).to receive(:find_by_id).with(42).and_return(page)
+          expect(url_builder).to receive(:url_for).with(page).and_return('/')
+        end
+
+        it { is_expected.to eq(['/', true]) }
+
       end
 
-      it { is_expected.to eq(['/', true]) }
+      context "the page doesn't exist" do
+
+        before do
+          expect(page_finder).to receive(:find_by_id).with(42).and_return(nil)
+          expect(page_finder).to receive(:find).with('404').and_return(page)
+          expect(url_builder).to receive(:url_for).with(page).and_return('/404')
+        end
+
+        it { is_expected.to eq(['/404', true]) }
+
+      end
+
 
     end
 
