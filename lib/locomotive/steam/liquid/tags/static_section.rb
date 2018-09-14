@@ -3,7 +3,7 @@ module Locomotive
   module Steam
     module Liquid
       module Tags
-        class StaticSection < Locomotive::Steam::Liquid::Tags::Section
+        class GlobalSection < Locomotive::Steam::Liquid::Tags::Section
 
           def parse(tokens)
             notify_on_parsing(evaluate_section_name,
@@ -25,7 +25,7 @@ module Locomotive
           end
 
         end
-        ::Liquid::Template.register_tag('static_section'.freeze, StaticSection)
+        ::Liquid::Template.register_tag('global_section'.freeze, GlobalSection)
       end
     end
   end
