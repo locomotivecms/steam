@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Locomotive::Steam::Liquid::Tags::StaticSection do
+describe Locomotive::Steam::Liquid::Tags::GlobalSection do
 
   let(:services)      { Locomotive::Steam::Services.build_instance(nil) }
   let(:finder)        { services.section_finder }
-  let(:source)        { 'Locomotive {% static_section header %}' }
+  let(:source)        { 'Locomotive {% global_section header %}' }
   let(:live_editing)  { true }
   let(:content)       { {} }
   let(:site)          { liquid_instance_double('Site', sections_content: content) }
