@@ -48,4 +48,41 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
 
   end
 
+  describe 'image picker type setting' do
+
+    let(:settings)    { [{ 'id' => 'image', 'type' => 'image_picker' }] }
+    let(:value)       { nil }
+    let(:content)     { { 'image' => value } }
+    let(:page)        { instance_double('Page') }
+    let(:image_drop)  { drop.before_method(:image) }
+
+    subject { image_drop.to_s }
+
+    it { is_expected.to eq('') }
+
+    context 'the content is a string' do
+
+      let(:value) { 'banner.jpg' }
+
+      it { is_expected.to eq('banner.jpg') }
+
+    end
+
+    context 'the content is a hash' do
+
+      let(:value) { { source: 'awesome_banner.jpg', cropped: 'cropped_awesome_banner.jpg', width: 42, height: 30 } }
+
+      it { is_expected.to eq('cropped_awesome_banner.jpg') }
+
+      it 'has access to the width and height of the image' do
+        expect(image_drop.source).to eq('awesome_banner.jpg')
+        expect(image_drop.cropped).to eq('cropped_awesome_banner.jpg')
+        expect(image_drop.width).to eq(42)
+        expect(image_drop.height).to eq(30)
+      end
+
+    end
+
+  end
+
 end
