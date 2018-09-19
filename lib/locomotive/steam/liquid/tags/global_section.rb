@@ -1,4 +1,3 @@
-require_relative './section.rb'
 module Locomotive
   module Steam
     module Liquid
@@ -25,6 +24,7 @@ module Locomotive
           end
 
         end
+
         ::Liquid::Template.register_tag('global_section'.freeze, GlobalSection)
       end
     end
