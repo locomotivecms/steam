@@ -112,6 +112,23 @@ describe Locomotive::Steam::ActionService do
 
       end
 
+      describe 'getCookiesProp' do
+
+        let(:cookie) { { name: 'John' } }
+        let(:script) { "return getCookiesProp('name');" }
+
+        it { is_expected.to eq 'John' }
+
+      end
+
+      describe 'sendCookiesProp' do
+
+        let(:script) { "return setCookiesProp('done', true);" }
+
+        it { subject; expect(cookies[:done]).to eq true }
+
+      end
+
       describe 'allEntries' do
 
         let(:now)     { Time.use_zone('America/Chicago') { Time.zone.local(2015, 'mar', 25, 10, 0) } }
