@@ -3,7 +3,7 @@ module Locomotive
 
     class UrlBuilderService
 
-      attr_accessor_initialize :site, :current_locale, :request
+      attr_accessor_initialize :site, :current_locale, :mounted_on
 
       def url_for(page, locale = nil)
         prefix(_url_for(page, locale))
@@ -38,11 +38,6 @@ module Locomotive
       end
 
       private
-
-      def mounted_on
-        return if request.nil?
-        request.env['steam.mounted_on']
-      end
 
       def sanitized_fullpath(page, same_locale)
         path = page.fullpath

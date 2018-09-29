@@ -5,7 +5,7 @@ module Locomotive::Steam
     #
     class Timezone < ThreadSafe
 
-      include Helpers
+      include Concerns::Helpers
 
       def _call
         timezone = site.try(:timezone)

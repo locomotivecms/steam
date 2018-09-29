@@ -6,10 +6,11 @@ module Locomotive
         class Snippet < ::Liquid::Include
 
           def parse(tokens)
-            ActiveSupport::Notifications.instrument('steam.parse.include', page: options[:page], name: @template_name)
+            name = evaluate_snippet_name
+
+            ActiveSupport::Notifications.instrument('steam.parse.include', page: options[:page], name: name)
 
             # look for editable elements
-            name = evaluate_snippet_name
             if options[:snippet_finder] && snippet = options[:snippet_finder].find(name)
               options[:parser]._parse(snippet, options.merge(snippet: name))
             end

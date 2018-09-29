@@ -15,6 +15,14 @@ module Locomotive
         end
       end
 
+      # Used to get an easy access to some of the services (url_builder)
+      # without passing a request
+      def self.build_simple_instance(site)
+        Instance.new(nil).tap do |instance|
+          instance.current_site = site
+        end
+      end
+
       class Defer < SimpleDelegator
         def initialize(&block)
           @constructor = block
@@ -62,6 +70,10 @@ module Locomotive
           Steam::SnippetFinderService.new(repositories.snippet)
         end
 
+        register :section_finder do
+          Steam::SectionFinderService.new(repositories.section)
+        end
+
         register :action do
           Steam::ActionService.new(current_site, email, content_entry: content_entry, api: external_api, redirection: page_redirection)
         end
@@ -79,7 +91,11 @@ module Locomotive
         end
 
         register :url_builder do
-          Steam::UrlBuilderService.new(current_site, locale, request)
+          Steam::UrlBuilderService.new(current_site, locale, request&.env&.fetch('steam.mounted_on', nil))
+        end
+
+        register :url_finder do
+          Steam::UrlFinderService.new(url_builder, page_finder, content_entry)
         end
 
         register :page_redirection do

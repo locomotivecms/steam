@@ -19,6 +19,7 @@ module Locomotive::Steam
         password:                 nil,
         metafields_schema:        {},
         metafields:               nil,
+        sections:                 nil,
         asset_host:               nil
       }.merge(attributes))
     end

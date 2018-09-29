@@ -35,7 +35,6 @@ describe Locomotive::Steam::ParentFinderService do
       it { is_expected.to eq 'Index' }
 
     end
-
   end
-
 end
+

@@ -5,7 +5,7 @@ module Locomotive::Steam
     #
     class EntrySubmission < ThreadSafe
 
-      include Helpers
+      include Concerns::Helpers
 
       HTTP_REGEXP             = /^https?:\/\//o
       ENTRY_SUBMISSION_REGEXP = /^\/entry_submissions\/(\w+)/o

@@ -25,6 +25,12 @@ module Locomotive
         end
       end
 
+      def find_by_id(id)
+        decorate do
+          repository.find(id)
+        end
+      end
+
       private
 
       def decorate(&block)

@@ -4,11 +4,11 @@ module Spec
   module Helpers
 
     def mongodb_database
-      'steam_test_1_4_x'
+      'steam_test_1_5_x'
     end
 
     def mongodb_site_id
-      BSON::ObjectId.from_string('5ae73303e051bb4f2bcbeefa')
+      BSON::ObjectId.from_string('5baf76f4a9533004e4ae9840')
     end
 
     def reset!

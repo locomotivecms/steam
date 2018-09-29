@@ -37,6 +37,8 @@ module Locomotive::Steam
                 set_fullpath_for(page, locale)
 
                 use_default_locale_template_path(page, locale)
+
+                transform_sections_content(page, locale)
               end
             end
           end
@@ -135,6 +137,15 @@ module Locomotive::Steam
             @templatized_ids[page._id]  = content_type
             page[:templatized]          = true
             page[:target_klass_name]    = "Locomotive::ContentEntry#{content_type}"
+          end
+
+          def transform_sections_content(page, locale)
+            [:sections_dropzone_content, :sections_content].each do |name|
+              if content = page[name][locale]
+                return unless content.is_a?(String)
+                page[name][locale] = JSON.parse(content)
+              end
+            end
           end
 
           def modify_if_parent_templatized(page, locale)

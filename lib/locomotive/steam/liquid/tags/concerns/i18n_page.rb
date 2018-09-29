@@ -10,7 +10,7 @@ module Locomotive
               page = drop.send(:_source)
 
               page.__with_locale__(locale) do
-                if page.templatized?
+                if page.templatized? && page.content_entry
                   page.content_entry.__with_locale__(locale) { yield }
                 else
                   yield

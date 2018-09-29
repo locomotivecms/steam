@@ -8,7 +8,7 @@ module Locomotive::Steam
     #
     class LocaleRedirection < ThreadSafe
 
-      include Helpers
+      include Concerns::Helpers
 
       def _call
         if url = redirect_url

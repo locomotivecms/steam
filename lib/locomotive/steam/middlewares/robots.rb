@@ -3,7 +3,7 @@ module Locomotive::Steam
 
     class Robots
 
-      include Helpers
+      include Concerns::Helpers
 
       attr_accessor_initialize :app
 

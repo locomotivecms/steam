@@ -5,7 +5,7 @@ module Locomotive::Steam
     #
     class Logging
 
-      include Helpers
+      include Concerns::Helpers
 
       attr_accessor_initialize :app
 

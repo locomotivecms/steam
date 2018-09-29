@@ -26,7 +26,7 @@ describe Locomotive::Steam::ThemeAssetRepository do
     describe '#checksums' do
       subject { repository.checksums }
       it { expect(subject.size).to eq 16 }
-      it { expect(subject['stylesheets/application.css']).to eq '15161ceeb93a9d26027a8a38862be47b' }
+      it { expect(subject['stylesheets/application.css']).to eq 'bcf663fd61d87846a60496249854d81a' }
     end
 
   end

@@ -116,7 +116,7 @@ describe Locomotive::Steam::ContentEntryRepository do
 
       let(:site_id)   { mongodb_site_id }
       let(:adapter)   { Locomotive::Steam::MongoDBAdapter.new(database: mongodb_database, hosts: ['127.0.0.1:27017']) }
-      let(:entry_id)  { BSON::ObjectId.from_string('5ae73458e051bb4f5525c92f') }
+      let(:entry_id)  { BSON::ObjectId.from_string('5baf7d38a953300567956448') }
 
     end
 

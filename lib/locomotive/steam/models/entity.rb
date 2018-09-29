@@ -1,6 +1,5 @@
 module Locomotive::Steam
   module Models
-
     module Entity
 
       include Locomotive::Steam::Models::Concerns::Validation
@@ -47,7 +46,6 @@ module Locomotive::Steam
       def serialize
         attributes.dup
       end
-
     end
   end
 end

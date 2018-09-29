@@ -17,7 +17,7 @@ module Locomotive
             end
           end
 
-          def parse_date(input, format)
+          def parse_date(input, format = nil)
             return '' if input.blank?
 
             format  ||= I18n.t('date.formats.default')

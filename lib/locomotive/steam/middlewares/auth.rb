@@ -13,7 +13,7 @@ module Locomotive::Steam
     #
     class Auth < ThreadSafe
 
-      include Helpers
+      include Concerns::Helpers
 
       def _call
         load_authenticated_entry

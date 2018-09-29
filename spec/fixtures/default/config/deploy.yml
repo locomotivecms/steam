@@ -1,6 +1,6 @@
 development:
   host: localhost:3000
-  handle: sample
+  handle: www
   email: admin@locomotivecms.com
   api_key: d49cd50f6f0d2b163f48fc73cb249f0244c37074
 staging:

@@ -45,7 +45,6 @@ module Locomotive
 
             def each_file(&block)
               Dir.glob(File.join(path, "*.{#{template_extensions.join(',')}}")).each do |filepath|
-
                 slug, locale = File.basename(filepath).split('.')[0..1]
                 locale = default_locale if template_extensions.include?(locale)
 
