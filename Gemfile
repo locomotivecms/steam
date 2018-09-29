@@ -3,8 +3,8 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  # gem 'locomotivecms_common', github: 'locomotivecms/common', ref: '257047b'
-  gem 'locomotivecms_common', path: '../common'
+  gem 'locomotivecms_common', github: 'locomotivecms/common', ref: '4d1bd56'
+  # gem 'locomotivecms_common', path: '../common'
   # gem 'locomotivecms_models', '~> 0.0.1', path: '../models'
   # gem 'locomotivecms_models', '0.0.1.pre.alpha'
   # gem 'locomotivecms-liquid', path: '/Users/didier/Documents/LocomotiveCMS/gems/liquid'

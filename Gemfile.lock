@@ -1,5 +1,7 @@
-PATH
-  remote: ../common
+GIT
+  remote: git://github.com/locomotivecms/common.git
+  revision: 4d1bd565246262ab4b1b824e21c7847846f4cc5c
+  ref: 4d1bd56
   specs:
     locomotivecms_common (0.3.1)
       activesupport (>= 5.1.5, < 6.0)
