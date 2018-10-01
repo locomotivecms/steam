@@ -32,6 +32,17 @@ describe Locomotive::Steam::Middlewares::LocaleRedirection do
       let(:locale_in_path)  { false }
       it { is_expected.to eq [200, nil] }
 
+      context 'the lang elected is not the default lang' do
+        let(:locale)          { 'fr' }
+        it { is_expected.to eq [302, '/fr'] }
+      end
+
+    end
+
+    describe 'locale is part of the path' do
+      let(:url) { 'http://models.example.com/fr' }
+      let(:locale)          { 'fr' }
+      it { is_expected.to eq [200, nil] }
     end
 
     describe 'for seo purpose redirect to the path without the locale' do
