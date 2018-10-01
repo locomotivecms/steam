@@ -79,7 +79,7 @@ module Locomotive
             if url.blank?
               if options[:json]
                 url = current_context['path'].blank? ? '/' : current_context['path']
-                url + 'index.json'
+                url + (url.ends_with?('/') ? 'index.json' : '.json')
               else
                 nil
               end

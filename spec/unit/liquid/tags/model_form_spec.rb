@@ -47,6 +47,14 @@ describe Locomotive::Steam::Liquid::Tags::ModelForm do
 
     end
 
+    context 'rendered at /_app/foo/preview/contact' do
+
+      let(:path)  { '/_app/foo/preview/contact' }
+      let(:env)   { { 'steam.mounted_on' => '/_app/foo/preview/' } }
+      it { is_expected.to eq %(<form method="POST" enctype="multipart/form-data" action="/_app/foo/preview/contact.json"><input type="hidden" name="content_type_slug" value="newsletter_addresses" /><input type="hidden" name="token" value="42" />Newsletter Form</form>) }
+
+    end
+
   end
 
   describe 'specifying an action' do
