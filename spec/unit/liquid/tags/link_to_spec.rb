@@ -71,7 +71,7 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
       context 'prefix_default_locale is true' do
 
         let(:prefix_default) { true }
-        it { is_expected.to eq 'My link: <a href="/en/">Home</a>!' }
+        it { is_expected.to eq 'My link: <a href="/en">Home</a>!' }
 
       end
 
