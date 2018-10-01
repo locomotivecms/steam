@@ -11,17 +11,33 @@ module Locomotive
 
       def _url_for(page, locale = nil)
         [''].tap do |segments|
-          locale ||= current_locale
-          same_locale = locale.to_sym == site.default_locale.to_sym
+          locale          = locale&.to_sym
+          _locale         = (locale || current_locale).to_sym
+          default_locale  = site.default_locale.to_sym
+          same_locale     = _locale == default_locale
 
-          # if the prefix_default_locale is enabled, we need to
-          # add the locale no matter if the locale is the same as the default one
+          fullpath = sanitized_fullpath(page, same_locale)
+
+          # To insert the locale in the path, 2 cases:
+          #
+          # 1.  if the prefix_default_locale is enabled, we need to
+          #     add the locale no matter if the locale is the same as the default one.
+          #
+          # 2.  since we also store the locale in session, calling the index page ("/")
+          #     will always return the page in the locale stored in session.
+          #     In order to see the index page in the default locale, we need to allow
+          #     "/<default locale>" instead of just "/".
+          #
           if site.prefix_default_locale || !same_locale
+            segments << _locale
+          elsif fullpath.blank? && locale == default_locale && current_locale != locale
             segments << locale
           end
 
-          # fullpath
-          segments << sanitized_fullpath(page, same_locale)
+          # we don't want a trailing slash for the home page if a locale is set
+          fullpath = nil if segments.size == 2 && fullpath.blank?
+
+          segments << fullpath
         end.compact.join('/')
       end
 

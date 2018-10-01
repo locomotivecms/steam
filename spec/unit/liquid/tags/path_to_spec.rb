@@ -4,9 +4,11 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
 
   let(:prefix_default)  { false }
   let(:assigns)         { {} }
+  let(:current_locale)  { 'en' }
+  let(:locales)         { ['en'] }
   let(:services)        { Locomotive::Steam::Services.build_instance }
-  let(:site)            { instance_double('Site', locales: ['en'], default_locale: 'en', prefix_default_locale: prefix_default) }
-  let(:context)         { ::Liquid::Context.new(assigns, {}, { services: services, site: site, locale: 'en' }) }
+  let(:site)            { instance_double('Site', locales: locales, default_locale: 'en', prefix_default_locale: prefix_default) }
+  let(:context)         { ::Liquid::Context.new(assigns, {}, { services: services, site: site, locale: current_locale }) }
 
   subject { render_template(source, context) }
 
@@ -52,10 +54,31 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
 
     end
 
+    context 'the current locale in session is different from the requested locale' do
+
+      let(:current_locale)  { 'fr' }
+      let(:locales)         { ['en', 'fr'] }
+      let(:source)          { "{% path_to index, locale: 'en' %}" }
+
+      before do
+        services.url_builder.current_locale = current_locale
+      end
+
+      it { is_expected.to eq '/en' }
+
+      context 'prefix_default_locale is true' do
+
+        let(:prefix_default) { true }
+        it { is_expected.to eq '/en' }
+
+      end
+
+    end
+
     context 'prefix_default_locale is true' do
 
       let(:prefix_default) { true }
-      it { is_expected.to eq '/en/' }
+      it { is_expected.to eq '/en' }
 
     end
 

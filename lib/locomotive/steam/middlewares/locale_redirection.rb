@@ -53,7 +53,7 @@ module Locomotive::Steam
       end
 
       def redirect_to_root_path_with_lang
-        locale_not_mentioned_in_path? && path.gsub(/^\//, '') == "" && !default_locale?
+        locale_not_mentioned_in_path? && path.gsub(/^\//, '') == '' && !default_locale?
       end
     end
   end
