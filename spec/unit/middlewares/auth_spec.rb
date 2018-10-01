@@ -16,7 +16,14 @@ describe Locomotive::Steam::Middlewares::Auth::AuthOptions do
 
     subject { options.smtp }
 
-    it { is_expected.to eq('address': '127.0.0.1', 'user_name': 'John', 'password': 'doe', 'port': 25) }
+    it { is_expected.to eq(
+        address: '127.0.0.1',
+        user_name: 'John',
+        password: 'doe',
+        port: 25,
+        authentication: 'plain',
+        enable_starttls_auto: false,
+    ) }
 
     context 'no smtp metafields' do
 
