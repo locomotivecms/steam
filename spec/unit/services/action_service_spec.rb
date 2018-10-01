@@ -16,7 +16,8 @@ describe Locomotive::Steam::ActionService do
     let(:params)  { {} }
     let(:assigns) { {} }
     let(:session) { {} }
-    let(:context) { ::Liquid::Context.new(assigns, {}, { session: session }) }
+    let(:cookies) { {} }
+    let(:context) { ::Liquid::Context.new(assigns, {}, { session: session, cookies: cookies }) }
 
     subject { service.run(script, params, context) }
 
@@ -109,6 +110,23 @@ describe Locomotive::Steam::ActionService do
         let(:script) { "return setSessionProp('done', true);" }
 
         it { subject; expect(session[:done]).to eq true }
+
+      end
+
+      describe 'getCookiesProp' do
+
+        let(:cookies) { { 'name' => 'John' } }
+        let(:script) { "return getCookiesProp('name');" }
+
+        it { is_expected.to eq 'John' }
+
+      end
+
+      describe 'sendCookiesProp' do
+
+        let(:script) { "return setCookiesProp('done', true);" }
+
+        it { subject; expect(cookies['done']).to eq 'true' }
 
       end
 
