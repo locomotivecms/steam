@@ -64,7 +64,7 @@ describe Locomotive::Steam::Middlewares::LocaleRedirection do
 
       describe 'add default locale to root path' do
         let(:url) { 'http://models.example.com/' }
-        it { is_expected.to eq [301, '/de'] }
+        it { is_expected.to eq [302, '/de'] }
       end
 
       describe 'add default locale to long path' do
