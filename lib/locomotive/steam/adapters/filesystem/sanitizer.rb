@@ -1,7 +1,9 @@
 module Locomotive::Steam
   module Adapters
     module Filesystem
+
       module Sanitizer
+
         extend Forwardable
 
         def_delegators :@scope, :site, :locale, :locales, :default_locale

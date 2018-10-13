@@ -48,7 +48,7 @@ module Locomotive::Steam
         protected
 
         def entry_value(entry)
-          value = entry.send(@field) rescue nil # not just it's safe to rely on rescue (hidden errors)
+          value = entry.send(@field) rescue nil # TODO: not safe to rely on rescue (hidden errors)
 
           if value.respond_to?(:translations)
             value[@locale]

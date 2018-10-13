@@ -1,3 +1,5 @@
+require 'oj'
+
 module Locomotive::Steam
   module Adapters
     module Filesystem
@@ -20,6 +22,7 @@ module Locomotive::Steam
             record_id(entity) # required to get the parent_id
 
             locales.each do |locale|
+              set_automatic_translations(entity, locale)
               set_default_redirect_type(entity, locale)
             end
 
@@ -38,6 +41,7 @@ module Locomotive::Steam
 
                 use_default_locale_template_path(page, locale)
 
+                # make sure we'll deal with a Hash and not a string
                 transform_sections_content(page, locale)
               end
             end
@@ -86,6 +90,20 @@ module Locomotive::Steam
 
             set_localized_fullpath(page._fullpath, fullpath, locale)
             page[:fullpath][locale] = fullpath
+          end
+
+          def set_automatic_translations(page, locale)
+            return if locale == self.locale
+
+            if page[:template_path][locale].blank?
+              %i(
+                title slug fullpath template_path redirect_url
+                sections_content sections_dropzone_content
+                seo_title meta_description meta_keywords
+              ).each do |name|
+                page[name][locale] ||= page[name][default_locale]
+              end
+            end
           end
 
           def depth(page)

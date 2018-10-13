@@ -109,7 +109,11 @@ module Locomotive
             end
 
             def path
-              File.join(site_path, 'data')
+              return @path if @path # memoization
+
+              path = File.join(site_path, 'data', env.to_s, 'content_entries')
+
+              @path = File.exists?(path) ? path : File.join(site_path, 'data') # allow the legacy folder
             end
 
             def content_type

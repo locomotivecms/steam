@@ -116,7 +116,7 @@ module Locomotive::Steam
 
     def build_yaml_loaders
       %i(sites pages content_types content_entries snippets sections translations theme_assets).inject({}) do |memo, name|
-        memo[name] = build_klass('YAMLLoaders', name).new(site_path)
+        memo[name] = build_klass('YAMLLoaders', name).new(site_path, options[:env])
         memo
       end
     end

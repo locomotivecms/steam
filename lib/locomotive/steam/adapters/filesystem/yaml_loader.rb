@@ -4,18 +4,18 @@ module Locomotive::Steam
 
       module YAMLLoader
 
-        attr_reader :site_path
+        extend Forwardable
 
-        def initialize(site_path)
-          @site_path = site_path
+        def_delegators :@scope, :locales, :default_locale
+
+        attr_reader :site_path, :env
+
+        def initialize(site_path, env)
+          @site_path, @env = site_path, env
         end
 
         def load(scope = nil)
           @scope = scope
-        end
-
-        def default_locale
-          @scope.default_locale
         end
 
         def _load(path, frontmatter = false, &block)

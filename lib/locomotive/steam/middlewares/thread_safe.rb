@@ -53,10 +53,6 @@ module Locomotive::Steam::Middlewares
       @locale ||= env.fetch('steam.locale')
     end
 
-    def liquid_assigns
-      @liquid_assigns ||= env.fetch('steam.liquid_assigns')
-    end
-
     def locales
       site.locales
     end
@@ -71,6 +67,10 @@ module Locomotive::Steam::Middlewares
 
     def session
       env['rack.session']
+    end
+
+    def liquid_assigns
+      @liquid_assigns ||= env.fetch('steam.liquid_assigns')
     end
 
     def live_editing?

@@ -47,6 +47,8 @@ module Locomotive::Steam
           end
 
           def set_id(entity)
+            return if entity._id.present?
+
             if (slug = entity[:_slug]).respond_to?(:translations)
               entity[:_id] = slug[locale]
             else
