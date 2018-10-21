@@ -23,7 +23,7 @@ describe Locomotive::Steam::Middlewares::Locale do
     env['steam.request']  = Rack::Request.new(env)
     env['steam.services'] = services
     code, env = middleware.call(env)
-    [env['steam.locale'], session['locale'].to_sym]
+    [env['steam.locale'], session['steam-locale']&.to_sym]
   end
 
   describe 'no locale defined in the path' do
@@ -56,7 +56,7 @@ describe Locomotive::Steam::Middlewares::Locale do
 
     context 'user with session, use it' do
 
-      let(:session) { {'locale' => 'en'} }
+      let(:session) { {'steam-locale' => 'en'} }
 
       it { is_expected.to eq [:en, :en] }
 

@@ -89,7 +89,7 @@ module Locomotive::Steam
       # would be the same for all the preview urls and this is not good.
       # This is why we need to use a different key.
       def session_key_name
-        live_editing? ? "locale-#{site.handle}" : 'locale'
+        live_editing? ? "steam-locale-#{site.handle}" : 'steam-locale'
       end
 
       def is_index_page?
