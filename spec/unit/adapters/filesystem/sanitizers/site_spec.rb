@@ -6,14 +6,40 @@ require_relative '../../../../../lib/locomotive/steam/adapters/filesystem/saniti
 describe Locomotive::Steam::Adapters::Filesystem::Sanitizers::Site do
 
   let(:schema)    { nil }
-  let(:entity)    { instance_double('SiteEntity', metafields_schema: schema) }
+  let(:routes)    { nil }
+  let(:entity)    { instance_double('SiteEntity', metafields_schema: schema, routes: routes) }
   let(:sanitizer) { described_class.new }
 
   describe '#apply_to_entity' do
 
     subject { sanitizer.apply_to_entity(entity) }
 
-    it { expect(entity).to receive(:metafields_schema=).with(nil); subject }
+    it 'modifies the entity' do
+      expect(entity).to receive(:metafields_schema=).with(nil)
+      expect(entity).to receive(:routes=).with([])
+      subject
+    end
+
+  end
+
+  describe '#build_routes' do
+
+    let(:routes) { nil }
+
+    subject { sanitizer.send(:build_routes, routes) }
+
+    it { is_expected.to eq [] }
+
+    describe 'various formats of the routes' do
+
+      let(:routes) { [{ '/blog/:year/:month' => 'blog' }, { 'route' => '/products/:category/:slug', 'page_handle' => 'product' }] }
+
+      it { is_expected.to eq([
+        { 'route' => '/blog/:year/:month', 'page_handle' => 'blog' },
+        { 'route' => '/products/:category/:slug', 'page_handle' => 'product' }
+      ]) }
+
+    end
 
   end
 

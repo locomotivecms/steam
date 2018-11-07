@@ -20,7 +20,8 @@ module Locomotive::Steam
         metafields_schema:        {},
         metafields:               nil,
         sections:                 nil,
-        asset_host:               nil
+        asset_host:               nil,
+        routes:                   []
       }.merge(attributes))
     end
 

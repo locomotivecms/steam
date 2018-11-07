@@ -69,6 +69,11 @@ module Locomotive::Steam::Middlewares
       @params ||= self.request.params.with_indifferent_access
     end
 
+    def merge_with_params(values)
+      values.each { |name, value| self.request.params[name] = value }
+      @params = nil
+    end
+
     def session
       env['rack.session']
     end

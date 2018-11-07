@@ -9,6 +9,7 @@ module Locomotive::Steam
 
           def apply_to_entity(entity)
             entity.metafields_schema = clean_metafields_schema(entity.metafields_schema)
+            entity.routes            = build_routes(entity.routes)
           end
 
           private
@@ -44,6 +45,23 @@ module Locomotive::Steam
             when Hash   then label
             when String then { default: label }
             else { default: default}
+            end
+          end
+
+          def build_routes(definitions)
+            return [] if definitions.blank?
+
+            definitions.map do |definition|
+              if definition.size == 1
+                # format: { '/posts/:year/:month' => 'blog' }
+                {
+                  'route'       => definition.keys.first,
+                  'page_handle' => definition.values.first
+                }
+              else
+                # format: { 'route' => '/posts/:year/:month', 'page_handle' => 'blog' }
+                definition.stringify_keys
+              end
             end
           end
 
