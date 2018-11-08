@@ -28,6 +28,15 @@ describe Locomotive::Steam::Liquid::Tags::Action do
 
     it { subject; expect(context['foo']).to eq 42.0 }
 
+    describe 'accessing params through props' do
+
+      let(:assigns) { { 'params' => Locomotive::Steam::Liquid::Drops::Params.new({ foo: 'bar' }) } }
+      let(:source)  { '{% action "getProps" %}var params = getProp("params");setProp("result", params.foo);{% endaction %}' }
+
+      it { subject; expect(context['result']).to eq('bar') }
+
+    end
+
     describe 'uploaded file' do
 
       let(:registers) { { services: services, params: { 'my_file' => { 'tempfile' => Tempfile.new('my_file') } } } }

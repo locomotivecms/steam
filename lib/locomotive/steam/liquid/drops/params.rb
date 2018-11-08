@@ -13,6 +13,10 @@ module Locomotive
             Param.new(@_params[meth.to_s])
           end
 
+          def as_json
+            @_params.as_json
+          end
+
         end
 
         class Param < ::Liquid::Drop
