@@ -19,6 +19,7 @@ module Locomotive::Steam
             repositories:   services.repositories,
             logger:         Locomotive::Common::Logger,
             live_editing:   live_editing?,
+            params:         params,
             session:        request.session,
             cookies:        request.cookies
           }
@@ -35,7 +36,7 @@ module Locomotive::Steam
         def _default_liquid_assigns
           {
             'current_page'      => params[:page],
-            'params'            => params.stringify_keys,
+            'params'            => Locomotive::Steam::Liquid::Drops::Params.new(params),
             'now'               => Time.zone.now,
             'today'             => Date.today,
             'mode'              => Locomotive::Steam.configuration.mode,
