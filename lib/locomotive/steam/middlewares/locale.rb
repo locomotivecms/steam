@@ -10,7 +10,7 @@ module Locomotive::Steam
     #   /index      => locale = :en (default one)
     #
     #   /en/index?locale=fr => locale = :fr
-    #   /index      => redirection to /en if the locale in session is :en
+    #   /index      => redirection to /en if the locale in cookie is :en
     #
     class Locale < ThreadSafe
 
@@ -19,7 +19,9 @@ module Locomotive::Steam
       def _call
         env['steam.path']   = request.path_info
 
-        env['steam.locale'] = session[session_key_name] = services.locale = extract_locale
+        env['steam.locale'] = services.locale = extract_locale
+
+        set_locale_cookie
 
         log "Locale used: #{locale.upcase}"
 
@@ -34,7 +36,7 @@ module Locomotive::Steam
         # Regarding the index page (basically, "/"), we've to see if we could
         # guess the locale from the headers the browser sends to us.
         locale = if is_index_page?
-          locale_from_params || locale_from_session || locale_from_header
+          locale_from_params || locale_from_cookie || locale_from_header
         else
           locale_from_path || locale_from_params
         end
@@ -75,20 +77,23 @@ module Locomotive::Steam
         end
       end
 
-      def locale_from_session
-        if locale = session[session_key_name]
-          env['steam.locale_in_session'] = true
+      def locale_from_cookie
+        if locale = services.cookie.get(cookie_key_name)
 
-          log 'Locale extracted from the session'
+          log 'Locale extracted from the cookie'
 
           locale.to_sym
         end
       end
 
-      # The preview urls for all the sites share the same domain, so session[:locale]
+      def set_locale_cookie
+        services.cookie.set(cookie_key_name, {'value': locale, 'path': '/', 'max_age': 1.year})
+      end
+
+      # The preview urls for all the sites share the same domain, so cookie[:locale]
       # would be the same for all the preview urls and this is not good.
       # This is why we need to use a different key.
-      def session_key_name
+      def cookie_key_name
         live_editing? ? "steam-locale-#{site.handle}" : 'steam-locale'
       end
 
