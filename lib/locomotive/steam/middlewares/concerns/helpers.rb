@@ -14,7 +14,11 @@ module Locomotive::Steam
         end
 
         def render_response(content, code = 200, type = nil)
-          @next_response = [code, { 'Content-Type' => type || 'text/html' }, [content]]
+          headers = { 'Content-Type' => type || 'text/html' }
+          request.env['steam.cookies'].each do |key, vals|
+            Rack::Utils.set_cookie_header!(headers, key, vals.symbolize_keys!)
+          end
+          @next_response = [code, headers, [content]]
         end
 
         def redirect_to(location, type = 301)
