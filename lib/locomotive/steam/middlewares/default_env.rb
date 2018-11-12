@@ -11,6 +11,7 @@ module Locomotive::Steam
         env['steam.request']        = request
         env['steam.services']       = build_services(request)
         env['steam.liquid_assigns'] = {}
+        env['steam.cookies'] = {}
 
         app.call(env)
       end
