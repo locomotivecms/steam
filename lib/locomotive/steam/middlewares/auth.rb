@@ -62,6 +62,8 @@ module Locomotive::Steam
 
         store_authenticated(nil)
 
+        redirect_to options.callback || path
+
         append_message(:signed_out)
       end
 
