@@ -89,7 +89,6 @@ module Locomotive::Steam
           'page'          => page.to_liquid,
           'models'        => Locomotive::Steam::Liquid::Drops::ContentTypes.new,
           'contents'      => Locomotive::Steam::Liquid::Drops::ContentTypes.new,
-          'current_user'  => {},
           'session'       => Locomotive::Steam::Liquid::Drops::SessionProxy.new,
         }.merge(env['steam.liquid_assigns'])
       end
