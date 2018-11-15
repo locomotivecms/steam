@@ -54,6 +54,13 @@ describe Locomotive::Steam::Liquid::Filters::Json do
 
   end
 
+  describe '#Render Hash' do
+
+    let(:input) { [{'foo': 'bar'}] }
+    it { expect(subject).to eq %({"foo":"bar"}) }
+
+  end
+
   describe '#open_json' do
 
     let(:input) { '' }
