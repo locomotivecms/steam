@@ -29,7 +29,7 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::ContentType do
 
     subject { loader.send(:build_select_options_from_hash, options) }
 
-    it { is_expected.to eq [{ _id: 'General', name: { en: 'General', fr: 'Général' }, position: 0 }, { _id: 'Gigs', name: { en: 'Gigs', fr: 'Concerts' }, position: 1 }, { _id: 'Bands', name: { en: 'Bands', fr: 'Groupes' }, position: 2 }] }
+    it { is_expected.to eq [{ _id: 0, name: { en: 'General', fr: 'Général' }, position: 0 }, { _id: 1, name: { en: 'Gigs', fr: 'Concerts' }, position: 1 }, { _id: 2, name: { en: 'Bands', fr: 'Groupes' }, position: 2 }] }
 
   end
 
@@ -40,7 +40,7 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::ContentType do
 
     subject { loader.send(:build_select_options_from_array, options) }
 
-    it { is_expected.to eq [{ _id: 'General', name: { en: 'General', fr: 'Général' }, position: 0 }, { _id: 'Gigs', name: { en: 'Gigs', fr: 'Concerts' }, position: 1 }, { _id: 'Bands', name: { en: 'Bands', fr: 'Groupes' }, position: 2 }] }
+    it { is_expected.to eq [{ _id: 0, name: { en: 'General', fr: 'Général' }, position: 0 }, { _id: 1, name: { en: 'Gigs', fr: 'Concerts' }, position: 1 }, { _id: 2, name: { en: 'Bands', fr: 'Groupes' }, position: 2 }] }
 
   end
 

@@ -35,11 +35,14 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::ContentEntry do
 
     context 'a content type with a select field' do
 
-      let(:field)         { instance_double('Field', name: 'kind', type: :select) }
+      let(:options)       { instance_double('Options') }
+      let(:field)         { instance_double('Field', name: 'kind', type: :select, select_options: options) }
       let(:content_type)  { instance_double('Bands', slug: 'bands', select_fields: [field], association_fields: [], file_fields: [], password_fields: []) }
 
       it 'adds a new attribute for the foreign key' do
-        expect(subject.first[:kind_id]).to eq 'grunge'
+        expect(options).to receive(:by_name).twice.with('grunge').and_return(instance_double('GrungeOption', _id: 0))
+        expect(options).to receive(:by_name).with('rock').and_return(instance_double('RockOption', _id: 1))
+        expect(subject.first[:kind_id]).to eq 0
         expect(subject.first[:kind]).to eq nil
       end
 
@@ -65,10 +68,11 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::ContentEntry do
       let(:content_type)  { instance_double('Updates', slug: 'updates', select_fields: [field], association_fields: [], file_fields: [], password_fields: []) }
 
       it 'adds a new localized attribute for the foreign key' do
-        option = instance_double('Option', _id: 'General')
+        option = instance_double('Option', _id: 0)
+        allow(options_scope).to receive(:with_locale) { |_, &block| block.call }
         allow(options).to receive(:by_name).with('General').and_return(option)
         allow(options).to receive(:by_name).with('Général').and_return(option)
-        expect(subject.last[:category_id]).to eq({ en: 'General', fr: 'General' })
+        expect(subject.last[:category_id]).to eq({ en: 0, fr: 0 })
         expect(subject.last[:category]).to eq nil
       end
 

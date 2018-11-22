@@ -31,7 +31,8 @@ module Locomotive::Steam
     end
 
     def localized_names
-      # FIXME: select_fields ALWAYS returns I18nField even if the site is not localized
+      # FIXME: select type fields are a bit specific. The label of the options is localized
+      # even if the select itself is not (see the _cast_select method in the content_entry entity class)
       fields.localized_names + select_fields.map(&:name)
     end
 

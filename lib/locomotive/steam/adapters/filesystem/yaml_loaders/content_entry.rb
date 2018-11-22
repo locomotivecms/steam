@@ -34,12 +34,13 @@ module Locomotive
               content_type.select_fields.each do |field|
                 if (option = attributes.delete(field.name.to_sym)).is_a?(Hash)
                   attributes[:"#{field.name}_id"] = option.inject({}) do |memo, (locale, name)|
-                    field.select_options.scope.locale = locale
-                    memo[locale] = field.select_options.by_name(name).try(:_id)
+                    field.select_options.scope.with_locale(locale) do
+                      memo[locale] = field.select_options.by_name(name).try(:_id)
+                    end
                     memo
                   end
                 else
-                  attributes[:"#{field.name}_id"] = option
+                  attributes[:"#{field.name}_id"] = field.select_options.by_name(option).try(:_id)
                 end
               end
             end

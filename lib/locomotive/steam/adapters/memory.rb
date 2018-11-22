@@ -39,7 +39,7 @@ module Locomotive::Steam
 
     def memoized_dataset(mapper, scope)
       return @dataset if @dataset
-      dataset(mapper, scope)
+      @dataset = dataset(mapper, scope)
     end
 
     def dataset(mapper, scope)
