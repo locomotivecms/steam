@@ -21,13 +21,15 @@ describe Locomotive::Steam::Server do
 
     it 'checks if it looks valid' do
       expect(Nokogiri::XML(subject).errors.empty?).to eq true
-      expect(subject.scan(/<url>/).size).to eq 26
+      expect(subject.scan(/<url>/).size).to eq 22
       expect(subject).to match("<loc>http://example.org/songs/song-number-2/band</loc>")
+      expect(subject).to match(%(<xhtml:link rel="alternate" hreflang="fr" href="http://example.org/fr/a-notre-sujet" />))
       expect(subject).to match((<<-EOF
   <url>
-    <loc>http://example.org/fr/a-notre-sujet</loc>
+    <loc>http://example.org/about-us</loc>
     <lastmod>2015-03-25</lastmod>
-    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr" href="http://example.org/fr/a-notre-sujet" />
+     <xhtml:link rel="alternate" hreflang="nb" href="http://example.org/nb/om-oss" />
   </url>
       EOF
       ).strip)

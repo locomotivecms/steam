@@ -14,78 +14,100 @@ module Locomotive::Steam
       private
 
       def build_xml
-        <<-EOF
+        <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>#{base_url}</loc>
-    <priority>1.0</priority>
-  </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 #{build_pages_to_xml}
 </urlset>
-        EOF
+        XML
       end
 
       def build_pages_to_xml
+        # we request the data based on the default locale
+        page_repository.locale = site.default_locale
+
         page_repository.published.map do |page|
           next if skip_page?(page)
 
-          build_page_xml(page)
+          _page = Locomotive::Steam::Decorators::I18nDecorator.new(page)
+
+          if page.templatized?
+            build_templatized_page_to_xml(_page)
+          else
+            build_page_to_xml(_page)
+          end
         end.flatten.join.strip
       end
 
-      def build_page_xml(page)
-        _page = Locomotive::Steam::Decorators::I18nDecorator.new(page)
+      def build_page_to_xml(page)
+        entry = { date: page.updated_at.to_date, links: [] }
 
-        site.locales.map do |locale|
-          _page.__locale__ = locale
+        site.locales.each_with_index do |locale, index|
+          page.__locale__ = locale
 
-          next if _page.title.blank? # should be translated
+          # if blank, means that the page is not translated, so skip it
+          next if page.title.blank?
 
-          if _page.templatized?
-            build_templatized_page_xml(_page, locale)
+          if index == 0 # default locale
+            entry[:loc] = url_for(page, locale)
           else
-            page_to_xml(_page, locale)
+            entry[:links] << { locale: locale, href: url_for(page, locale) }
           end
         end
+
+        entry_to_xml(entry)
       end
 
-      def build_templatized_page_xml(page, locale)
+      def build_templatized_page_to_xml(page)
         content_type = repositories.content_type.find(page.content_type_id)
 
-        return nil unless build_templatized_page_xml?(page, content_type, locale)
+        repositories.content_entry.with(content_type).all({ _visible: true }).map do |content_entry|
+          _content_entry  = Locomotive::Steam::Decorators::I18nDecorator.new(content_entry, locale)
+          entry           = { date: content_entry.updated_at.to_date, links: [] }
 
-        repositories.content_entry.with(content_type).all.map do |entry|
-          next unless entry.visible? # only visible content entry
+          site.locales.each_with_index do |locale, index|
+            page.__locale__           = locale
+            _content_entry.__locale__ = locale
 
-          _entry = Locomotive::Steam::Decorators::I18nDecorator.new(entry, locale)
+            # if blank, means that the page or the content entry is not translated, so skip it
+            next if _content_entry._label.blank? || page.title.blank?
 
-          next if _entry._label.blank? # should be translated
+            page.content_entry = _content_entry
 
-          page.content_entry = _entry
+            if index == 0 # default locale
+              entry[:loc] = url_for(page, locale)
+            else
+              entry[:links] << { locale: locale, href: url_for(page, locale) }
+            end
+          end
 
-          page_to_xml(page, locale)
-        end
+          entry_to_xml(entry)
+        end.flatten.join.strip
       end
 
-      def page_to_xml(page, locale)
-        last_modification = (page.content_entry || page).updated_at.to_date
-
-        <<-EOF
+      def entry_to_xml(entry)
+        <<-XML
   <url>
-    <loc>#{base_url}#{url_for(page, locale)}</loc>
-    <lastmod>#{last_modification.to_s('%Y-%m-%d')}</lastmod>
-    <priority>0.9</priority>
+    <loc>#{base_url}#{entry[:loc]}</loc>
+    <lastmod>#{entry[:date].to_s('%Y-%m-%d')}</lastmod>
+    #{entry_links_to_xml(entry[:links])}
   </url>
-        EOF
+        XML
+      end
+
+      def entry_links_to_xml(links)
+        links.map do |link|
+          <<-XML
+     <xhtml:link rel="alternate" hreflang="#{link[:locale]}" href="#{base_url}#{link[:href]}" />
+          XML
+        end.flatten.join.strip
       end
 
       def skip_page?(page)
-        page.index? ||
         page.not_found? ||
         page.layout? ||
         page.redirect? ||
-        (!page.templatized? && !page.listed?)
+        (!page.templatized? && !page.index? && !page.listed?)
       end
 
       def repositories
@@ -98,15 +120,6 @@ module Locomotive::Steam
 
       def url_for(page, locale = nil)
         services.url_builder.url_for(page, locale)
-      end
-
-      def build_templatized_page_xml?(page, content_type, locale)
-        return true if content_type.localized? || default_locale == locale
-
-        # does the templatized page have the same source
-        # (liquid template) as in the default locale?
-        # If so, no need to add a xml entry for this page
-        !page.source.blank?
       end
 
       def base_url
