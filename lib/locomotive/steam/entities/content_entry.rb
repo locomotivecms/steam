@@ -95,7 +95,7 @@ module Locomotive::Steam
       _attributes += content_type.persisted_field_names
 
       _attributes.each do |name|
-        hash[name.to_s] = send(name) rescue nil
+        hash[name.to_s] = send(name)
       end
 
       # errors?
@@ -121,6 +121,7 @@ module Locomotive::Steam
         _cast_value(field)
       rescue Exception => e
         Locomotive::Common::Logger.info "[#{content_type.slug}][#{_label}] Unable to cast the \"#{name}\" field, reason: #{e.message}".yellow
+        puts e.message
         nil
       end
     end
@@ -190,14 +191,21 @@ module Locomotive::Steam
     end
 
     def _cast_select(field)
-      if (_value = attributes[:"#{field.name}_id"]).respond_to?(:translations)
-        # the field is localized, so get the labels in all the locales (2 different locales might point to different options)
-        # FIXME: dup is used because we want to preserve the original ids
-        attributes[field.name] = attributes[:"#{field.name}_id"].dup
+      if (_value = @attributes[:"#{field.name}_id"]).respond_to?(:translations)
+        # the field is localized, so get the labels in all the locales
+        # (2 different locales might point to different options)
 
-        _cast_convertor(field.name, true) do |value, locale|
-          name = field.select_options.find(value)&.name
-          locale.nil? ? name&.default : name.try(:[], locale)
+        if _value.default
+          # unique value for all the locales, so grab the option
+          name = field.select_options.find(_value.default)&.name
+          name.duplicate(field.name)
+        else
+          @attributes[field.name] = _value.duplicate(field.name)
+
+          _cast_convertor(field.name, true) do |value, locale|
+            name = field.select_options.find(value)&.name
+            name.try(:[], locale)
+          end
         end
       else
         # the field is not localized, we only have the id of the option,

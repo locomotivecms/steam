@@ -61,9 +61,9 @@ module Locomotive
         query { where(required: true) }.all
       end
 
-      def localized_names
+      def localized_names(include_select_field_id: true)
         query { where(localized: true) }.all.map do |field|
-          field.type == :select ? [field.name, "#{field.name}_id"] : field.name
+          field.type == :select && include_select_field_id ? [field.name, "#{field.name}_id"] : field.name
         end.flatten
       end
 
