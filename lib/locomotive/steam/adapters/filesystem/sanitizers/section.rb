@@ -21,8 +21,13 @@ module Locomotive::Steam
 
             json, template = match[:json], match[:template]
 
-            entity.definition = JSON.parse(json)
-            entity.template   = template
+            begin
+              entity.definition = MultiJson.load(json)
+            rescue MultiJson::ParseError => e
+              raise Locomotive::Steam::JsonParsingError.new(e, entity.template_path, json)
+            end
+
+            entity.template = template
           end
 
           def raise_parsing_error(entity, content)
