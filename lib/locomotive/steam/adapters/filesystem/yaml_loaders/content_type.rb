@@ -33,6 +33,7 @@ module Locomotive
 
             def build_field(name, attributes, position)
               attributes.tap do |attributes|
+                attributes[:_id]      = name.to_s
                 attributes[:name]     = name.to_s
                 attributes[:type]     = (attributes[:type] || 'string').to_s.downcase
                 attributes[:position] ||= position
@@ -64,7 +65,7 @@ module Locomotive
                 options.each do |locale, values|
                   values.each_with_index do |name, position|
                     if (option = list.at(position)).nil?
-                      list << { _id: name, name: { locale => name }, position: position }
+                      list << { _id: position, name: { locale => name }, position: position }
                     else
                       option[:name][locale] = name
                     end
@@ -76,8 +77,8 @@ module Locomotive
             def build_select_options_from_array(options)
               [].tap do |list|
                 options.each_with_index do |name, position|
-                  _id = name.is_a?(Hash) ? name.values.first : name
-                  list << { _id: _id, name: name, position: position }
+                  # _id = name.is_a?(Hash) ? name.values.first : name
+                  list << { _id: position, name: name, position: position }
                 end
               end
             end

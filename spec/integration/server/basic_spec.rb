@@ -191,4 +191,12 @@ describe Locomotive::Steam::Server do
 
   end
 
+  describe 'prevent XSS attacks' do
+
+    subject { get '/events?some_variable=%3Cscript%3Ealert(document.cookie)%3C/script%3E'; last_response.body }
+
+    it { is_expected.not_to include '<script>alert(document.cookie)</script>' }
+
+  end
+
 end

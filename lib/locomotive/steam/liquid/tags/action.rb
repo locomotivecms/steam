@@ -54,9 +54,9 @@ module Locomotive
           end
 
           def safe_params(context)
-            return {} if context['params'].blank?
+            return {} if context.registers[:params].blank?
 
-            context['params'].dup.tap do |params|
+            context.registers[:params].dup.tap do |params|
               # Tempfile can't be converted in Duktape for obvious reasons
               replace_tempfile(params)
             end

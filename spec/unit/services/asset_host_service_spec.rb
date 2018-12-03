@@ -66,6 +66,14 @@ describe Locomotive::Steam::AssetHostService do
 
     end
 
+    describe 'but without a trailing /' do
+
+      let(:host) { 'https://storage.googleapis.com/locomotive-station' }
+      let(:source) { '/sites/42/assets/1/banner.png' }
+      it { is_expected.to eq 'https://storage.googleapis.com/sites/42/assets/1/banner.png' }
+
+    end
+
   end
 
   describe 'the host is a string' do

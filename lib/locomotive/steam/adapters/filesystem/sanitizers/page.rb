@@ -161,7 +161,12 @@ module Locomotive::Steam
             [:sections_dropzone_content, :sections_content].each do |name|
               if content = page[name][locale]
                 return unless content.is_a?(String)
-                page[name][locale] = JSON.parse(content)
+
+                begin
+                  page[name][locale] = MultiJson.load(content)
+                rescue MultiJson::ParseError => e
+                  raise Locomotive::Steam::JsonParsingError.new(e, page.template_path[locale], content)
+                end
               end
             end
           end

@@ -5,19 +5,22 @@ module Locomotive
 
       attr_accessor_initialize :site, :current_locale, :mounted_on
 
-      def url_for(page, locale = nil)
-        prefix(_url_for(page, locale))
+      def url_for(page, locale = nil, prefix_default_locale = nil)
+        prefix(_url_for(page, locale, prefix_default_locale))
       end
 
-      def _url_for(page, locale = nil)
+      def _url_for(page, locale = nil, prefix_default_locale = nil)
+        locale          = locale&.to_sym
+        _locale         = (locale || current_locale).to_sym
+        default_locale  = site.default_locale.to_sym
+        same_locale     = _locale == default_locale
+
+        # the prefix_default_locale can override the site.prefix_default_locale attribute
+        prefix_default_locale = prefix_default_locale.nil? ? site.prefix_default_locale : prefix_default_locale
+
+        fullpath = sanitized_fullpath(page, same_locale)
+
         [''].tap do |segments|
-          locale          = locale&.to_sym
-          _locale         = (locale || current_locale).to_sym
-          default_locale  = site.default_locale.to_sym
-          same_locale     = _locale == default_locale
-
-          fullpath = sanitized_fullpath(page, same_locale)
-
           # To insert the locale in the path, 2 cases:
           #
           # 1.  if the prefix_default_locale is enabled, we need to
@@ -28,7 +31,7 @@ module Locomotive
           #     In order to see the index page in the default locale, we need to allow
           #     "/<default locale>" instead of just "/".
           #
-          if site.prefix_default_locale || !same_locale
+          if prefix_default_locale || !same_locale
             segments << _locale
           elsif fullpath.blank? && locale == default_locale && current_locale != locale
             segments << locale

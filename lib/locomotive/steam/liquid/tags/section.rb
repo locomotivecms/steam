@@ -20,7 +20,7 @@ module Locomotive
           def parse(tokens)
             notify_on_parsing(evaluate_section_name,
               id:         "page-#{@section_options[:id] || evaluate_section_name}",
-              key:        @section_options[:id] || evaluate_section_name,
+              key:        (@section_options[:id] || evaluate_section_name).to_s,
               label:      @section_options[:label],
               placement:  @section_options[:placement]&.to_sym
             )

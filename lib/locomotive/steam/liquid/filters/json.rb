@@ -9,7 +9,9 @@ module Locomotive
               fields = fields.split(',').map(&:strip)
             end
 
-            if input.respond_to?(:each)
+            if input.is_a?(Hash)
+              object_to_json(input, fields)
+            elsif input.respond_to?(:each)
               '[' + input.map do |object|
                 fields.size == 1 ? object[fields.first].to_json : object_to_json(object, fields)
               end.join(',') + ']'

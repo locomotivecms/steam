@@ -62,7 +62,17 @@ module Locomotive::Steam::Middlewares
     end
 
     def params
-      @params ||= self.request.params.with_indifferent_access
+      @params ||= if request.content_type == 'application/json' && (request.post? || request.put?)
+        request.body.rewind
+        JSON.parse(request.body.read).with_indifferent_access
+      else
+        request.params.with_indifferent_access
+      end
+    end
+
+    def merge_with_params(values)
+      values.each { |name, value| self.request.params[name] = value }
+      @params = nil
     end
 
     def session

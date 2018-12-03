@@ -17,6 +17,14 @@ module Locomotive::Steam
         site.try(:locales)
       end
 
+      def with_locale(locale, &block)
+        @previous_locale = @locale
+        @locale = locale
+        yield.tap do
+          @locale = @previous_locale
+        end
+      end
+
       def apply(attributes)
         attributes['site_id'] = @site._id
       end

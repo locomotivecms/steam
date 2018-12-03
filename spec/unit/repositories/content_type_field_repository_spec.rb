@@ -80,4 +80,22 @@ describe Locomotive::Steam::ContentTypeFieldRepository do
 
   end
 
+  describe '#localized_names' do
+
+    let(:collection)  { [{ name: 'name', type: 'string', localized: true }, { name: 'picture', type: 'file' }, { name: 'category', type: 'select', localized: true }] }
+
+    subject { repository.localized_names }
+
+    it { expect(subject).to eq(['name', 'category', 'category_id']) }
+
+    context 'without the select field id' do
+
+      subject { repository.localized_names(include_select_field_id: false) }
+
+      it { expect(subject).to eq(['name', 'category']) }
+
+    end
+
+  end
+
 end

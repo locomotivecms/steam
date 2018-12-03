@@ -57,6 +57,10 @@ module Locomotive::Steam
         self
       end
 
+      def duplicate(new_name)
+        self.class.new(new_name, self.translations)
+      end
+
       alias :__translations__ :translations
 
       alias :to_hash :translations

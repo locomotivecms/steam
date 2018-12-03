@@ -8,7 +8,7 @@ describe Locomotive::Steam::Middlewares::Sitemap do
 
   let(:site)            { instance_double('Site', locales: ['en', 'fr'], default_locale: 'en') }
   let(:pages)           { [] }
-  let(:page_repository) { instance_double('PageRepository', published: pages) }
+  let(:page_repository) { instance_double('PageRepository', published: pages, :locale= => 'en') }
   let(:app)             { ->(env) { [200, env, 'app'] }}
   let(:middleware)      { described_class.new(app) }
 
@@ -26,7 +26,7 @@ describe Locomotive::Steam::Middlewares::Sitemap do
     describe 'no pages' do
 
       it 'renders a blank sitemap' do
-        is_expected.to eq [200, { "Content-Type"=>"text/plain" }, ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <url>\n    <loc>http://localhost/</loc>\n    <priority>1.0</priority>\n  </url>\n\n</urlset>\n"]]
+        is_expected.to eq [200, { "Content-Type"=>"text/plain" }, ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">\n\n</urlset>\n"]]
       end
 
     end
@@ -36,45 +36,7 @@ describe Locomotive::Steam::Middlewares::Sitemap do
       let(:pages) { [instance_double('Page', index?: false, not_found?: false, layout?: true)] }
 
       it 'renders a blank sitemap' do
-        is_expected.to eq [200, { "Content-Type"=>"text/plain" }, ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <url>\n    <loc>http://localhost/</loc>\n    <priority>1.0</priority>\n  </url>\n\n</urlset>\n"]]
-      end
-
-    end
-
-    describe '#build_templatized_page_xml?' do
-
-      let(:localized)     { true }
-      let(:source)        { '<h1>{{ post.title }}</h1>' }
-      let(:page)          { instance_double('TemplatePage', source: source) }
-      let(:content_type)  { instance_double('Post', localized?: localized) }
-      let(:locale)        { 'fr' }
-
-      subject { middleware.send(:build_templatized_page_xml?, page, content_type, locale) }
-
-      it { is_expected.to eq true }
-
-      context 'current locale is equals to the site default locale' do
-
-        let(:locale) { 'en' }
-
-        it { is_expected.to eq true }
-
-      end
-
-      context 'the content type is not localized' do
-
-        let(:localized) { false }
-
-        it { is_expected.to eq true }
-
-        context 'the page has the same liquid template in all the locales' do
-
-          let(:source) { '' }
-
-          it { is_expected.to eq false }
-
-        end
-
+        is_expected.to eq [200, { "Content-Type"=>"text/plain" }, ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">\n\n</urlset>\n"]]
       end
 
     end

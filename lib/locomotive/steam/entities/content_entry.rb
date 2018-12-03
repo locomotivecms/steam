@@ -95,7 +95,7 @@ module Locomotive::Steam
       _attributes += content_type.persisted_field_names
 
       _attributes.each do |name|
-        hash[name.to_s] = send(name) rescue nil
+        hash[name.to_s] = send(name)
       end
 
       # errors?
@@ -121,6 +121,7 @@ module Locomotive::Steam
         _cast_value(field)
       rescue Exception => e
         Locomotive::Common::Logger.info "[#{content_type.slug}][#{_label}] Unable to cast the \"#{name}\" field, reason: #{e.message}".yellow
+        puts e.message
         nil
       end
     end
@@ -190,9 +191,28 @@ module Locomotive::Steam
     end
 
     def _cast_select(field)
-      _cast_convertor(:"#{field.name}_id", true) do |value, locale|
-        name = field.select_options.find(value).try(:name)
-        locale.nil? ? name : name.try(:[], locale)
+      if (_value = @attributes[:"#{field.name}_id"]).respond_to?(:translations)
+        # the field is localized, so get the labels in all the locales
+        # (2 different locales might point to different options)
+
+        if _value.default
+          # unique value for all the locales, so grab the option
+          name = field.select_options.find(_value.default)&.name
+          name.duplicate(field.name)
+        else
+          @attributes[field.name] = _value.duplicate(field.name)
+
+          _cast_convertor(field.name, true) do |value, locale|
+            name = field.select_options.find(value)&.name
+            name.try(:[], locale)
+          end
+        end
+      else
+        # the field is not localized, we only have the id of the option,
+        # so just copy the labels (in all the locales) of the matching select option
+        if name = field.select_options.find(_value)&.name # this should either return an i18nField or nil
+          attributes[field.name] = name.dup
+        end
       end
     end
 

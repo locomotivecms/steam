@@ -18,10 +18,15 @@ module Locomotive
             %{<link rel="#{rel}" type="#{type}" title="#{title}" href="#{input}" />}
           end
 
+          # Write the url of any theme file
+          def theme_asset_url(input)
+            any_asset_url(input)
+          end
+
           # Write the url of a theme stylesheet
           # input: name of the css file
           def stylesheet_url(input)
-            css_js_asset_url(input, '.css', 'stylesheets')
+            any_asset_url(input, '.css', 'stylesheets')
           end
 
           # Write the link tag of a theme stylesheet
@@ -37,7 +42,7 @@ module Locomotive
           # Write the url to javascript resource
           # input: name of the javascript file
           def javascript_url(input)
-            css_js_asset_url(input, '.js', 'javascripts')
+            any_asset_url(input, '.js', 'javascripts')
           end
 
           # Write the link to javascript resource

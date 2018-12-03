@@ -57,7 +57,7 @@ LIQUID
         let(:template_path) { 'spec/fixtures/errors/section_bad_json_content.liquid' }
 
         it 'should throw an error' do
-          expect { subject }.to raise_error(JSON::ParserError)
+          expect { subject }.to raise_error(Locomotive::Steam::JsonParsingError)
         end
       end
     end

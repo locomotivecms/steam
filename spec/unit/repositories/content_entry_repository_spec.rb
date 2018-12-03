@@ -240,35 +240,35 @@ describe Locomotive::Steam::ContentEntryRepository do
       let(:fields) do
         {
           title:    instance_double('TitleField', name: :title, type: :string),
-          category: instance_double('SelectField', name: :category, type: :select, select_options: { en: ['cooking', 'bread'], fr: ['cuisine', 'pain'] })
+          category: instance_double('SelectField', name: :category, type: :select, localized: true, select_options: [])
         }
       end
-      let(:type) { build_content_type('Articles', order_by: '_position asc', label_field_name: :title, localized_names: [:title, :category], fields: _fields, fields_by_name: fields, fields_with_default: []) }
+      let(:type) { build_content_type('Articles', order_by: '_position asc', label_field_name: :title, localized_names: [:title, :category_id], fields: _fields, fields_by_name: fields, fields_with_default: []) }
       let(:name) { :category }
 
       let(:options) {
         [
-          instance_double('SelectOption1', name: 'cooking'),
-          instance_double('SelectOption2', name: 'wine'),
-          instance_double('SelectOption3', name: 'bread')
+          instance_double('SelectOption1', _id: 0, name: instance_double('I18nField', :[] => 'cooking', translations: { 'en' => 'cooking' })),
+          instance_double('SelectOption2', _id: 1, name: instance_double('I18nField', :[] => 'wine', translations: { 'en' => 'wine' })),
+          instance_double('SelectOption3', _id: 2, name: instance_double('I18nField', :[] => 'bread', translations: { 'en' => 'bread' }))
         ]
       }
 
       let(:entries) do
         [
-          { content_type_id: 1, _position: 0, _label: 'Recipe #1', category_id: 'cooking' },
-          { content_type_id: 1, _position: 1, _label: 'Recipe #2', category_id: 'bread' },
-          { content_type_id: 1, _position: 2, _label: 'Recipe #3', category_id: 'bread' },
-          { content_type_id: 1, _position: 3, _label: 'Recipe #4', category_id: 'unknown' }
+          { content_type_id: 1, _position: 0, _label: 'Recipe #1', category_id: { 'en' => 0 } },
+          { content_type_id: 1, _position: 1, _label: 'Recipe #2', category_id: { 'en' => 2 } },
+          { content_type_id: 1, _position: 2, _label: 'Recipe #3', category_id: { 'en' => 2 } },
+          { content_type_id: 1, _position: 3, _label: 'Recipe #4', category_id: { 'en' => 42 } } # unknown category
         ]
       end
 
       before {
         allow(content_type_repository).to receive(:select_options).and_return(options)
-        %w(cooking wine bread).each_with_index do |name, i|
-          allow(fields[:category].select_options).to receive(:find).with(name).and_return(options.at(i))
+        %w(cooking wine bread).each_with_index do |name, position|
+          allow(fields[:category].select_options).to receive(:find).with(position).and_return(options.at(position))
         end
-        allow(fields[:category].select_options).to receive(:find).with('unknown').and_return(nil)
+        allow(fields[:category].select_options).to receive(:find).with(42).and_return(nil)
       }
 
       it { expect(subject.size).to eq 4 }
@@ -384,7 +384,7 @@ describe Locomotive::Steam::ContentEntryRepository do
 
       let(:value)       { 'CMS' }
       let(:option)      { instance_double('Option', _id: 42)}
-      let(:options)     { instance_double('OptionRepository', by_name: option) }
+      let(:options)     { instance_double('OptionRepository', by_name: option, :'locale=' => nil) }
       let(:field)       { instance_double('SelectField', name: 'category', persisted_name: 'category_id', select_options: options) }
       let(:_fields)     { instance_double('Fields', selects: [field], belongs_to: [], many_to_many: [], dates_and_date_times: []) }
       let(:conditions)  { { 'category' => value } }

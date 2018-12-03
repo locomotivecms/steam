@@ -135,8 +135,8 @@ describe 'ContactForm' do
 
   describe 'submit a new entry (new version)' do
 
-    let(:url) { '/events' }
-    let(:params) { {
+    let(:url)     { '/events' }
+    let(:params)  { {
       'content_type_slug' => 'messages',
       'some_variable'     => '42',
       'entry' => { 'name' => 'John', 'email' => 'j@doe.net', 'message' => 'Bla bla' } } }
@@ -153,6 +153,19 @@ describe 'ContactForm' do
 
       it 'displays errors' do
         expect(response.body.to_s).to include "can't be blank"
+      end
+
+      describe 'XSS attack' do
+
+        let(:params) { {
+          'content_type_slug' => 'messages',
+          'entry' => { 'name' => '<script>alert(document.cookie)</script>' }
+        } }
+
+        it "doesn't let people to insert malicious JS code" do
+          expect(response.body.to_s).not_to include "<script>alert(document.cookie)</script>"
+        end
+
       end
 
     end

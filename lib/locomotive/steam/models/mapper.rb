@@ -92,7 +92,7 @@ module Locomotive::Steam
 
       def i18n_value_of(entity, name, locale)
         value = entity.send(name.to_sym)
-        value.respond_to?(:translations) ? value[locale] : value
+        (value.respond_to?(:translations) ? value[locale] : value)
       end
 
       def reset_entity_map
@@ -141,9 +141,11 @@ module Locomotive::Steam
       end
 
       def cache_entity(entity_klass, attributes, &block)
-        return yield if attributes['_id'].blank?
+        entity_id = attributes['_id'] || attributes[:_id] # FIXME: in Wagon, we deal with symbols
 
-        key = "#{entity_klass.to_s}-#{attributes['_id']}"
+        return yield if entity_id.blank?
+
+        key = "#{entity_klass.to_s}-#{entity_id}"
 
         if (entity = @entity_map[key]).nil?
           entity = @entity_map[key] = yield

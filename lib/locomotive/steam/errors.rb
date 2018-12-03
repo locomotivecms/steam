@@ -55,6 +55,20 @@ module Locomotive::Steam
 
   end
 
+  class JsonParsingError < ParsingRenderingError
+
+    def initialize(error, file, source)
+      line = if error.message =~ /at line ([0-9]+)/
+        $1.to_i
+      else
+        0
+      end
+
+      super(error.message, file, source, line, error.backtrace)
+    end
+
+  end
+
   class ActionError < ParsingRenderingError
 
     attr_accessor :action

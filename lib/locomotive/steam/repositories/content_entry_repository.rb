@@ -104,7 +104,7 @@ module Locomotive
         _groups = all.group_by { |entry| i18n_value_of(entry, name) }
 
         groups_to_array(name, _groups).tap do |groups|
-          # entries with a not existing select_option value?
+          # entries with a non existing select_option value?
           unless _groups.blank?
             groups << { name: nil, entries: _groups.values.flatten }.with_indifferent_access
           end
@@ -205,6 +205,7 @@ module Locomotive
           @conditions = conditions.try(:with_indifferent_access) || {}
           @fields, @operators = fields, {}
           @target_repository = target_repository
+          @locale = target_repository.locale
 
           @conditions.each do |name, value|
             _name, operator = name.to_s.split('.')
@@ -213,8 +214,11 @@ module Locomotive
         end
 
         def prepare
-          # selects
           _prepare(@fields.selects) do |field, value|
+            # FIXME: [only in Wagon], if the user changes the locale, since all content is stored in memory,
+            # we have to change the locale in the repository used to fetch the select options.
+            field.select_options.locale = @locale
+
             field.select_options.by_name(value).try(:_id)
           end
 

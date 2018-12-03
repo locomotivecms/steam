@@ -49,7 +49,7 @@ module Spec
       File.expand_path('../../fixtures/default/', __FILE__)
     end
 
-    def env_for(url, opts={})
+    def env_for(url, opts = {})
       Rack::MockRequest.env_for(url, opts)
     end
 
