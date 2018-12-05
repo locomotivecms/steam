@@ -1,5 +1,3 @@
-require 'oj'
-
 module Locomotive::Steam
   module Adapters
     module Filesystem

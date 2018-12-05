@@ -71,7 +71,7 @@ describe Locomotive::Steam::PageRepository do
       it { expect(subject.templatized?).to eq true }
       it { expect(subject.content_type_id).to eq 'articles' }
       it { expect(subject.slug[:en]).to eq 'comments' }
-      it { expect(subject.slug[:fr]).to eq nil }
+      it { expect(subject.slug[:fr]).to eq 'comments' }
       it { expect(subject.fullpath[:en]).to eq 'articles/content_type_template/comments' }
 
     end

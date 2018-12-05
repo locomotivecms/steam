@@ -29,16 +29,18 @@ module Locomotive::Steam::Liquid::Tags::Concerns
         editor_settings_lookup(template.root)
       end
 
-      context.stack do
-        html    = template.render(context)
-        section = context['section']
+      html        = template.render(context)
+      section     = context['section']
+      css_class   = context['section_css_class']
 
-        tag_id    = %(id="locomotive-section-#{section.id}")
-        tag_class = %(class="#{['locomotive-section', section.css_class].compact.join(' ')}")
-        tag_data  = %(data-locomotive-section-type="#{section.type}")
+      # we need the section_css_class once
+      context.scopes.last.delete('section_css_class')
 
-        %(<div #{tag_id} #{tag_class} #{tag_data}>#{html}</div>)
-      end
+      tag_id    = %(id="locomotive-section-#{section.id}")
+      tag_class = %(class="#{['locomotive-section', section.css_class, css_class].compact.join(' ')}")
+      tag_data  = %(data-locomotive-section-type="#{section.type}")
+
+      %(<div #{tag_id} #{tag_class} #{tag_data}>#{html}</div>)
     end
 
     # in order to enable string/text synchronization with the editor:

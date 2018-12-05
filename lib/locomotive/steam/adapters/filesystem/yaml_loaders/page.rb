@@ -1,5 +1,3 @@
-require 'oj'
-
 module Locomotive
   module Steam
     module Adapters
@@ -12,7 +10,7 @@ module Locomotive
 
             # Basically Load all the pages from both the app/views/pages and data/<env>/pages folders
             #
-            # The process to load locally all the pages is pretty complex. Of course, it handles localized pages.
+            # The process of loading locally all the pages is pretty complex. Of course, it handles localized pages.
             # It involves 2 main steps.
             #
             # 1/ load all the pages/layouts under app/views/pages. Because of legacy support,
@@ -20,7 +18,7 @@ module Locomotive
             #
             # 2/ load the localized content from the data/<env>/pages folder. The content is fetched
             # from the Wagon sync command. 2 kind of pages are stored in this folder:
-            #   - pages with a handle property not null. We call them core pages. They are not aimed
+            #   - pages with a not null handle property. We call them core pages. They are not aimed
             #     to be deleted. When found, we merge their content with the original page found by process #1
             #   - pages without a handle and created from a layout. These pages don't own a liquid template.
             #     We just use the liquid template of the layout they belong to.
@@ -61,90 +59,44 @@ module Locomotive
             end
 
             def load_data
-              datapath = File.join(site_path, 'data', env.to_s, 'pages')
-
-              Dir.glob(File.join(datapath, '**', '*.json')).each do |filepath|
+              Dir.glob(File.join(data_path, '**', '*.json')).each do |filepath|
                 filepath  =~ /#{data_path}\/([a-z]+)\//
-                locale    = locales.include?($1) ? $1 : default_locale
-                data      = JSON.parse(File.read(filepath))
+                data      = safe_json_load(filepath)
+                locale    = $1.to_sym
+
+                next unless locales.include?($1.to_sym)
 
                 if data['handle'].present? # yeah, core page found!
                   attributes = @pages_by_handle[data['handle']]
-
-                  next if attributes.nil? # shouldn't happen (undeleted page? local files out of date?)
-
-                  # this is super important to handle correctly url type settings in sections
-                  attributes[:_id] = data['id']
-
-                  # set the localized attributes
-                  %i(
-                    title slug redirect_url seo_title meta_description meta_keywords
-                    sections_content sections_dropzone_content editable_elements
-                  ).each do |name|
-                    next if (value = data[name.to_s]).nil?
-
-                    if name == :editable_elements
-                      update_editable_elements(attributes, value, locale)
-                    else
-                      attributes[name] = { locale => value }
-                    end
-                  end
                 else
-                  puts data.inspect
-                  raise "TODO #{data['title']}"
-                  # raw_template: {% extends <layout> %}....
-                  # TO BE TESTED WITH ANAE's site
+                  @pages_by_fullpath[data['fullpath']] ||= {}
+                  attributes = @pages_by_fullpath[data['fullpath']]
                 end
+
+                complete_attributes_from_data(attributes, data, locale)
               end
             end
 
-            # # First, load the
-            # def build_from_data(pages)
-            #   datapath = File.join(site_path, 'data', env.to_s, 'pages')
+            def complete_attributes_from_data(attributes, data, locale)
+              return if attributes.nil? # shouldn't happen (undeleted page? local files out of date?)
 
-            #   # load pages in the default locale
-            #   Dir.glob(File.join(datapath, '**', '*.json')).each do |filepath|
-            #     filepath =~ /#{data_path}\/([a-z]+)\//
+              # this is super important to handle correctly url type settings in sections
+              attributes[:_id] = data['id']
 
-            #     next if (locales - [default_locale]).include?($1)
+              # set the localized attributes
+              %i(
+                title slug redirect_url seo_title meta_description meta_keywords
+                sections_content sections_dropzone_content editable_elements raw_template
+              ).each do |name|
+                next if (value = data[name.to_s]).nil?
 
-            #     relative_path = get_relative_path(filepath)
-            #     fullpath      = relative_path.split('.')[0]
-            #     slug          = fullpath.split('/').last
-            #     data          = JSON.parse(File.read(filepath))
-
-            #     attributes = {
-            #       _id:            data['id'],
-            #       title:          { default_locale => data['title'] },
-            #       slug:           { default_locale => data['slug'] || slug },
-            #       handle:         data['handle'],
-            #       # TODO: no need to get the following 2 attributes
-            #       # template_path:  { default_locale => File.join(path, "#{fullpath}.liquid") },
-            #       # _fullpath:      fullpath
-            #     }
-
-            #     %i(
-            #       title slug redirect_url seo_title meta_description meta_keywords
-            #       sections_content sections_dropzone_content editable_elements
-            #     ).each do |name|
-            #       value = data[name.to_s]
-
-            #       next if value.nil?
-
-            #       if name == :editable_elements
-            #         update_editable_elements(attributes, value, default_locale)
-            #       else
-            #         attributes[name] = { default_locale => value }
-            #       end
-            #     end
-
-            #     puts attributes.inspect
-
-            #     raise 'TODO'
-            #   end
-
-            #   # TODO: in the other locales
-            # end
+                if name == :editable_elements
+                  update_editable_elements(attributes, value, locale)
+                elsif name != :raw_template || (name == :raw_template && data['handle'].blank?)
+                  (attributes[name] ||= {})[locale] = value
+                end
+              end
+            end
 
             def build(filepath, fullpath, locale)
               slug            = fullpath.split('/').last
@@ -168,31 +120,6 @@ module Locomotive
 
               _attributes.merge!(attributes)
             end
-
-            # def append_data(fullpath, attributes)
-            #   data = get_data(fullpath)
-
-            #   return attributes if data.keys.compact.blank?
-
-            #   %i(
-            #     title slug redirect_url seo_title meta_description meta_keywords
-            #     sections_content sections_dropzone_content editable_elements
-            #   ).each do |name|
-            #     data.each do |locale, localized_data|
-            #       value = localized_data[name.to_s]
-
-            #       next if value.nil?
-
-            #       if name == :editable_elements
-            #         update_editable_elements(attributes, value, locale)
-            #       else
-            #         attributes[name][locale] = value || attributes[name][locale]
-            #       end
-            #     end
-            #   end
-
-            #   _attributes[:_id] = data[default_locale]['id']
-            # end
 
             def update(leaf, filepath, fullpath, locale)
               slug            = fullpath.split('/').last
@@ -316,26 +243,12 @@ module Locomotive
             end
 
             def data_path
-              File.join(self.site_path, 'data', env, 'pages')
+              File.join(self.site_path, 'data', env.to_s, 'pages')
             end
 
             def path
               @path ||= File.join(site_path, 'app', 'views', 'pages')
             end
-
-            # def get_data(fullpath)
-            #   locales.inject({}) do |memo, locale|
-            #     filepath = File.join(site_path, 'data', env.to_s, 'pages', default_locale == locale ? '' : locale.to_s, fullpath + '.json')
-
-            #     memo[locale] = if File.exists?(filepath)
-            #       JSON.parse(File.read(filepath))
-            #     else
-            #       {}
-            #     end
-
-            #     memo
-            #   end
-            # end
 
           end
 

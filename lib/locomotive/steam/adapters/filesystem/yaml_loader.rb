@@ -10,7 +10,7 @@ module Locomotive::Steam
 
         attr_reader :site_path, :env
 
-        def initialize(site_path, env)
+        def initialize(site_path, env = :local)
           @site_path, @env = site_path, env
         end
 
@@ -43,6 +43,18 @@ module Locomotive::Steam
             end
           rescue Exception => e
             raise "Malformed YAML in this file #{path}, error: #{e.message}"
+          end
+        end
+
+        def safe_json_load(path)
+          return {} unless File.exists?(path)
+
+          json = File.read(path)
+
+          begin
+            MultiJson.load(json)
+          rescue MultiJson::ParseError => e
+            raise Locomotive::Steam::JsonParsingError.new(e, path, json)
           end
         end
 

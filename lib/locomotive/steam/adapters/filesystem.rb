@@ -116,7 +116,7 @@ module Locomotive::Steam
 
     def build_yaml_loaders
       %i(sites pages content_types content_entries snippets sections translations theme_assets).inject({}) do |memo, name|
-        memo[name] = build_klass('YAMLLoaders', name).new(site_path, options[:env])
+        memo[name] = build_klass('YAMLLoaders', name).new(site_path, env)
         memo
       end
     end
@@ -136,6 +136,10 @@ module Locomotive::Steam
 
     def site_path
       options.respond_to?(:has_key?) ? options[:path] : options
+    end
+
+    def env
+      (options.respond_to?(:has_key?) ? options[:env] : nil) || :local
     end
   end
 end

@@ -24,6 +24,16 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Site do
 
     end
 
+    context 'a different environment' do
+
+      let(:loader) { described_class.new(site_path, :production) }
+
+      it 'completes the data with the ones from the production environment' do
+        expect(subject[:name]).to eq('My awesome site')
+      end
+
+    end
+
   end
 
 end

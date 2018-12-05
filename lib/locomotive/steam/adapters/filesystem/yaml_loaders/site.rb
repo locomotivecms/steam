@@ -17,10 +17,18 @@ module Locomotive
 
               attributes[:metafields_schema] = load_metafields_schema
 
+              attributes.merge!(load_from_env)
+
               [attributes]
             end
 
             private
+
+            def load_from_env
+              return {} if env == :local
+
+              safe_json_load(File.join(site_path, 'data', env.to_s, 'site.json')).symbolize_keys
+            end
 
             def load_metafields_schema
               _load(File.join(site_path, 'config', 'metafields_schema.yml'))

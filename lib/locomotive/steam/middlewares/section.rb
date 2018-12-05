@@ -18,10 +18,6 @@ module Locomotive::Steam
         request.get_header('HTTP_LOCOMOTIVE_SECTION_TYPE')
       end
 
-      def section_finder
-        services.section_finder
-      end
-
       def render(section_type)
         document = Liquid::Template.parse(liquid_source(section_type))
         document.render(liquid_context)

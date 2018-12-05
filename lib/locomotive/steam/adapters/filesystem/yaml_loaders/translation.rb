@@ -16,13 +16,17 @@ module Locomotive
             private
 
             def load_array
+              all = env == :local ? _load(path) : _load_from_env
+
               [].tap do |array|
-                if (all = _load(path))
-                  all.each do |key, values|
-                    array << { key: key.to_s, values: HashConverter.to_string(values) }
-                  end
+                (all || {}).each do |key, values|
+                  array << { key: key.to_s, values: HashConverter.to_string(values) }
                 end
               end
+            end
+
+            def _load_from_env
+              safe_json_load(File.join(site_path, 'data', env.to_s, 'translations.json'))
             end
 
             def path
