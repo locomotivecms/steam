@@ -1,0 +1,8 @@
+{
+  "title": "Our music",
+  "handle": "our-music",
+  "fullpath": "our-music",
+  "editable_elements": {
+    "content/introduction": "Simple content"
+  }
+}

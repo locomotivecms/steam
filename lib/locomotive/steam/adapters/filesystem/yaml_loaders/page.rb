@@ -83,15 +83,21 @@ module Locomotive
               # this is super important to handle correctly url type settings in sections
               attributes[:_id] = data['id']
 
-              # set the localized attributes
+              # required by pages which are not present locally
+              attributes[:_fullpath] = data['fullpath']
+
+              # set the attributes
               %i(
                 title slug redirect_url seo_title meta_description meta_keywords
+                listed published position
                 sections_content sections_dropzone_content editable_elements raw_template
               ).each do |name|
                 next if (value = data[name.to_s]).nil?
 
                 if name == :editable_elements
                   update_editable_elements(attributes, value, locale)
+                elsif %i(listed published position).include?(name)
+                  attributes[name] = value
                 elsif name != :raw_template || (name == :raw_template && data['handle'].blank?)
                   (attributes[name] ||= {})[locale] = value
                 end

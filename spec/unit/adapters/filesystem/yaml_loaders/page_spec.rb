@@ -31,7 +31,7 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Page do
       let(:loader)  { described_class.new(site_path, env) }
 
       it 'completes the data with the ones from the production environment' do
-        expect(subject.size).to eq 35
+        expect(subject.size).to eq 36
         expect(subject[21][:title]).to eq(en: 'Home page', fr: "Ma page d'accueil en production")
       end
 
