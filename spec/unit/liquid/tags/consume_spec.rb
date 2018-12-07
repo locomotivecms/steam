@@ -80,6 +80,30 @@ describe Locomotive::Steam::Liquid::Tags::Consume do
 
   end
 
+  describe 'with an expires_in option' do
+
+    let(:assigns)     { { 'secret_password' => 'bar' } }
+    let(:source)      { "{% consume blog from \"http://blog.locomotiveapp.org/api/read\", username: 'foo', password: secret_password, expires_in: #{expires_in} %}{{ blog.title }}{% endconsume %}" }
+    let(:expires_in)  { 42 }
+
+    it 'passes the expires_in value to the cache' do
+      expect(services.cache).to receive(:fetch).with('Steam-consume-d1249cd56af82e108d383f981ad953347dbb94dc', { expires_in: 42 }).and_return('Locomotive rocks!')
+      is_expected.to eq 'Locomotive rocks!'
+    end
+
+    describe 'expires_in set to 0 (so basically, meaning non cache at all)' do
+
+      let(:expires_in)  { 0 }
+
+      it "doesn't pass the expires_in value to the cache" do
+        expect(services.cache).to receive(:fetch).with('Steam-consume-d1249cd56af82e108d383f981ad953347dbb94dc', { force: true }).and_return('Locomotive rocks!')
+        is_expected.to eq 'Locomotive rocks!'
+      end
+
+    end
+
+  end
+
   describe 'timeout' do
 
     let(:response)  { { 'title' => 'first response' } }

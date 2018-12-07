@@ -89,7 +89,7 @@ module Locomotive
           end
 
           def cache_options
-            @expires_in.blank? ? { force: true } : { expires_in: @expires_in }
+            @expires_in.blank? || @expires_in == 0 ? { force: true } : { expires_in: @expires_in }
           end
 
           def last_response(context)
