@@ -248,27 +248,27 @@ describe Locomotive::Steam::ContentEntryRepository do
 
       let(:options) {
         [
-          instance_double('SelectOption1', _id: 0, name: instance_double('I18nField', :[] => 'cooking', translations: { 'en' => 'cooking' })),
-          instance_double('SelectOption2', _id: 1, name: instance_double('I18nField', :[] => 'wine', translations: { 'en' => 'wine' })),
-          instance_double('SelectOption3', _id: 2, name: instance_double('I18nField', :[] => 'bread', translations: { 'en' => 'bread' }))
+          instance_double('SelectOption1', _id: '0', name: instance_double('I18nField', :[] => 'cooking', translations: { 'en' => 'cooking' })),
+          instance_double('SelectOption2', _id: '1', name: instance_double('I18nField', :[] => 'wine', translations: { 'en' => 'wine' })),
+          instance_double('SelectOption3', _id: '2', name: instance_double('I18nField', :[] => 'bread', translations: { 'en' => 'bread' }))
         ]
       }
 
       let(:entries) do
         [
-          { content_type_id: 1, _position: 0, _label: 'Recipe #1', category_id: { 'en' => 0 } },
-          { content_type_id: 1, _position: 1, _label: 'Recipe #2', category_id: { 'en' => 2 } },
-          { content_type_id: 1, _position: 2, _label: 'Recipe #3', category_id: { 'en' => 2 } },
-          { content_type_id: 1, _position: 3, _label: 'Recipe #4', category_id: { 'en' => 42 } } # unknown category
+          { content_type_id: 1, _position: 0, _label: 'Recipe #1', category_id: { 'en' => '0' } },
+          { content_type_id: 1, _position: 1, _label: 'Recipe #2', category_id: { 'en' => '2' } },
+          { content_type_id: 1, _position: 2, _label: 'Recipe #3', category_id: { 'en' => '2' } },
+          { content_type_id: 1, _position: 3, _label: 'Recipe #4', category_id: { 'en' => '42' } } # unknown category
         ]
       end
 
       before {
         allow(content_type_repository).to receive(:select_options).and_return(options)
         %w(cooking wine bread).each_with_index do |name, position|
-          allow(fields[:category].select_options).to receive(:find).with(position).and_return(options.at(position))
+          allow(fields[:category].select_options).to receive(:by_id_or_name).with(position.to_s).and_return(options.at(position))
         end
-        allow(fields[:category].select_options).to receive(:find).with(42).and_return(nil)
+        allow(fields[:category].select_options).to receive(:by_id_or_name).with('42').and_return(nil)
       }
 
       it { expect(subject.size).to eq 4 }

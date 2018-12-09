@@ -191,26 +191,28 @@ module Locomotive::Steam
     end
 
     def _cast_select(field)
+      options = field.select_options
+
       if (_value = @attributes[:"#{field.name}_id"]).respond_to?(:translations)
         # the field is localized, so get the labels in all the locales
         # (2 different locales might point to different options)
-
         if _value.default
           # unique value for all the locales, so grab the option
-          name = field.select_options.find(_value.default)&.name
-          name.duplicate(field.name)
+          name = options.by_id_or_name(_value.default)&.name
+          name&.duplicate(field.name)
         else
           @attributes[field.name] = _value.duplicate(field.name)
 
           _cast_convertor(field.name, true) do |value, locale|
-            name = field.select_options.find(value)&.name
+            name = options.by_id_or_name(value)&.name
             name.try(:[], locale)
           end
         end
       else
-        # the field is not localized, we only have the id of the option,
+        # the field is not localized, we only have the id of the option (or its name if a
+        # contact form submission in Wagon for instance),
         # so just copy the labels (in all the locales) of the matching select option
-        if name = field.select_options.find(_value)&.name # this should either return an i18nField or nil
+        if name = options.by_id_or_name(_value)&.name # this should either return an i18nField or nil
           attributes[field.name] = name.dup
         end
       end

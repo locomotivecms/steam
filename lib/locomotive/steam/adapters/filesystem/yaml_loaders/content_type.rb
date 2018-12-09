@@ -65,7 +65,7 @@ module Locomotive
                 options.each do |locale, values|
                   values.each_with_index do |name, position|
                     if (option = list.at(position)).nil?
-                      list << { _id: position, name: { locale => name }, position: position }
+                      list << { _id: position.to_s, name: { locale => name }, position: position }
                     else
                       option[:name][locale] = name
                     end

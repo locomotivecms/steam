@@ -22,6 +22,10 @@ module Locomotive
         query { where(name: name) }.first
       end
 
+      def by_id_or_name(id_or_name)
+        find(id_or_name) || by_name(id_or_name)
+      end
+
     end
   end
 end

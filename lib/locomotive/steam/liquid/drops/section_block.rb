@@ -12,7 +12,7 @@ module Locomotive
             @index      = index
             @definition = section.definition['blocks'].find do |block|
               block['type'] == type
-            end
+            end || {}
           end
 
           def id
@@ -31,12 +31,8 @@ module Locomotive
           end
 
           def locomotive_attributes
-            if @context.registers[:live_editing]
-              value = "section-#{@context['section'].id}-block-#{id}"
-              %(data-locomotive-block="#{value}")
-            else
-              ''
-            end
+            value = "section-#{@context['section'].id}-block-#{id}"
+            %(data-locomotive-block="#{value}")
           end
 
         end

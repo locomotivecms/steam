@@ -27,7 +27,9 @@ module Locomotive
       # Warning: do not work with localized and file fields
       def create(type_slug, attributes, as_json = false)
         with_repository(type_slug) do |_repository|
-          entry = _repository.build(clean_attributes(attributes))
+          _attributes = prepare_attributes(_repository.content_type, attributes)
+
+          entry = _repository.build(_attributes)
 
           yield(entry) if block_given?
 
@@ -46,8 +48,10 @@ module Locomotive
       # Warning: do not work with localized and file fields
       def update(type_slug, id_or_slug, attributes, as_json = false)
         with_repository(type_slug) do |_repository|
-          entry = _repository.by_slug(id_or_slug) || _repository.find(id_or_slug)
-          decorated_entry = i18n_decorate { entry.change(clean_attributes(attributes)) }
+          entry       = _repository.by_slug(id_or_slug) || _repository.find(id_or_slug)
+          _attributes = prepare_attributes(_repository.content_type, attributes)
+
+          decorated_entry = i18n_decorate { entry.change(_attributes) }
 
           if validate(_repository, decorated_entry)
             _repository.update(entry)
@@ -61,9 +65,10 @@ module Locomotive
 
       def update_decorated_entry(decorated_entry, attributes)
         with_repository(decorated_entry.content_type) do |_repository|
-          entry = decorated_entry.__getobj__
+          entry       = decorated_entry.__getobj__
+          _attributes = prepare_attributes(_repository.content_type, attributes)
 
-          entry.change(clean_attributes(attributes))
+          entry.change(_attributes)
 
           _repository.update(entry)
 
@@ -117,12 +122,19 @@ module Locomotive
         as_json ? entry.as_json : entry
       end
 
-      def clean_attributes(attributes)
+      def prepare_attributes(content_type, attributes)
+        select_field_names = content_type.fields.selects.map(&:name)
+
         attributes.each do |key, value|
           next unless value.is_a?(String)
           attributes[key] = Sanitize.clean(value, Sanitize::Config::BASIC)
         end
-        attributes
+
+        # special case: select fields. <name> becomes <name>_id
+        attributes.map do |key, value|
+          _key = select_field_names.include?(key.to_s) ? "#{key}_id" : key
+          [_key, value]
+        end.to_h
       end
 
       def validate(_repository, entry)

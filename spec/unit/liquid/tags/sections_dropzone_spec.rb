@@ -80,27 +80,6 @@ describe Locomotive::Steam::Liquid::Tags::SectionsDropzone do
         .strip.gsub(/\n\s+/, '')
       end
 
-      context 'live editing is off' do
-
-        let(:live_editing) { false }
-
-        it 'renders the list of sections' do
-          is_expected.to eq <<-HTML
-            <div class="locomotive-sections">
-              <div id="locomotive-section-dropzone-0" class="locomotive-section" data-locomotive-section-type="hero">
-                <h1>Hello world</h1>
-              </div>
-              <div id="locomotive-section-dropzone-1" class="locomotive-section" data-locomotive-section-type="slideshow">
-                <div ><p>Slide 1</p></div>
-                <div ><p>Slide 2</p></div>
-              </div>
-            </div>
-          HTML
-          .strip.gsub(/\n\s+/, '')
-        end
-
-      end
-
     end
 
   end

@@ -82,13 +82,38 @@ module Locomotive
 
             (content_type_repository.select_options(@content_type, name) || []).map do |option|
               _option = Locomotive::Steam::Decorators::I18nDecorator.new(option, locale, default_locale)
-              _option.name
+              ContentTypeFieldSelectOption.new(_option)
             end
           end
 
         end
 
       end
+
+      class ContentTypeFieldSelectOption < ::Liquid::Drop
+
+        def initialize(option)
+          @option = option
+        end
+
+        def id
+          @option._id
+        end
+
+        def name
+          @option.name
+        end
+
+        def ==(other_object)
+          self.name == other_object
+        end
+
+        def to_s
+          self.name
+        end
+
+      end
+
     end
   end
 end

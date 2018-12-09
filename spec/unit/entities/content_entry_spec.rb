@@ -241,7 +241,7 @@ describe Locomotive::Steam::ContentEntry do
         let(:option)    { instance_double('SelectOption', name: 'Category #1') }
         let(:attribute) { 42 }
 
-        before { expect(options).to receive(:find).with(42).and_return(option) }
+        before { expect(options).to receive(:by_id_or_name).with(42).and_return(option) }
 
         it { expect(subject).to eq('Category #1') }
       end
@@ -266,7 +266,7 @@ describe Locomotive::Steam::ContentEntry do
           let(:attribute) { instance_double('FieldValue', default: 42, translations: true) }
 
           before { expect(translations).to receive(:duplicate).with(:my_field).and_return(translations) }
-          before { expect(options).to receive(:find).with(42).and_return(option) }
+          before { expect(options).to receive(:by_id_or_name).with(42).and_return(option) }
 
           it { expect(subject.translations).to eq({ en: 'Category #1', fr: 'Categorie #1' }) }
 
