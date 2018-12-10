@@ -97,7 +97,7 @@ module Locomotive
         end
 
         def id
-          @option._id
+          @option._id.to_s
         end
 
         def name
