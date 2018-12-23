@@ -10,7 +10,7 @@ module Locomotive::Steam
           def setup(scope)
             super.tap do
               @ids, @parent_ids, @templatized_ids = {}, {}, {}
-              @localized      = locales.inject({}) { |m, l| m[l] = {}; m }
+              @localized = locales.inject({}) { |m, l| m[l] = {}; m }
             end
           end
 
@@ -91,7 +91,7 @@ module Locomotive::Steam
           end
 
           def set_automatic_translations(page, locale)
-            return if locale == self.locale
+            return if locale == default_locale
 
             if page[:template_path][locale].blank?
               %i(

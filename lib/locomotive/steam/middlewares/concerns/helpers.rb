@@ -14,7 +14,13 @@ module Locomotive::Steam
         end
 
         def render_response(content, code = 200, type = nil)
-          @next_response = [code, { 'Content-Type' => type || 'text/html' }, [content]]
+          _headers = env['steam.headers'] || {}
+
+          @next_response = [
+            code,
+            { 'Content-Type' => type || 'text/html' }.merge(_headers),
+            [content]
+          ]
         end
 
         def redirect_to(location, type = 301)
