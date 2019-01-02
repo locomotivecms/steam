@@ -16,6 +16,13 @@ describe Locomotive::Steam::TranslationRepository do
       it { expect(subject.size).to eq 8 }
     end
 
+    describe '#group_by_key' do
+      subject { repository.group_by_key }
+      it { expect(subject.keys.size).to eq 8 }
+      it { expect(subject['powered_by']).to eq({ 'en' => 'Powered by', 'fr' => 'Propulsé par' }) }
+      it { expect(subject['auth_wrong_email']).to eq({ 'en' => "Your email is unknown", 'fr' => "Votre email est inconnu" }) }
+    end
+
     describe '#by_key' do
       subject { repository.by_key('powered_by') }
       it { expect(subject.values).to eq({ 'en' => 'Powered by', 'fr' => 'Propulsé par' }) }

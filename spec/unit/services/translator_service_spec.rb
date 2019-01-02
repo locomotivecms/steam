@@ -14,14 +14,14 @@ describe Locomotive::Steam::TranslatorService do
     let(:interpolation) { {} }
 
     before do
-      allow(repository).to receive(:by_key).with('example_test').and_return(translation)
+      allow(repository).to receive(:group_by_key).and_return({ 'example_test' => translation })
     end
 
     subject { service.translate(input, interpolation.merge('locale' => locale, 'scope' => scope)) }
 
     describe 'existing translation' do
 
-      let(:translation) { instance_double('Translation', values: { 'en' => 'Example text', 'es' => 'Texto de ejemplo' }) }
+      let(:translation) { { 'en' => 'Example text', 'es' => 'Texto de ejemplo' } }
 
       it { is_expected.to eq 'Example text' }
 
@@ -55,7 +55,7 @@ describe Locomotive::Steam::TranslatorService do
       describe 'interpolation' do
 
         let(:interpolation) { { 'name' => 'John' } }
-        let(:translation)   { instance_double('Translation', values: { 'en' => 'Hello {{ name }}', 'es' => 'Texto de ejemplo' }) }
+        let(:translation)   { { 'en' => 'Hello {{ name }}', 'es' => 'Texto de ejemplo' } }
 
         it { is_expected.to eq 'Hello John' }
 
@@ -66,9 +66,9 @@ describe Locomotive::Steam::TranslatorService do
         context 'zero' do
 
           let(:interpolation) { { 'count' => '0' } }
-          let(:translation)   { instance_double('Translation', values: { 'en' => 'No posts' }) }
+          let(:translation)   { { 'en' => 'No posts' } }
 
-          before { expect(repository).to receive(:by_key).with('example_test_zero').and_return(translation) }
+          before { expect(repository).to receive(:group_by_key).and_return({ 'example_test_zero' => translation }) }
 
           it { is_expected.to eq 'No posts' }
 
@@ -77,9 +77,9 @@ describe Locomotive::Steam::TranslatorService do
         context 'one' do
 
           let(:interpolation) { { 'count' => '1' } }
-          let(:translation)   { instance_double('Translation', values: { 'en' => '1 post' }) }
+          let(:translation)   { { 'en' => '1 post' } }
 
-          before { expect(repository).to receive(:by_key).with('example_test_one').and_return(translation) }
+          before { expect(repository).to receive(:group_by_key).and_return({ 'example_test_one' => translation }) }
 
           it { is_expected.to eq '1 post' }
 
@@ -88,9 +88,9 @@ describe Locomotive::Steam::TranslatorService do
         context 'two' do
 
           let(:interpolation) { { 'count' => 2 } }
-          let(:translation)   { instance_double('Translation', values: { 'en' => '2 posts' }) }
+          let(:translation)   { { 'en' => '2 posts' } }
 
-          before { expect(repository).to receive(:by_key).with('example_test_two').and_return(translation) }
+          before { expect(repository).to receive(:group_by_key).and_return({ 'example_test_two' => translation }) }
 
           it { is_expected.to eq '2 posts' }
 
@@ -99,9 +99,9 @@ describe Locomotive::Steam::TranslatorService do
         context 'other' do
 
           let(:interpolation) { { 'count' => 42 } }
-          let(:translation)   { instance_double('Translation', values: { 'en' => '{{ count }} posts' }) }
+          let(:translation)   { { 'en' => '{{ count }} posts' } }
 
-          before { expect(repository).to receive(:by_key).with('example_test_other').and_return(translation) }
+          before { expect(repository).to receive(:group_by_key).and_return({ 'example_test_other' => translation }) }
 
           it { is_expected.to eq '42 posts' }
 

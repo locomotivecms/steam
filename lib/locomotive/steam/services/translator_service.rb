@@ -19,7 +19,7 @@ module Locomotive
         if scope.blank?
           input = "#{input}_#{pluralize_prefix(options['count'])}" if options['count']
 
-          values = repository.by_key(input).try(:values) || {}
+          values = find_values_by_key(input)
 
           # FIXME: important to check if the returned value is nil (instead of nil + false)
           # false being reserved for an existing key but without provided translation)
@@ -36,6 +36,10 @@ module Locomotive
       end
 
       private
+
+      def find_values_by_key(input)
+        (@all_values ||= repository.group_by_key)[input] || {}
+      end
 
       def _translate(string, options)
         ::Liquid::Template.parse(string).render(options)

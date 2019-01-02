@@ -52,8 +52,8 @@ describe Locomotive::Steam::Liquid::Filters::Translate do
 
   describe 'pluralization' do
 
-    let(:translation) { instance_double('Translation', values: { 'en' => '{{ name }} has {{ count }} articles' }) }
-    before { expect(translator.repository).to receive(:by_key).with('post_count_two').and_return(translation) }
+    let(:translation) { { 'en' => '{{ name }} has {{ count }} articles' } }
+    before { expect(translator.repository).to receive(:group_by_key).and_return({ 'post_count_two' => translation }) }
 
     let(:source) { "{{ 'post_count' | translate: count: 2, name: 'John' }}" }
     it { expect(subject).to eq('John has 2 articles') }
