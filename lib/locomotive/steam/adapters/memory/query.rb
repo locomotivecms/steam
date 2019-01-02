@@ -38,6 +38,7 @@ module Locomotive::Steam
 
         def order_by(*args)
           @sorting = Order.new(*args)
+          self
         end
 
         def limit(num)

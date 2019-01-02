@@ -35,6 +35,16 @@ describe Locomotive::Steam::ContentEntryRepository do
       it { is_expected.to eq true }
     end
 
+    describe '#first' do
+      subject { repository.first }
+      it { expect(subject.name).to eq 'Alice in Chains' }
+    end
+
+    describe '#last' do
+      subject { repository.last }
+      it { expect(subject.name).to eq 'The who' }
+    end
+
     describe '#find' do
       subject { repository.find(entry_id) }
       it { expect(subject.name).to eq 'Pearl Jam' }
@@ -60,6 +70,11 @@ describe Locomotive::Steam::ContentEntryRepository do
     describe 'filter by a belongs_to field' do
       subject { target_repository.all(band: 'the-who') }
       it { expect(subject.map { |entry| entry[:title] }).to eq(['Song #5', 'Song #6']) }
+      context 'looking for a nil value and in a different locale' do
+        before { target_repository.scope.locale = :fr }
+        subject { target_repository.all(band: nil) }
+        it { expect(subject.size).to eq 2 }
+      end
     end
 
     describe '#group_by_select_option' do

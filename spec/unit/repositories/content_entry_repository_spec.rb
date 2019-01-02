@@ -451,6 +451,13 @@ describe Locomotive::Steam::ContentEntryRepository do
 
       end
 
+      context 'testing a nil value (field => nil)' do
+
+        let(:value) { nil }
+        it { is_expected.to eq([{ _visible: true, content_type_id: 1, 'person_id' => nil }, nil]) }
+
+      end
+
       context 'testing a nil value (field.ne => nil)' do
 
         let(:conditions)  { { 'person.ne' => nil } }

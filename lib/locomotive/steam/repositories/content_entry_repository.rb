@@ -61,6 +61,14 @@ module Locomotive
         first { where(conditions) }
       end
 
+      def first(&block)
+        all({}, &block).first
+      end
+
+      def last(&block)
+        all({}, &block).last
+      end
+
       def exists?(conditions = {})
         conditions, _ = conditions_without_order_by(conditions)
         query { where(conditions) }.all.size > 0
@@ -278,6 +286,8 @@ module Locomotive
         end
 
         def slug_to_id(slug, target_id)
+          return nil if slug.blank?
+
           if _repository = @target_repository.with(target_id)
             _entry = _repository.first { where(_slug: slug).only(:_id) }
             _entry.try(:_id)
