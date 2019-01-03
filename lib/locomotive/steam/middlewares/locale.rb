@@ -57,7 +57,7 @@ module Locomotive::Steam
           locale = $1
 
           # no need to keep the locale in the path used to fetch the page
-          env['steam.path'] = path.gsub($1 + $2, '')
+          env['steam.path'] = path.gsub(/^\/#{$1 + $2}/, '/')
           env['steam.locale_in_path'] = true
 
           log 'Locale extracted from the path'

@@ -23,7 +23,15 @@ describe Locomotive::Steam::Middlewares::Locale do
     env['steam.request']  = Rack::Request.new(env)
     env['steam.services'] = services
     code, env = middleware.call(env)
-    [env['steam.locale'], session['steam-locale']&.to_sym]
+    [env['steam.locale'], session['steam-locale']&.to_sym, env['steam.path']]
+  end
+
+  describe 'locale defined in the path' do
+
+    let(:url) { 'http://models.example.com/de/hello-de/foo' }
+
+    it { is_expected.to eq [:de, :de, '/hello-de/foo'] }
+
   end
 
   describe 'no locale defined in the path' do
@@ -32,7 +40,7 @@ describe Locomotive::Steam::Middlewares::Locale do
 
       context 'without accept-language header' do
 
-        it { is_expected.to eq [:de, :de] }
+        it { is_expected.to eq [:de, :de, '/'] }
 
       end
 
@@ -40,13 +48,13 @@ describe Locomotive::Steam::Middlewares::Locale do
 
         let(:accept_language) { 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7' }
 
-        it { is_expected.to eq [:fr, :fr] }
+        it { is_expected.to eq [:fr, :fr, '/'] }
 
         context 'with url path' do
 
           let(:url) { 'http://models.example.com/werkzeug' }
 
-          it { is_expected.to eq [:de, :de] }
+          it { is_expected.to eq [:de, :de, '/werkzeug'] }
 
         end
 
@@ -58,7 +66,7 @@ describe Locomotive::Steam::Middlewares::Locale do
 
       let(:session) { {'steam-locale' => 'en'} }
 
-      it { is_expected.to eq [:en, :en] }
+      it { is_expected.to eq [:en, :en, '/'] }
 
     end
 
@@ -70,7 +78,7 @@ describe Locomotive::Steam::Middlewares::Locale do
 
       let(:url) { 'http://models.example.com?locale=' }
 
-      it { is_expected.to eq [:de, :de] }
+      it { is_expected.to eq [:de, :de, '/'] }
 
     end
 
@@ -78,7 +86,7 @@ describe Locomotive::Steam::Middlewares::Locale do
 
       let(:url) { 'http://models.example.com?locale=en' }
 
-      it { is_expected.to eq [:en, :en] }
+      it { is_expected.to eq [:en, :en, '/'] }
 
     end
 
@@ -86,7 +94,7 @@ describe Locomotive::Steam::Middlewares::Locale do
 
       let(:url) { 'http://models.example.com?locale=onload' }
 
-      it { is_expected.to eq [:de, :de] }
+      it { is_expected.to eq [:de, :de, '/'] }
 
     end
 
