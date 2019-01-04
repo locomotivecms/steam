@@ -222,6 +222,12 @@ module Locomotive
         end
 
         def prepare
+          # _id (primary key)
+          _prepare([Locomotive::Steam::ContentTypeField.new(name: '_id')]) do |_, value|
+            @target_repository.adapter.make_id(value)
+          end
+
+          # select
           _prepare(@fields.selects) do |field, value|
             # FIXME: [only in Wagon], if the user changes the locale, since all content is stored in memory,
             # we have to change the locale in the repository used to fetch the select options.

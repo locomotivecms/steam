@@ -62,6 +62,11 @@ describe Locomotive::Steam::ContentEntryRepository do
       it { expect(subject.name).to eq 'Alice in Chains' }
     end
 
+    describe 'filter by an _id (string)' do
+      subject { repository.all(_id: entry_id.to_s) }
+      it { expect(subject.map { |entry| entry[:name] }).to eq(['Pearl Jam']) }
+    end
+
     describe 'filter by a select field' do
       subject { repository.all(kind: 'grunge') }
       it { expect(subject.map { |entry| entry[:name] }).to eq(['Alice in Chains', 'Pearl Jam']) }
