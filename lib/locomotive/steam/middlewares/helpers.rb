@@ -87,9 +87,11 @@ module Locomotive::Steam
 
       #= Helper methods
 
-      def render_response(content, code = 200, type = nil)
+      def render_response(content, code = 200, type = nil, no_cookies=false)
         headers = { 'Content-Type' => type || 'text/html' }
-        inject_cookies(headers)
+        unless no_cookies
+          inject_cookies(headers)
+        end
         @next_response = [code, headers, [content]]
       end
 

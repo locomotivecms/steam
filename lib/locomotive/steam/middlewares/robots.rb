@@ -10,7 +10,7 @@ module Locomotive::Steam
       def call(env)
         if env['PATH_INFO'] == '/robots.txt'
           site = env['steam.site']
-          render_response(site[:robots_txt] || '', 200, 'text/plain')
+          render_response(site[:robots_txt] || '', 200, 'text/plain', no_cookies=true)
         else
           app.call(env)
         end
