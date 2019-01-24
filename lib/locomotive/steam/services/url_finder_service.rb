@@ -31,7 +31,7 @@ module Locomotive
         url = if page_or_url.is_a?(String)
           page_or_url
         elsif !page_or_url.not_found?
-          [url_builder.url_for(page_or_url), _resource['anchor']].compact.join('#')
+          [url_builder.url_for(page_or_url), _resource['anchor'].presence].compact.join('#')
         else
           url_builder.url_for(page_or_url)
         end

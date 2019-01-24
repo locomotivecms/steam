@@ -10,6 +10,10 @@ module Locomotive::Steam
           def apply_to_entity(entity)
             super
             add_label(entity)
+
+            locales.each do |locale|
+              set_automatic_translations(entity, locale)
+            end
           end
 
           def apply_to_dataset(dataset)
@@ -22,6 +26,7 @@ module Locomotive::Steam
           def apply_to_entity_with_dataset(entity, dataset)
             # Note: this statement attaches the site to the entity
             apply_to_entity(entity)
+
 
             # make sure it gets an unique slug and an _id + set default values
             _apply_to_dataset(entity, dataset)
@@ -54,6 +59,15 @@ module Locomotive::Steam
               entity[:_id] = slug[locale]
             else
               entity[:_id] = slug
+            end
+          end
+
+          def set_automatic_translations(entity, locale)
+            return if locale == default_locale
+
+            entity.localized_attributes.each do |(name, _)|
+              next if entity[name].blank?
+              entity[name][locale] ||= entity[name][default_locale]
             end
           end
 

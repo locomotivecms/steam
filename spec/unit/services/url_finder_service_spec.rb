@@ -35,7 +35,7 @@ describe Locomotive::Steam::UrlFinderService do
     context 'value is a link to a page' do
 
       let(:page)  { instance_double('Page', not_found?: false) }
-      let(:value) { { 'type' => 'page', 'value' => 42, 'new_window' => true } }
+      let(:value) { { 'type' => 'page', 'value' => 42, 'new_window' => true, 'anchor' => '' } }
 
       context 'the page exists' do
 

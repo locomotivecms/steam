@@ -45,7 +45,7 @@ describe Locomotive::Steam::Middlewares::Section do
     is_expected.to eq [
       200,
       { "Content-Type" => "text/html" },
-      [%(<div id="locomotive-section-page-header" class="locomotive-section" data-locomotive-section-type="header"><span id="page-header-section" />Here some </div>)]
+      [%(<div id="locomotive-section-page-header" class="locomotive-section" data-locomotive-section-type="header"><span id="page-header-section"></span>Here some </div>)]
     ]
   end
 
@@ -61,7 +61,7 @@ describe Locomotive::Steam::Middlewares::Section do
       is_expected.to eq [
         200,
         { "Content-Type" => "text/html" },
-        [%(<div id="locomotive-section-site-header" class="locomotive-section" data-locomotive-section-type="header"><span id="site-header-section" />Here some modified HTML</div>)]
+        [%(<div id="locomotive-section-site-header" class="locomotive-section" data-locomotive-section-type="header"><span id="site-header-section"></span>Here some modified HTML</div>)]
       ]
     end
 

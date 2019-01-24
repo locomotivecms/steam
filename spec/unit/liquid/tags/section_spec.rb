@@ -65,7 +65,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
         ' <div id="locomotive-section-page-header"'\
         ' class="locomotive-section my-awesome-header"'\
         ' data-locomotive-section-type="header">'\
-          '<span id="page-header-section" />'\
+          '<span id="page-header-section"></span>'\
           'built by <a>' + %(\n\t) + '<strong data-locomotive-editor-setting="section-page-header.brand">NoCoffee</strong></a>'\
         '</div>' }
 
@@ -77,7 +77,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
           ' <div id="locomotive-section-page-header"'\
           ' class="locomotive-section my-awesome-header"'\
           ' data-locomotive-section-type="header">'\
-            '<span id="page-header-section" />'\
+            '<span id="page-header-section"></span>'\
             'built by <a>' + %(\n\t) + '<strong class="bold" data-locomotive-editor-setting="section-page-header.brand">NoCoffee</strong></a>'\
           '</div>' }
 
@@ -91,7 +91,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
           ' <div id="locomotive-section-page-header"'\
           ' class="locomotive-section my-awesome-header"'\
           ' data-locomotive-section-type="header">'\
-            '<span id="page-header-section" />'\
+            '<span id="page-header-section"></span>'\
             'built by <strong>foo.png</strong>'\
           '</div>' }
 
@@ -105,7 +105,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
           '<div id="locomotive-section-page-header"'\
           ' class="locomotive-section my-awesome-header"'\
           ' data-locomotive-section-type="header">'\
-            '<span id="page-header-section" />'\
+            '<span id="page-header-section"></span>'\
             'built by <a>' + %(\n\t) + '<strong>NoCoffee</strong></a>'\
           '</div>' }
 
@@ -121,7 +121,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
         ' <div id="locomotive-section-page-header"'\
         ' class="locomotive-section my-awesome-header"'\
         ' data-locomotive-section-type="header">'\
-          '<span id="page-header-section" />'\
+          '<span id="page-header-section"></span>'\
           '<a href="/" data-locomotive-editor-setting="section-page-header-block.42.title">Home</a>'\
         '</div>' }
 
@@ -133,7 +133,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
           ' <div id="locomotive-section-page-header"'\
           ' class="locomotive-section my-awesome-header"'\
           ' data-locomotive-section-type="header">'\
-            '<span id="page-header-section" />'\
+            '<span id="page-header-section"></span>'\
             '<a>foo.png</a>'\
           '</div>' }
 
@@ -160,7 +160,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
             '<div id="locomotive-section-page-header"'\
             ' class="locomotive-section my-awesome-header"'\
             ' data-locomotive-section-type="header">'\
-              '<span id="page-header-section" />'\
+              '<span id="page-header-section"></span>'\
               'built by '\
               '<strong data-locomotive-editor-setting="section-page-header.brand">'\
                 'Locomotive'\
@@ -184,7 +184,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
             '<div id="locomotive-section-page-my_header" '\
             'class="locomotive-section my-awesome-header" '\
             'data-locomotive-section-type="header">'\
-              '<span id="page-my_header-section" />'\
+              '<span id="page-my_header-section"></span>'\
               'built by '\
               '<strong data-locomotive-editor-setting="section-page-my_header.brand">'\
                 'Locomotive'\
@@ -206,7 +206,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
             '<div id="locomotive-section-site-header" '\
             'class="locomotive-section my-awesome-header" '\
             'data-locomotive-section-type="header">'\
-              '<span id="site-header-section" />'\
+              '<span id="site-header-section"></span>'\
               'built by '\
               '<strong data-locomotive-editor-setting="section-site-header.brand">'\
                 'Locomotive'\

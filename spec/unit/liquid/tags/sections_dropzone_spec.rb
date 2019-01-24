@@ -72,11 +72,11 @@ describe Locomotive::Steam::Liquid::Tags::SectionsDropzone do
         is_expected.to eq <<-HTML
           <div class="locomotive-sections">
             <div id="locomotive-section-dropzone-0" class="locomotive-section" data-locomotive-section-type="hero">
-              <span id="hero-1-section" />
+              <span id="hero-1-section"></span>
               <h1 data-locomotive-editor-setting="section-dropzone-0.title">Hello world</h1>
             </div>
             <div id="locomotive-section-dropzone-1" class="locomotive-section" data-locomotive-section-type="slideshow">
-              <span id="slideshow-1-section" />
+              <span id="slideshow-1-section"></span>
               <div data-locomotive-block="section-dropzone-1-block-0"><p data-locomotive-editor-setting="section-dropzone-1-block.0.title">Slide 1</p></div>
               <div data-locomotive-block="section-dropzone-1-block-1"><p data-locomotive-editor-setting="section-dropzone-1-block.1.title">Slide 2</p></div>
             </div>
