@@ -38,6 +38,10 @@ module Locomotive
             @section.definition['class']
           end
 
+          def anchor
+            @content['anchor'] || id
+          end
+
           def blocks
             (@content['blocks'] || []).each_with_index.map do |block, index|
               SectionBlock.new(@section, block, index)

@@ -36,11 +36,12 @@ module Locomotive::Steam::Liquid::Tags::Concerns
       # we need the section_css_class once
       context.scopes.last.delete('section_css_class')
 
+      anchor_id = %(id="#{section.anchor}-section")
       tag_id    = %(id="locomotive-section-#{section.id}")
       tag_class = %(class="#{['locomotive-section', section.css_class, css_class].compact.join(' ')}")
       tag_data  = %(data-locomotive-section-type="#{section.type}")
 
-      %(<div #{tag_id} #{tag_class} #{tag_data}>#{html}</div>)
+      %(<div #{tag_id} #{tag_class} #{tag_data}><span #{anchor_id} />#{html}</div>)
     end
 
     # in order to enable string/text synchronization with the editor:

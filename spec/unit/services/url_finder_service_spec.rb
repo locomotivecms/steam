@@ -25,9 +25,16 @@ describe Locomotive::Steam::UrlFinderService do
 
     end
 
+    context 'value is an email address' do
+
+      let(:value) { { 'type' => 'email', 'value' => 'jane@doe.net', 'new_window' => false } }
+      it { is_expected.to eq(['mailto:jane@doe.net', false]) }
+
+    end
+
     context 'value is a link to a page' do
 
-      let(:page)  { instance_double('Page') }
+      let(:page)  { instance_double('Page', not_found?: false) }
       let(:value) { { 'type' => 'page', 'value' => 42, 'new_window' => true } }
 
       context 'the page exists' do
@@ -38,6 +45,13 @@ describe Locomotive::Steam::UrlFinderService do
         end
 
         it { is_expected.to eq(['/', true]) }
+
+        context 'pointing to a section' do
+
+          let(:value) { { 'type' => 'page', 'value' => 42, 'anchor' => 'getting-started' } }
+          it { is_expected.to eq(['/#getting-started', false]) }
+
+        end
 
       end
 
@@ -53,13 +67,12 @@ describe Locomotive::Steam::UrlFinderService do
 
       end
 
-
     end
 
     context 'value is a link to a content entry' do
 
       let(:entry) { instance_double('Product') }
-      let(:page)  { instance_double('Page', :content_entry= => true) }
+      let(:page)  { instance_double('Page', :content_entry= => true, not_found?: false) }
       let(:value) { {
         'type' => 'content_entry',
         'value' => { 'page_id' => 42, 'content_type_slug' => 'products', 'id' => 1 },

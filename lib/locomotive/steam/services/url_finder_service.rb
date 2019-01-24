@@ -16,10 +16,11 @@ module Locomotive
       #   'type'        => 'page',
       #   'value'       =>  '42', # id of the home page
       #   'locale'      => 'en',
-      #   'new_window'  => true
+      #   'new_window'  => true,
+      #   'anchor'      => 'portfolio'
       # })
       #
-      # will return: ['/', true]
+      # will return: ['/#portfolio', true]
       #
       def url_for(resource)
         return [resource, false] if resource.is_a?(String)
@@ -27,8 +28,16 @@ module Locomotive
         _resource   = resource || {}
         page_or_url = find_page(_resource['type'], _resource['value']) || page_finder.find('404')
 
+        url = if page_or_url.is_a?(String)
+          page_or_url
+        elsif !page_or_url.not_found?
+          [url_builder.url_for(page_or_url), _resource['anchor']].compact.join('#')
+        else
+          url_builder.url_for(page_or_url)
+        end
+
         [
-          page_or_url.is_a?(String) ? page_or_url : url_builder.url_for(page_or_url),
+          url,
           _resource['new_window'] || false
         ]
       end
@@ -59,7 +68,7 @@ module Locomotive
       # Based on the type of the resource, it returns either:
       # - a simple page
       # - a templatized page with its related content entry attached
-      # - nil if external url
+      # - the value itself if external url
       def find_page(type, value)
         case type
         when 'page'
@@ -76,6 +85,8 @@ module Locomotive
           end
         when '_external'
           value
+        when 'email'
+          "mailto:#{value}"
         else
           nil
         end

@@ -21,7 +21,7 @@ module Locomotive
 
               next if section.nil? # the section doesn't exist anymore?
 
-              # assign a new dom_id to the section
+              # assign a new dom_id to the section if it doesn't have one
               content['id'] = "dropzone-#{index}"
 
               # parse the template of the section
