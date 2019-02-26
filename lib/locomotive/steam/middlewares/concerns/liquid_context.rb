@@ -80,7 +80,7 @@ module Locomotive::Steam
 
         def _http_actions_liquid_assigns
           {
-            'head?'    => request.head?,
+            'head?'   => request.head?,
             'get?'    => request.get?,
             'post?'   => request.post?,
             'put?'    => request.put?,

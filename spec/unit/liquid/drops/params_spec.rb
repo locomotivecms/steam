@@ -35,4 +35,20 @@ describe Locomotive::Steam::Liquid::Drops::Params do
 
   end
 
+  describe 'gives access to the Hash object through the unsafe method' do
+
+    let(:params) { { 'foo' => 'hello', 'bar' => 'world' } }
+
+    it 'expects to respond to []' do
+      expect(drop.unsafe['foo']).to eq('hello')
+    end
+
+    it 'expects to respond to each_pair' do
+      memo = []
+      drop.unsafe.each_pair { |p| memo << p.last }
+      expect(memo.join(' ')).to eq 'hello world'
+    end
+
+  end
+
 end
