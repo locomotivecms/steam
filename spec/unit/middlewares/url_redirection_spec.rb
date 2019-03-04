@@ -54,6 +54,15 @@ describe Locomotive::Steam::Middlewares::UrlRedirection do
 
       end
 
+      describe 'and redirecting to an external url' do
+
+        let(:redirections) { [['/foo.php', 'https://rickandmorty.dev']] }
+        let(:url) { 'http://models.example.com/foo.php' }
+
+        it { is_expected.to eq [301, 'https://rickandmorty.dev'] }
+
+      end
+
       describe 'url matching a pattern' do
 
         let(:redirections) { [['/old_images/:file', '/images/old/:file']] }
