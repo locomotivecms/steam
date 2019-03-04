@@ -4,25 +4,33 @@ describe Locomotive::Steam::ExternalAPIService do
 
   pending 'API rate limit exceeded'
 
-  let(:service) { described_class.new }
+  if ENV['TRAVIS'].blank?
 
-  describe '#consume' do
+    let(:service) { described_class.new }
 
-    let(:url)     { 'https://api.github.com/users/did/repos' }
-    let(:options) { { format: "'json'", with_user_agent: true } }
+    describe '#consume' do
 
-    subject { service.consume(url, options) }
+      let(:url)     { 'https://api.github.com/users/did/repos' }
+      let(:options) { { format: "'json'", with_user_agent: true } }
 
-    it { expect(subject.size).to_not eq 0 }
+      subject { service.consume(url, options) }
 
-    context 'returns the status too' do
+      it { expect(subject.size).to_not eq 0 }
 
-      subject { service.consume(url, options, true) }
+      context 'returns the status too' do
 
-      it { expect(subject[:status]).to eq 200 }
-      it { expect(subject[:data].size).to_not eq 0 }
+        subject { service.consume(url, options, true) }
+
+        it { expect(subject[:status]).to eq 200 }
+        it { expect(subject[:data].size).to_not eq 0 }
+
+      end
 
     end
+
+  else
+
+    pending 'API not available in Travis'
 
   end
 
