@@ -85,6 +85,10 @@ module Locomotive
             @new_window
           end
 
+          def new_window_attribute
+            !!@new_window ? 'target="_blank"' : ''
+          end
+
           def to_s
             @url
           end

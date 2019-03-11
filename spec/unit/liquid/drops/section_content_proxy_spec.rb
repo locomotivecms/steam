@@ -46,6 +46,14 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
 
     end
 
+    context 'it outputs the target="_blank" A attribute if new window is true' do
+
+      subject { drop.before_method(:link).new_window_attribute }
+
+      it { is_expected.to eq('target="_blank"') }
+
+    end
+
   end
 
   describe 'image picker type setting' do
