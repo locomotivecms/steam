@@ -9,29 +9,35 @@ describe Locomotive::Steam::Middlewares::Locale do
   let(:site)            { instance_double('Site', default_locale: :de, locales: [:de, :fr, :en]) }
   let(:url)             { 'http://models.example.com' }
   let(:app)             { ->(env) { [200, env, 'app'] } }
-  let(:services)        { instance_double('Services', :locale= => 'en') }
+  let(:cookie_lang)     { nil }
+  let(:cookie_service)  { instance_double('Cookie Service', :get => cookie_lang) }
+  let(:services)        { instance_double('Services', :locale= => 'en', :cookie => cookie_service) }
   let(:middleware)      { Locomotive::Steam::Middlewares::Locale.new(app) }
-  let(:session)         { {} }
   let(:accept_language) { '' }
+  let(:expected_lang)   { :de }
+  let(:expected_path)   { '/' }
+  let(:expected_cookie) { { value: expected_lang, path: '/', max_age: 1.year } }
 
   subject do
     env = env_for(
         url,
         'steam.site' => site,
-        'rack.session' => session,
         'HTTP_ACCEPT_LANGUAGE' => accept_language)
     env['steam.request']  = Rack::Request.new(env)
     env['steam.services'] = services
+    env['steam.locale']
     code, env = middleware.call(env)
-    [env['steam.locale'], session['steam-locale']&.to_sym, env['steam.path']]
+    [env['steam.locale'], env['steam.path']]
   end
 
   describe 'locale defined in the path' do
 
     let(:url) { 'http://models.example.com/de/hello-de/foo' }
 
-    it { is_expected.to eq [:de, :de, '/hello-de/foo'] }
-
+    it 'should use de language and set the cookies' do
+       expect(cookie_service).to receive(:set).with('steam-locale', expected_cookie).and_return(nil)
+       is_expected.to eq [expected_lang, '/hello-de/foo']
+    end
   end
 
   describe 'no locale defined in the path' do
@@ -40,21 +46,32 @@ describe Locomotive::Steam::Middlewares::Locale do
 
       context 'without accept-language header' do
 
-        it { is_expected.to eq [:de, :de, '/'] }
+       it 'should use default language' do
+         expect(cookie_service).to receive(:set).with('steam-locale', expected_cookie).and_return(nil)
+         is_expected.to eq [expected_lang, '/']
+       end
 
       end
 
       context 'with accept-language header' do
 
         let(:accept_language) { 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7' }
+        let(:expected_lang) { :fr }
 
-        it { is_expected.to eq [:fr, :fr, '/'] }
+        it 'should use "fr" in header' do
+          expect(cookie_service).to receive(:set).with('steam-locale', expected_cookie).and_return(nil)
+          is_expected.to eq [expected_lang,  '/']
+        end
 
         context 'with url path' do
 
           let(:url) { 'http://models.example.com/werkzeug' }
+          let(:expected_lang) { :de }
 
-          it { is_expected.to eq [:de, :de, '/werkzeug'] }
+          it 'should use "de" in path' do
+            expect(cookie_service).to receive(:set).with('steam-locale', expected_cookie).and_return(nil)
+            is_expected.to eq [expected_lang, '/werkzeug']
+          end
 
         end
 
@@ -62,11 +79,15 @@ describe Locomotive::Steam::Middlewares::Locale do
 
     end
 
-    context 'user with session, use it' do
+    context 'user with cookie, use it' do
 
-      let(:session) { {'steam-locale' => 'en'} }
+      let(:cookie_lang) { 'en' }
+      let(:expected_lang) { :en }
 
-      it { is_expected.to eq [:en, :en, '/'] }
+      it 'should use "en" in cookie' do
+        expect(cookie_service).to receive(:set).with('steam-locale', expected_cookie).and_return(nil)
+        is_expected.to eq [expected_lang, '/']
+      end
 
     end
 
@@ -78,15 +99,22 @@ describe Locomotive::Steam::Middlewares::Locale do
 
       let(:url) { 'http://models.example.com?locale=' }
 
-      it { is_expected.to eq [:de, :de, '/'] }
+      it 'should use default locale "de"' do
+        expect(cookie_service).to receive(:set).with('steam-locale', expected_cookie).and_return(nil)
+        is_expected.to eq [expected_lang, '/']
+      end
 
     end
 
     context 'the locale exists' do
 
       let(:url) { 'http://models.example.com?locale=en' }
+      let(:expected_lang) { :en }
 
-      it { is_expected.to eq [:en, :en, '/'] }
+      it 'should use existing locale "en"' do
+        expect(cookie_service).to receive(:set).with('steam-locale', expected_cookie).and_return(nil)
+        is_expected.to eq [expected_lang, '/']
+      end
 
     end
 
@@ -94,7 +122,10 @@ describe Locomotive::Steam::Middlewares::Locale do
 
       let(:url) { 'http://models.example.com?locale=onload' }
 
-      it { is_expected.to eq [:de, :de, '/'] }
+      it 'should use default locale "de"' do
+        expect(cookie_service).to receive(:set).with('steam-locale', expected_cookie).and_return(nil)
+        is_expected.to eq [expected_lang, '/']
+      end
 
     end
 

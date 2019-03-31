@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Tags::Section do
 
-  let(:services)      { Locomotive::Steam::Services.build_instance(nil) }
+  let(:request)       { instance_double('Request', env: {}) }
+  let(:services)      { Locomotive::Steam::Services.build_instance(request) }
   let(:finder)        { services.section_finder }
   let(:source)        { 'Locomotive {% section header %}' }
   let(:live_editing)  { true }

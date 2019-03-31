@@ -13,17 +13,22 @@ namespace :mongodb do
     task :seed do
       root_path = File.expand_path(File.dirname(__FILE__))
       db_path   = File.join(root_path, 'spec', 'fixtures', 'mongodb')
+      if ENV['MONGO_HOST']
+        host = "--host=#{ENV['MONGO_HOST']}"
+      else
+        host = ""
+      end
 
       if database = ENV['DATABASE']
         dump_path = File.join(root_path, 'dump', database)
 
         `rm -rf #{db_path}`
-        `mongodump --db #{database}`
+        `mongodump --db #{database} #{host}`
         `mv #{dump_path} #{db_path}`
       end
 
-      `mongo steam_test_1_5_x --eval "db.dropDatabase()"`
-      `mongorestore -d steam_test_1_5_x #{db_path}`
+      `mongo steam_test_1_5_x --eval "db.dropDatabase()" #{host}`
+      `mongorestore -d steam_test_1_5_x #{db_path} #{host}`
 
       puts "Done! Update now the spec/support/helpers.rb file by setting the new id of the site returned by the mongodb_site_id method"
     end

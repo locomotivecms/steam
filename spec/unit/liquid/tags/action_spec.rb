@@ -6,7 +6,8 @@ describe Locomotive::Steam::Liquid::Tags::Action do
   let(:source)    { '{% action "random Javascript action" %}var foo = 42; setProp("foo", foo);{% endaction %}' }
   let(:assigns)   { {} }
   let(:registers) { { services: services } }
-  let(:services)  { Locomotive::Steam::Services.build_instance }
+  let(:request)   { instance_double('Request', env: {}) }
+  let(:services)  { Locomotive::Steam::Services.build_instance(request) }
   let(:context)   { ::Liquid::Context.new(assigns, {}, registers) }
 
   before { allow(services).to receive(:current_site).and_return(site) }

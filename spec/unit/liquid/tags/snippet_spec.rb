@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Tags::Snippet do
 
-  let(:services)  { Locomotive::Steam::Services.build_instance(nil) }
+  let(:request)   { instance_double('Request', env: {}) }
+  let(:services)  { Locomotive::Steam::Services.build_instance(request) }
   let(:finder)    { services.snippet_finder }
   let(:snippet)   { instance_double('Snippet', template: nil, :template= => nil, liquid_source: 'built by NoCoffee') }
   let(:source)    { 'Locomotive {% include footer %}' }
