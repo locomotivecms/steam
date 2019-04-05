@@ -6,7 +6,7 @@ describe Locomotive::Steam::CookieService do
   let(:request_cookies) { {} }
   let(:request)         { instance_double('Request', env: { 'steam.cookies' => steam_cookies }, cookies: request_cookies) }
   let(:cookie)          { {'value' => 'bar2'} }
-  let(:service)   { described_class.new(request)}
+  let(:service)         { described_class.new(request)}
 
   describe '#get cookies from request' do
 

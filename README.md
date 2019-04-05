@@ -61,7 +61,7 @@ see the list in the issues section.
 
 ## Running test with docker
 
-A docker configuration is included in this repository, you can run all the test with the following process
+A docker configuration is included in this repository, you can run all the tests with the following procedure
 
 First run a bash shell inside the container
 
