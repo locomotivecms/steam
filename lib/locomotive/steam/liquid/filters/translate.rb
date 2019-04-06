@@ -15,6 +15,8 @@ module Locomotive
             @context.registers[:services].translator.translate(input, options) || input
           end
 
+          alias t translate
+
         end
 
         ::Liquid::Template.register_filter(Translate)
