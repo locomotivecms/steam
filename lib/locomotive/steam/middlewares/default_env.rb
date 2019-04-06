@@ -8,9 +8,10 @@ module Locomotive::Steam
       def call(env)
         request = Rack::Request.new(env)
 
-        env['steam.request']        = request
-        env['steam.services']       = build_services(request)
-        env['steam.liquid_assigns'] = {}
+        env['steam.request']          = request
+        env['steam.services']         = build_services(request)
+        env['steam.liquid_registers'] = {}
+        env['steam.liquid_assigns']   = {}
 
         app.call(env)
       end
