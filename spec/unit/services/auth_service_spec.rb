@@ -161,8 +161,14 @@ describe Locomotive::Steam::AuthService do
     end
 
 
-    it "returns :wrong_credentials if the password is empty" do
+    it "returns :wrong_credentials if the password is nil" do
       entry = instance_double('Account', password: nil)
+      expect(entries).to receive(:all).with('accounts', { 'email' => 'john@doe.net' }).and_return([entry])
+      is_expected.to eq :wrong_credentials
+    end
+
+    it "returns :wrong_credentials if the password is blank" do
+      entry = instance_double('Account', password: '')
       expect(entries).to receive(:all).with('accounts', { 'email' => 'john@doe.net' }).and_return([entry])
       is_expected.to eq :wrong_credentials
     end
