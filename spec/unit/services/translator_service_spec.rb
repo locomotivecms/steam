@@ -8,13 +8,14 @@ describe Locomotive::Steam::TranslatorService do
 
   describe '#translate' do
 
+    let(:key)           { 'example_test' }
     let(:input)         { 'example_test' }
     let(:locale)        { nil }
     let(:scope)         { nil }
     let(:interpolation) { {} }
 
     before do
-      allow(repository).to receive(:group_by_key).and_return({ 'example_test' => translation })
+      allow(repository).to receive(:group_by_key).and_return({ key => translation })
     end
 
     subject { service.translate(input, interpolation.merge('locale' => locale, 'scope' => scope)) }
@@ -49,6 +50,15 @@ describe Locomotive::Steam::TranslatorService do
         let(:scope)   { 'locomotive.locales' }
 
         it { is_expected.to eq 'French' }
+
+        context 'the translation has been overwritten for the site' do
+
+          let(:key)         { 'locomotive_locales_fr' }
+          let(:translation) { { 'en' => 'Français' } }
+
+          it { is_expected.to eq 'Français' }
+
+        end
 
       end
 

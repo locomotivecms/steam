@@ -15,23 +15,22 @@ module Locomotive
       def translate(input, options = {})
         locale  = options['locale'] || self.current_locale
         scope   = options.delete('scope')
+        key     = scope.present? ? "#{scope.gsub('.', '_')}_#{input}" : input
 
-        if scope.blank?
-          input = "#{input}_#{pluralize_prefix(options['count'])}" if options['count']
+        key     = "#{key}_#{pluralize_prefix(options['count'])}" if options['count']
 
-          values = find_values_by_key(input)
+        values  = find_values_by_key(key)
 
-          # FIXME: important to check if the returned value is nil (instead of nil + false)
-          # false being reserved for an existing key but without provided translation)
-          if (translation = values[locale.to_s]).present?
-            _translate(translation, options)
-          else
-            Locomotive::Common::Logger.warn "Missing translation '#{input}' for the '#{locale}' locale".yellow
-            ActiveSupport::Notifications.instrument('steam.missing_translation', input: input, locale: locale)
-            input
-          end
+        # FIXME: important to check if the returned value is nil (instead of nil + false)
+        # false being reserved for an existing key but without provided translation)
+        if (translation = values[locale.to_s]).present?
+          _translate(translation, options)
+        elsif output = I18n.t(input, scope: scope&.split('.'), locale: locale, default: nil)
+          output
         else
-          I18n.t(input, scope: scope.split('.'), locale: locale)
+          Locomotive::Common::Logger.warn "Missing translation '#{input}' for the '#{locale}' locale".yellow
+          ActiveSupport::Notifications.instrument('steam.missing_translation', input: input, locale: locale)
+          input
         end
       end
 
