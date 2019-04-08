@@ -1,3 +1,5 @@
+require 'maxmind/db'
+
 module Locomotive::Steam
   module Middlewares
 
@@ -21,9 +23,14 @@ module Locomotive::Steam
 
         env['steam.locale'] = services.locale = extract_locale
 
+        country = extract_country
+        env['steam.country'] = country
+
         set_locale_cookie
+        set_country_cookie(country)
 
         log "Locale used: #{locale.upcase}"
+        log "Country used: #{country.upcase}"
 
         I18n.with_locale(locale) do
           self.next
@@ -31,6 +38,58 @@ module Locomotive::Steam
       end
 
       protected
+
+      def extract_country
+        country =  country_from_params || country_from_cookie || country_from_geoip(env) || country_from_default
+        country.to_s.downcase
+      end
+
+      def country_from_params
+        params[:country]&.to_sym.tap do |country|
+          log 'Country extracted from the params' unless country.blank?
+        end
+      end
+
+      def country_from_cookie
+        if country = services.cookie.get(cookie_country_key_name)
+          log 'Country extracted from the cookie'
+          country.to_sym
+        end
+      end
+
+      def country_from_geoip(remote_ip)
+        reader = MaxMind::DB.new('/home/akretion/GeoLite2-Country.mmdb', mode: MaxMind::DB::MODE_MEMORY)
+        remote_ip = env["action_dispatch.remote_ip"].to_s
+        record = reader.get(remote_ip)
+        if record.nil?
+          log "Country not found in database for: #{remote_ip}"
+          return nil
+        else
+          log "Country found in database for: #{remote_ip}"
+          return record['country']['iso_code']
+        end
+      end
+
+      def country_from_default
+        return "fr"
+      end
+
+      def locale_from_path
+        path = request.path_info
+
+        if path =~ /^\/(#{site.locales.join('|')})+(\/|$)/
+          locale = $1
+
+          # no need to keep the locale in the path used to fetch the page
+          env['steam.path'] = path.gsub($1 + $2, '')
+          env['steam.locale_in_path'] = true
+
+          log 'Locale extracted from the path'
+
+          locale.to_sym
+        end
+      end
+
 
       def extract_locale
         # Regarding the index page (basically, "/"), we've to see if we could
@@ -90,11 +149,20 @@ module Locomotive::Steam
         services.cookie.set(cookie_key_name, {'value': locale, 'path': '/', 'max_age': 1.year})
       end
 
+
+      def set_country_cookie(country)
+        services.cookie.set(cookie_country_key_name, {'value': country, 'path': '/', 'max_age': 1.year})
+      end
+
       # The preview urls for all the sites share the same domain, so cookie[:locale]
       # would be the same for all the preview urls and this is not good.
       # This is why we need to use a different key.
       def cookie_key_name
         live_editing? ? "steam-locale-#{site.handle}" : 'steam-locale'
+      end
+
+      def cookie_country_key_name
+        live_editing? ? "steam-country-#{site.handle}" : 'steam-country'
       end
 
       def is_index_page?

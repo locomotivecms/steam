@@ -16,6 +16,10 @@ module Locomotive
               @_source.__locale__ = locale
             end
 
+            if country = context.registers[:country]
+              @_source.__country__ = country
+            end
+
             @_source.__default_locale__ = context.registers[:site].try(:default_locale)
 
             super
