@@ -2,13 +2,14 @@ require 'spec_helper'
 
 describe Locomotive::Steam::ActionService do
 
-  let(:site_hash)     { { 'name' => 'Acme Corp' } }
-  let(:site)          { instance_double('Site', as_json: site_hash ) }
-  let(:email_service) { instance_double('EmailService') }
-  let(:entry_service) { instance_double('ContentService') }
-  let(:api_service)   { instance_double('ExternalAPIService') }
+  let(:site_hash)      { { 'name' => 'Acme Corp' } }
+  let(:site)           { instance_double('Site', as_json: site_hash ) }
+  let(:email_service)  { instance_double('EmailService') }
+  let(:entry_service)  { instance_double('ContentService') }
+  let(:api_service)    { instance_double('ExternalAPIService') }
   let(:redirection_service) { instance_double('PageRedirectionService') }
-  let(:service)       { described_class.new(site, email_service, content_entry: entry_service, api: api_service, redirection: redirection_service) }
+  let(:cookie_service) { instance_double('CookieService') }
+  let(:service)        { described_class.new(site, email_service, content_entry: entry_service, api: api_service, redirection: redirection_service, cookie: cookie_service) }
 
   describe '#run' do
 
@@ -115,18 +116,23 @@ describe Locomotive::Steam::ActionService do
 
       describe 'getCookiesProp' do
 
-        let(:cookies) { { 'name' => 'John' } }
         let(:script) { "return getCookiesProp('name');" }
 
-        it { is_expected.to eq 'John' }
+        it 'should read in the cookie name and return John' do
+          expect(cookie_service).to receive(:get).with('name').and_return('John')
+          is_expected.to eq('John')
+        end
 
       end
 
-      describe 'sendCookiesProp' do
+      describe 'setCookiesProp' do
 
-        let(:script) { "return setCookiesProp('done', true);" }
+        let(:script) { "return setCookiesProp('done', {'value': true});" }
 
-        it { subject; expect(cookies['done']).to eq 'true' }
+        it 'should set the cookie done with the value true' do
+          expect(cookie_service).to receive(:set).with('done', {'value' => true})
+          is_expected.to eq(nil)
+        end
 
       end
 

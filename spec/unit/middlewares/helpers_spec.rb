@@ -42,7 +42,11 @@ describe Locomotive::Steam::Middlewares::Concerns::Helpers do
 
     context 'mounted_on is not blank' do
 
-      before { allow(instance).to receive(:mounted_on).and_return('/my_app') }
+      before do
+        allow(instance).to receive(:mounted_on).and_return('/my_app')
+        allow(instance).to receive(:inject_cookies).and_return(nil)
+      end
+
 
       let(:location) { '/foo/bar' }
       it { is_expected.to eq '/my_app/foo/bar' }
