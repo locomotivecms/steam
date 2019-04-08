@@ -142,6 +142,10 @@ module Locomotive
           Steam::AuthService.new(current_site, content_entry, email)
         end
 
+        register :recaptcha do
+          Steam::RecaptchaService.new(request, current_site)
+        end
+
         register :cache do
           Steam::NoCacheService.new
         end
