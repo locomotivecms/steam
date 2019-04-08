@@ -11,8 +11,10 @@ module Locomotive::Steam
       include Helpers
 
       def _call
-        if url = redirect_url
-          redirect_to url
+        if redirect_to_root_path_with_lang
+          redirect_to(path_with_locale, 302)
+        elsif url = redirect_url
+          redirect_to(url, redirect_type)
         end
       end
 
@@ -21,11 +23,18 @@ module Locomotive::Steam
       def redirect_url
         if apply_redirection?
           if site.prefix_default_locale
-            path_with_default_locale if locale_not_mentioned_in_path?
+            path_with_locale if locale_not_mentioned_in_path?
           else
             env['steam.path'] if default_locale? && locale_mentioned_in_path?
           end
         end
+      end
+
+      # only applied if redirect_url is not nil
+      def redirect_type
+        # We don't want a permanent redirection for the index page in case
+        # the user wants to change the current locale from the index page.
+        self.path == '/' && self.locales.size > 1 ? 302 : 301
       end
 
       def apply_redirection?
@@ -44,12 +53,15 @@ module Locomotive::Steam
         !locale_mentioned_in_path?
       end
 
-      def path_with_default_locale
+      def path_with_locale
         modify_path do |segments|
-          segments.insert(1, site.default_locale)
+          segments.insert(1, locale)
         end
       end
 
+      def redirect_to_root_path_with_lang
+        locale_not_mentioned_in_path? && path.gsub(/^\//, '') == '' && !default_locale?
+      end
     end
   end
 

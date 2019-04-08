@@ -8,7 +8,8 @@ describe Locomotive::Steam::ActionService do
   let(:entry_service) { instance_double('ContentService') }
   let(:api_service)   { instance_double('ExternalAPIService') }
   let(:redirection_service) { instance_double('PageRedirectionService') }
-  let(:service)       { described_class.new(site, email_service, content_entry: entry_service, api: api_service, redirection: redirection_service) }
+  let(:cookie_service) { instance_double('CookieService') }
+  let(:service)       { described_class.new(site, email_service, content_entry: entry_service, api: api_service, redirection: redirection_service, cookie: cookie_service) }
 
   describe '#run' do
 
@@ -110,6 +111,22 @@ describe Locomotive::Steam::ActionService do
 
         it { subject; expect(session[:done]).to eq true }
 
+      end
+
+      describe 'getCookiesProp' do
+        let(:script) { "return getCookiesProp('name');" }
+        before do
+          expect(cookie_service).to receive(:get).with('name').and_return('John')
+        end
+        it { is_expected.to eq('John') }
+      end
+
+      describe 'setCookiesProp' do
+        let(:script) { "return setCookiesProp('done', {'value': true});" }
+        before do
+          expect(cookie_service).to receive(:set).with('done', {'value' => true})
+        end
+        it { is_expected.to eq(nil) }
       end
 
       describe 'allEntries' do

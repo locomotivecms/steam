@@ -7,13 +7,15 @@ describe Locomotive::Steam::UrlBuilderService do
   let(:request)         { instance_double('Request', env: { 'steam.mounted_on' => mounted_on }) }
   let(:site)            { instance_double('Site', default_locale: 'en', prefix_default_locale: prefix_default) }
   let(:locale)          { 'en' }
-  let(:service)         { described_class.new(site, locale, request) }
+  let(:current_locale)  { 'en' }
+  let(:locale)          { nil }
+  let(:service)         { described_class.new(site, current_locale, mounted_on) }
 
   describe '#url_for' do
 
     let(:page) { instance_double('AboutUs', fullpath: 'about-us', templatized?: false) }
 
-    subject { service.url_for(page) }
+    subject { service.url_for(page, locale) }
 
     it { is_expected.to eq '/about-us' }
 
@@ -34,6 +36,16 @@ describe Locomotive::Steam::UrlBuilderService do
         let(:mounted_on) { '/foo' }
         it { is_expected.to eq '/foo/fr/about-us' }
       end
+
+    end
+
+    describe 'asking for the index page url in the defaut locale when the current locale is different from the default one' do
+
+      let(:current_locale)  { 'fr' }
+      let(:locale)          { 'en' }
+      let(:page)            { instance_double('index', fullpath: 'index', templatized?: false) }
+
+      it { is_expected.to eq '/en' }
 
     end
 

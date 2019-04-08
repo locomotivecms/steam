@@ -30,7 +30,7 @@ describe Locomotive::Steam::Liquid::Tags::LocaleSwitcher do
     context 'prefix_default_locale is true' do
 
       let(:prefix_default) { true }
-      it { is_expected.to eq '<div id="locale-switcher"><a href="/en/" class="en current">en</a> | <a href="/fr" class="fr">fr</a></div>' }
+      it { is_expected.to eq '<div id="locale-switcher"><a href="/en" class="en current">en</a> | <a href="/fr" class="fr">fr</a></div>' }
 
     end
 

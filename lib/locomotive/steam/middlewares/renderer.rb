@@ -59,7 +59,8 @@ module Locomotive::Steam
           repositories:   services.repositories,
           logger:         Locomotive::Common::Logger,
           live_editing:   !!env['steam.live_editing'],
-          session:        request.session
+          session:        request.session,
+          cookies:        request.cookies
         }
       end
 
@@ -96,6 +97,7 @@ module Locomotive::Steam
       def _locale_liquid_assigns
         {
           'locale'         => locale.to_s,
+          'country'        => env['steam.country'],
           'default_locale' => site.default_locale.to_s,
           'locales'        => site.locales.map(&:to_s)
         }

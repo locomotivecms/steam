@@ -171,11 +171,7 @@ describe 'Authentication' do
       auth_id:                    email,
       auth_reset_password_url:    'http://acme.com/account/reset-password',
       auth_callback:              '/account/sign-in',
-      auth_email_from:            'support@acme.com',
       auth_email_handle:          'reset_password_instructions',
-      auth_email_smtp_address:    'smtp.nowhere.net',
-      auth_email_smtp_user_name:  'jane',
-      auth_email_smtp_password:   'easyone'
     } }
 
     it 'renders the forgot password page with an error message' do

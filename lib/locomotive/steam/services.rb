@@ -63,7 +63,7 @@ module Locomotive
         end
 
         register :action do
-          Steam::ActionService.new(current_site, email, content_entry: content_entry, api: external_api, redirection: page_redirection)
+          Steam::ActionService.new(current_site, email, content_entry: content_entry, api: external_api, redirection: page_redirection, cookie: cookie)
         end
 
         register :content_entry do
@@ -128,6 +128,10 @@ module Locomotive
 
         register :cache do
           Steam::NoCacheService.new
+        end
+
+        register :cookie do
+          Steam::CookieService.new(request)
         end
 
         register :configuration do

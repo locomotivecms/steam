@@ -62,6 +62,8 @@ module Locomotive::Steam
 
         store_authenticated(nil)
 
+        redirect_to options.callback || path
+
         append_message(:signed_out)
       end
 
@@ -169,7 +171,7 @@ module Locomotive::Steam
         end
 
         def from
-          params[:auth_email_from] || 'support@locomotivecms.com'
+          smtp_config['sender'] || 'support@locomotivecms.com'
         end
 
         def subject
@@ -188,22 +190,38 @@ module Locomotive::Steam
           params[:auth_entry]
         end
 
-        def smtp
-          name = params[:auth_email_smtp_namespace] || 'smtp'
-          namespace = site.metafields.try(:[], name)
-
-          if namespace.blank?
-            Locomotive::Common::Logger.error "[Auth] Missing SMTP settings in the Site metafields. Namespace: #{name}".light_red
-            return {}
-          end
-
-          {
-            address:    namespace[params[:auth_email_smtp_address_alias] || 'address'],
-            port:       namespace[params[:auth_email_smtp_port_alias] || 'port'],
-            user_name:  namespace[params[:auth_email_smtp_user_name_alias] || 'user_name'],
-            password:   namespace[params[:auth_email_smtp_password_alias] || 'password']
-          }
+        def smtp_config
+          @config ||= _read_smtp_config
         end
+
+        def smtp
+          if smtp_config.blank?
+            {}
+          else
+            {
+              address:              smtp_config['address'],
+              port:                 smtp_config['port'],
+              user_name:            smtp_config['user_name'],
+              password:             smtp_config['password'],
+              authentication:       smtp_config['authentication'] || 'plain',
+              enable_starttls_auto: (smtp_config['enable_starttls_auto'] || "0").to_bool,
+            }
+          end
+        end
+
+      private
+
+        def _read_smtp_config
+          name = params[:auth_email_smtp_namespace] || 'smtp'
+          config = site.metafields.try(:[], name)
+          if config.blank?
+            Locomotive::Common::Logger.error "[Auth] Missing SMTP settings in the Site metafields. Namespace: #{name}".light_red
+            {}
+          else
+            config
+          end
+        end
+
 
       end
 
