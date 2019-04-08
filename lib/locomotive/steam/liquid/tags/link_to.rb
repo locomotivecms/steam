@@ -18,7 +18,10 @@ module Locomotive
                 end
               end
 
-              %{<a href="#{path}">#{label}</a>}
+              tag_href  = %(href="#{path}")
+              tag_class = %( class="#{css}") if css.present?
+
+              %{<a #{tag_href}#{tag_class}>#{label}</a>}
             end
           end
 
@@ -34,6 +37,10 @@ module Locomotive
             else
               page.title
             end
+          end
+
+          def css
+            @path_options[:class]
           end
 
         end

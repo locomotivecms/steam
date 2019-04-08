@@ -75,6 +75,13 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
 
       end
 
+      context 'with a custom CSS class' do
+
+        let(:source) { "{% link_to index, locale: 'fr', class: 'button' %}" }
+        it { is_expected.to eq '<a href="/fr" class="button">Accueil</a>' }
+
+      end
+
     end
 
     describe 'used as a block' do
