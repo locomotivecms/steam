@@ -22,7 +22,7 @@ module Locomotive::Steam
             params:         params,
             session:        request.session,
             cookies:        request.cookies
-          }
+          }.merge(env['steam.liquid_registers'])
         end
 
         def liquid_assigns

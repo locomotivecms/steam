@@ -63,7 +63,7 @@ module Spec
 
       ActiveSupport::Notifications.unsubscribe(subscription)
 
-      return payload
+      payload
     end
 
   end

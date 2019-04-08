@@ -27,11 +27,12 @@ describe Locomotive::Steam::Middlewares::Section do
                         }
 
   before do
-    env['steam.page']           = page
-    env['steam.services']       = services
-    env['steam.locale']         = :en
-    env['steam.liquid_assigns'] = {}
-    env['steam.request']        = Rack::Request.new(env)
+    env['steam.page']             = page
+    env['steam.services']         = services
+    env['steam.locale']           = :en
+    env['steam.liquid_registers'] = {}
+    env['steam.liquid_assigns']   = {}
+    env['steam.request']          = Rack::Request.new(env)
     env['steam.request'].add_header('HTTP_LOCOMOTIVE_SECTION_TYPE', 'header')
     allow(section_finder).to receive(:find).with('header').and_return(section)
   end

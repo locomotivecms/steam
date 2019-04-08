@@ -48,6 +48,13 @@ describe Locomotive::Steam::Liquid::Filters::Translate do
 
     end
 
+    describe 'shortcut alias' do
+
+      let(:source) { "{{ 'welcome_message' | t: 'fr', 'locomotive.default' }}" }
+      it { expect(translator).to receive(:translate).with('welcome_message', 'locale' => 'fr', 'scope' => 'locomotive.default'); subject }
+
+    end
+
   end
 
   describe 'pluralization' do
