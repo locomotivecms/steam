@@ -144,7 +144,7 @@ module Locomotive
         # check if the entry has unique values for its
         # fields marked as unique
         content_type_repository.look_for_unique_fields(entry.content_type).each do |name, _|
-          if _repository.exists?(name => entry.send(name))
+          if _repository.exists?(name => entry.send(name), :"_id.ne" => entry._id)
             entry.errors.add(name, :taken)
           end
         end

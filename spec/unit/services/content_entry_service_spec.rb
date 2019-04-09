@@ -17,7 +17,8 @@ describe Locomotive::Steam::ContentEntryService do
     let(:first_validation)  { false }
     let(:errors)            { [:title] }
     let(:type)              { instance_double('Comments') }
-    let(:entry)             { instance_double('Entry', title: 'Hello world', content_type: type, valid?: first_validation, errors: errors, attributes: { title: 'Hello world' }, localized_attributes: []) }
+    let(:entry_id)          { nil }
+    let(:entry)             { instance_double('Entry', _id: entry_id, title: 'Hello world', content_type: type, valid?: first_validation, errors: errors, attributes: { title: 'Hello world' }, localized_attributes: []) }
 
     before do
       allow(type_repository).to receive(:by_slug).and_return(type)
@@ -47,12 +48,32 @@ describe Locomotive::Steam::ContentEntryService do
         let(:unique_fields) { { title: instance_double('Field', name: 'title') } }
 
         before do
-          allow(entry_repository).to receive(:exists?).with(title: 'Hello world').and_return(true)
           expect(entry.errors).to receive(:add).with(:title, :taken).and_return(true)
         end
 
-        it { is_expected.to eq false }
-        it { subject; expect(entry.errors).to eq([:title]) }
+        context 'the entry has never been persisted before' do
+
+          before do
+            allow(entry_repository).to receive(:exists?).with(title: 'Hello world', :'_id.ne' => nil).and_return(true)
+          end
+
+          it { is_expected.to eq false }
+          it { subject; expect(entry.errors).to eq([:title]) }
+
+        end
+
+        context 'the entry has already been persisted' do
+
+          let(:entry_id) { 42 }
+
+          before do
+            allow(entry_repository).to receive(:exists?).with(title: 'Hello world', :'_id.ne' => 42).and_return(true)
+          end
+
+          it { is_expected.to eq false }
+          it { subject; expect(entry.errors).to eq([:title]) }
+
+        end
 
       end
 
