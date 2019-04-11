@@ -9,94 +9,115 @@ describe Locomotive::Steam::Middlewares::Locale do
   let(:site)            { instance_double('Site', default_locale: :de, locales: [:de, :fr, :en]) }
   let(:url)             { 'http://models.example.com' }
   let(:app)             { ->(env) { [200, env, 'app'] } }
-  let(:services)        { instance_double('Services', :locale= => 'en') }
+  let(:cookie_lang)     { nil }
+  let(:cookie_service)  { instance_double('Cookie Service', :get => cookie_lang) }
+  let(:services)        { instance_double('Services', :locale= => 'en', :cookie => cookie_service) }
   let(:middleware)      { Locomotive::Steam::Middlewares::Locale.new(app) }
-  let(:session)         { {} }
   let(:accept_language) { '' }
 
   subject do
     env = env_for(
         url,
         'steam.site' => site,
-        'rack.session' => session,
         'HTTP_ACCEPT_LANGUAGE' => accept_language)
     env['steam.request']  = Rack::Request.new(env)
     env['steam.services'] = services
+    env['steam.locale']
     code, env = middleware.call(env)
-    [env['steam.locale'], session['steam-locale']&.to_sym, env['steam.path']]
+    [env['steam.locale'], env['steam.path']]
   end
 
-  describe 'locale defined in the path' do
+  describe 'whatever url' do
 
-    let(:url) { 'http://models.example.com/de/hello-de/foo' }
+    let(:url) { 'http://models.example.com/whatever' }
 
-    it { is_expected.to eq [:de, :de, '/hello-de/foo'] }
+    it 'should set the cookies' do
+       expect(cookie_service).to receive(:set).with('steam-locale', {
+           value: :de,
+           path: '/',
+           max_age: 1.year
+       }).and_return(nil)
+       is_expected.to eq [:de,  '/whatever']
+    end
 
   end
 
-  describe 'no locale defined in the path' do
+  describe 'browse site with' do
 
-    describe 'first connexion' do
+    before { allow(cookie_service).to receive(:set).and_return(nil) }
 
-      context 'without accept-language header' do
+    describe 'locale defined in the path' do
 
-        it { is_expected.to eq [:de, :de, '/'] }
+      let(:url) { 'http://models.example.com/de/hello-de/foo' }
 
-      end
+      it { is_expected.to eq [:de, '/hello-de/foo'] }
 
-      context 'with accept-language header' do
+    end
 
-        let(:accept_language) { 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7' }
+    describe 'no locale defined in the path' do
 
-        it { is_expected.to eq [:fr, :fr, '/'] }
+      describe 'first connexion' do
 
-        context 'with url path' do
+        context 'without accept-language header' do
 
-          let(:url) { 'http://models.example.com/werkzeug' }
+          it { is_expected.to eq [:de, '/'] }
 
-          it { is_expected.to eq [:de, :de, '/werkzeug'] }
+        end
+
+        context 'with accept-language header' do
+
+          let(:accept_language) { 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7' }
+
+          it { is_expected.to eq [:fr,  '/'] }
+
+          context 'with url path' do
+
+            let(:url) { 'http://models.example.com/werkzeug' }
+
+            it { is_expected.to eq [:de, '/werkzeug'] }
+
+          end
 
         end
 
       end
 
-    end
+      context 'user with cookie, use it' do
 
-    context 'user with session, use it' do
+        let(:cookie_lang) { 'en' }
 
-      let(:session) { {'steam-locale' => 'en'} }
+        it { is_expected.to eq [:en, '/'] }
 
-      it { is_expected.to eq [:en, :en, '/'] }
-
-    end
-
-  end
-
-  describe 'locale asked in the request params' do
-
-    context 'the locale is blank' do
-
-      let(:url) { 'http://models.example.com?locale=' }
-
-      it { is_expected.to eq [:de, :de, '/'] }
+      end
 
     end
 
-    context 'the locale exists' do
+    describe 'locale asked in the request params' do
 
-      let(:url) { 'http://models.example.com?locale=en' }
+      context 'the locale is blank' do
 
-      it { is_expected.to eq [:en, :en, '/'] }
+        let(:url) { 'http://models.example.com?locale=' }
+
+        it { is_expected.to eq [:de, '/'] }
+
+      end
+
+      context 'the locale exists' do
+
+        let(:url) { 'http://models.example.com?locale=en' }
+
+        it { is_expected.to eq [:en, '/'] }
+
+      end
+
+      context 'the locale is unknown' do
+
+        let(:url) { 'http://models.example.com?locale=onload' }
+
+        it { is_expected.to eq [:de, '/'] }
+
+      end
 
     end
-
-    context 'the locale is unknown' do
-
-      let(:url) { 'http://models.example.com?locale=onload' }
-
-      it { is_expected.to eq [:de, :de, '/'] }
-
-    end
-
   end
 end

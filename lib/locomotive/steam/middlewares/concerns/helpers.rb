@@ -15,7 +15,7 @@ module Locomotive::Steam
 
         def render_response(content, code = 200, type = nil)
           _headers = env['steam.headers'] || {}
-
+          inject_cookies(_headers)
           @next_response = [
             code,
             { 'Content-Type' => type || 'text/html' }.merge(_headers),
@@ -28,7 +28,17 @@ module Locomotive::Steam
 
           self.log "Redirected to #{_location}".blue
 
-          @next_response = [type, { 'Content-Type' => 'text/html', 'Location' => _location }, []]
+          headers = { 'Content-Type' => 'text/html', 'Location' => _location }
+          inject_cookies(headers)
+
+          @next_response = [type, headers, []]
+        end
+
+        def inject_cookies(headers)
+          _cookies = env['steam.cookies'] || {}
+          _cookies.each do |key, vals|
+            Rack::Utils.set_cookie_header!(headers, key, vals.symbolize_keys!)
+          end
         end
 
         def modify_path(path = nil, &block)

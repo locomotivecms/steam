@@ -35,7 +35,3 @@ group :test do
   gem 'codeclimate-test-reporter',  '~> 0.4.7',   require: false
   gem 'coveralls',                  '~> 0.8.1',   require: false
 end
-
-platform :ruby do
-  ruby '2.5.0'
-end

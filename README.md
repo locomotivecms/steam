@@ -59,6 +59,39 @@ see the list in the issues section.
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
+## Running test with docker
+
+A docker configuration is included in this repository, you can run all the tests with the following procedure
+
+First run a bash shell inside the container
+
+```
+docker-compose run steam gosu ubuntu bash
+```
+
+Now you are inside the container you can
+
+Init the database with demo data
+
+```
+rake mongodb:test:seed
+```
+
+Run all the test with
+
+```
+rake spec
+```
+
+Run specific test with rspec
+
+```
+rspec spec/unit/middlewares/locale_spec.rb
+
+```
+
+Note: you do not need to prefix with bundle exec as the docky-ruby image already add it automatically
+
 ## License
 
 Copyright (c) 2018 NoCoffee. MIT Licensed, see MIT-LICENSE for details.

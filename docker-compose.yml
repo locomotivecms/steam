@@ -1,0 +1,15 @@
+services:
+  db:
+    image: mongo:3
+    volumes:
+      - ./data/db:/data/db
+  steam:
+    image: quay.io/akretion/docky-ruby:latest
+    environment:
+      - MONGO_HOST=db
+    volumes:
+      - .:/workspace
+      - ./bundle:/usr/local/bundle
+    depends_on:
+      - db
+version: '3'

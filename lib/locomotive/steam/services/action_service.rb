@@ -11,7 +11,7 @@ module Locomotive
 
     class ActionService
 
-      SERVICES = %w(content_entry api redirection)
+      SERVICES = %w(content_entry api redirection cookie)
 
       BUILT_IN_FUNCTIONS = %w(
         getProp
@@ -84,11 +84,11 @@ module Locomotive
       end
 
       def get_cookies_prop_lambda(liquid_context)
-        -> (name) { liquid_context.registers[:cookies][name.to_s].as_json }
+        -> (name) { cookie_service.get(name.to_s) }
       end
 
       def set_cookies_prop_lambda(liquid_context)
-        -> (name, value) { liquid_context.registers[:cookies][name.to_s] = value.to_s }
+        -> (name, values) { cookie_service.set(name.to_s, values) }
       end
 
       def all_entries_lambda(liquid_context)
