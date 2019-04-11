@@ -21,6 +21,12 @@ module Locomotive::Steam
         :"#{__name__}_id"
       end
 
+      def __attach__(entity)
+        # setting a default nil value for the target key
+        entity[__target_key__] ||= nil
+        super
+      end
+
     end
 
   end

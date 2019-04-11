@@ -79,6 +79,10 @@ describe Locomotive::Steam::ContentEntryRepository do
         before { target_repository.scope.locale = :fr }
         subject { target_repository.all(band: nil) }
         it { expect(subject.size).to eq 2 }
+
+        describe 'set a nil value to the attribute storing the id of the related element' do
+          it { expect(subject.map(&:band_id)).to eq([nil, nil]) }
+        end
       end
     end
 
