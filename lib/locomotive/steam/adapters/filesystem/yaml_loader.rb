@@ -43,13 +43,32 @@ module Locomotive::Steam
           ERB.new(data).result(binding)
         end
 
+        def parse_erb_struct(vals)
+          if vals.is_a? Array
+            vals.each do | val |
+              parse_erb_struct(val)
+            end
+          else
+            vals.each do | key, val |
+              if val.is_a? String
+                vals[key] = parse_erb(val)
+              else
+                parse_erb_struct(val)
+              end
+            end
+          end
+        end
+
         def safe_yaml_load(yaml, template, path, &block)
           return {} if yaml.blank?
 
-          yaml = parse_erb(yaml)
+          erb_activated = parse_erb(yaml) != yaml
 
           begin
             HashConverter.to_sym(YAML.load(yaml)).tap do |attributes|
+              if erb_activated
+                parse_erb_struct(attributes)
+              end
               block.call(attributes, template) if block_given?
             end
           rescue Exception => e
