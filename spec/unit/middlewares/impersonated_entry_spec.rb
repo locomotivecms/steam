@@ -16,13 +16,7 @@ describe Locomotive::Steam::Middlewares::ImpersonatedEntry do
   let(:middleware)      { described_class.new(app) }
 
   subject do
-    env = env_for(url, params: params)
-    env['rack.session']               = session
-    env['steam.site']                 = site
-    env['steam.request']              = Rack::Request.new(env)
-    env['steam.liquid_assigns']       = {}
-    env['steam.authenticated_entry']  = entry
-    code, env, body = middleware.call(env)
+    code, env, body = call
     [env['steam.impersonating_authenticated_entry'], body.first]
   end
 
@@ -56,10 +50,26 @@ describe Locomotive::Steam::Middlewares::ImpersonatedEntry do
       let(:entry) { instance_double('Account', _label: 'John') }
       let(:params) { { impersonating: 'stop' } }
 
-      it { is_expected.to eq [nil, '<html><body></body></html>'] }
+      subject do
+        code, env, body = call
+        [code, env['steam.impersonating_authenticated_entry'], env['Location']]
+      end
+
+      it { is_expected.to eq [302, nil, '/'] }
 
     end
 
+  end
+
+  def call
+    env = env_for(url, params: params)
+    env['rack.session']               = session
+    env['steam.site']                 = site
+    env['steam.path']                 = '/'
+    env['steam.request']              = Rack::Request.new(env)
+    env['steam.liquid_assigns']       = {}
+    env['steam.authenticated_entry']  = entry
+    middleware.call(env)
   end
 
 end

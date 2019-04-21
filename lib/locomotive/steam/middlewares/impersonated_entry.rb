@@ -19,6 +19,9 @@ module Locomotive::Steam
 
           # leave the impersonating mode
           request.session[:authenticated_impersonation] == '0'
+
+          # redirect the user to the same page
+          redirect_to path, 302
         elsif authenticated? && is_impersonating?
           # useful if other middlewares need this information
           env['steam.impersonating_authenticated_entry'] = true
