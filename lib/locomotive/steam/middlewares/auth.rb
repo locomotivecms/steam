@@ -29,8 +29,7 @@ module Locomotive::Steam
       private
 
       def sign_up(options)
-        return if authenticated?
-        return unless recaptcha_content_entry_valid?(options.type, options.recaptcha_response)
+        return if authenticated? || !is_recaptcha_valid?(options.type, options.recaptcha_response)
 
         status, entry = services.auth.sign_up(options, default_liquid_context, request)
 

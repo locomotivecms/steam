@@ -76,6 +76,17 @@ describe Locomotive::Steam::ContentEntryService do
 
       after(:all) { Locomotive::Steam::Adapters::Filesystem::SimpleCacheStore.new.clear }
 
+      describe '#build' do
+
+        let(:attributes) { { name: 'John', email: 'john@doe.net', message: 'Hello world!' } }
+
+        subject { service.build('messages', attributes) }
+
+        it { expect(subject['name']).to eq 'John' }
+        it { expect(subject['errors'].blank?).to eq true }
+
+      end
+
       describe '#create' do
 
         let(:attributes) { { name: 'John', email: 'john@doe.net', message: 'Hello world!' } }

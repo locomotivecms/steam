@@ -3,22 +3,28 @@ require 'httparty'
 module Locomotive
   module Steam
 
+    # This service supports Google Recaptcha or any API compatible with Google
     class RecaptchaService
 
-      def initialize(request, site)
-        # This service support google recaptcha or API compatible
-        @api = site.metafields.dig(:google, :recaptcha_api) || 'https://www.google.com/recaptcha/api/siteverify'
-        @secret = site.metafields.dig(:google, :recaptcha_secret)
-        @request = request
+      GOOGLE_API_URL = 'https://www.google.com/recaptcha/api/siteverify'.freeze
+
+      def initialize(site, request)
+        @api      = site.metafields.dig(:google, :recaptcha_api_url) || GOOGLE_API_URL
+        @secret   = site.metafields.dig(:google, :recaptcha_secret)
+        @ip       = request.ip
       end
 
-      def verify(response)
-        res = HTTParty.get(@api, { query: {
-            secret: @secret,
-            response: response,
-            remoteip: @request.ip,
+      def verify(response_code)
+        # save a HTTP query if there is no code
+        return false if response_code.blank?
+
+        _response = HTTParty.get(@api, { query: {
+          secret:   @secret,
+          response: response_code,
+          remoteip: @ip
         }})
-        res.parsed_response["success"]
+
+        _response.parsed_response['success']
       end
 
     end

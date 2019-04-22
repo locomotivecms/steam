@@ -143,7 +143,7 @@ module Locomotive
         end
 
         register :recaptcha do
-          Steam::RecaptchaService.new(request, current_site)
+          Steam::RecaptchaService.new(current_site, request)
         end
 
         register :cache do

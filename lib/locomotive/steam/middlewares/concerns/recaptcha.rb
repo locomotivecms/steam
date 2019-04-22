@@ -3,34 +3,25 @@ module Locomotive::Steam
     module Concerns
       module Recaptcha
 
-        def recaptcha_content_entry_valid?(slug, response)
-          !recaptcha_content_entry_required?(slug) || recaptcha_valid?(response)
+        def is_recaptcha_valid?(slug, response)
+          !is_recaptcha_required?(slug) || is_recaptcha_verified?(response)
         end
 
-        def recaptcha_content_entry_required?(slug)
-          type = content_entry.get_type(slug)
-          # TODO @did we should remove this try when data will be updated?
-          !type.nil? && type.try(:recaptcha_required)
+        def is_recaptcha_required?(slug)
+          type = services.content_entry.get_type(slug)
+          type&.recaptcha_required?
         end
 
-        def recaptcha_valid?(response)
-          valid = recaptcha.verify(response)
-          liquid_assigns['recaptcha_invalid'] = !valid
-          valid
-        end
-
-        def recaptcha
-          services.recaptcha
+        def is_recaptcha_verified?(response)
+          services.recaptcha.verify(response).tap do |valid|
+            liquid_assigns['recaptcha_invalid'] = !valid
+          end
         end
 
         def build_invalid_recaptcha_entry(slug, entry_attributes)
-          entry = content_entry.build(slug, entry_attributes)
-          entry.errors.add(:recaptcha_invalid, true)
-          entry
-        end
-
-        def content_entry
-          services.content_entry
+          services.content_entry.build(slug, entry_attributes).tap do |entry|
+            entry.errors.add(:recaptcha_invalid, true)
+          end
         end
 
       end

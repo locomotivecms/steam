@@ -10,6 +10,7 @@ describe Locomotive::Steam::Middlewares::Site do
   let(:configuration)   { instance_double('SimpleConfiguration', render_404_if_no_site: render_404) }
   let(:services)        { instance_double('SimpleServices', configuration: configuration) }
   let(:url)             { 'http://models.example.com' }
+  let(:engine_site)     { nil }
   let(:app)             { ->(env) { [200, env, 'app'] } }
   let(:middleware)      { Locomotive::Steam::Middlewares::Site.new(app) }
   let(:is_default_host) { nil }
@@ -17,6 +18,7 @@ describe Locomotive::Steam::Middlewares::Site do
   subject do
     env = env_for(url, 'steam.services' => services)
     env['steam.request']          = Rack::Request.new(env)
+    env['steam.site']             = engine_site
     env['steam.is_default_host']  = is_default_host
     code, env = middleware.call(env)
     [code, env['Location']]
@@ -38,6 +40,17 @@ describe Locomotive::Steam::Middlewares::Site do
         expect { subject }.to raise_exception(Locomotive::Steam::NoSiteException)
       end
 
+    end
+
+  end
+
+  describe 'the site has been set from the Engine' do
+
+    let(:engine_site) { instance_double('SiteWithDomains', name: 'Acme', domains: ['www.acme.com'], redirect_to_first_domain: false, redirect_to_https: false) }
+
+    it 'sets the site for all the services' do
+      expect(services).to receive(:set_site).with(engine_site).and_return(engine_site)
+      is_expected.to eq [200, nil]
     end
 
   end
