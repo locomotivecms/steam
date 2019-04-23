@@ -14,6 +14,7 @@ module Locomotive::Steam
     class Auth < ThreadSafe
 
       include Concerns::Helpers
+      include Concerns::AuthHelpers
       include Concerns::Recaptcha
 
       def _call
@@ -92,24 +93,9 @@ module Locomotive::Steam
         entry_id   = request.session[:authenticated_entry_id]
 
         if entry = services.auth.find_authenticated_resource(entry_type, entry_id)
-          env['authenticated_entry'] = entry
+          env['steam.authenticated_entry'] = entry
           liquid_assigns["current_#{entry_type.singularize}"] = entry
         end
-      end
-
-      def authenticated?
-        !!env['authenticated_entry']
-      end
-
-      def store_authenticated(entry)
-        type = entry ? entry.content_type.slug : request.session[:authenticated_entry_type]
-
-        request.session[:authenticated_entry_type]  = type.to_s
-        request.session[:authenticated_entry_id]    = entry.try(:_id).to_s
-
-        log "[Auth] authenticated #{type.to_s.singularize} ##{entry.try(:_id).to_s}"
-
-        liquid_assigns["current_#{type.singularize}"] = entry
       end
 
       def append_message(message)
