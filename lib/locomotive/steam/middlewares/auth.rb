@@ -15,6 +15,7 @@ module Locomotive::Steam
 
       include Concerns::Helpers
       include Concerns::AuthHelpers
+      include Concerns::Recaptcha
 
       def _call
         load_authenticated_entry
@@ -29,7 +30,7 @@ module Locomotive::Steam
       private
 
       def sign_up(options)
-        return if authenticated?
+        return if authenticated? || !is_recaptcha_valid?(options.type, options.recaptcha_response)
 
         status, entry = services.auth.sign_up(options, default_liquid_context, request)
 
@@ -176,6 +177,10 @@ module Locomotive::Steam
 
         def smtp_config
           @config ||= _read_smtp_config
+        end
+
+        def recaptcha_response
+          params["g-recaptcha-response"]
         end
 
         def smtp

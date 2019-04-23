@@ -6,6 +6,7 @@ module Locomotive::Steam
     class EntrySubmission < ThreadSafe
 
       include Concerns::Helpers
+      include Concerns::Recaptcha
 
       HTTP_REGEXP             = /^https?:\/\//o
       ENTRY_SUBMISSION_REGEXP = /^\/entry_submissions\/(\w+)/o
@@ -141,7 +142,9 @@ module Locomotive::Steam
       #
       #
       def create_entry(slug)
-        if entry = entry_submission.submit(slug, entry_attributes)
+        if !is_recaptcha_valid?(slug, entry_attributes['g-recaptcha-response'])
+          build_invalid_recaptcha_entry(slug, entry_attributes)
+        elsif entry = entry_submission.submit(slug, entry_attributes)
           entry
         else
           raise %{Unknown content type "#{slug}" or public_submission_enabled property not true}

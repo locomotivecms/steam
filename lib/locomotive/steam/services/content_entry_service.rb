@@ -24,6 +24,16 @@ module Locomotive
         end
       end
 
+      def build(type_slug, attributes)
+        with_repository(type_slug) do |_repository|
+          _attributes = prepare_attributes(_repository.content_type, attributes)
+
+          entry = _repository.build(_attributes)
+
+          i18n_decorate { entry }
+        end
+      end
+
       # Warning: do not work with localized and file fields
       def create(type_slug, attributes, as_json = false)
         with_repository(type_slug) do |_repository|

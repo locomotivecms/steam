@@ -13,8 +13,9 @@ module Locomotive::Steam
 
     def initialize(attributes = {})
       super({
-        order_by:         '_position',
-        order_direction:  'asc'
+        order_by:           '_position',
+        order_direction:    'asc',
+        recaptcha_required: false
       }.merge(attributes))
     end
 
@@ -66,6 +67,10 @@ module Locomotive::Steam
       end
 
       { name.to_sym => self.order_direction.to_s }
+    end
+
+    def recaptcha_required?
+      !!self.recaptcha_required
     end
 
   end
