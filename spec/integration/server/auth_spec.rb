@@ -152,9 +152,16 @@ describe 'Authentication' do
       'authenticated_entry_id'    => 'john'
     } }
 
+    it 'redirect to the requested page' do
+      post '/account/sign-in', params, { 'rack.session' => rack_session }
+      expect(last_response.status).to eq 301
+      expect(last_response.location).to eq "/account/sign-in"
+    end
+
     it 'displays the profile page as described in the params' do
       post '/account/sign-in', params, { 'rack.session' => rack_session }
-      expect(last_response.body).to include "You've been signed out"
+      follow_redirect!
+      expect(last_response.body).to include "Sign in"
       expect(last_response.body).not_to include "You're already authenticated!"
     end
 
