@@ -15,8 +15,6 @@ module Locomotive
       end
 
       def verify(response_code)
-        puts "VERIFY!!! #{response_code.inspect}"
-
         # save a HTTP query if there is no code
         return false if response_code.blank?
 
@@ -25,8 +23,6 @@ module Locomotive
           response: response_code,
           remoteip: @ip
         }})
-
-        puts "@api = #{@api}, #{@secret}, #{response_code}, result = #{_response.parsed_response.inspect}"
 
         _response.parsed_response['success']
       end
