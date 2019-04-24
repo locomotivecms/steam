@@ -142,7 +142,7 @@ module Locomotive::Steam
       #
       #
       def create_entry(slug)
-        if !is_recaptcha_valid?(slug, entry_attributes['g-recaptcha-response'])
+        if !is_recaptcha_valid?(slug, params[:'g-recaptcha-response'])
           build_invalid_recaptcha_entry(slug, entry_attributes)
         elsif entry = entry_submission.submit(slug, entry_attributes)
           entry

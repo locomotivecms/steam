@@ -21,7 +21,7 @@ describe Locomotive::Steam::Middlewares::EntrySubmission do
   let(:method)              { 'POST' }
   let(:errors)              { instance_double('Error', empty?: false) }
   let(:entry)               { instance_double('Entry', errors: errors, content_type_slug: 'contacts') }
-  let(:form)                { { content_type_slug: 'contacts', content: { email: 'john@doe.net' } } }
+  let(:form)                { { content_type_slug: 'contacts', :'g-recaptcha-response' => 'myrecaptchacode', content: { email: 'john@doe.net' } } }
   let(:rack_env)            { build_env }
 
   before do
@@ -63,6 +63,7 @@ describe Locomotive::Steam::Middlewares::EntrySubmission do
       let(:recaptcha_valid) { true }
 
       it 'creates a new entry' do
+        expect(recaptcha_service).to receive(:verify).with('myrecaptchacode').and_return(true)
         expect(subject.first).to eq 200
         expect(subject.last).to eq entry
       end

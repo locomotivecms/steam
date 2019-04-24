@@ -34,6 +34,13 @@ describe Locomotive::Steam::Liquid::Tags::ModelForm do
 
   end
 
+  describe 'with recaptcha' do
+
+    let(:source) { "{% model_form 'newsletter_addresses', recaptcha: true %}Newsletter Form{% endmodel_form %}" }
+    it { is_expected.to include %(<input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response" />) }
+
+  end
+
   describe 'json enabled' do
 
     let(:source) { "{% model_form 'newsletter_addresses', json: true %}Newsletter Form{% endmodel_form %}" }

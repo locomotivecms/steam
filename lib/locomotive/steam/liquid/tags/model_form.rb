@@ -27,7 +27,7 @@ module Locomotive
             form_attributes = prepare_form_attributes(options)
 
             html_content_tag :form,
-              content_type_html(name) + csrf_html + callbacks_html(options) + yield,
+              content_type_html(name) + csrf_html + callbacks_html(options) + recaptcha_html(options) + yield,
               form_attributes
           end
 
@@ -45,6 +45,12 @@ module Locomotive
             options.slice(:success, :error).map do |(name, value)|
               html_tag :input, type: 'hidden', name: "#{name}_callback", value: value
             end.join('')
+          end
+
+          def recaptcha_html(options)
+            return '' if options[:recaptcha] != true
+
+            html_tag :input, type: 'hidden', name: 'g-recaptcha-response', id: 'g-recaptcha-response'
           end
 
           private

@@ -3,8 +3,8 @@ module Locomotive::Steam
     module Concerns
       module Recaptcha
 
-        def is_recaptcha_valid?(slug, response)
-          !is_recaptcha_required?(slug) || is_recaptcha_verified?(response)
+        def is_recaptcha_valid?(slug, response_code)
+          !is_recaptcha_required?(slug) || is_recaptcha_verified?(response_code)
         end
 
         def is_recaptcha_required?(slug)
@@ -12,8 +12,8 @@ module Locomotive::Steam
           type&.recaptcha_required?
         end
 
-        def is_recaptcha_verified?(response)
-          services.recaptcha.verify(response).tap do |valid|
+        def is_recaptcha_verified?(response_code)
+          services.recaptcha.verify(response_code).tap do |valid|
             liquid_assigns['recaptcha_invalid'] = !valid
           end
         end
