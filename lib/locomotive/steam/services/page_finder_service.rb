@@ -16,6 +16,11 @@ module Locomotive
       def match(path)
         decorate do
           repository.matching_fullpath(path_combinations(path))
+        end.sort do |page_1, page_2|
+          # normal pages have priority over the templatized ones if they're not in the same "folder"
+          same_folder?(page_1, page_2) ?
+            page_1.position <=> page_2.position :
+            (page_2.fullpath.include?(WILDCARD) ? 0 : 1) <=> (page_1  .fullpath.include?(WILDCARD) ? 0 : 1)
         end
       end
 
@@ -56,6 +61,13 @@ module Locomotive
 
       def path_combinations(path)
         _path_combinations(path.split('/'))
+      end
+
+      def same_folder?(page_1, page_2)
+        (path_1 = page_1.fullpath.split('/')).pop
+        (path_2 = page_2.fullpath.split('/')).pop
+
+        path_1.join('/') == path_2.join('/')
       end
 
       def _path_combinations(segments, can_include_template = true)
