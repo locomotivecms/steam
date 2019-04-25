@@ -57,6 +57,11 @@ describe Locomotive::Steam::Middlewares::ImpersonatedEntry do
 
       it { is_expected.to eq [302, nil, '/'] }
 
+      it "resets the session variable used to tell if we're in the impersonating mode" do
+        subject
+        expect(session[:authenticated_impersonation]).to eq '0'
+      end
+
     end
 
   end

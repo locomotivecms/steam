@@ -18,7 +18,7 @@ module Locomotive::Steam
           store_authenticated(nil)
 
           # leave the impersonating mode
-          request.session[:authenticated_impersonation] == '0'
+          request.session[:authenticated_impersonation] = '0'
 
           # redirect the user to the same page
           redirect_to path, 302
