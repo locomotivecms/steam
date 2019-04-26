@@ -20,7 +20,7 @@ module Locomotive
           # normal pages have priority over the templatized ones if they're not in the same "folder"
           same_folder?(page_1, page_2) ?
             page_1.position <=> page_2.position :
-            (page_2.fullpath.include?(WILDCARD) ? 0 : 1) <=> (page_1  .fullpath.include?(WILDCARD) ? 0 : 1)
+            (page_2.fullpath.include?(WILDCARD) ? 0 : 1) <=> (page_1.fullpath.include?(WILDCARD) ? 0 : 1)
         end
       end
 
