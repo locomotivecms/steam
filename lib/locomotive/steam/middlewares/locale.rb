@@ -35,7 +35,7 @@ module Locomotive::Steam
       def extract_locale
         # Regarding the index page (basically, "/"), we've to see if we could
         # guess the locale from the headers the browser sends to us.
-        locale = if is_index_page?
+        locale = if is_index_page? && !site.bypass_browser_locale
           locale_from_params || locale_from_cookie || locale_from_header
         else
           locale_from_path || locale_from_params
@@ -87,7 +87,7 @@ module Locomotive::Steam
       end
 
       def set_locale_cookie
-        services.cookie.set(cookie_key_name, {'value': locale, 'path': '/', 'max_age': 1.year})
+        services.cookie.set(cookie_key_name, { 'value': locale, 'path': '/', 'max_age': 1.year })
       end
 
       # The preview urls for all the sites share the same domain, so cookie[:locale]

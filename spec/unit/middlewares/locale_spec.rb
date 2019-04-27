@@ -6,7 +6,7 @@ require_relative '../../../lib/locomotive/steam/middlewares/locale'
 
 describe Locomotive::Steam::Middlewares::Locale do
 
-  let(:site)            { instance_double('Site', default_locale: :de, locales: [:de, :fr, :en]) }
+  let(:site)            { instance_double('Site', bypass_browser_locale: false, default_locale: :de, locales: [:de, :fr, :en]) }
   let(:url)             { 'http://models.example.com' }
   let(:app)             { ->(env) { [200, env, 'app'] } }
   let(:cookie_lang)     { nil }
@@ -69,6 +69,13 @@ describe Locomotive::Steam::Middlewares::Locale do
           let(:accept_language) { 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7' }
 
           it { is_expected.to eq [:fr,  '/'] }
+
+          context 'the site is set up to bypass the browser locale' do
+
+            let(:site) { instance_double('Site', default_locale: :de, locales: [:de, :fr, :en], bypass_browser_locale: true) }
+            it { is_expected.to eq [:de, '/'] }
+
+          end
 
           context 'with url path' do
 
