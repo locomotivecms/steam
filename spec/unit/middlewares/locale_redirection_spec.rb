@@ -50,6 +50,13 @@ describe Locomotive::Steam::Middlewares::LocaleRedirection do
       let(:url) { 'http://models.example.com/de/hello' }
       it { is_expected.to eq [301, '/hello'] }
 
+      context 'pass the query string to the redirection' do
+
+        let(:url) { 'http://models.example.com/de/hello?name=John' }
+        it { is_expected.to eq [301, '/hello?name=John'] }
+
+      end
+
     end
 
   end

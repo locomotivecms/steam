@@ -25,7 +25,7 @@ module Locomotive::Steam
           if site.prefix_default_locale
             path_with_locale if locale_not_mentioned_in_path?
           else
-            env['steam.path'] if default_locale? && locale_mentioned_in_path?
+            modify_path(env['steam.path']) if default_locale? && locale_mentioned_in_path?
           end
         end
       end

@@ -45,7 +45,7 @@ module Locomotive::Steam
           path ||= env['steam.path']
 
           segments = path.split('/')
-          yield(segments)
+          yield(segments) if block_given?
           path = segments.join('/')
 
           path = '/' if path.blank?
