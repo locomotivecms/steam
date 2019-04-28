@@ -24,6 +24,8 @@ module Locomotive
     SECTIONS_BLOCK_FORLOOP_REGEXP     = /(?<name>.+)-section\.blocks$/o.freeze
     SECTIONS_LINK_TARGET_REGEXP       = /[^\"]+\/_locomotive-link\/(?<link>[^\"]+)/mo.freeze
 
+    ASSET_URL_REGEXP                  = /("|')(https:\/\/[^\/]+)?\/(sites|steam)\/(\S+)("|')/.freeze
+
     IsHTTP    = /\Ahttps?:\/\//o.freeze
 
     IsLAYOUT  = /\Alayouts(\/|\z)/o.freeze
