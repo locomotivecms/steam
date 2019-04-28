@@ -18,7 +18,7 @@ module Locomotive
             def load_list
               [].tap do |list|
                 each(content_type_slug) do |label, attributes, position|
-                  _attributes = { _position: position, _label: label.to_s }.merge(attributes)
+                  _attributes = { _position: position, _label: label.to_s }.merge(attributes || {})
 
                   modify_for_selects(_attributes)
                   modify_for_associations(_attributes)
