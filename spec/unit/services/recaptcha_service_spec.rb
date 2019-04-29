@@ -4,7 +4,7 @@ describe Locomotive::Steam::RecaptchaService do
 
   let(:api_url)     { nil }
   let(:secret)      { 'asecretkey' }
-  let(:site)        { instance_double('Site', metafields: { google: { recaptcha_api_url: api_url, recaptcha_secret: secret } }) }
+  let(:site)        { instance_double('Site', metafields: { google: { recaptcha_api_url: api_url, 'recaptcha_secret' => secret } }) }
   let(:request)     { instance_double('Request', ip: '127.0.0.1') }
   let(:service)     { described_class.new(site, request) }
 

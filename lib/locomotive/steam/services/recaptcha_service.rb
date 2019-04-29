@@ -9,7 +9,7 @@ module Locomotive
       GOOGLE_API_URL = 'https://www.google.com/recaptcha/api/siteverify'.freeze
 
       def initialize(site, request)
-        attributes = site.metafields.values.reduce({}, :merge)
+        attributes = site.metafields.values.reduce({}, :merge).with_indifferent_access
 
         @api      = attributes[:recaptcha_api_url] || GOOGLE_API_URL
         @secret   = attributes[:recaptcha_secret]
