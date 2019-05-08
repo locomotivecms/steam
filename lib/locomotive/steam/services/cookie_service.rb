@@ -5,6 +5,7 @@ module Locomotive
 
       def initialize(request)
         @request = request
+        request.env['steam.cookies'] ||= {}
         @cookies = request.env['steam.cookies']
       end
 

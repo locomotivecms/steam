@@ -14,6 +14,8 @@ describe Locomotive::Steam::Middlewares::ImpersonatedEntry do
   let(:session)         { {} }
   let(:params)          { {} }
   let(:middleware)      { described_class.new(app) }
+  let(:auth_service)    { instance_double('Auth') }
+  let(:services)        { instance_double('Services', :auth => auth_service) }
 
   subject do
     code, env, body = call
@@ -55,6 +57,10 @@ describe Locomotive::Steam::Middlewares::ImpersonatedEntry do
         [code, env['steam.impersonating_authenticated_entry'], env['Location']]
       end
 
+      before do
+        expect(auth_service).to receive(:notify).with(:signed_out, any_args).and_return(nil)
+      end
+
       it { is_expected.to eq [302, nil, '/'] }
 
       it "resets the session variable used to tell if we're in the impersonating mode" do
@@ -74,6 +80,7 @@ describe Locomotive::Steam::Middlewares::ImpersonatedEntry do
     env['steam.request']              = Rack::Request.new(env)
     env['steam.liquid_assigns']       = {}
     env['steam.authenticated_entry']  = entry
+    env['steam.services'] = services
     middleware.call(env)
   end
 

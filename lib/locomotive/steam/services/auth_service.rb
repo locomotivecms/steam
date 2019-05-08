@@ -96,6 +96,15 @@ module Locomotive
         :invalid_token
       end
 
+      def notify(action, entry, request)
+        ActiveSupport::Notifications.instrument("steam.auth.#{action}",
+          site:     site,
+          entry:    entry,
+          locale:   entries.locale,
+          request:  request
+        )
+      end
+
       private
 
       def send_welcome_email(options, context)
@@ -136,15 +145,6 @@ EMAIL
         res = 0
         b.each_byte { |byte| res |= byte ^ l.shift }
         res == 0
-      end
-
-      def notify(action, entry, request)
-        ActiveSupport::Notifications.instrument("steam.auth.#{action}",
-          site:     site,
-          entry:    entry,
-          locale:   entries.locale,
-          request:  request
-        )
       end
 
       # Module inject to the content entry to enable
