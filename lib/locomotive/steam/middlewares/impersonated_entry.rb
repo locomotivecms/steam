@@ -14,6 +14,10 @@ module Locomotive::Steam
 
       def _call
         if params[:impersonating] == 'stop'
+
+          # notify sign out
+          services.auth.notify(:signed_out, request.env['steam.authenticated_entry'], request)
+
           # sign out the current user
           store_authenticated(nil)
 
