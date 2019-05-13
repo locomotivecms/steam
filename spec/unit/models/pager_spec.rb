@@ -23,7 +23,7 @@ describe Locomotive::Steam::Models::Pager do
       it { is_expected.to eq ['MongoDB'] }
     end
 
-    describe 'per_page is > to the number of total entries' do
+    describe 'per_page is greater than the number of total entries' do
       let(:per_page) { 10 }
       it { is_expected.to eq ['MongoDB', 'Rails', 'Liquid', 'Rack', 'Devise'] }
     end
@@ -31,6 +31,16 @@ describe Locomotive::Steam::Models::Pager do
     describe 'page is > to the total number of pages' do
       let(:page) { 4 }
       it { is_expected.to eq [] }
+    end
+
+    describe 'page is a negative number' do
+      let(:page) { -3 }
+      it { is_expected.to eq ['MongoDB', 'Rails'] }
+    end
+
+    describe 'page is a string' do
+      let(:page) { ''.to_i }
+      it { is_expected.to eq ['MongoDB', 'Rails'] }
     end
 
   end

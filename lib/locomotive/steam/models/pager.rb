@@ -10,6 +10,7 @@ module Locomotive::Steam
       def initialize(source, page, per_page)
         @current_page, @per_page = page || 1, per_page || DEFAULT_PER_PAGE
 
+        @current_page   = 1 if page < 1
         @total_entries  = source.count
         @total_pages    = (@total_entries.to_f / @per_page).ceil
 
