@@ -24,6 +24,15 @@ describe Locomotive::Steam::ActionService do
 
     it { is_expected.to eq 2.0 }
 
+    describe 'deal with dates (since EPOCH in milliseconds) from a param' do
+
+      let(:params) { { 'api' => { 'title' => 'Hello world', 'sent_at' => 1536598528930 } } }
+      let(:script) { "return params.api.sent_at;" }
+
+      it { is_expected.to eq 1536598528930 }
+
+    end
+
     describe 'deal with exceptions' do
 
       context 'wrong syntax' do
@@ -31,7 +40,7 @@ describe Locomotive::Steam::ActionService do
         let(:script) { 'a +/ b * var;' }
 
         it 'raises a meaningful exception' do
-          expect { subject }.to raise_error(Locomotive::Steam::ActionError, "eof or line terminator in regexp (line 2)")
+          expect { subject }.to raise_error(Locomotive::Steam::ActionError, "unterminated regexp (line 2)")
         end
 
       end
