@@ -1,11 +1,4 @@
 GIT
-  remote: git://github.com/did/duktape.rb.git
-  revision: a5645763f8cdb1fabafaf8bb0442f7747c5882f5
-  branch: any-fixnum
-  specs:
-    duktape (2.0.1.0)
-
-GIT
   remote: git://github.com/locomotivecms/common.git
   revision: 4d1bd565246262ab4b1b824e21c7847846f4cc5c
   ref: 4d1bd56
@@ -27,7 +20,7 @@ PATH
       coffee-script (~> 2.4.1)
       compass (~> 1.0.3)
       dragonfly (~> 1.2.0)
-      duktape (~> 2.0.1.0)
+      duktape (~> 2.0.1.1)
       httparty (~> 0.16.0)
       kramdown (~> 1.16.2)
       locomotivecms-solid (~> 4.0.1)
@@ -98,6 +91,7 @@ GEM
       addressable (~> 2.3)
       multi_json (~> 1.0)
       rack (>= 1.3)
+    duktape (2.0.1.1)
     execjs (2.7.0)
     ffi (1.10.0)
     flamegraph (0.9.5)
@@ -207,7 +201,6 @@ PLATFORMS
 DEPENDENCIES
   codeclimate-test-reporter (~> 0.4.7)
   coveralls (~> 0.8.1)
-  duktape!
   flamegraph
   haml (~> 5.0.4)
   i18n-spec (~> 0.6.0)
