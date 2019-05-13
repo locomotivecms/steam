@@ -105,6 +105,18 @@ describe Locomotive::Steam::ContentEntryService do
           it { expect(subject['errors']).to eq({ 'name' => ["can't be blank"], 'email' => ["can't be blank"], 'message' => ["can't be blank"] }) }
 
         end
+
+        context 'with a belongs_to relationship' do
+
+          let(:attributes) { { title: 'Do the evolution', band_id: 'pearl-jam' } }
+
+          subject { service.create('songs', attributes, false) }
+
+          it { expect { subject }.to change { service.all('songs').size } }
+          it { expect(subject.band.name).to eq 'Pearl Jam' }
+
+        end
+
       end
 
       describe '#update' do
