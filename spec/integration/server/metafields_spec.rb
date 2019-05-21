@@ -10,6 +10,7 @@ describe 'Site metafields' do
 
   it 'returns all the values of the site metafields' do
     get '/basic'
+    expect(last_response.body).to include 'Font=OpenSans'
     expect(last_response.body).to include 'Color scheme=white'
     expect(last_response.body).to include 'Facebook ID=FB42'
     expect(last_response.body).to include 'Google ID=G42'

@@ -1,5 +1,8 @@
 theme:
   fields:
+    font:
+      type: string
+      sample: 'OpenSans'
     color_scheme:
       localized: true
 

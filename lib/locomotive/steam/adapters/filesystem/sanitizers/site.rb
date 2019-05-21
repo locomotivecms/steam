@@ -10,6 +10,8 @@ module Locomotive::Steam
           def apply_to_entity(entity)
             entity.metafields_schema = clean_metafields_schema(entity.metafields_schema)
             entity.routes            = build_routes(entity.routes)
+
+            apply_metafields_samples(entity)
           end
 
           private
@@ -20,7 +22,7 @@ module Locomotive::Steam
             schema.each_with_index.map do |(namespace, definitions), position|
               {
                 name:     namespace.to_s,
-                label:    localized_label(definitions.delete(:label), namespace.to_s), # { default: namespace.to_s }.merge(definitions.delete(:label) || {}),
+                label:    localized_label(definitions.delete(:label), namespace.to_s),
                 fields:   parse_metafields(definitions.delete(:fields)),
                 position: definitions.delete(:position) || position
               }.merge(definitions)
@@ -37,6 +39,18 @@ module Locomotive::Steam
               end
 
               { name: name.to_s, position: position }.merge(attributes || {})
+            end
+          end
+
+          def apply_metafields_samples(entity)
+            entity.metafields_schema&.each do |namespace|
+              namespace[:fields].each do |field|
+                next unless field[:sample].present?
+
+                entity.metafields ||= {}
+                entity.metafields[namespace[:name]] ||= {}
+                entity.metafields[namespace[:name]][field[:name]] = field[:sample]
+              end
             end
           end
 
