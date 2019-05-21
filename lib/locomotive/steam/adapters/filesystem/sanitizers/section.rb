@@ -22,12 +22,26 @@ module Locomotive::Steam
             json, template = match[:json], match[:template]
 
             begin
-              entity.definition = MultiJson.load(json)
+              entity.definition = handle_aliases(MultiJson.load(json))
             rescue MultiJson::ParseError => e
               raise Locomotive::Steam::JsonParsingError.new(e, entity.template_path, json)
             end
 
             entity.template = template
+          end
+
+          def handle_aliases(definition)
+            # Dropzone presets -> presets
+            if presets = definition.delete('dropzone_presets')
+              definition['presets'] = presets
+            end
+
+            # Global content -> default
+            if default = definition.delete('global_content')
+              definition['default'] = default
+            end
+
+            definition
           end
 
           def raise_parsing_error(entity, content)
