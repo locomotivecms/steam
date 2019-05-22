@@ -39,10 +39,16 @@ module Locomotive
               page      = fetch_page(context)
               block     = @element_options[:block] || context['block'].try(:name)
 
+              # If Steam inside Wagon (test mode), we've to let the developer know
+              # that editable_**** tags don't work if the site has declared at least one section
+              if context['wagon'] && context.registers[:repositories].section.count > 0
+                Locomotive::Common::Logger.error "[#{page.fullpath}] You can't use editable elements whereas you declared section(s)".colorize(:red)
+              end
+
               if element = service.find(page, block, @slug)
                 render_element(context, element)
               else
-                Locomotive::Common::Logger.error "[#{page.fullpath}] missing #{@tag_name} \"#{@slug}\" (#{context['block'].try(:name) || 'default'})"
+                Locomotive::Common::Logger.error "[#{page.fullpath}] missing #{@tag_name} \"#{@slug}\" (#{context['block'].try(:name) || 'default'})".colorize(:yellow)
                 super
               end
             end

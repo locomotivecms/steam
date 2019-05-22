@@ -93,11 +93,13 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
     let(:live_editing)    { false }
     let(:element_editing) { true }
+    let(:wagon)           { false }
 
-    let(:child_page)  { instance_double('Page', fullpath: 'child-page') }
-    let(:element)     { instance_double('EditableText', _id: 42, id: 42, content: nil, inline_editing?: element_editing, inline_editing: element_editing, format: 'html') }
-    let(:services)    { Locomotive::Steam::Services.build_instance(nil) }
-    let(:context)     { ::Liquid::Context.new({}, {}, { page: child_page, services: services, live_editing: live_editing }) }
+    let(:child_page)    { instance_double('Page', fullpath: 'child-page') }
+    let(:element)       { instance_double('EditableText', _id: 42, id: 42, content: nil, inline_editing?: element_editing, inline_editing: element_editing, format: 'html') }
+    let(:services)      { Locomotive::Steam::Services.build_instance(nil) }
+    let(:repositories)  { instance_double('Repositories') }
+    let(:context)       { ::Liquid::Context.new({ 'wagon' => wagon }, {}, { page: child_page, services: services, repositories: repositories, live_editing: live_editing }) }
 
     before { allow(services.editable_element).to receive(:find).and_return(element) }
 
@@ -188,6 +190,32 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
         let(:source) { "{% editable_short_text title %}Hello world{% endeditable_short_text %}" }
         it { is_expected.to eq 'Hello world' }
+
+      end
+
+    end
+
+    context 'site with sections' do
+
+      let(:repositories) { instance_double('Repositories', section: instance_double('SectionRepository', count: 1)) }
+
+      context 'in production' do
+
+        it "doesn't display the warning message" do
+          expect(Locomotive::Common::Logger).not_to receive(:error).with("[child-page] You can't use editable elements whereas you declared section(s)".colorize(:red))
+          subject
+        end
+
+      end
+
+      context 'in Wagon' do
+
+        let(:wagon) { true }
+
+        it "displays a warning message (because we don't allow editable elements and sections to be used together in the same site)" do
+          expect(Locomotive::Common::Logger).to receive(:error).with("[child-page] You can't use editable elements whereas you declared section(s)".colorize(:red))
+          subject
+        end
 
       end
 
