@@ -31,6 +31,10 @@ module Locomotive
             false
           end
 
+          def nodelist
+            @body&.nodelist || []
+          end
+
         end
 
       end

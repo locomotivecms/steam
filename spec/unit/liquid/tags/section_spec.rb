@@ -98,6 +98,22 @@ describe Locomotive::Steam::Liquid::Tags::Section do
 
       end
 
+      context 'including the link_to liquid tag' do
+
+        let(:liquid_source) { 'go to {% link_to home %}' }
+
+        before { expect_any_instance_of(Locomotive::Steam::Liquid::Tags::LinkTo).to receive(:render).and_return('HOME') }
+
+        it { is_expected.to eq 'Locomotive'\
+          ' <div id="locomotive-section-page-header"'\
+          ' class="locomotive-section my-awesome-header"'\
+          ' data-locomotive-section-type="header">'\
+            '<span id="page-header-section"></span>'\
+            'go to HOME'\
+          '</div>' }
+
+      end
+
       context 'without the live editing feature enabled' do
 
         let(:live_editing) { false }
