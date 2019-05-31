@@ -1,3 +1,5 @@
+require 'hjson'
+
 require 'locomotive/common'
 
 require_relative      'steam/configuration'

@@ -52,8 +52,8 @@ module Locomotive::Steam
           json = File.read(path)
 
           begin
-            MultiJson.load(json)
-          rescue MultiJson::ParseError => e
+            Hjson.parse(json)
+          rescue Exception => e
             raise Locomotive::Steam::JsonParsingError.new(e, path, json)
           end
         end

@@ -22,8 +22,8 @@ module Locomotive::Steam
             json, template = match[:json], match[:template]
 
             begin
-              entity.definition = handle_aliases(MultiJson.load(json))
-            rescue MultiJson::ParseError => e
+              entity.definition = handle_aliases(Hjson.parse(json))
+            rescue Exception => e
               raise Locomotive::Steam::JsonParsingError.new(e, entity.template_path, json)
             end
 
