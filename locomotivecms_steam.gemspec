@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'mongo',      '~> 2.5.1'
   spec.add_development_dependency 'origin',     '~> 2.3.1'
 
-  spec.add_dependency 'nokogiri',               '~> 1.8.2'
+  spec.add_dependency 'nokogiri',               '~> 1.10.3'
   spec.add_dependency 'sanitize',               '~> 4.6.4'
   spec.add_dependency 'morphine',               '~> 0.1.1'
   spec.add_dependency 'httparty',               '~> 0.16.0'
