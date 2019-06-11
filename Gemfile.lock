@@ -30,7 +30,7 @@ PATH
       moneta (~> 1.0.0)
       morphine (~> 0.1.1)
       multi_json (~> 1.13.1)
-      nokogiri (~> 1.8.2)
+      nokogiri (~> 1.10.3)
       pony (~> 1.12)
       rack-cache (~> 1.7.0)
       rack-rewrite (~> 1.5.1)
