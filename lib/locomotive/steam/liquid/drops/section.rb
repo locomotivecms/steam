@@ -43,13 +43,33 @@ module Locomotive
           end
 
           def blocks
-            (@content['blocks'] || []).each_with_index.map do |block, index|
+            scoped_blocks.each_with_index.map do |block, index|
               SectionBlock.new(@section, block, index)
             end
           end
 
           def editor_setting_data
             SectionEditorSettingData.new(@section)
+          end
+
+          private
+
+          def scoped_blocks
+            val = (@content['blocks'] || [])
+
+            if @context['with_scope']
+              @context['with_scope_content_type'] ||= 'blocks'
+
+              if @context['with_scope_content_type'] == 'blocks'
+                conditions = @context['with_scope'] || {}
+
+                val = val.select do |block|
+                  conditions.all?{|k,v| block[k] == v}
+                end
+              end
+            end
+
+            val
           end
 
         end
