@@ -41,6 +41,36 @@ module Locomotive::Steam
               definition['default'] = default
             end
 
+            definition['default'] ||= {}
+            definition['default']['settings'] ||= {}
+            definition['default']['blocks'] ||= []
+            definition['default']['blocks'].each_index do |i|
+              definition['default']['blocks'][i]['settings'] ||= {}
+            end
+            definition['blocks'] ||= []
+            definition['blocks'].each_index do |i|
+              definition['blocks'][i]['settings'] ||= {}
+            end
+
+            # Fallback to use setting `default` key for Standalone/Global section settings and block settings
+            definition['settings'].each do |setting|
+              if setting.key?('default') && !definition['default']['settings'].key?(setting['id'])
+                definition['default']['settings'][setting['id']] = setting['default']
+              end
+            end
+
+            definition['default']['blocks'].each_with_index do |default_block, i|
+              type_block_def = definition['blocks'].detect{|x| x['type'] == default_block['type']}
+
+              if type_block_def
+                type_block_def['settings'].each do |setting|
+                  if setting.key?('default') && !default_block['settings'].key?(setting['id'])
+                    definition['default']['blocks'][i]['settings'][setting['id']] = setting['default']
+                  end
+                end
+              end
+            end
+
             definition
           end
 

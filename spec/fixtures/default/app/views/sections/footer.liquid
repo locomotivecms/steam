@@ -10,33 +10,70 @@
       "type": "text",
       "label": "Text to display in the footer",
       "default": "Header"
+    },
+    {
+      "id": "default_test",
+      "type": "text",
+      "label": "Test default key",
+      "default": "value"
+    },
+    {
+      "id": "other_default_test",
+      "type": "text",
+      "label": "Other test default key",
+      "default": "other value"
     }
   ],
-  "global_content":
-  {
-    "settings":
+  "blocks": [
     {
-      "brand": "MY COMPANY"
+      "name": "Link",
+      "type": "link",
+      "settings": [
+        {
+          "label": "Label",
+          "id": "label",
+          "type": "text",
+          "default": "Link text"
+        },
+        {
+          "label": "URL",
+          "id": "url",
+          "type": "url",
+          "default": "https://www.nocoffee.fr"
+        },
+        {
+          "label": "New Tab",
+          "id": "new_tab",
+          "type": "text",
+          "default": "true"
+        }
+      ]
+    }
+  ],
+  "global_content": {
+    "settings": {
+      "brand": "MY COMPANY",
+      "other_default_test": null
     },
-    "blocks":
-    [
+    "blocks": [
       {
         "type": "link",
-        "settings":
-        {
+        "settings": {
           "label": "Link #1",
           "url": "https://www.nocoffee.fr",
-          "new_tab": "true"
+          "new_tab": "false"
         }
       },
       {
         "type": "link",
-        "settings":
-        {
+        "settings": {
           "label": "Link #2",
-          "url": "https://www.nocoffee.fr",
-          "new_tab": "true"
+          "url": null
         }
+      },
+      {
+        "type": "link",
+        "settings": {}
       }
     ]
   }

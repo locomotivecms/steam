@@ -65,11 +65,84 @@ LIQUID
         let(:template_path) { 'spec/fixtures/default/app/views/sections/footer.liquid' }
 
         it 'allow to alias default' do
-          expect(entity).to receive(:definition=).with(hash_including({ 'default' =>
-            { "settings" => { "brand" => "MY COMPANY" }, "blocks" => [
-              { "type" => "link", "settings" => { "label" => "Link #1", "url" => "https://www.nocoffee.fr", "new_tab" => "true" } },
-              { "type" => "link", "settings" => { "label" => "Link #2", "url" => "https://www.nocoffee.fr", "new_tab" => "true" } }
-            ]}
+          expect(entity).to receive(:definition=).with(hash_including({ 
+            'default' => { 
+              "settings" => { 
+                "brand" => "MY COMPANY",
+                "default_test" => "value",
+                "other_default_test" => nil,
+              }, 
+              "blocks" => [
+                { 
+                  "type" => "link", 
+                  "settings" => { 
+                    "label" => "Link #1", 
+                    "url" => "https://www.nocoffee.fr", 
+                    "new_tab" => "false" 
+                  } 
+                },
+                { 
+                  "type" => "link", 
+                  "settings" => { 
+                    "label" => "Link #2", 
+                    "url" => nil, 
+                    "new_tab" => "true" 
+                  } 
+                },
+                { 
+                  "type" => "link", 
+                  "settings" => { 
+                    "label" => "Link text", 
+                    "url" => "https://www.nocoffee.fr", 
+                    "new_tab" => "true" 
+                  } 
+                },
+              ]
+            }
+          }))
+          subject
+        end
+
+      end
+
+      context 'section default (standalone/global)' do
+        let(:template_path) { 'spec/fixtures/default/app/views/sections/footer.liquid' }
+
+        it 'has fallback for setting `default` key if not already defined in section settings or block settings `default` key' do
+          expect(entity).to receive(:definition=).with(hash_including({ 
+            'default' => { 
+              "settings" => { 
+                "brand" => "MY COMPANY",
+                "default_test" => "value",
+                "other_default_test" => nil,
+              }, 
+              "blocks" => [
+                { 
+                  "type" => "link", 
+                  "settings" => { 
+                    "label" => "Link #1", 
+                    "url" => "https://www.nocoffee.fr", 
+                    "new_tab" => "false" 
+                  } 
+                },
+                { 
+                  "type" => "link", 
+                  "settings" => { 
+                    "label" => "Link #2", 
+                    "url" => nil, 
+                    "new_tab" => "true" 
+                  } 
+                },
+                { 
+                  "type" => "link", 
+                  "settings" => { 
+                    "label" => "Link text", 
+                    "url" => "https://www.nocoffee.fr", 
+                    "new_tab" => "true" 
+                  } 
+                },
+              ]
+            }
           }))
           subject
         end
