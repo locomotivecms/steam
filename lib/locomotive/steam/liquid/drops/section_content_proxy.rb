@@ -15,11 +15,17 @@ module Locomotive
           def before_method(name)
             value = @content[name.to_s]
 
-            case type_of(name)
-            when 'url'          then SectionUrlField.new(*url_finder.url_for(value))
-            when 'image_picker' then SectionImagePickerField.new(value)
-            when 'text'         then url_finder.decode_urls_for(value)
-            else value
+            if value
+              if value == ''
+                value
+              else
+                case type_of(name)
+                when 'url'          then SectionUrlField.new(*url_finder.url_for(value))
+                when 'image_picker' then SectionImagePickerField.new(value)
+                when 'text'         then url_finder.decode_urls_for(value)
+                else value
+                end
+              end
             end
           end
 
