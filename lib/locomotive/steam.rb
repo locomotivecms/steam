@@ -1,4 +1,8 @@
-require 'hjson'
+begin
+  require 'hjson'
+rescue LoadError
+
+end
 
 require 'locomotive/common'
 
