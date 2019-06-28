@@ -123,11 +123,11 @@ describe Locomotive::Steam::Liquid::Filters::Misc do
 
     let(:array) { [1, 2, 3, 4] }
 
-    subject { shuffle(array) }
+    subject { 5.times.map{ shuffle(array) } }
 
     it 'returns an array in a random order' do
-      expect(subject.size).to eq 4
-      expect(subject).not_to eq([1, 2, 3, 4])
+      expect(subject.all?{|x| x == array}).to eq(false)
+      expect(subject.all?{|x| x.sort == array}).to eq(true)
     end
 
   end
