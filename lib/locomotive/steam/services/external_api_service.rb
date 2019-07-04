@@ -7,6 +7,11 @@ module Locomotive
 
       include ::HTTParty
 
+      # any HTTP call shouldn't block a thread or a process
+      # for a long time (waiting for 3 seconds seems reasonable).
+      open_timeout 3
+      read_timeout 3
+
       # Available option keys:
       # - method
       # - data
