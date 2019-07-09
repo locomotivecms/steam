@@ -30,6 +30,8 @@ module Locomotive::Steam
           end
 
           def parse_metafields(fields)
+            custom_field_types = load_custom_field_types
+
             fields.each_with_index.map do |(name, attributes), position|
               name, attributes = name.to_a[0] if name.is_a?(Hash) # ordered list of fields
 
@@ -38,7 +40,17 @@ module Locomotive::Steam
                 attributes[:hint]   = { default: attributes[:hint] } if attributes[:hint].is_a?(String)
               end
 
-              { name: name.to_s, position: position }.merge(attributes || {})
+              attributes ||= {}
+
+              if custom_field_types.present? && attributes[:type].present?
+                custom_field_type = custom_field_types.detect{|x| x[:slug] == attributes[:type]}
+
+                if custom_field_type
+                  attributes = custom_field_type[:definition].merge(attributes)
+                end
+              end
+
+              { name: name.to_s, position: position }.merge(attributes)
             end
           end
 

@@ -8,7 +8,11 @@ module Locomotive::Steam
 
         def_delegators :@scope, :site, :locale, :locales, :default_locale
 
-        attr_reader :scope
+        attr_reader :scope, :site_path
+
+        def initialize(site_path)
+          @site_path = site_path
+        end
 
         def setup(scope)
           @scope = scope
@@ -43,6 +47,29 @@ module Locomotive::Steam
 
         def attach_site_to(entity)
           entity[:site_id] = scope.site._id if scope.site
+        end
+
+        def load_custom_field_types
+          Dir.glob(File.join(site_path, 'config', 'custom_field_types', "*.json")).map do |filepath|
+            if File.exists?(filepath)
+              json = File.read(filepath)
+
+              begin
+                json = MultiJson.load(json)
+              rescue MultiJson::ParseError => e
+                raise Locomotive::Steam::JsonParsingError.new(e, filepath, json)
+              end
+            else
+              json = {}
+            end
+
+            slug = File.basename(filepath).split('.').first
+
+            {
+              slug: slug,
+              definition: json,
+            }
+          end
         end
 
         alias :current_locale :locale
