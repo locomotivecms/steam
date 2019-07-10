@@ -1,3 +1,9 @@
+begin
+  require 'hjson'
+rescue LoadError
+
+end
+
 require 'locomotive/common'
 
 require_relative      'steam/configuration'

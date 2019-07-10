@@ -160,11 +160,20 @@ module Locomotive::Steam
               if content = page[name][locale]
                 return unless content.is_a?(String)
 
-                begin
-                  page[name][locale] = MultiJson.load(content)
-                rescue MultiJson::ParseError => e
-                  raise Locomotive::Steam::JsonParsingError.new(e, page.template_path[locale], content)
+                if defined?(Hjson)
+                  begin
+                    page[name][locale] = Hjson.parse(content)
+                  rescue Hjson::Error => e
+                    raise Locomotive::Steam::JsonParsingError.new(e, page.template_path[locale], content)
+                  end
+                else
+                  begin
+                    page[name][locale] = MultiJson.load(content)
+                  rescue MultiJson::ParseError => e
+                    raise Locomotive::Steam::JsonParsingError.new(e, page.template_path[locale], content)
+                  end
                 end
+
               end
             end
           end
