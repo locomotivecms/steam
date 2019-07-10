@@ -34,10 +34,14 @@ module Locomotive
           end
 
           def in_groups_of(array, number, fill_with = nil)
-            return array unless array.is_a?(::Array)
+            if array.is_a?(Locomotive::Steam::Liquid::Drops::ContentEntryCollection)
+              array = array.all
+            elsif !array.is_a?(::Array) 
+              return array
+            end
 
             number = number.to_i
-              
+
             grouped_array = array.dup
 
             if fill_with != false
