@@ -9,11 +9,7 @@ module Locomotive::Steam::Middlewares
       threadsafed = dup
       threadsafed.env = env
 
-      # time = Benchmark.realtime do
       threadsafed._call # thread-safe purpose
-      # end
-
-      # puts "[Benchmark][#{self.class.name}] Time elapsed #{time*1000} milliseconds"
 
       threadsafed.next
     end

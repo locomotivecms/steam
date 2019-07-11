@@ -20,9 +20,9 @@ module Locomotive::Steam
         def render_response(content, code = 200, type = nil)
           base_headers = { 'Content-Type' => type || HTML_CONTENT_TYPE }
 
-          base_headers['Cache-Control'] if env['steam.cache_control']
-          base_headers['ETag'] if env['steam.cache_etag']
-          base_headers['Vary'] if env['steam.cache_vary']
+          base_headers['Cache-Control'] = env['steam.cache_control'] if env['steam.cache_control']
+          base_headers['ETag'] = env['steam.cache_etag'] if env['steam.cache_etag']
+          base_headers['Vary'] = env['steam.cache_vary'] if env['steam.cache_vary']
 
           _headers = env['steam.headers'] || {}
           inject_cookies(_headers)
