@@ -3,8 +3,12 @@ module Locomotive::Steam
     module Concerns
       module Helpers
 
+        HTML_CONTENT_TYPE = 'text/html'.freeze
+
+        HTML_MIME_TYPES   = [nil, 'text/html', 'application/x-www-form-urlencoded', 'multipart/form-data'].freeze
+
         def html?
-          [nil, 'text/html', 'application/x-www-form-urlencoded', 'multipart/form-data'].include?(self.request.media_type) &&
+          HTML_MIME_TYPES.include?(self.request.media_type) &&
           !self.request.xhr? &&
           !self.json?
         end
@@ -14,13 +18,16 @@ module Locomotive::Steam
         end
 
         def render_response(content, code = 200, type = nil)
+          base_headers = { 'Content-Type' => type || HTML_CONTENT_TYPE }
+
+          base_headers['Cache-Control'] if env['steam.cache_control']
+          base_headers['ETag'] if env['steam.cache_etag']
+          base_headers['Vary'] if env['steam.cache_vary']
+
           _headers = env['steam.headers'] || {}
           inject_cookies(_headers)
-          @next_response = [
-            code,
-            { 'Content-Type' => type || 'text/html' }.merge(_headers),
-            [content]
-          ]
+
+          @next_response = [code, base_headers.merge(_headers), [content]]
         end
 
         def redirect_to(location, type = 301)
@@ -28,7 +35,7 @@ module Locomotive::Steam
 
           self.log "Redirected to #{_location}".blue
 
-          headers = { 'Content-Type' => 'text/html', 'Location' => _location }
+          headers = { 'Content-Type' => HTML_CONTENT_TYPE, 'Location' => _location }
           inject_cookies(headers)
 
           @next_response = [type, headers, []]

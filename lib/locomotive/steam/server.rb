@@ -68,6 +68,7 @@ module Locomotive::Steam
           Middlewares::PrivateAccess,
           Middlewares::Path,
           Middlewares::Page,
+          Middlewares::Cache,
           Middlewares::Section,
           Middlewares::Sitemap,
           Middlewares::TemplatizedPage
