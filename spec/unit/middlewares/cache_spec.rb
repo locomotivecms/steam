@@ -58,7 +58,7 @@ describe Locomotive::Steam::Middlewares::Cache do
         before { expect(cache).to receive(:write).with('2aa324a4ee6159cedf46c5c850d965b1', Marshal.dump([200, {}, ["Hello world!"]])) }
 
         it 'tells the CDN to cache the page and also cache it internally' do
-          is_expected.to eq 's-maxage: 3600, public, must-revalidate'
+          is_expected.to eq 'max-age=0, s-maxage=3600, public, must-revalidate'
         end
 
         describe 'ETag' do
@@ -83,7 +83,7 @@ describe Locomotive::Steam::Middlewares::Cache do
 
         it 'tells the CDN to cache the page' do
           expect(cache).not_to receive(:write)
-          is_expected.to eq 's-maxage: 3600, public, must-revalidate'
+          is_expected.to eq 'max-age=0, s-maxage=3600, public, must-revalidate'
         end
 
       end

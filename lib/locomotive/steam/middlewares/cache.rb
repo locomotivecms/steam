@@ -9,7 +9,7 @@ module Locomotive::Steam
 
       CACHEABLE_REQUEST_METHODS = %w(GET HEAD).freeze
 
-      DEFAULT_CACHE_CONTROL     = 's-maxage: 3600, public, must-revalidate'.freeze
+      DEFAULT_CACHE_CONTROL     = 'max-age=0, s-maxage=3600, public, must-revalidate'.freeze
 
       DEFAULT_CACHE_VARY        = 'Accept-Language'.freeze
 
