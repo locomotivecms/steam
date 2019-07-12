@@ -26,8 +26,8 @@ module Locomotive::Steam
           end
 
           # we have to tell the CDN (or any proxy) what is the expiration / validation strategy
-          env['steam.cache_control']  = DEFAULT_CACHE_CONTROL
-          env['steam.cache_vary']     = DEFAULT_CACHE_VARY
+          env['steam.cache_control']  = cache_control
+          env['steam.cache_vary']     = cache_vary
           env['steam.cache_etag']     = key
 
           # retrieve the response from the cache.
@@ -36,6 +36,7 @@ module Locomotive::Steam
 
           unless CACHEABLE_RESPONSE_CODES.include?(code.to_i)
             env['steam.cache_control'] = headers['Cache-Control'] = NO_CACHE_CONTROL
+            env['steam.cache_vary'] = headers['Vary'] = nil
           end
         else
           env['steam.cache_control']  = NO_CACHE_CONTROL
@@ -57,10 +58,10 @@ module Locomotive::Steam
 
       def cacheable?
         CACHEABLE_REQUEST_METHODS.include?(env['REQUEST_METHOD']) &&
-        !env['steam.live_editing'] &&
-        env['steam.site'].try(:cache_enabled) &&
-        env['steam.page'].try(:cache_enabled) &&
-        is_redirect_url?(env['steam.page'])
+        !live_editing? &&
+        site.try(:cache_enabled) &&
+        page.try(:cache_enabled) &&
+        is_redirect_url?
       end
 
       def cache_key
@@ -69,7 +70,15 @@ module Locomotive::Steam
         Digest::MD5.hexdigest(key)
       end
 
-      def is_redirect_url?(page)
+      def cache_control
+        site.try(:cache_control) || DEFAULT_CACHE_CONTROL
+      end
+
+      def cache_vary
+        site.try(:cache_vary) || DEFAULT_CACHE_VARY
+      end
+
+      def is_redirect_url?
         return false if page.nil?
         page.try(:redirect_url).blank?
       end
