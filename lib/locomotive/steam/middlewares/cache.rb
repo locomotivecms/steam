@@ -71,11 +71,11 @@ module Locomotive::Steam
       end
 
       def cache_control
-        site.try(:cache_control) || DEFAULT_CACHE_CONTROL
+        site.try(:cache_control).presence || DEFAULT_CACHE_CONTROL
       end
 
       def cache_vary
-        site.try(:cache_vary) || DEFAULT_CACHE_VARY
+        site.try(:cache_vary).presence || DEFAULT_CACHE_VARY
       end
 
       def is_redirect_url?

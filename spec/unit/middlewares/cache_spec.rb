@@ -47,7 +47,7 @@ describe Locomotive::Steam::Middlewares::Cache do
 
   describe 'the caching is enabled for the page' do
 
-    let(:site) { instance_double('Site', _id: 42, last_modified_at: now, cache_enabled: true) }
+    let(:site) { instance_double('Site', _id: 42, last_modified_at: now, cache_enabled: true, cache_control: '', cache_vary: nil) }
     let(:page) { instance_double('Page', cache_enabled: true) }
 
     context 'the request is a GET' do
