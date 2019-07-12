@@ -19,6 +19,9 @@ module Locomotive::Steam
         if cacheable?
           key = cache_key
 
+          log("HTTP keys: #{env.keys}".light_blue)
+          log("HTTP Cache: If-Modified-Since = #{env['If-Modified-Since']}, If-None-Match = #{env['If-None-Match']}".light_blue)
+
           # Test if the ETag has been modified. If not, return a 304 response
           if env['If-None-Match'] == key
             render_response(nil, 304, nil)
