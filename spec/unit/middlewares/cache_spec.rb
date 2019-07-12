@@ -12,6 +12,7 @@ describe Locomotive::Steam::Middlewares::Cache do
   let(:live_editing)    { nil }
   let(:published)       { true }
   let(:etag)            { nil }
+  let(:modified_at)     { nil }
   let(:url)             { 'http://models.example.com' }
   let(:path)            { 'hello-world' }
   let(:page)            { instance_double('Page') }
@@ -99,13 +100,28 @@ describe Locomotive::Steam::Middlewares::Cache do
 
     describe 'the page has not been modified for a while' do
 
-      let(:etag) { '2aa324a4ee6159cedf46c5c850d965b1' }
-
       subject { [send_request[:code], send_request[:headers]] }
 
-      it 'returns a 304 (Not modified) without no cache headers' do
-        expect(subject.first).to eq 304
-        expect(subject.last['Cache-Control']).to eq nil
+      context 'based on the ETag' do
+
+        let(:etag) { '2aa324a4ee6159cedf46c5c850d965b1' }
+
+        it 'returns a 304 (Not modified) without no cache headers' do
+          expect(subject.first).to eq 304
+          expect(subject.last['Cache-Control']).to eq nil
+        end
+
+      end
+
+      context 'based on the Last-Modified' do
+
+        let(:modified_at) { now }
+
+        it 'returns a 304 (Not modified) without no cache headers' do
+          expect(subject.first).to eq 304
+          expect(subject.last['Cache-Control']).to eq nil
+        end
+
       end
 
     end
@@ -149,14 +165,15 @@ describe Locomotive::Steam::Middlewares::Cache do
 
   def send_request
     env = env_for(url,
-      method:               method,
-      'If-None-Match'       => etag,
-      'steam.site'          => site,
-      'steam.page'          => page,
-      'steam.path'          => path,
-      'steam.locale'        => 'en',
-      'steam.live_editing'  => live_editing,
-      'steam.services'      => instance_double('Services', cache: cache)
+      method:                   method,
+      'HTTP_IF_NONE_MATCH'      => etag,
+      'HTTP_IF_MODIFIED_SINCE'  => modified_at,
+      'steam.site'              => site,
+      'steam.page'              => page,
+      'steam.path'              => path,
+      'steam.locale'            => 'en',
+      'steam.live_editing'      => live_editing,
+      'steam.services'          => instance_double('Services', cache: cache)
     )
 
     env['steam.request'] = Rack::Request.new(env)

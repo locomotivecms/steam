@@ -19,19 +19,20 @@ module Locomotive::Steam
         if cacheable?
           key = cache_key
 
-          log("HTTP keys: #{env.keys}".light_blue)
-          log("HTTP Cache: If-Modified-Since = #{env['If-Modified-Since']}, If-None-Match = #{env['If-None-Match']}".light_blue)
+          # TODO: only for debugging
+          log("HTTP keys: #{env.select { |key, _| key.starts_with?('HTTP_') }}".light_blue)
 
-          # Test if the ETag has been modified. If not, return a 304 response
-          if env['If-None-Match'] == key
+          # Test if the ETag or Last Modified has been modified. If not, return a 304 response
+          if stale?(key)
             render_response(nil, 304, nil)
             return
           end
 
           # we have to tell the CDN (or any proxy) what is the expiration / validation strategy
-          env['steam.cache_control']  = cache_control
-          env['steam.cache_vary']     = cache_vary
-          env['steam.cache_etag']     = key
+          env['steam.cache_control']        = cache_control
+          env['steam.cache_vary']           = cache_vary
+          env['steam.cache_etag']           = key
+          env['steam.cache_last_modified']  = site.last_modified_at.httpdate
 
           # retrieve the response from the cache.
           # This is useful if no CDN is being used.
@@ -74,11 +75,11 @@ module Locomotive::Steam
       end
 
       def cache_control
-        site.try(:cache_control).presence || DEFAULT_CACHE_CONTROL
+        page.try(:cache_control).presence || site.try(:cache_control).presence || DEFAULT_CACHE_CONTROL
       end
 
       def cache_vary
-        site.try(:cache_vary).presence || DEFAULT_CACHE_VARY
+        page.try(:cache_vary).presence || site.try(:cache_vary).presence || DEFAULT_CACHE_VARY
       end
 
       def is_redirect_url?
@@ -93,6 +94,11 @@ module Locomotive::Steam
         _headers = headers.reject { |key, val| !val.respond_to?(:to_str) }
 
         Marshal.dump([code, _headers, body])
+      end
+
+      def stale?(key)
+        env['HTTP_IF_NONE_MATCH'] == key ||
+        env['HTTP_IF_MODIFIED_SINCE'] == site.last_modified_at.httpdate
       end
 
       def cache
