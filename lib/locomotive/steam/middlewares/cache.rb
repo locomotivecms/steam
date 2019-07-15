@@ -20,7 +20,7 @@ module Locomotive::Steam
           key = cache_key
 
           # TODO: only for debugging
-          log("HTTP keys: #{env.select { |key, _| key.starts_with?('HTTP_') }}".light_blue)
+          # log("HTTP keys: #{env.select { |key, _| key.starts_with?('HTTP_') }}".light_blue)
 
           # Test if the ETag or Last Modified has been modified. If not, return a 304 response
           if stale?(key)
@@ -60,7 +60,7 @@ module Locomotive::Steam
         else
           log('Cache MISS')
           self.next.tap do |response|
-            # cache the HTML for further validations (optimization)
+            # cache the HTML for further validations (+ optimization)
             cache.write(key, marshal(response))
           end
         end
