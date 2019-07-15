@@ -36,12 +36,15 @@ module Locomotive::Steam
 
           # retrieve the response from the cache.
           # This is useful if no CDN is being used.
-          code, headers, _ = fetch_cached_response(key)
+          code, headers, _ = response = fetch_cached_response(key)
 
           unless CACHEABLE_RESPONSE_CODES.include?(code.to_i)
             env['steam.cache_control'] = headers['Cache-Control'] = NO_CACHE_CONTROL
             env['steam.cache_vary'] = headers['Vary'] = nil
           end
+
+          # we don't want to render twice the page
+          @next_response = response
         else
           env['steam.cache_control']  = NO_CACHE_CONTROL
         end
@@ -52,10 +55,10 @@ module Locomotive::Steam
       def fetch_cached_response(key)
         log("Cache key = #{key.inspect}")
         if marshaled = cache.read(key)
-          log("Cache HIT")
+          log('Cache HIT')
           Marshal.load(marshaled)
         else
-          log("Cache MISS")
+          log('Cache MISS')
           self.next.tap do |response|
             # cache the HTML for further validations (optimization)
             cache.write(key, marshal(response))
