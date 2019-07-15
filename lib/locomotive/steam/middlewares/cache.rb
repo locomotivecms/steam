@@ -28,7 +28,7 @@ module Locomotive::Steam
             return
           end
 
-          # we have to tell the CDN (or any proxy) what is the expiration / validation strategy
+          # we have to tell the CDN (or any proxy) what the expiration & validation strategy are
           env['steam.cache_control']        = cache_control
           env['steam.cache_vary']           = cache_vary
           env['steam.cache_etag']           = key
@@ -50,9 +50,12 @@ module Locomotive::Steam
       private
 
       def fetch_cached_response(key)
+        log("Cache key = #{key.inspect}")
         if marshaled = cache.read(key)
+          log("Cache HIT")
           Marshal.load(marshaled)
         else
+          log("Cache MISS")
           self.next.tap do |response|
             # cache the HTML for further validations (optimization)
             cache.write(key, marshal(response))
