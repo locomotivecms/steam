@@ -17,7 +17,7 @@ module Locomotive
             parent = options[:parent_finder].find(options[:page], @template_name)
 
             # no need to go further if the parent does not exist
-            raise PageNotFound.new("Extending a missing page. Page/Layout with fullpath '#{@template_name}' was not found") if parent.nil?
+            raise Liquid::PageNotFound.new("Extending a missing page. Page/Layout with fullpath '#{@template_name}' was not found") if parent.nil?
 
             ActiveSupport::Notifications.instrument('steam.parse.extends', page: options[:page], parent: parent)
 

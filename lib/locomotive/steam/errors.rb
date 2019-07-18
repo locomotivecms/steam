@@ -14,6 +14,9 @@ module Locomotive::Steam
 
   end
 
+  class PageNotFoundException < ::Exception
+  end
+
   class ParsingRenderingError < ::StandardError
 
     LINES_RANGE = 10

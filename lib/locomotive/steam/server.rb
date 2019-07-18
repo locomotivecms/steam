@@ -63,6 +63,7 @@ module Locomotive::Steam
           Middlewares::Locale,
           Middlewares::LocaleRedirection,
           Middlewares::Redirection,
+          Middlewares::PageNotFound,
           Middlewares::Auth,
           Middlewares::ImpersonatedEntry,
           Middlewares::PrivateAccess,
