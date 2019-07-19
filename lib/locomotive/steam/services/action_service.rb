@@ -14,6 +14,7 @@ module Locomotive
       SERVICES = %w(content_entry api redirection cookie)
 
       BUILT_IN_FUNCTIONS = %w(
+        log
         getProp
         setProp
         getSessionProp
@@ -61,6 +62,10 @@ module Locomotive
         BUILT_IN_FUNCTIONS.each do |name|
           context.define_function name, &send(:"#{name.underscore}_lambda", liquid_context)
         end
+      end
+
+      def log_lambda(liquid_context)
+        -> (message) { Locomotive::Common::Logger.info(message) }
       end
 
       def send_email_lambda(liquid_context)

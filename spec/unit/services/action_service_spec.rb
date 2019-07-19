@@ -145,6 +145,17 @@ describe Locomotive::Steam::ActionService do
 
       end
 
+      describe 'log' do
+
+        let(:script) { "log('Hello world!');" }
+
+        it 'should call the internal logger to output the log message' do
+          expect(Locomotive::Common::Logger).to receive(:info).with('Hello world!')
+          is_expected.to eq(nil)
+        end
+
+      end
+
       describe 'allEntries' do
 
         let(:now)     { Time.use_zone('America/Chicago') { Time.zone.local(2015, 'mar', 25, 10, 0) } }
