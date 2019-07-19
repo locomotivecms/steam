@@ -104,26 +104,35 @@ describe 'Locomotive::Steam::Liquid::Filters::Array' do
 
     subject { in_groups_of(array, '3') }
 
-    it { is_expected.to eq([[1,2,3],[4,5,6],[7,8,9],[10, nil, nil]]) }
+    it { is_expected.to eq([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, nil, nil]]) }
 
     context 'passing fill_with argument: nil' do
       subject { in_groups_of(array, '3', nil) }
-      it { is_expected.to eq([[1,2,3],[4,5,6],[7,8,9],[10, nil, nil]]) }
+      it { is_expected.to eq([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, nil, nil]]) }
     end
 
     context 'passing fill_with argument: value' do
       subject { in_groups_of(array, '3', 'foo') }
-      it { is_expected.to eq([[1,2,3],[4,5,6],[7,8,9],[10, 'foo', 'foo']]) }
+      it { is_expected.to eq([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 'foo', 'foo']]) }
     end
 
     context 'passing fill_with argument: false' do
       subject { in_groups_of(array, '3', false) }
-      it { is_expected.to eq([[1,2,3],[4,5,6],[7,8,9],[10]]) }
+      it { is_expected.to eq([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10]]) }
     end
 
     context 'passing a non array input' do
       let(:array) { 'Hello world' }
       it { is_expected.to eq('Hello world') }
+    end
+
+    context 'passing a ContentEntryCollection input' do
+      let(:array) { Locomotive::Steam::Liquid::Drops::ContentEntryCollection.new('blog_posts') }
+
+      it 'groups entries' do
+        expect(array).to receive(:all).and_return((1..10).to_a)
+        is_expected.to eq([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, nil, nil]])
+      end
     end
 
   end
