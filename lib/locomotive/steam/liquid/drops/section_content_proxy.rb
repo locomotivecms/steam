@@ -68,6 +68,10 @@ module Locomotive
             @attributes[:cropped]
           end
 
+          def present?
+            self.source.present?
+          end
+
           def to_s
             self.cropped || self.source || ''
           end

@@ -1,3 +1,10 @@
+# Enhance the IF condition to write the following statement:
+#
+# {% if value is present %}Value is not blank{% endif %}
+#
+Liquid::Expression::LITERALS['present'.freeze] = :present?
+Liquid::Condition.operators['is'.freeze] = lambda { |cond, left, right|  cond.send(:equal_variables, left, right) }
+
 module Liquid
   module StandardFilters
 

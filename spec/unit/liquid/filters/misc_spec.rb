@@ -22,19 +22,21 @@ describe Locomotive::Steam::Liquid::Filters::Misc do
   end
 
   describe 'blank?' do
-    let(:array) { [0, "foobar", Object.new, nil, "", " ", "\n"] }
 
-    subject { array.map{|x| blank?(x)} }
+    let(:array) { [0, "foobar", Object.new, nil, "", " ", "\n"] }
+    subject { array.map { |x| blank?(x) } }
 
     it { is_expected.to eq [false, false, false, true, true, true, true] }
+
   end
 
   describe 'present?' do
-    let(:array) { [0, "foobar", Object.new, nil, "", " ", "\n"] }
 
-    subject { array.map{|x| present?(x)} }
+    let(:array) { [0, "foobar", Object.new, nil, "", " ", "\n"] }
+    subject { array.map { |x| present?(x) } }
 
     it { is_expected.to eq [true, true, true, false, false, false, false] }
+
   end
 
   describe 'index' do
