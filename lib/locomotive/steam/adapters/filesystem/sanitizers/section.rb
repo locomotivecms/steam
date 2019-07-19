@@ -42,24 +42,20 @@ module Locomotive::Steam
             end
 
             # Utilize global defaults for dropzone preset when `use_default` is defined
-            if definition.key?('default') && definition.key?('dropzone_presets')
-              definition['dropzone_presets'].each_with_index do |preset_def, i|
-                if preset_def['use_default']
-                  # Fallback to use setting `default` key for Standalone/Global section settings and block settings
-                  definition['default']['settings'].each do |k,v|
-                    if !preset_def['settings'].key?(k)
-                      definition['dropzone_presets'][i]['settings'][setting['id']] = v
-                    end
-                  end
+            if definition.key?('default') && definition.key?('presets')
+              definition['presets'].each_with_index do |preset_definition, preset_index|
+                next unless preset_definition.delete('use_default') == true
 
-                  preset_def['blocks'] ||= []
-                  definition['default']['blocks'] ||= []
+                settings = preset_definition['settings'] ||= {}
 
-                  definition['dropzone_presets'][i]['blocks'] = preset_def['blocks'] + definition['default']['blocks']
+                # Fallback to use setting `default` key for Standalone/Global section settings and block settings
+                definition['default']['settings'].each do |name, value|
+                  settings[name] ||= value
                 end
+
+                preset_definition['blocks'] = (preset_definition['blocks'] || []) + definition['default']['blocks']
               end
             end
-
 
             definition
           end

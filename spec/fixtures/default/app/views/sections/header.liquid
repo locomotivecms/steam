@@ -3,8 +3,7 @@
   "name": "header",
   "category": "header",
   "class": "section-header",
-  "settings":
-  [
+  "settings": [
     {
       "id": "brand",
       "type": "text",
@@ -12,14 +11,11 @@
       "default": "Header"
     }
   ],
-  "default":
-  {
-    "settings":
-    {
+  "default": {
+    "settings": {
       "brand": "MY COMPANY"
     },
-    "blocks":
-    [
+    "blocks": [
       {
         "type": "link",
         "settings":
@@ -39,7 +35,14 @@
         }
       }
     ]
-  }
+  },
+  "dropzone_presets": [
+    {
+      "name": "Default header",
+      "category": "Header",
+      "use_default": true
+    }
+  ]
 }
 ---
 <h1> {{ section.settings.brand }} </h1>

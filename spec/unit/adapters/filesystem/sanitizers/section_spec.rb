@@ -22,7 +22,7 @@ describe Locomotive::Steam::Adapters::Filesystem::Sanitizers::Section do
 
     describe 'with correct json' do
 
-      it 'sanitize entity' do
+      it 'sanitizes the entity' do
         expect(entity).to receive(:definition=).with(hash_including({ 'name' => 'header' }))
         expect(entity).to receive(:template=).with((<<-LIQUID
 <h1> {{ section.settings.brand }} </h1>
@@ -53,7 +53,7 @@ LIQUID
 
         let(:template_path) { 'spec/fixtures/default/app/views/sections/carousel.liquid' }
 
-        it 'allow to alias presets' do
+        it 'allows to alias presets' do
           expect(entity).to receive(:definition=).with(hash_including({ 'presets' => [{ "name" => "Carousel", "category" => "Content", "settings" => { "brand" => "Acme" }, "blocks" => [] }] }))
           subject
         end
@@ -64,12 +64,35 @@ LIQUID
 
         let(:template_path) { 'spec/fixtures/default/app/views/sections/footer.liquid' }
 
-        it 'allow to alias default' do
+        it 'allows to alias default' do
           expect(entity).to receive(:definition=).with(hash_including({ 'default' =>
             { "settings" => { "brand" => "MY COMPANY" }, "blocks" => [
               { "type" => "link", "settings" => { "label" => "Link #1", "url" => "https://www.nocoffee.fr", "new_tab" => "true" } },
               { "type" => "link", "settings" => { "label" => "Link #2", "url" => "https://www.nocoffee.fr", "new_tab" => "true" } }
             ]}
+          }))
+          subject
+        end
+
+      end
+
+      context 'default (global) used also for dropzone_presets (DRY)' do
+
+        let(:template_path) { 'spec/fixtures/default/app/views/sections/header.liquid' }
+
+        it 'copies the default settings to any dropzone preset' do
+          expect(entity).to receive(:definition=).with(hash_including({
+            'presets' => [
+              {
+                "name"      => "Default header",
+                "category"  => "Header",
+                "settings"  => { "brand" => "MY COMPANY" },
+                "blocks"    => [
+                  { "type" => "link", "settings" => { "label" => "Link #1", "url" => "https://www.nocoffee.fr", "new_tab" => "true" } },
+                  { "type" => "link", "settings" => { "label" => "Link #2", "url" => "https://www.nocoffee.fr", "new_tab" => "true" } }
+                ]
+              }
+            ]
           }))
           subject
         end
