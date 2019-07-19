@@ -4,6 +4,14 @@ module Locomotive
       module Filters
         module Misc
 
+          def blank?(input)
+            input.blank?
+          end
+
+          def present?(input)
+            input.present?
+          end
+
           # was called modulo at first
           def str_modulo(word, index, modulo)
             (index.to_i + 1) % modulo == 0 ? word : ''
