@@ -7,6 +7,8 @@ module Locomotive::Steam
     def initialize(attributes = {})
       super({
         cache_enabled:            false,
+        cache_control:            nil,
+        cache_vary:               nil,
         bypass_browser_locale:    false,
         prefix_default_locale:    false,
         updated_at:               nil,

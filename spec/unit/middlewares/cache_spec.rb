@@ -12,6 +12,7 @@ describe Locomotive::Steam::Middlewares::Cache do
   let(:live_editing)    { nil }
   let(:published)       { true }
   let(:etag)            { nil }
+  let(:modified_at)     { nil }
   let(:url)             { 'http://models.example.com' }
   let(:path)            { 'hello-world' }
   let(:page)            { instance_double('Page') }
@@ -19,14 +20,17 @@ describe Locomotive::Steam::Middlewares::Cache do
   let(:app)             { ->(env) { [code, {}, ['Hello world!']] } }
   let(:middleware)      { described_class.new(app) }
 
-  subject { send_request[:env]['steam.cache_control'] }
+  subject do
+    env = send_request[:env]
+    [env['steam.cache_control'], env['steam.cache_vary']]
+  end
 
   describe 'caching is disabled for the site' do
 
     let(:site) { instance_double('Site', cache_enabled: false) }
 
     it 'tells the the CDN to not cache the page' do
-      is_expected.to eq 'max-age=0, private, must-revalidate'
+      is_expected.to eq ['max-age=0, private, must-revalidate', nil]
     end
 
   end
@@ -37,14 +41,14 @@ describe Locomotive::Steam::Middlewares::Cache do
     let(:page) { instance_double('Page', cache_enabled: false) }
 
     it 'tells the the CDN to not cache the page' do
-      is_expected.to eq 'max-age=0, private, must-revalidate'
+      is_expected.to eq ['max-age=0, private, must-revalidate', nil]
     end
 
   end
 
   describe 'the caching is enabled for the page' do
 
-    let(:site) { instance_double('Site', _id: 42, last_modified_at: now, cache_enabled: true) }
+    let(:site) { instance_double('Site', _id: 42, last_modified_at: now, cache_enabled: true, cache_control: '', cache_vary: nil) }
     let(:page) { instance_double('Page', cache_enabled: true) }
 
     context 'the request is a GET' do
@@ -58,7 +62,7 @@ describe Locomotive::Steam::Middlewares::Cache do
         before { expect(cache).to receive(:write).with('2aa324a4ee6159cedf46c5c850d965b1', Marshal.dump([200, {}, ["Hello world!"]])) }
 
         it 'tells the CDN to cache the page and also cache it internally' do
-          is_expected.to eq 'max-age=0, s-maxage=3600, public, must-revalidate'
+          is_expected.to eq ['max-age=0, s-maxage=3600, public, must-revalidate', 'Accept-Language']
         end
 
         describe 'ETag' do
@@ -69,9 +73,13 @@ describe Locomotive::Steam::Middlewares::Cache do
 
         end
 
-        describe 'the site administrator sets a custom cache control' do
+        describe 'the site administrator sets a custom cache control and vary' do
 
-          # TODO
+          let(:site) { instance_double('Site', _id: 42, last_modified_at: now, cache_enabled: true, cache_control: 'max-age=600, s-maxage=600, public, must-revalidate', cache_vary: 'Cookie') }
+
+          it 'tells the CDN to cache the page with the custom cache control' do
+            is_expected.to eq ['max-age=600, s-maxage=600, public, must-revalidate', 'Cookie']
+          end
 
         end
 
@@ -83,7 +91,7 @@ describe Locomotive::Steam::Middlewares::Cache do
 
         it 'tells the CDN to cache the page' do
           expect(cache).not_to receive(:write)
-          is_expected.to eq 'max-age=0, s-maxage=3600, public, must-revalidate'
+          is_expected.to eq ['max-age=0, s-maxage=3600, public, must-revalidate', 'Accept-Language']
         end
 
       end
@@ -92,13 +100,28 @@ describe Locomotive::Steam::Middlewares::Cache do
 
     describe 'the page has not been modified for a while' do
 
-      let(:etag) { '2aa324a4ee6159cedf46c5c850d965b1' }
-
       subject { [send_request[:code], send_request[:headers]] }
 
-      it 'returns a 304 (Not modified) without no cache headers' do
-        expect(subject.first).to eq 304
-        expect(subject.last['Cache-Control']).to eq nil
+      context 'based on the ETag' do
+
+        let(:etag) { '2aa324a4ee6159cedf46c5c850d965b1' }
+
+        it 'returns a 304 (Not modified) without no cache headers' do
+          expect(subject.first).to eq 304
+          expect(subject.last['Cache-Control']).to eq nil
+        end
+
+      end
+
+      context 'based on the Last-Modified' do
+
+        let(:modified_at) { now }
+
+        it 'returns a 304 (Not modified) without no cache headers' do
+          expect(subject.first).to eq 304
+          expect(subject.last['Cache-Control']).to eq nil
+        end
+
       end
 
     end
@@ -108,7 +131,7 @@ describe Locomotive::Steam::Middlewares::Cache do
       let(:method) { 'POST' }
 
       it 'tells the the CDN to not cache the page' do
-        is_expected.to eq 'max-age=0, private, must-revalidate'
+        is_expected.to eq ['max-age=0, private, must-revalidate', nil]
       end
 
     end
@@ -123,7 +146,7 @@ describe Locomotive::Steam::Middlewares::Cache do
       end
 
       it 'tells the the CDN to not cache the page' do
-        is_expected.to eq 'max-age=0, private, must-revalidate'
+        is_expected.to eq ['max-age=0, private, must-revalidate', nil]
       end
 
     end
@@ -133,7 +156,7 @@ describe Locomotive::Steam::Middlewares::Cache do
       let(:live_editing) { true }
 
       it 'tells the the CDN to not cache the page' do
-        is_expected.to eq 'max-age=0, private, must-revalidate'
+        is_expected.to eq ['max-age=0, private, must-revalidate', nil]
       end
 
     end
@@ -142,14 +165,15 @@ describe Locomotive::Steam::Middlewares::Cache do
 
   def send_request
     env = env_for(url,
-      method:               method,
-      'If-None-Match'       => etag,
-      'steam.site'          => site,
-      'steam.page'          => page,
-      'steam.path'          => path,
-      'steam.locale'        => 'en',
-      'steam.live_editing'  => live_editing,
-      'steam.services'      => instance_double('Services', cache: cache)
+      method:                   method,
+      'HTTP_IF_NONE_MATCH'      => etag,
+      'HTTP_IF_MODIFIED_SINCE'  => modified_at,
+      'steam.site'              => site,
+      'steam.page'              => page,
+      'steam.path'              => path,
+      'steam.locale'            => 'en',
+      'steam.live_editing'      => live_editing,
+      'steam.services'          => instance_double('Services', cache: cache)
     )
 
     env['steam.request'] = Rack::Request.new(env)

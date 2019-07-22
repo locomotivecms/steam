@@ -28,6 +28,7 @@ module Locomotive::Steam
         when 200 then '200 OK'
         when 301 then '301 Found'
         when 302 then '302 Found'
+        when 304 then '304 Not Modified'
         when 404 then '404 Not Found'
         when 422 then '422 Unprocessable Entity'
         end

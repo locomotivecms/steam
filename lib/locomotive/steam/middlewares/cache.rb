@@ -19,24 +19,32 @@ module Locomotive::Steam
         if cacheable?
           key = cache_key
 
-          # Test if the ETag has been modified. If not, return a 304 response
-          if env['If-None-Match'] == key
+          # TODO: only for debugging
+          # log("HTTP keys: #{env.select { |key, _| key.starts_with?('HTTP_') }}".light_blue)
+
+          # Test if the ETag or Last Modified has been modified. If not, return a 304 response
+          if stale?(key)
             render_response(nil, 304, nil)
             return
           end
 
-          # we have to tell the CDN (or any proxy) what is the expiration / validation strategy
-          env['steam.cache_control']  = DEFAULT_CACHE_CONTROL
-          env['steam.cache_vary']     = DEFAULT_CACHE_VARY
-          env['steam.cache_etag']     = key
+          # we have to tell the CDN (or any proxy) what the expiration & validation strategy are
+          env['steam.cache_control']        = cache_control
+          env['steam.cache_vary']           = cache_vary
+          env['steam.cache_etag']           = key
+          env['steam.cache_last_modified']  = site.last_modified_at.httpdate
 
           # retrieve the response from the cache.
           # This is useful if no CDN is being used.
-          code, headers, _ = fetch_cached_response(key)
+          code, headers, _ = response = fetch_cached_response(key)
 
           unless CACHEABLE_RESPONSE_CODES.include?(code.to_i)
             env['steam.cache_control'] = headers['Cache-Control'] = NO_CACHE_CONTROL
+            env['steam.cache_vary'] = headers['Vary'] = nil
           end
+
+          # we don't want to render twice the page
+          @next_response = response
         else
           env['steam.cache_control']  = NO_CACHE_CONTROL
         end
@@ -45,11 +53,14 @@ module Locomotive::Steam
       private
 
       def fetch_cached_response(key)
+        log("Cache key = #{key.inspect}")
         if marshaled = cache.read(key)
+          log('Cache HIT')
           Marshal.load(marshaled)
         else
+          log('Cache MISS')
           self.next.tap do |response|
-            # cache the HTML for further validations (optimization)
+            # cache the HTML for further validations (+ optimization)
             cache.write(key, marshal(response))
           end
         end
@@ -57,10 +68,10 @@ module Locomotive::Steam
 
       def cacheable?
         CACHEABLE_REQUEST_METHODS.include?(env['REQUEST_METHOD']) &&
-        !env['steam.live_editing'] &&
-        env['steam.site'].try(:cache_enabled) &&
-        env['steam.page'].try(:cache_enabled) &&
-        is_redirect_url?(env['steam.page'])
+        !live_editing? &&
+        site.try(:cache_enabled) &&
+        page.try(:cache_enabled) &&
+        is_redirect_url?
       end
 
       def cache_key
@@ -69,7 +80,15 @@ module Locomotive::Steam
         Digest::MD5.hexdigest(key)
       end
 
-      def is_redirect_url?(page)
+      def cache_control
+        page.try(:cache_control).presence || site.try(:cache_control).presence || DEFAULT_CACHE_CONTROL
+      end
+
+      def cache_vary
+        page.try(:cache_vary).presence || site.try(:cache_vary).presence || DEFAULT_CACHE_VARY
+      end
+
+      def is_redirect_url?
         return false if page.nil?
         page.try(:redirect_url).blank?
       end
@@ -81,6 +100,11 @@ module Locomotive::Steam
         _headers = headers.reject { |key, val| !val.respond_to?(:to_str) }
 
         Marshal.dump([code, _headers, body])
+      end
+
+      def stale?(key)
+        env['HTTP_IF_NONE_MATCH'] == key ||
+        env['HTTP_IF_MODIFIED_SINCE'] == site.last_modified_at.httpdate
       end
 
       def cache
