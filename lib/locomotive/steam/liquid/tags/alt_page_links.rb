@@ -13,10 +13,12 @@ module Locomotive
             if @site.locales.size == 1
               ''
             else
+              ending_path = context['alt_page_links_ending_path'] || ''
+
               (
-                [%(<link rel="alternate" hreflang="x-default" href="#{url_for(@site.default_locale, true)}" />)] +
+                [%(<link rel="alternate" hreflang="x-default" href="#{url_for(@site.default_locale, ending_path, true)}" />)] +
                 @site.locales.map do |locale|
-                  %(<link rel="alternate" hreflang="#{locale}" href="#{url_for(locale)}" />)
+                  %(<link rel="alternate" hreflang="#{locale}" href="#{url_for(locale, ending_path)}" />)
                 end
               ).join("\n")
             end
@@ -30,15 +32,17 @@ module Locomotive
           #
           # Note: the index page has a different behaviour because rendering "/" depends
           # on the language returned by the browser (so might be different based on the user session).
-          def url_for(locale, default = false)
+          def url_for(locale, ending_path = '', default = false)
             change_page_locale(locale, @page) do
-              fullpath = services.url_builder.url_for(@page.send(:_source), locale, @page.index? && !default ? true : nil)
+              fullpath = services.url_builder.url_for(@page.send(:_source), locale, @site.prefix_default_locale) #@page.index? && !default ? true : nil)
 
               if @page.index? && default
                 fullpath.gsub!(/\/#{locale}$/, '/')
               end
 
-              @base_url + fullpath
+              fullpath.gsub!(/\/$/, '') if ending_path.present?
+
+              @base_url + fullpath + ending_path
             end
           end
 

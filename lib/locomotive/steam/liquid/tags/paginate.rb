@@ -126,7 +126,7 @@ module Locomotive
 
           def link(title, page, path)
             _path = %(#{path}#{path.include?('?') ? '&' : '?'}page=#{page})
-            { 'title' => title, 'url' => _path, 'is_link' => true }
+            { 'title' => title, 'url' => _path, 'is_link' => true, 'page' => page }
           end
         end
 

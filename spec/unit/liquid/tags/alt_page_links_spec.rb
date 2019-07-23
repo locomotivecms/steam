@@ -30,7 +30,7 @@ describe Locomotive::Steam::Liquid::Tags::AltPageLinks do
 
       it { is_expected.to eq((<<-HTML
 <link rel="alternate" hreflang="x-default" href="https://www.example.com/" />
-<link rel="alternate" hreflang="en" href="https://www.example.com/en" />
+<link rel="alternate" hreflang="en" href="https://www.example.com/" />
 <link rel="alternate" hreflang="fr" href="https://www.example.com/fr" />
         HTML
         ).strip)
@@ -43,8 +43,25 @@ describe Locomotive::Steam::Liquid::Tags::AltPageLinks do
         it 'has to be the same links' do
           is_expected.to eq((<<-HTML
 <link rel="alternate" hreflang="x-default" href="https://www.example.com/" />
-<link rel="alternate" hreflang="en" href="https://www.example.com/en" />
+<link rel="alternate" hreflang="en" href="https://www.example.com/" />
 <link rel="alternate" hreflang="fr" href="https://www.example.com/fr" />
+        HTML
+          ).strip)
+        end
+
+      end
+
+      context 'the developer wants to pass an ending path (dynamic routing)' do
+
+        let(:locale)  { 'fr' }
+        let(:page)    { liquid_instance_double('News', index?: false, localized_attributes: { title: true, fullpath: true }, title: { en: 'News', fr: 'Actualités' }, fullpath: { en: 'news', fr: 'actualites' }, templatized?: false) }
+        let(:assigns) { { 'page' => drop, 'base_url' => 'https://www.example.com', 'alt_page_links_ending_path' => '/2019/06' } }
+
+        it 'has to be the same links' do
+          is_expected.to eq((<<-HTML
+<link rel="alternate" hreflang="x-default" href="https://www.example.com/news/2019/06" />
+<link rel="alternate" hreflang="en" href="https://www.example.com/news/2019/06" />
+<link rel="alternate" hreflang="fr" href="https://www.example.com/fr/actualites/2019/06" />
         HTML
           ).strip)
         end
