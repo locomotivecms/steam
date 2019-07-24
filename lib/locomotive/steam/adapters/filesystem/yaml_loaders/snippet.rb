@@ -44,11 +44,23 @@ module Locomotive
             end
 
             def each_file(&block)
-              Dir.glob(File.join(path, "*.{#{template_extensions.join(',')}}")).each do |filepath|
-                slug, locale = File.basename(filepath).split('.')[0..1]
-                locale = default_locale if template_extensions.include?(locale)
+              Dir.glob(File.join(path, "**", "*.{#{template_extensions.join(',')}}")).each do |filepath|
+                basename =  File.basename(filepath)
+                subfolder = filepath.sub(path, '').sub(/^\//, '').sub(basename, '')
 
-                yield(filepath, slug.permalink, locale.to_sym)
+                slug, locale = basename.split('.')[0..1]
+
+                if template_extensions.include?(locale)
+                  locale = default_locale 
+                end
+
+                slug = slug.permalink
+
+                if subfolder != ''
+                  slug.prepend(subfolder)
+                end
+
+                yield(filepath, slug, locale.to_sym)
               end
             end
 
