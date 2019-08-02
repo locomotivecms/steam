@@ -20,6 +20,13 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
       is_expected.to eq 'done'
     end
 
+    context 'the text is nil' do
+
+      let(:content) { { 'title' => nil } }
+      it { is_expected.to eq nil }
+
+    end
+
   end
 
   describe 'url type setting' do
@@ -28,29 +35,43 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
     let(:content)   { { 'link' => { 'type' => 'page', 'value' => 42, 'new_window' => true } } }
     let(:page)      { instance_double('Page') }
 
-    before do
-      expect(url_finder_service).to receive(:url_for).with({ 'type' => 'page', 'value' => 42, 'new_window' => true }).and_return(['/foo/bar', true])
+    context 'the link is not nil' do
+
+      before do
+        expect(url_finder_service).to receive(:url_for).with({ 'type' => 'page', 'value' => 42, 'new_window' => true }).and_return(['/foo/bar', true])
+      end
+
+      subject { drop.before_method(:link).to_s }
+
+      it 'returns the url to the page' do
+        is_expected.to eq '/foo/bar'
+      end
+
+      context 'it knows if the link has to be opened in a new window or not' do
+
+        subject { drop.before_method(:link).new_window }
+
+        it { is_expected.to eq true }
+
+      end
+
+      context 'it outputs the target="_blank" A attribute if new window is true' do
+
+        subject { drop.before_method(:link).new_window_attribute }
+
+        it { is_expected.to eq('target="_blank"') }
+
+      end
+
     end
 
-    subject { drop.before_method(:link).to_s }
+    context 'the link is nil' do
 
-    it 'returns the url to the page' do
-      is_expected.to eq '/foo/bar'
-    end
+      let(:content) { { 'link' => nil } }
 
-    context 'it knows if the link has to be opened in a new window or not' do
+      subject { drop.before_method(:link) }
 
-      subject { drop.before_method(:link).new_window }
-
-      it { is_expected.to eq true }
-
-    end
-
-    context 'it outputs the target="_blank" A attribute if new window is true' do
-
-      subject { drop.before_method(:link).new_window_attribute }
-
-      it { is_expected.to eq('target="_blank"') }
+      it { is_expected.to eq nil }
 
     end
 
@@ -66,9 +87,9 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
 
     subject { image_drop.to_s }
 
-    it { is_expected.to eq('') }
+    it { is_expected.to eq '' }
 
-    context 'the content is a string' do
+    context 'the image is a string' do
 
       let(:value) { 'banner.jpg' }
 
@@ -76,7 +97,7 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
 
     end
 
-    context 'the content is a hash' do
+    context 'the image is a hash' do
 
       let(:value) { { source: 'awesome_banner.jpg', cropped: 'cropped_awesome_banner.jpg', width: 42, height: 30 } }
 
@@ -88,6 +109,16 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
         expect(image_drop.width).to eq(42)
         expect(image_drop.height).to eq(30)
       end
+
+    end
+
+    context 'the image is nil' do
+
+      let(:value) { nil }
+
+      subject { image_drop }
+
+      it { is_expected.to eq nil }
 
     end
 

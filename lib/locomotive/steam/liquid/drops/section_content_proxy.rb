@@ -15,6 +15,8 @@ module Locomotive
           def before_method(name)
             value = @content[name.to_s]
 
+            return nil if value.blank?
+
             case type_of(name)
             when 'url'          then SectionUrlField.new(*url_finder.url_for(value))
             when 'image_picker' then SectionImagePickerField.new(value)
@@ -82,7 +84,7 @@ module Locomotive
         class SectionUrlField < ::Liquid::Drop
 
           def initialize(url, new_window = false)
-            @url, @new_window = url || '#', new_window
+            @url, @new_window = url, new_window
           end
 
           def new_window
@@ -91,6 +93,10 @@ module Locomotive
 
           def new_window_attribute
             !!@new_window ? 'target="_blank"' : ''
+          end
+
+          def present?
+            @url.present?
           end
 
           def to_s
