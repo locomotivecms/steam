@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/locomotivecms/common.git
+  remote: https://github.com/locomotivecms/common.git
   revision: 4d1bd565246262ab4b1b824e21c7847846f4cc5c
   ref: 4d1bd56
   specs:
@@ -221,4 +221,4 @@ DEPENDENCIES
   timecop (~> 0.9.1)
 
 BUNDLED WITH
-   1.17.3
+   2.0.2
