@@ -54,7 +54,7 @@ LIQUID
         let(:template_path) { 'spec/fixtures/default/app/views/sections/carousel.liquid' }
 
         it 'allows to alias presets' do
-          expect(entity).to receive(:definition=).with(hash_including({ 'presets' => [{ "name" => "Carousel", "category" => "Content", "settings" => { "brand" => "Acme" }, "blocks" => [] }] }))
+          expect(entity).to receive(:definition=).with(hash_including({ 'presets' => [{ 'name' => 'Carousel', 'category' => 'Content', 'settings' => { 'brand' => 'Acme' }, 'blocks' => [] }] }))
           subject
         end
 
@@ -66,9 +66,10 @@ LIQUID
 
         it 'allows to alias default' do
           expect(entity).to receive(:definition=).with(hash_including({ 'default' =>
-            { "settings" => { "brand" => "MY COMPANY" }, "blocks" => [
-              { "type" => "link", "settings" => { "label" => "Link #1", "url" => "https://www.nocoffee.fr", "new_tab" => "true" } },
-              { "type" => "link", "settings" => { "label" => "Link #2", "url" => "https://www.nocoffee.fr", "new_tab" => "true" } }
+            { 'settings' => { 'brand' => 'MY COMPANY', 'copyright' => '(c) NoCoffee' }, 'blocks' => [
+              { 'type' => 'link', 'settings' => { 'label' => 'Link #1', 'url' => 'https://www.nocoffee.fr', 'new_tab' => true } },
+              { 'type' => 'link', 'settings' => { 'label' => 'Link #2', 'url' => 'https://www.nocoffee.fr', 'new_tab' => true } },
+              { 'type' => 'link', 'settings' => { 'label' => 'Link', 'url' => 'https://www.locomotivecms.com', 'new_tab' => true } }
             ]}
           }))
           subject
@@ -84,12 +85,13 @@ LIQUID
           expect(entity).to receive(:definition=).with(hash_including({
             'presets' => [
               {
-                "name"      => "Default header",
-                "category"  => "Header",
-                "settings"  => { "brand" => "MY COMPANY" },
-                "blocks"    => [
-                  { "type" => "link", "settings" => { "label" => "Link #1", "url" => "https://www.nocoffee.fr", "new_tab" => "true" } },
-                  { "type" => "link", "settings" => { "label" => "Link #2", "url" => "https://www.nocoffee.fr", "new_tab" => "true" } }
+                'name'      => 'Default header',
+                'category'  => 'Header',
+                'settings'  => { 'brand' => 'MY COMPANY' },
+                'blocks'    => [
+                  { 'type' => 'link', 'settings' => { 'label' => 'Link #1', 'url' => 'https://www.nocoffee.fr', 'new_tab' => true } },
+                  { 'type' => 'link', 'settings' => { 'label' => 'Link #2', 'url' => 'https://www.nocoffee.fr', 'new_tab' => true } },
+                  { 'type' => 'link', 'settings' => { 'label' => 'Link', 'url' => 'https://www.locomotivecms.com', 'new_tab' => true } }
                 ]
               }
             ]

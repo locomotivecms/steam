@@ -9,6 +9,37 @@
       "type": "text",
       "label": "Text to display in the header",
       "default": "Header"
+    },
+    {
+      "id": "logo",
+      "type": "image_picker",
+      "label": "Logo",
+      "default": "/images/logo.png"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "settings": [
+        {
+          "id": "label",
+          "type": "text",
+          "label": "Label",
+          "default": "Link"
+        },
+        {
+          "id": "url",
+          "type": "url",
+          "label": "Url",
+          "default": "https://www.locomotivecms.com"
+        },
+        {
+          "id": "new_tab",
+          "type": "checkbox",
+          "label": "Open in a new tab?",
+          "default": true
+        }
+      ]
     }
   ],
   "default": {
@@ -22,7 +53,7 @@
         {
           "label": "Link #1",
           "url": "https://www.nocoffee.fr",
-          "new_tab": "true"
+          "new_tab": true
         }
       },
       {
@@ -31,8 +62,11 @@
         {
           "label": "Link #2",
           "url": "https://www.nocoffee.fr",
-          "new_tab": "true"
+          "new_tab": true
         }
+      },
+      {
+        "type": "link"
       }
     ]
   },
