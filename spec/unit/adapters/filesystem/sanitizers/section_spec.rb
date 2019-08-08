@@ -6,83 +6,53 @@ require_relative '../../../../../lib/locomotive/steam/errors.rb'
 
 describe Locomotive::Steam::Adapters::Filesystem::Sanitizers::Section do
 
-  let(:template_path) { 'spec/fixtures/default/app/views/sections/header.liquid' }
-  let(:entity)        { instance_double('SectionEntity', template_path: template_path, definition: {}) }
+  let(:entity)        { instance_double('SectionEntity', definition: definition) }
   let(:site)          { instance_double('Site', _id: 1) }
   let(:scope)         { instance_double('Scope', site: site) }
   let(:sanitizer)     { described_class.new }
 
-  before(:each) do
-    sanitizer.setup(scope);
-  end
+  before(:each) { sanitizer.setup(scope) }
 
   describe '#apply_to_entity' do
 
+    before { expect(entity).to receive(:[]=).with(:site_id, 1) }
+
     subject { sanitizer.apply_to_entity(entity) }
-
-    describe 'with correct json' do
-
-      it 'sanitizes the entity' do
-        expect(entity).to receive(:definition=).with(hash_including({ 'name' => 'header' }))
-        expect(entity).to receive(:template=).with((<<-LIQUID
-<h1> {{ section.settings.brand }} </h1>
-<ul>
-  {% for block in section.blocks %}
-    <li>
-      <a href="{{ block.settings.url }}" target="{% if block.settings.new_tab %}_blank{% endif %}">
-        {{ block.settings.label }}
-      </a>
-    </li>
-  {% endfor %}
-</ul>
-LIQUID
-        ).gsub /^$\n/, '')
-        expect(entity).to receive(:[]=).with(:site_id, 1)
-        subject
-      end
-    end
 
     describe 'aliases' do
 
-      before do
-        expect(entity).to receive(:[]=).with(:site_id, 1)
-        allow(entity).to receive(:template=)
+      let(:definition) { load_section_definition('carousel', :yaml) }
+
+      it 'allows to alias presets' do
+        expect(subject.definition).to match(hash_including({ 'presets' => [{ 'name' => 'Carousel', 'category' => 'Content', 'settings' => { 'brand' => 'Acme' }, 'blocks' => [] }] }))
       end
 
-      context 'presets (section dropzone)' do
+    end
 
-        let(:template_path) { 'spec/fixtures/default/app/views/sections/carousel.liquid' }
-
-        it 'allows to alias presets' do
-          expect(entity).to receive(:definition=).with(hash_including({ 'presets' => [{ 'name' => 'Carousel', 'category' => 'Content', 'settings' => { 'brand' => 'Acme' }, 'blocks' => [] }] }))
-          subject
-        end
-
-      end
+    describe 'fill_presets / set_default_values' do
 
       context 'global content (global section)' do
 
-        let(:template_path) { 'spec/fixtures/default/app/views/sections/footer.liquid' }
+        let(:definition) { load_section_definition('footer') }
 
         it 'allows to alias default' do
-          expect(entity).to receive(:definition=).with(hash_including({ 'default' =>
+          expect(subject.definition).to match(hash_including({ 'default' =>
             { 'settings' => { 'brand' => 'MY COMPANY', 'copyright' => '(c) NoCoffee' }, 'blocks' => [
               { 'type' => 'link', 'settings' => { 'label' => 'Link #1', 'url' => 'https://www.nocoffee.fr', 'new_tab' => true } },
               { 'type' => 'link', 'settings' => { 'label' => 'Link #2', 'url' => 'https://www.nocoffee.fr', 'new_tab' => true } },
               { 'type' => 'link', 'settings' => { 'label' => 'Link', 'url' => 'https://www.locomotivecms.com', 'new_tab' => true } }
             ]}
           }))
-          subject
         end
 
       end
 
       context 'default (global) used also for dropzone_presets (DRY)' do
 
-        let(:template_path) { 'spec/fixtures/default/app/views/sections/header.liquid' }
+        let(:definition) { load_section_definition('header') }
 
         it 'copies the default settings to any dropzone preset' do
-          expect(entity).to receive(:definition=).with(hash_including({
+          expect(subject.definition).to match(hash_including({
             'presets' => [
               {
                 'name'      => 'Default header',
@@ -96,39 +66,26 @@ LIQUID
               }
             ]
           }))
-          subject
         end
 
       end
 
     end
 
-    describe 'errors' do
+  end
 
-      before(:each) do
-        allow(entity).to receive(:[]=)
-      end
+  def load_section_definition(slug, format = :json)
+    filepath  = File.join(default_fixture_site_path, 'app', 'views', 'sections', "#{slug}.liquid")
+    content   = File.read(filepath)
 
-      describe 'in json header' do
-
-        let(:template_path) { 'spec/fixtures/errors/section_bad_json_header.liquid' }
-
-        it 'should throw an error' do
-          expect { subject }.to raise_error(Locomotive::Steam::ParsingRenderingError)
-        end
-      end
-
-      describe 'json content' do
-
-        let(:template_path) { 'spec/fixtures/errors/section_bad_json_content.liquid' }
-
-        it 'should throw an error' do
-          expect { subject }.to raise_error(Locomotive::Steam::JsonParsingError)
-        end
-      end
-
+    case format
+    when :json
+      match = content.match(Locomotive::Steam::JSON_FRONTMATTER_REGEXP)
+      MultiJson.load(match[:json])
+    when :yaml
+      match = content.match(Locomotive::Steam::YAML_FRONTMATTER_REGEXP)
+      YAML.load(match[:yaml])
     end
-
   end
 
 end

@@ -61,7 +61,7 @@ module Locomotive
             def load_data
               Dir.glob(File.join(data_path, '**', '*.json')).each do |filepath|
                 filepath  =~ /#{data_path}\/([a-z]+)\//
-                data      = safe_json_load(filepath)
+                data      = safe_json_file_load(filepath)
                 locale    = $1.to_sym
 
                 next unless locales.include?($1.to_sym)

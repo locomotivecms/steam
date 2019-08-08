@@ -18,16 +18,29 @@ module Locomotive::Steam
           @scope = scope
         end
 
-        def _load(path, frontmatter = false, &block)
+        def _load(path, frontmatter = false, strict = false, &block)
           if File.exists?(path)
             yaml      = File.open(path).read.force_encoding('utf-8')
             template  = nil
 
-            if frontmatter && match = yaml.match(FRONTMATTER_REGEXP)
-              yaml, template = match[:yaml], match[:template]
-            end
+            # JSON header?
+            if frontmatter && match = yaml.match(JSON_FRONTMATTER_REGEXP)
+              json, template = match[:json], match[:template]
+              safe_json_load(json, template, path, &block)
 
-            safe_yaml_load(yaml, template, path, &block)
+            # YAML header?
+            elsif frontmatter && match = yaml.match(strict ? YAML_FRONTMATTER_REGEXP : FRONTMATTER_REGEXP)
+              yaml, template = match[:yaml], match[:template]
+              safe_yaml_load(yaml, template, path, &block)
+
+            elsif frontmatter
+              message = 'Your file requires a valid YAML or JSON header'
+              raise Locomotive::Steam::ParsingRenderingError.new(message, path, yaml, 0, nil)
+
+            # YAML by default
+            else
+              safe_yaml_load(yaml, template, path, &block)
+            end
           else
             Locomotive::Common::Logger.error "No #{path} file found"
             {}
@@ -46,16 +59,24 @@ module Locomotive::Steam
           end
         end
 
-        def safe_json_load(path)
+        def safe_json_load(json, template, path, &block)
+          return {} if  json.blank?
+
+          begin
+            MultiJson.load(json).tap do |attributes|
+              block.call(attributes, template) if block_given?
+            end
+          rescue MultiJson::ParseError => e
+            raise Locomotive::Steam::JsonParsingError.new(e, path, json)
+          end
+        end
+
+        def safe_json_file_load(path)
           return {} unless File.exists?(path)
 
           json = File.read(path)
 
-          begin
-            MultiJson.load(json)
-          rescue MultiJson::ParseError => e
-            raise Locomotive::Steam::JsonParsingError.new(e, path, json)
-          end
+          safe_json_load(json, nil, path)
         end
 
         def template_extensions

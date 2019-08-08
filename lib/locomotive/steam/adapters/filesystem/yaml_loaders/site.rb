@@ -27,7 +27,7 @@ module Locomotive
             def load_from_env
               return {} if env == :local
 
-              safe_json_load(File.join(site_path, 'data', env.to_s, 'site.json')).symbolize_keys
+              safe_json_file_load(File.join(site_path, 'data', env.to_s, 'site.json')).symbolize_keys
             end
 
             def load_metafields_schema

@@ -5,7 +5,7 @@ describe Locomotive::Steam::SectionRepository do
 
   #TODO: site_id should not be passed like this
   #TODO: template_path should be shorter
-  let(:sections)    { [{ name: 'Header', slug: 'header', site_id: 1, template_path: 'spec/fixtures/default/app/views/sections/header.liquid'  }] }
+  let(:sections)    { [{ name: 'Header', slug: 'header', site_id: 1, definition: {}, template_path: 'spec/fixtures/default/app/views/sections/header.liquid'  }] }
   let(:locale)      { :en }
   let(:site)        { instance_double('Site', _id: 1, default_locale: :en, locales: [:en, :fr]) }
   let(:adapter)     { Locomotive::Steam::FilesystemAdapter.new(nil) }

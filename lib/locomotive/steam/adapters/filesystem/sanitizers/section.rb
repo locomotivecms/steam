@@ -7,38 +7,22 @@ module Locomotive::Steam
           include Adapters::Filesystem::Sanitizer
 
           def apply_to_entity(entity)
-            super
-            parse_json(entity)
+            super.tap do
+              # allow multiple ways of defining global and preset content
+              handle_aliases(entity.definition)
+
+              # Utilize global defaults for dropzone preset
+              # when `use_default` is defined
+              fill_presets(entity.definition)
+
+              # use the default setting values if some settings
+              # are not set in the default object
+              set_default_values(entity.definition)
+            end
           end
 
           private
 
-          def parse_json(entity)
-            content = File.read(entity.template_path)
-            match   = content.match(JSON_FRONTMATTER_REGEXP)
-
-            raise_parsing_error(entity, content) if match.nil?
-
-            json, template  = match[:json], match[:template]
-            definition      = load_definition(json, entity.template_path)
-
-            # bit of transformations to ease the designer/developer's life
-            handle_aliases(definition)
-            fill_presets(definition)
-            set_default_values(definition)
-
-            # update the entity
-            entity.definition = definition
-            entity.template   = template
-          end
-
-          def load_definition(json, template_path)
-            MultiJson.load(json)
-          rescue MultiJson::ParseError => e
-            raise Locomotive::Steam::JsonParsingError.new(e, template_path, json)
-          end
-
-          # allow multiple ways of defining global and preset content
           def handle_aliases(definition)
             # Dropzone presets -> presets
             if presets = definition.delete('dropzone_presets')
@@ -51,8 +35,6 @@ module Locomotive::Steam
             end
           end
 
-          # Utilize global defaults for dropzone preset
-          # when `use_default` is defined
           def fill_presets(definition)
             if definition.key?('default') && definition.key?('presets')
               definition['presets'].each_with_index do |preset_definition, preset_index|
@@ -70,8 +52,6 @@ module Locomotive::Steam
             end
           end
 
-          # use the default setting values if some settings
-          # are not set in the default object
           def set_default_values(definition)
             content = definition['default']
 
@@ -99,11 +79,6 @@ module Locomotive::Steam
                 block['settings'][setting['id']] ||= setting['default']
               end
             end
-          end
-
-          def raise_parsing_error(entity, content)
-            message = 'Your section requires a valid JSON header'
-            raise Locomotive::Steam::ParsingRenderingError.new(message, entity.template_path, content, 0, nil)
           end
 
         end

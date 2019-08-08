@@ -16,9 +16,20 @@ module Locomotive
 
             def load_list
               Dir.glob(File.join(path, "*.{#{template_extensions.join(',')}}")).map do |filepath|
-                slug = File.basename(filepath).split('.').first
-                build(filepath, slug.permalink)
+                load_file(filepath)
               end
+            end
+
+            def load_file(filepath)
+              slug        = File.basename(filepath).split('.').first
+              attributes  = build(filepath, slug.permalink)
+
+              _load(filepath, true, true) do |definition, template|
+                attributes[:definition] = definition
+                attributes[:template]   = template
+              end
+
+              attributes
             end
 
             def build(filepath, slug)
@@ -32,6 +43,7 @@ module Locomotive
             def path
               @path ||= File.join(site_path, 'app', 'views', 'sections')
             end
+
           end
         end
       end

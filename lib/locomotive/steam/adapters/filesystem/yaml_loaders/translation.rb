@@ -26,7 +26,7 @@ module Locomotive
             end
 
             def _load_from_env
-              safe_json_load(File.join(site_path, 'data', env.to_s, 'translations.json'))
+              safe_json_file_load(File.join(site_path, 'data', env.to_s, 'translations.json'))
             end
 
             def path

@@ -24,4 +24,29 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Section do
 
   end
 
+  describe '#load_file' do
+
+    subject { loader.send(:load_file, filepath) }
+
+    describe 'error in the json header' do
+
+      let(:filepath) { File.join(default_fixture_site_path, '..', 'errors', 'section_bad_json_header.liquid') }
+
+      it 'should throw an error' do
+        expect { subject }.to raise_error(Locomotive::Steam::ParsingRenderingError)
+      end
+
+    end
+
+    describe 'json content' do
+
+      let(:filepath) { File.join(default_fixture_site_path, '..', 'errors', 'section_bad_json_content.liquid') }
+
+      it 'should throw an error' do
+        expect { subject }.to raise_error(Locomotive::Steam::JsonParsingError)
+      end
+    end
+
+  end
+
 end
