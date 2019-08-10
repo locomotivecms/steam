@@ -2,10 +2,16 @@
 listed: true
 handle: our-music
 position: 2
+sections_content:
+  carousel:
+    settings:
+      brand: "My brand"
 ---
 {% extends parent %}
 
 {% block content %}
+
+{% section 'carousel' %}
 
 {% editable_long_text 'introduction' %}
 

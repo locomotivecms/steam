@@ -29,6 +29,26 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
 
   end
 
+  describe 'integer type setting' do
+
+    let(:settings)  { [{ 'id' => 'number', 'type' => 'integer' }] }
+    let(:content)   { { 'number' => '42' } }
+
+    subject { drop.before_method(:number) }
+
+    it 'converts the number into an integer' do
+      is_expected.to eq 42
+    end
+
+    context 'the number is nil' do
+
+      let(:content) { { 'number' => nil } }
+      it { is_expected.to eq nil }
+
+    end
+
+  end
+
   describe 'url type setting' do
 
     let(:settings)  { [{ 'id' => 'link', 'type' => 'url' }] }

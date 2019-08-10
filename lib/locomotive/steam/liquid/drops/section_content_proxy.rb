@@ -20,6 +20,7 @@ module Locomotive
             case type_of(name)
             when 'url'          then SectionUrlField.new(*url_finder.url_for(value))
             when 'image_picker' then SectionImagePickerField.new(value)
+            when 'integer'      then value.to_i
             when 'text'         then url_finder.decode_urls_for(value)
             else value
             end
