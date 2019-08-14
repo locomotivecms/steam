@@ -29,14 +29,25 @@ module Locomotive::Steam::Liquid::Tags::Concerns
         editor_settings_lookup(template.root)
       end
 
-      html        = template.render(context)
+      html = template.render(context)
+
+      # by default, Steam will wrap the section HTML to make sure it has all the
+      # DOM attributes the live editing editor needs.
+      if context['is_section_locomotive_attributes_displayed']
+        html
+      else
+        wrap_html(html, context)
+      end
+    end
+
+    def wrap_html(html, context)
       section     = context['section']
       css_class   = context['section_css_class']
 
       # we need the section_css_class once
-      context.scopes.last.delete('section_css_class')
+      # context.scopes.last.delete('section_css_class')
 
-      anchor_id = %(id="#{section.anchor}-section")
+      anchor_id = %(id="#{section.anchor_id}")
       tag_id    = %(id="locomotive-section-#{section.id}")
       tag_class = %(class="#{['locomotive-section', section.css_class, css_class].compact.join(' ')}")
       tag_data  = %(data-locomotive-section-type="#{section.type}")

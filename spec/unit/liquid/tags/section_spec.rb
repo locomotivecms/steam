@@ -128,6 +128,20 @@ describe Locomotive::Steam::Liquid::Tags::Section do
 
       end
 
+      context 'the developer wants to wrap herself/himself the section' do
+
+        let(:liquid_source) { '<section class="section-header" id="{{ section.anchor_id }}" {{ section.locomotive_attributes }}>Hello world</section>' }
+
+        it { is_expected.to eq 'Locomotive '\
+          '<section class="section-header"'\
+          ' id="page-header-section"'\
+          ' data-locomotive-section-id="page-header"'\
+          ' data-locomotive-section-type="header">'\
+            'Hello world'\
+          '</section>' }
+
+      end
+
     end
 
     context 'with blocks' do

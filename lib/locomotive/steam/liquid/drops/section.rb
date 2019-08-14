@@ -38,8 +38,16 @@ module Locomotive
             @section.definition['class']
           end
 
-          def anchor
-            @content['anchor'] || id
+          def anchor_id
+            "#{@content['anchor'] || id}-section"
+          end
+
+          def locomotive_attributes
+            %(data-locomotive-section-id="#{id}" data-locomotive-section-type="#{type}").tap do
+              # let Steam know that we won't need to wrap the section HTML
+              # into an extra DIV layer.
+              @context['is_section_locomotive_attributes_displayed'] = true
+            end
           end
 
           def blocks
