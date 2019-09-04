@@ -68,7 +68,6 @@ describe Locomotive::Steam::Liquid::Tags::SectionsDropzone do
       end
 
       it 'renders the list of sections' do
-        puts is_expected.inspect
         is_expected.to eq <<-HTML
           <div class="locomotive-sections">
             <div id="locomotive-section-dropzone-0" class="locomotive-section" data-locomotive-section-type="hero">
