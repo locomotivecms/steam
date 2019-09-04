@@ -41,6 +41,10 @@ describe Locomotive::Steam::Liquid::Filters::Text do
     expect(encode('http:://www.example.com?key=hello world')).to eq 'http%3A%3A%2F%2Fwww.example.com%3Fkey%3Dhello+world'
   end
 
+  it 'parameterizes an input' do
+    expect(parameterize('séjourner & dormir')).to eq 'sejourner-dormir'
+  end
+
   it 'replaces \n by <br/>' do
     expect(multi_line("hello\nworld")).to eq 'hello<br/>world'
   end

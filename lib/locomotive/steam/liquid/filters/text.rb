@@ -16,6 +16,10 @@ module Locomotive
             Rack::Utils.escape(input)
           end
 
+          def parameterize(input)
+            input.parameterize
+          end
+
           # alias newline_to_br
           def multi_line(input)
             input.to_s.gsub("\n", '<br/>')
