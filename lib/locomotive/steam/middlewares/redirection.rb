@@ -14,7 +14,7 @@ module Locomotive::Steam
         begin
           self.next
         rescue Locomotive::Steam::RedirectionException => e
-          redirect_to e.url, 302
+          redirect_to e.url, e.permanent ? 301 : 302
         end
       end
 

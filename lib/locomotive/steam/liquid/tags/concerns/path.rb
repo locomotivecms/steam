@@ -5,7 +5,7 @@ module Locomotive
         module Concerns
           module Path
 
-            Syntax = /(#{::Liquid::VariableSignature}+)(\s*,.+)?/o
+            Syntax = /(#{::Liquid::QuotedFragment}+)(\s*,.+)?/o
 
             def initialize(tag_name, markup, options)
               if markup =~ Syntax
@@ -26,8 +26,12 @@ module Locomotive
             def render_path(context, &block)
               set_vars_from_context(context)
 
-              # return a drop or model?
-              if page = self.retrieve_page_drop_from_handle
+              handle = @context[@handle] || @handle
+
+              # is external url?
+              if handle =~ Locomotive::Steam::IsHTTP
+                handle
+              elsif page = self.retrieve_page_drop_from_handle(handle) # return a drop or model?
                 # make sure we've got the page/content entry (if templatized)
                 # in the right locale
                 change_page_locale(locale, page) do
@@ -50,9 +54,7 @@ module Locomotive
               services.repositories.page
             end
 
-            def retrieve_page_drop_from_handle
-              handle = @context[@handle] || @handle
-
+            def retrieve_page_drop_from_handle(handle)
               case handle
               when String
                 _retrieve_page_drop_from(handle)

@@ -32,6 +32,14 @@ describe Locomotive::Steam::Middlewares::Redirection do
 
     it { is_expected.to eq [302, '/sign_in'] }
 
+    context 'permanent' do
+
+      let(:app) { ->(env) { raise Locomotive::Steam::RedirectionException.new('/sign_in', permanent: true) } }
+
+      it { is_expected.to eq [301, '/sign_in'] }
+
+    end
+
   end
 
 end

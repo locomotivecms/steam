@@ -31,7 +31,7 @@ describe Locomotive::Steam::Liquid::Tags::Authorize do
     context 'unauthenticated account' do
 
       it 'redirects to the sign in page' do
-        expect { subject }.to raise_error(Locomotive::Steam::RedirectionException, 'Redirect to /me/sign_in')
+        expect { subject }.to raise_error(Locomotive::Steam::RedirectionException, 'Redirect to /me/sign_in (302)')
       end
 
     end

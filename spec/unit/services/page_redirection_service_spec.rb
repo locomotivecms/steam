@@ -18,7 +18,7 @@ describe Locomotive::Steam::PageRedirectionService do
 
       it 'raises an PageRedirectionException that will caught the appropriate middleware' do
         expect(url_builder).to receive(:url_for).with(page, nil).and_return('/about-us')
-        expect { subject }.to raise_exception(Locomotive::Steam::RedirectionException, 'Redirect to /about-us')
+        expect { subject }.to raise_exception(Locomotive::Steam::RedirectionException, 'Redirect to /about-us (302)')
       end
 
       context 'passing a locale' do
@@ -27,7 +27,7 @@ describe Locomotive::Steam::PageRedirectionService do
 
         it 'raises an PageRedirectionException that will caught the appropriate middleware' do
           expect(url_builder).to receive(:url_for).with(page, 'fr').and_return('/a-notre-sujet')
-          expect { subject }.to raise_exception(Locomotive::Steam::RedirectionException, 'Redirect to /a-notre-sujet')
+          expect { subject }.to raise_exception(Locomotive::Steam::RedirectionException, 'Redirect to /a-notre-sujet (302)')
         end
 
       end

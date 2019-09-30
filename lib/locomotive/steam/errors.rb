@@ -5,11 +5,12 @@ module Locomotive::Steam
 
   class RedirectionException < ::Exception
 
-    attr_reader :url
+    attr_reader :url, :permanent
 
-    def initialize(url)
-      @url = url
-      super("Redirect to #{url}")
+    def initialize(url, permanent: false)
+      @url        = url
+      @permanent  = permanent
+      super("Redirect to #{url} (#{permanent ? '301': '302'})")
     end
 
   end

@@ -261,7 +261,7 @@ describe Locomotive::Steam::ActionService do
 
         it 'stops the rendering process and redirects the user to another page' do
           expect(redirection_service).to receive(:redirect_to).with('about-us', nil).and_raise(Locomotive::Steam::RedirectionException.new('/about-us'))
-          expect { subject }.to raise_exception(Locomotive::Steam::RedirectionException, 'Redirect to /about-us')
+          expect { subject }.to raise_exception(Locomotive::Steam::RedirectionException, 'Redirect to /about-us (302)')
         end
 
       end
