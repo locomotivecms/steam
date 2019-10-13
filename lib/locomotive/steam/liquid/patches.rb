@@ -1,10 +1,3 @@
-# Enhance the IF condition to write the following statement:
-#
-# {% if value is present %}Value is not blank{% endif %}
-#
-Liquid::Expression::LITERALS['present'.freeze] = :present?
-Liquid::Condition.operators['is'.freeze] = lambda { |cond, left, right|  cond.send(:equal_variables, left, right) }
-
 module Liquid
   module StandardFilters
 
@@ -27,31 +20,3 @@ module Liquid
 
   end
 end
-
-module Liquid
-  module OptionsBuilder
-
-    private
-
-    def parse_options_from_string(string)
-      string.try(:strip!)
-
-      return nil if string.blank?
-
-      string = string.gsub(/^(\s*,)/, '')
-
-      Solid::Arguments.parse(string)
-    end
-
-    def interpolate_options(options, context)
-      if options
-        options.interpolate(context).first
-      else
-        {}
-      end
-    end
-
-  end
-end
-
-Liquid::Tag.send(:include, Liquid::OptionsBuilder)

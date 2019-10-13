@@ -12,7 +12,7 @@ module Locomotive
             @content, @settings = content, settings
           end
 
-          def before_method(name)
+          def liquid_method_missing(name)
             value = @content[name.to_s]
 
             return nil if value.blank?

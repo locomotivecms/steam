@@ -15,68 +15,62 @@ module Locomotive
         #
         class Consume < ::Liquid::Block
 
-          Syntax = /(#{::Liquid::VariableSignature}+)\s*from\s*(#{::Liquid::QuotedString}|#{::Liquid::VariableSignature}+)(.*)?/o
+          include Concerns::Attributes
+
+          Syntax = /(#{::Liquid::VariableSignature}+)\s*from\s*(#{::Liquid::QuotedFragment}+),?(.+)?/o.freeze
+
+          attr_reader :variable_name, :url, :expires_in
 
           def initialize(tag_name, markup, options)
-            if markup =~ Syntax
-              @name = $1.to_s
+            super
 
-              self.prepare_url($2)
-              @default_api_options = parse_options_from_string($3)
+            if markup =~ Syntax
+              @variable_name, @url, attributes = $1.to_s, ::Liquid::Expression.parse($2), $3
+
+              parse_attributes(attributes)
             else
               raise ::Liquid::SyntaxError.new("Syntax Error in 'consume' - Valid syntax: consume <var> from \"<url>\" [username: value, password: value]")
             end
-
-            super
           end
 
-          def render(context)
-            self.set_api_options(context)
+          def render_to_output_buffer(context, output)
+            evaluate_attributes(context)
 
-            if instance_variable_defined?(:@variable_name)
-              @url = context[@variable_name]
-            end
+            # attributes will become the options which will be passed to the service.
+            # we don't want the expires_in option to be part of it.
+            @expires_in = attributes.delete(:expires_in)&.to_i
 
-            if @url.blank?
+            # the URL can come from a variable
+            @url = context.evaluate(url)
+
+            if url.blank?
               Locomotive::Common::Logger.error "A consume tag can't call an empty URL."
-              ''
             else
-              render_all_and_cache_it(context)
+              output << render_all_and_cache_it(context) { |_context| super(_context, '') }
             end
+
+            output
           end
 
           protected
 
-          def prepare_url(token)
-            if token.match(::Liquid::QuotedString)
-              @url = token.gsub(/['"]/, '')
-            else
-              @variable_name = token
-            end
-          end
-
-          def set_api_options(context)
-            @api_options  = interpolate_options(@default_api_options, context)
-            @expires_in   = @api_options.delete(:expires_in).try(:to_i)
-          end
-
-          def render_all_and_cache_it(context)
+          def render_all_and_cache_it(context, &block)
             cache_service(context).fetch(page_fragment_cache_key, cache_options) do
-              self.render_all_without_cache(context)
+              self.render_all_without_cache(context, &block)
             end
           end
 
           def render_all_without_cache(context)
             context.stack do
               begin
-                Locomotive::Common::Logger.info "[consume] #{@url.inspect} / #{@api_options.inspect}"
+                Locomotive::Common::Logger.info "[consume] #{url.inspect} / #{attributes.inspect}"
 
-                context.scopes.last[@name] = service(context).consume(@url, @api_options)
+                context.scopes.last[variable_name] = service(context).consume(url, attributes)
               rescue Timeout::Error, Errno::ETIMEDOUT
-                context.scopes.last[@name] = last_response(context)
+                context.scopes.last[variable_name] = last_response(context)
               end
 
-              @body.render(context)
+              yield(context)
             end
           end
 
@@ -89,7 +83,7 @@ module Locomotive
           end
 
           def cache_options
-            @expires_in.blank? || @expires_in == 0 ? { force: true } : { expires_in: @expires_in }
+            expires_in.blank? || expires_in == 0 ? { force: true } : { expires_in: expires_in }
           end
 
           def last_response(context)
@@ -97,7 +91,7 @@ module Locomotive
           end
 
           def page_fragment_cache_key
-            "Steam-consume-#{Digest::SHA1.hexdigest(@name + @url)}"
+            "Steam-consume-#{Digest::SHA1.hexdigest(variable_name + url)}"
           end
 
         end

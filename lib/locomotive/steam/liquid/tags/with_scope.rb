@@ -14,64 +14,100 @@ module Locomotive
         # {% endwith_scope %}
         #
 
-        class WithScope < Solid::Block
+        class WithScope < ::Liquid::Block
 
-          OPERATORS = %w(all exists gt gte in lt lte ne nin size near within)
+          include Concerns::Attributes
 
-          SYMBOL_OPERATORS_REGEXP = /(\w+\.(#{OPERATORS.join('|')})){1}\s*\:/o
+          # Regexps and Arrays are allowed
+          ArrayFragment   = /\[(\s*(#{::Liquid::QuotedFragment},\s*)*#{::Liquid::QuotedFragment}\s*)\]/o.freeze
+          RegexpFragment  = /\/([^\/]+)\/([imx]+)?/o.freeze
+
+          # a slight different from the Shopify implementation because we allow stuff like `started_at.le`
+          TagAttributes   = /([a-zA-Z_0-9\.]+)\s*\:\s*(#{ArrayFragment}|#{RegexpFragment}|#{::Liquid::QuotedFragment})/o.freeze
 
           REGEX_OPTIONS = {
             'i' => Regexp::IGNORECASE,
             'm' => Regexp::MULTILINE,
             'x' => Regexp::EXTENDED
-          }
+          }.freeze
 
-          # register the tag
-          tag_name :with_scope
+          attr_reader :attributes
 
-          def initialize(name, markup, options)
-            # convert symbol operators into valid ruby code
-            markup.gsub!(SYMBOL_OPERATORS_REGEXP, ':"\1" =>')
+          def initialize(tag_name, markup, options)
+            super
 
-            super(name, markup, options)
+            parse_attributes(markup) { |value| parse_attribute(value) }
+
+            if attributes.empty?
+              raise ::Liquid::SyntaxError.new("Syntax Error in 'with_scope' - Valid syntax: with_scope <name_1>: <value_1>, ..., <name_n>: <value_n>")
+            end
           end
 
-          def display(options = {}, &block)
-            current_context.stack do
-              current_context['with_scope'] = self.decode(options)
-              current_context['with_scope_content_type'] = false # for now, no content type is assigned to this with_scope
-              yield
+          def render_to_output_buffer(context, output)
+            context.stack do
+              context['with_scope'] = self.evaluate_attributes(context)
+
+              # for now, no content type is assigned to this with_scope
+              context['with_scope_content_type'] = false
+
+              super
             end
+
+            output
           end
 
           protected
 
-          def decode(options)
+          def parse_attribute(value)
+            case value
+            when RegexpFragment
+              # let the cast_value attribute create the Regexp (done during the rendering phase)
+              value
+            when ArrayFragment
+              $1.split(',').map { |_value| parse_attribute(_value) }
+            else
+              ::Liquid::Expression.parse(value)
+            end
+          end
+
+          def evaluate_attributes(context)
             HashWithIndifferentAccess.new.tap do |hash|
-              options.each do |key, value|
+              attributes.each do |key, value|
                 # _slug instead of _permalink
                 _key = key.to_s == '_permalink' ? '_slug' : key.to_s
 
-                hash[_key] = cast_value(value)
+                # evaluate the value if possible before casting it
+                _value = value.is_a?(::Liquid::VariableLookup) ? context.evaluate(value) : value
+
+                hash[_key] = cast_value(context, _value)
               end
             end
           end
 
-          def cast_value(value)
+          def cast_value(context, value)
             case value
-            when Array then value.map { |_value| cast_value(_value) }
-            when /^\/([^\/]*)\/([imx]+)?$/
-              _value, options_str = $1, $2
-              options = options_str.blank? ? nil : options_str.split('').uniq.inject(0) do |_options, letter|
-                _options |= REGEX_OPTIONS[letter]
-              end
-              Regexp.new(_value, options)
+            when Array          then value.map { |_value| cast_value(context, _value) }
+            when RegexpFragment then create_regexp($1, $2)
             else
-              value.respond_to?(:_id) ? value.send(:_source) : value
+              _value = context.evaluate(value)
+              _value.respond_to?(:_id) ? _value.send(:_source) : _value
             end
+          end
+
+          def create_regexp(value, unparsed_options)
+            options = unparsed_options.blank? ? nil : unparsed_options.split('').uniq.inject(0) do |_options, letter|
+              _options |= REGEX_OPTIONS[letter]
+            end
+            Regexp.new(value, options)
+          end
+
+          def tag_attributes_regexp
+            TagAttributes
           end
 
         end
+
+        ::Liquid::Template.register_tag('with_scope'.freeze, WithScope)
 
       end
     end

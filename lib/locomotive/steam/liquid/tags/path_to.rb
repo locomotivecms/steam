@@ -4,11 +4,13 @@ module Locomotive
       module Tags
         class PathTo < ::Liquid::Tag
 
+          include Concerns::Attributes
           include Concerns::I18nPage
           include Concerns::Path
 
-          def render(context)
-            render_path(context)
+          def render_to_output_buffer(context, output)
+            output << render_path(context)
+            output
           end
 
           def wrong_syntax!

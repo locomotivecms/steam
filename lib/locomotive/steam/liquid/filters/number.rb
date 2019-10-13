@@ -4,15 +4,15 @@ module Locomotive
       module Filters
         module Number
 
-          def money(input, *options)
+          def money(input, options = nil)
             NumberProxyHelper.new(:currency, @context).invoke(input, options)
           end
 
-          def percentage(input, *options)
+          def percentage(input, options = nil)
             NumberProxyHelper.new(:percentage, @context).invoke(input, options)
           end
 
-          def human_size(input, *options)
+          def human_size(input, options = nil)
             NumberProxyHelper.new(:human_size, @context).invoke(input, options)
           end
 
@@ -30,17 +30,18 @@ module Locomotive
             end
 
             def invoke(input, options)
-              _options = parse_and_interpolate_options(options)
-              send :"number_to_#{@name}", input, _options
+              send :"number_to_#{@name}", input, interpolate_options(options)
             end
 
-            def parse_and_interpolate_options(string_or_array)
-              return {} if string_or_array.empty?
-
-              string = [*string_or_array].flatten.join(', ')
-              arguments = Solid::Arguments.parse(string)
-
-              (arguments.interpolate(@context).first || {})
+            def interpolate_options(options)
+              (options || {}).transform_values do |option|
+                if option.is_a?(String)
+                  _option = ::Liquid::Expression.parse(option)
+                  @context.evaluate(_option) || option
+                else
+                  option
+                end
+              end
             end
 
           end

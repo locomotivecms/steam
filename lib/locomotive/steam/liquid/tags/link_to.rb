@@ -4,17 +4,18 @@ module Locomotive
       module Tags
         class LinkTo < Hybrid
 
+          include Concerns::Attributes
           include Concerns::I18nPage
           include Concerns::Path
 
-          def render(context)
-            render_path(context) do |page, path|
+          def render_to_output_buffer(context, output)
+            output << render_path(context) do |page, path|
               label = label_from_page(page)
 
               if render_as_block?
                 context.stack do
                   context.scopes.last['target'] = page
-                  label = super.html_safe
+                  label = super(context, '').html_safe
                 end
               end
 
@@ -23,6 +24,8 @@ module Locomotive
 
               %{<a #{tag_href}#{tag_class}>#{label}</a>}
             end
+
+            output
           end
 
           def wrong_syntax!
@@ -40,7 +43,7 @@ module Locomotive
           end
 
           def css
-            @path_options[:class]
+            attributes[:class]
           end
 
         end

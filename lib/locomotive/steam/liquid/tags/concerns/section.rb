@@ -18,7 +18,7 @@ module Locomotive::Steam::Liquid::Tags::Concerns
         begin
           _render(context, template)
         rescue Locomotive::Steam::ParsingRenderingError => e
-          e.file = section.name + ' [Section]'
+          e.template_name = section.name + ' [Section]'
           raise e
         end
       end
@@ -29,7 +29,7 @@ module Locomotive::Steam::Liquid::Tags::Concerns
         editor_settings_lookup(template.root)
       end
 
-      html = template.render(context)
+      html = template.render_to_output_buffer(context, '')
 
       # by default, Steam will wrap the section HTML to make sure it has all the
       # DOM attributes the live editing editor needs.
@@ -63,10 +63,8 @@ module Locomotive::Steam::Liquid::Tags::Concerns
       previous_node = nil
       new_nodelist  = []
 
-      return if root.nodelist.blank?
-
       root.nodelist.each_with_index do |node, index|
-        if node.is_a?(::Liquid::Variable) && previous_node.is_a?(::Liquid::Token)
+        if node.is_a?(::Liquid::Variable) && previous_node.is_a?(String)
           matches = node.raw.match(Locomotive::Steam::SECTIONS_SETTINGS_VARIABLE_REGEXP)
 
           # is a section setting variable?
@@ -77,11 +75,11 @@ module Locomotive::Steam::Liquid::Tags::Concerns
             # here we go, add a liquid variable!
             new_nodelist.push(::Liquid::Variable.new(
               "section.editor_setting_data.#{matches[:id]}",
-              node.instance_variable_get(:@options))
+              node.parse_context) #instance_variable_get(:@options))
             )
 
             # close the tag
-            new_nodelist.push(::Liquid::Token.new('>', previous_node.line_number))
+            new_nodelist.push('>') #::Liquid::Tokenizer.new('>', previous_node.line_number))
           end
         elsif node.respond_to?(:nodelist)
           editor_settings_lookup(node)
@@ -101,7 +99,7 @@ module Locomotive::Steam::Liquid::Tags::Concerns
       previous_node = nodelist[index - 1]
       next_node     = nodelist[index + 1]
 
-      return false unless next_node.is_a?(::Liquid::Token)
+      return false unless next_node.is_a?(String)
 
       (previous_node =~ /\>\s*\z/).present? && (next_node =~ /\A\s*\</).present?
     end

@@ -7,7 +7,7 @@ group :development do
   # gem 'locomotivecms_common', path: '../common'
   # gem 'locomotivecms_models', '~> 0.0.1', path: '../models'
   # gem 'locomotivecms_models', '0.0.1.pre.alpha'
-  # gem 'locomotivecms-liquid', path: '/Users/didier/Documents/LocomotiveCMS/gems/liquid'
+  gem 'locomotivecms-liquid', path: '../liquid'
   # gem 'duktape', path: '../tmp/duktape.rb'
   # gem 'duktape', github: 'judofyr/duktape.rb', ref: '20ef6a5'
   # gem 'duktape', github: 'did/duktape.rb', branch: 'any-fixnum'

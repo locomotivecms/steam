@@ -24,7 +24,7 @@ module Locomotive
             begin
               super
             rescue Locomotive::Steam::ParsingRenderingError => e
-              e.file = @template_name + ' [Snippet]'
+              e.template_name = @template_name + ' [Snippet]'
               raise e
             end
           end

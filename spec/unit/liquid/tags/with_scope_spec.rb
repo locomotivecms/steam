@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'origin'
 
 describe Locomotive::Steam::Liquid::Tags::WithScope do
 
@@ -6,6 +7,11 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
   let(:context)     { ::Liquid::Context.new(assigns, {}, {}) }
   let!(:output)     { render_template(source, context) }
   let(:conditions)  { context['conditions'] }
+
+  describe 'renders basic stuff' do
+    let(:source) { '{% with_scope a: 1 %}42{% endwith_scope %}' }
+    it { expect(output).to eq '42' }
+  end
 
   describe 'store the conditions in the context' do
 
@@ -102,9 +108,10 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
 
   describe 'decode criteria with gt and lt' do
 
-    let(:source) { "{% with_scope price.gt:42.0, price.lt:50 %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+    let(:source) { "{% with_scope price.gt:42.0, price.lt:50, published_at.lte: '2019-09-10 00:00:00' %}{% assign conditions = with_scope %}{% endwith_scope %}" }
     it { expect(conditions['price.gt']).to eq 42.0 }
     it { expect(conditions['price.lt']).to eq 50 }
+    it { expect(conditions['published_at.lte']).to eq '2019-09-10 00:00:00' }
 
   end
 

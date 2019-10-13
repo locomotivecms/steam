@@ -1,6 +1,6 @@
 def render_template(source, context = nil, options = {})
   context ||= ::Liquid::Context.new
-  context.exception_handler = ->(e) { true }
+  context.exception_renderer = ->(e) { puts e.message; raise e }
   Locomotive::Steam::Liquid::Template.parse(source, options).render(context)
 end
 

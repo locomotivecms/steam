@@ -11,7 +11,7 @@ module Locomotive
             @section = section
           end
 
-          def before_method(meth)
+          def liquid_method_missing(meth)
             block   = nil
             prefix  = "section-#{@context['section'].id}"
             matches = (@context['forloop.name'] || '').match(SECTIONS_BLOCK_FORLOOP_REGEXP)

@@ -2,16 +2,25 @@ module Locomotive
   module Steam
     module Liquid
       module Tags
-        class GoogleAnalytics < ::Solid::Tag
+        class GoogleAnalytics < ::Liquid::Tag
 
-          tag_name :google_analytics
+          Syntax = /(#{::Liquid::QuotedFragment}+)/o.freeze
 
-          def display(account_id = nil)
-            if account_id.blank?
-              raise ::Liquid::SyntaxError.new("Syntax Error in 'google_analytics' - Valid syntax: google_analytics <account_id>")
+          attr_reader :account_id
+
+          def initialize(tag_name, markup, options)
+            super
+
+            if markup =~ Syntax
+              @account_id = ::Liquid::Expression.parse($1)
             else
-              ga_snippet(account_id)
+              raise ::Liquid::SyntaxError.new("Syntax Error in 'google_analytics' - Valid syntax: google_analytics <account_id>")
             end
+          end
+
+          def render_to_output_buffer(context, output)
+            output << ga_snippet(context.evaluate(account_id))
+            output
           end
 
           private
@@ -31,6 +40,8 @@ module Locomotive
           end
 
         end
+
+        ::Liquid::Template.register_tag('google_analytics'.freeze, GoogleAnalytics)
 
       end
     end

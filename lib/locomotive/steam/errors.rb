@@ -18,25 +18,28 @@ module Locomotive::Steam
   class PageNotFoundException < ::Exception
   end
 
-  class ParsingRenderingError < ::StandardError
+  class ParsingRenderingError < ::Liquid::Error
 
     LINES_RANGE = 10
 
-    attr_accessor :file, :line, :source, :original_backtrace
+    attr_accessor :source, :original_backtrace
 
-    def initialize(message, file, source, line, original_backtrace)
-      @file, @source, @line, @original_backtrace = file, source, line, original_backtrace
+    def initialize(message, template_name, source, line_number, original_backtrace)
       super(message)
+      self.template_name      = template_name
+      self.line_number        = line_number
+      self.source             = source
+      self.original_backtrace = original_backtrace
     end
 
     def code_lines
-      return [] if source.blank? || line.nil?
+      return [] if source.blank? || line_number.nil?
 
       lines = source.split("\n")
 
-      start   = line - (LINES_RANGE / 2)
+      start   = line_number - (LINES_RANGE / 2)
       start   = 1 if start <= 0
-      finish  = line + (LINES_RANGE / 2)
+      finish  = line_number + (LINES_RANGE / 2)
 
       (start..finish).map { |i| [i, lines[i - 1]] }
     end
@@ -45,16 +48,28 @@ module Locomotive::Steam
       original_backtrace
     end
 
+    private
+
+    def message_prefix
+      "Liquid parsing error - "
+    end
+
   end
 
   class RenderError < ParsingRenderingError
 
     def initialize(error, file, source)
-      message   = error.message
-      line      = error.respond_to?(:line_number) ? error.line_number : error.line
-      backtrace = error.backtrace
+      message     = error.message
+      line_number = error.respond_to?(:line_number) ? error.line_number : error.line
+      backtrace   = error.backtrace
 
       super(message, file, source, line, backtrace)
+    end
+
+    private
+
+    def message_prefix
+      "Liquid rendering error - "
     end
 
   end
@@ -71,6 +86,12 @@ module Locomotive::Steam
       super(error.message, file, source, line, error.backtrace)
     end
 
+    private
+
+    def message_prefix
+      "JSON parsing error - "
+    end
+
   end
 
   class ActionError < ParsingRenderingError
@@ -79,6 +100,12 @@ module Locomotive::Steam
 
     def initialize(error, script)
       super(error.message, nil, script, 0, error.backtrace)
+    end
+
+    private
+
+    def message_prefix
+      "Action error - "
     end
 
   end

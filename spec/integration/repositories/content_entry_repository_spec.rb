@@ -142,6 +142,15 @@ describe Locomotive::Steam::ContentEntryRepository do
       let(:adapter)   { Locomotive::Steam::MongoDBAdapter.new(database: mongodb_database, hosts: ['127.0.0.1:27017']) }
       let(:entry_id)  { BSON::ObjectId.from_string('5baf7d38a953300567956448') }
 
+      describe 'filter by a date field' do
+
+        let(:type) { type_repository.by_slug('events') }
+
+        subject { repository.all(:date.lte => Time.now.to_date, order_by: 'date desc') }
+        it { expect(subject.map { |entry| entry[:place] }.slice(0, 2)).to eq(["Avogadro's Number", "Quixote's True Blue"]) }
+
+      end
+
     end
 
   end

@@ -5,7 +5,7 @@ module Locomotive
 
         class SessionProxy < ::Liquid::Drop
 
-          def before_method(meth)
+          def liquid_method_missing(meth)
             request = @context.registers[:request]
             request.session[meth.to_sym]
           end

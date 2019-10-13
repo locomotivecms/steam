@@ -38,7 +38,7 @@ module Locomotive::Steam
           begin
             document.render(liquid_context)
           rescue Locomotive::Steam::ParsingRenderingError => e
-            e.file = page.template_path if e.file.blank?
+            e.template_name = page.template_path if e.file.blank?
             raise e
           end
         end

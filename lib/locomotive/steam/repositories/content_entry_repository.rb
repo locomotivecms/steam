@@ -39,6 +39,8 @@ module Locomotive
       def all(conditions = {}, &block)
         conditions, order_by = conditions_without_order_by(conditions)
 
+        puts "ContentEntryRepository: #{conditions.inspect}"
+
         # priority:
         # 1/ order_by passed in the conditions parameter
         # 2/ the default order (_position) defined in the content type
