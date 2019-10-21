@@ -22,6 +22,7 @@ describe Locomotive::Steam::Middlewares::Section do
   let(:services)        { instance_double(
                           'Services',
                           section_finder: section_finder,
+                          snippet_finder: nil,
                           repositories: repositories,
                           locale: 'en')
                         }

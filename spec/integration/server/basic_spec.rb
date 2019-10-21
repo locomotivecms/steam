@@ -185,7 +185,7 @@ describe Locomotive::Steam::Server do
     context 'rendering error' do
 
       subject { get '/fr/a-notre-sujet/jean-personne'; last_response.body }
-      it { expect { subject }.to raise_error(Locomotive::Steam::ActionError, "identifier 'foo' undefined") }
+      it { expect { subject }.to raise_error(Locomotive::Steam::ActionError, "Action error - identifier 'foo' undefined") }
 
     end
 

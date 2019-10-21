@@ -25,18 +25,12 @@ module Locomotive
           include Concerns::Attributes
           include Concerns::I18nPage
 
-          Syntax = /(.*)?/o.freeze
-
           attr_reader :attributes, :site, :page, :current_locale, :url_builder
 
           def initialize(tag_name, markup, options)
             super
 
-            if markup =~ Syntax
-              parse_attributes(markup, label: 'iso', sep: ' | ')
-            else
-              raise ::Liquid::SyntaxError.new("Syntax Error in 'locale_switcher' - Valid syntax: locale_switcher label: <value>, sep: <value>")
-            end
+            parse_attributes(markup, label: 'iso', sep: ' | ')
           end
 
           def render_to_output_buffer(context, output)

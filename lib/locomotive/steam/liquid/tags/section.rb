@@ -16,7 +16,7 @@ module Locomotive
 
             if markup =~ Syntax
               @section_type, _attributes = $1, $2
-              @template_name_expr = @section_type
+              @template_name_expr = @section_type.gsub!(/['"]/, '')
 
               parse_attributes(_attributes)
             else

@@ -51,7 +51,8 @@ module Locomotive::Steam
     private
 
     def message_prefix
-      "Liquid parsing error - "
+      ""
+      # "Liquid parsing error - "
     end
 
   end
@@ -63,14 +64,14 @@ module Locomotive::Steam
       line_number = error.respond_to?(:line_number) ? error.line_number : error.line
       backtrace   = error.backtrace
 
-      super(message, file, source, line, backtrace)
+      super(message, file, source, line_number, backtrace)
     end
 
     private
 
-    def message_prefix
-      "Liquid rendering error - "
-    end
+    # def message_prefix
+    #   "Liquid rendering error - "
+    # end
 
   end
 

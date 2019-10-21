@@ -5,113 +5,126 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
 
   let(:assigns)     { {} }
   let(:context)     { ::Liquid::Context.new(assigns, {}, {}) }
-  let!(:output)     { render_template(source, context) }
+  let(:output)      { render_template(source, context) }
   let(:conditions)  { context['conditions'] }
 
-  describe 'renders basic stuff' do
-    let(:source) { '{% with_scope a: 1 %}42{% endwith_scope %}' }
-    it { expect(output).to eq '42' }
-  end
+  describe 'no attributes' do
 
-  describe 'store the conditions in the context' do
-
-    let(:source) { "{% with_scope active: true, price: 42, title: 'foo', hidden: false %}{% assign conditions = with_scope %}{% assign content_type = with_scope_content_type %}{% endwith_scope %}" }
-
-    it { expect(context['conditions'].keys).to eq(%w(active price title hidden)) }
-    it { expect(context['content_type']).to eq false }
+    let(:source)  { '{% with_scope %}42{% endwith_scope %}'}
+    it { expect { output }.to raise_error("Liquid syntax error (line 1): Syntax Error in 'with_scope' - Valid syntax: with_scope <name_1>: <value_1>, ..., <name_n>: <value_n>") }
 
   end
 
-  describe 'decode basic options (boolean, integer, ...)' do
+  describe 'valid syntax' do
 
-    let(:source) { "{% with_scope active: true, price: 42, title: 'foo', hidden: false %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+    before { output }
 
-    it { expect(conditions['active']).to eq true }
-    it { expect(conditions['price']).to eq 42 }
-    it { expect(conditions['title']).to eq 'foo' }
-    it { expect(conditions['hidden']).to eq false }
+    describe 'renders basic stuff' do
+      let(:source) { '{% with_scope a: 1 %}42{% endwith_scope %}' }
+      it { expect(output).to eq '42' }
+    end
 
-  end
+    describe 'store the conditions in the context' do
 
-  describe 'decode regexps' do
+      let(:source) { "{% with_scope active: true, price: 42, title: 'foo', hidden: false %}{% assign conditions = with_scope %}{% assign content_type = with_scope_content_type %}{% endwith_scope %}" }
 
-    let(:source) { "{% with_scope title: /Like this one|or this one/ %}{% assign conditions = with_scope %}{% endwith_scope %}" }
-    it { expect(conditions['title']).to eq(/Like this one|or this one/) }
-
-  end
-
-  describe 'decode regexps with case-insensitive' do
-
-    let(:source) { "{% with_scope title: /like this/ix %}{% assign conditions = with_scope %}{% endwith_scope %}" }
-    it { expect(conditions['title']).to eq(/like this/ix) }
-
-  end
-
-  describe 'decode content entry' do
-
-    let(:entry) {
-      instance_double('ContentEntry', _id: 1, _source: 'entity').tap do |_entry|
-        allow(_entry).to receive(:to_liquid).and_return(_entry)
-      end }
-    let(:assigns) { { 'my_project' => entry } }
-    let(:source)  { "{% with_scope project: my_project %}{% assign conditions = with_scope %}{% endwith_scope %}" }
-
-    it { expect(conditions['project']).to eq 'entity' }
-
-    context 'an array of content entries' do
-
-      let(:source) { "{% with_scope project: [my_project, my_project, my_project] %}{% assign conditions = with_scope %}{% endwith_scope %}" }
-
-      it { expect(conditions['project']).to eq ['entity', 'entity', 'entity'] }
+      it { expect(context['conditions'].keys).to eq(%w(active price title hidden)) }
+      it { expect(context['content_type']).to eq false }
 
     end
 
-  end
+    describe 'decode basic options (boolean, integer, ...)' do
 
-  describe 'decode context variable' do
+      let(:source) { "{% with_scope active: true, price: 42, title: 'foo', hidden: false %}{% assign conditions = with_scope %}{% endwith_scope %}" }
 
-    let(:assigns) { { 'params' => { 'type' => 'posts' } } }
-    let(:source) { "{% with_scope category: params.type %}{% assign conditions = with_scope %}{% endwith_scope %}" }
-    it { expect(conditions['category']).to eq 'posts' }
+      it { expect(conditions['active']).to eq true }
+      it { expect(conditions['price']).to eq 42 }
+      it { expect(conditions['title']).to eq 'foo' }
+      it { expect(conditions['hidden']).to eq false }
 
-  end
+    end
 
-  describe 'decode a regexp stored in a context variable' do
+    describe 'decode regexps' do
 
-    let(:assigns) { { 'my_regexp' => '/^Hello World/' } }
-    let(:source) { "{% with_scope title: my_regexp %}{% assign conditions = with_scope %}{% endwith_scope %}" }
-    it { expect(conditions['title']).to eq(/^Hello World/) }
+      let(:source) { "{% with_scope title: /Like this one|or this one/ %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+      it { expect(conditions['title']).to eq(/Like this one|or this one/) }
 
-  end
+    end
 
-  describe 'decode a regexp stored in a context variable, with case-insensitive' do
+    describe 'decode regexps with case-insensitive' do
 
-    let(:assigns) { { 'my_regexp' => '/^hello world/ix' } }
-    let(:source) { "{% with_scope title: my_regexp %}{% assign conditions = with_scope %}{% endwith_scope %}" }
-    it { expect(conditions['title']).to eq(/^hello world/ix) }
+      let(:source) { "{% with_scope title: /like this/ix %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+      it { expect(conditions['title']).to eq(/like this/ix) }
 
-  end
+    end
 
-  describe 'allow order_by option' do
+    describe 'decode content entry' do
 
-    let(:source) { "{% with_scope order_by:\'name DESC\' %}{% assign conditions = with_scope %}{% endwith_scope %}" }
-    it { expect(conditions['order_by']).to eq 'name DESC' }
+      let(:entry) {
+        instance_double('ContentEntry', _id: 1, _source: 'entity').tap do |_entry|
+          allow(_entry).to receive(:to_liquid).and_return(_entry)
+        end }
+      let(:assigns) { { 'my_project' => entry } }
+      let(:source)  { "{% with_scope project: my_project %}{% assign conditions = with_scope %}{% endwith_scope %}" }
 
-  end
+      it { expect(conditions['project']).to eq 'entity' }
 
-  describe 'replace _permalink by _slug' do
+      context 'an array of content entries' do
 
-    let(:source) { "{% with_scope _permalink: 'foo' %}{% assign conditions = with_scope %}{% endwith_scope %}" }
-    it { expect(conditions['_slug']).to eq 'foo' }
+        let(:source) { "{% with_scope project: [my_project, my_project, my_project] %}{% assign conditions = with_scope %}{% endwith_scope %}" }
 
-  end
+        it { expect(conditions['project']).to eq ['entity', 'entity', 'entity'] }
 
-  describe 'decode criteria with gt and lt' do
+      end
 
-    let(:source) { "{% with_scope price.gt:42.0, price.lt:50, published_at.lte: '2019-09-10 00:00:00' %}{% assign conditions = with_scope %}{% endwith_scope %}" }
-    it { expect(conditions['price.gt']).to eq 42.0 }
-    it { expect(conditions['price.lt']).to eq 50 }
-    it { expect(conditions['published_at.lte']).to eq '2019-09-10 00:00:00' }
+    end
+
+    describe 'decode context variable' do
+
+      let(:assigns) { { 'params' => { 'type' => 'posts' } } }
+      let(:source) { "{% with_scope category: params.type %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+      it { expect(conditions['category']).to eq 'posts' }
+
+    end
+
+    describe 'decode a regexp stored in a context variable' do
+
+      let(:assigns) { { 'my_regexp' => '/^Hello World/' } }
+      let(:source) { "{% with_scope title: my_regexp %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+      it { expect(conditions['title']).to eq(/^Hello World/) }
+
+    end
+
+    describe 'decode a regexp stored in a context variable, with case-insensitive' do
+
+      let(:assigns) { { 'my_regexp' => '/^hello world/ix' } }
+      let(:source) { "{% with_scope title: my_regexp %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+      it { expect(conditions['title']).to eq(/^hello world/ix) }
+
+    end
+
+    describe 'allow order_by option' do
+
+      let(:source) { "{% with_scope order_by:\'name DESC\' %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+      it { expect(conditions['order_by']).to eq 'name DESC' }
+
+    end
+
+    describe 'replace _permalink by _slug' do
+
+      let(:source) { "{% with_scope _permalink: 'foo' %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+      it { expect(conditions['_slug']).to eq 'foo' }
+
+    end
+
+    describe 'decode criteria with gt and lt' do
+
+      let(:source) { "{% with_scope price.gt:42.0, price.lt:50, published_at.lte: '2019-09-10 00:00:00' %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+      it { expect(conditions['price.gt']).to eq 42.0 }
+      it { expect(conditions['price.lt']).to eq 50 }
+      it { expect(conditions['published_at.lte']).to eq '2019-09-10 00:00:00' }
+
+    end
 
   end
 

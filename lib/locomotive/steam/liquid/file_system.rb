@@ -20,19 +20,21 @@ module Locomotive
         end
 
         # Called by Liquid to retrieve a template file
-        def read_template_file(_template_path)
-          type, name = _template_path.split('--')
+        def read_template_file(template_path)
+          type, name = template_path.split('--')
 
           entity = (
             case type
             when 'sections'
               section_finder.find(name)
-            when 'snippet'
+            when 'snippets'
               snippet_finder.find(name)
             else
               raise ::Liquid::FileSystemError, "This liquid context does not allow #{type}."
             end
           )
+
+          raise ::Liquid::FileSystemError, "Unable to find #{name} in the #{type} folder" if entity.nil?
 
           entity.liquid_source
         end

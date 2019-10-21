@@ -5,9 +5,17 @@ module Locomotive
 
         class Snippet < ::Liquid::Include
 
-          def parse(tokens)
-            name = evaluate_snippet_name
+          attr_reader :name
 
+          def initialize(tag_name, markup, options)
+            super
+
+            # we use a convention to differentiate sections from snippets
+            @name               = evaluate_snippet_name
+            @template_name_expr = "snippets--#{@name}"
+          end
+
+          def parse(tokens)
             ActiveSupport::Notifications.instrument('steam.parse.include', page: parse_context[:page], name: name)
 
             # look for editable elements. In the next version of Locomotive (v5), we won't support
@@ -18,9 +26,6 @@ module Locomotive
           end
 
           def render_to_output_buffer(context, output)
-            # let the FileSystem know to look for a snippet
-            @template_name_expr = "snippet--#{evaluate_snippet_name}"
-
             # parse_context (previously @options) doesn't include the page key if cache is on
             parse_context[:page] = context.registers[:page]
 
