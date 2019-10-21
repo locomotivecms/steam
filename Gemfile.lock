@@ -9,8 +9,10 @@ GIT
       colorize
       stringex (~> 2.8.2)
 
-PATH
-  remote: ../liquid
+GIT
+  remote: https://github.com/locomotivecms/liquid.git
+  revision: 6dcd85f5584422046eb5107646914c43d1798c18
+  ref: 6dcd85f
   specs:
     locomotivecms-liquid (4.0.3)
 
