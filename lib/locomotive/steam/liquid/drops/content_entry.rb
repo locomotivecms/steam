@@ -50,7 +50,7 @@ module Locomotive
             end
           end
 
-          def before_method(meth)
+          def liquid_method_missing(meth)
             return '' if @_source.nil?
 
             if not @@forbidden_attributes.include?(meth.to_s)

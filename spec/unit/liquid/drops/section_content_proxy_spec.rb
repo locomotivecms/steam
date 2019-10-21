@@ -13,7 +13,7 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
     let(:settings)  { [{ 'id' => 'title', 'type' => 'text' }] }
     let(:content)   { { 'title' => %(Click <a href="//locomotive/_locomotive-link/aaaa">here</a>) } }
 
-    subject { drop.before_method(:title) }
+    subject { drop.liquid_method_missing(:title) }
 
     it 'calls the url_finder_service to transform encoded links to existing urls' do
       expect(url_finder_service).to receive(:decode_urls_for).with(%(Click <a href="//locomotive/_locomotive-link/aaaa">here</a>)).and_return('done')
@@ -34,7 +34,7 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
     let(:settings)  { [{ 'id' => 'number', 'type' => 'integer' }] }
     let(:content)   { { 'number' => '42' } }
 
-    subject { drop.before_method(:number) }
+    subject { drop.liquid_method_missing(:number) }
 
     it 'converts the number into an integer' do
       is_expected.to eq 42
@@ -61,7 +61,7 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
         expect(url_finder_service).to receive(:url_for).with({ 'type' => 'page', 'value' => 42, 'new_window' => true }).and_return(['/foo/bar', true])
       end
 
-      subject { drop.before_method(:link).to_s }
+      subject { drop.liquid_method_missing(:link).to_s }
 
       it 'returns the url to the page' do
         is_expected.to eq '/foo/bar'
@@ -69,7 +69,7 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
 
       context 'it knows if the link has to be opened in a new window or not' do
 
-        subject { drop.before_method(:link).new_window }
+        subject { drop.liquid_method_missing(:link).new_window }
 
         it { is_expected.to eq true }
 
@@ -77,7 +77,7 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
 
       context 'it outputs the target="_blank" A attribute if new window is true' do
 
-        subject { drop.before_method(:link).new_window_attribute }
+        subject { drop.liquid_method_missing(:link).new_window_attribute }
 
         it { is_expected.to eq('target="_blank"') }
 
@@ -89,7 +89,7 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
 
       let(:content) { { 'link' => nil } }
 
-      subject { drop.before_method(:link) }
+      subject { drop.liquid_method_missing(:link) }
 
       it { is_expected.to eq nil }
 
@@ -103,7 +103,7 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
     let(:value)       { nil }
     let(:content)     { { 'image' => value } }
     let(:page)        { instance_double('Page') }
-    let(:image_drop)  { drop.before_method(:image) }
+    let(:image_drop)  { drop.liquid_method_missing(:image) }
 
     subject { image_drop.to_s }
 

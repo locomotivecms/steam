@@ -36,7 +36,7 @@ module Locomotive
 
           # map/collect on a given property (support to_f, to_i)
           def map(input, property)
-            ::Liquid::StandardFilters::InputIterator.new(input).map do |e|
+            ::Liquid::StandardFilters::InputIterator.new(input, context).map do |e|
               e = e.call if e.is_a?(Proc)
 
               if property == 'to_liquid'.freeze
@@ -46,10 +46,12 @@ module Locomotive
               elsif property == 'to_i'.freeze
                 e.to_i
               elsif e.respond_to?(:[])
-                e[property]
+                r = e[property]
+                r.is_a?(Proc) ? r.call : r
               end
             end
-
+          rescue TypeError
+            raise_property_error(property)
           end
 
           def hexdigest(input, key, digest = nil)

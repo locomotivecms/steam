@@ -26,9 +26,9 @@ module Locomotive
           entity = (
             case type
             when 'sections'
-              section_finder.find(Regexp.last_match(1))
+              section_finder.find(name)
             when 'snippet'
-              raise 'TODO'
+              snippet_finder.find(name)
             else
               raise ::Liquid::FileSystemError, "This liquid context does not allow #{type}."
             end

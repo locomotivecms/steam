@@ -42,16 +42,16 @@ module Locomotive
             def default_element_attributes
               super.merge(
                 content_from_default: self.render_default_content,
-                format:               @element_options[:format] || 'html',
-                rows:                 @element_options[:rows] || 10,
-                inline:               @element_options[:inline],
-                line_break:           @element_options[:line_break].blank? ? true : @element_options[:line_break],
+                format:               attributes[:format] || 'html',
+                rows:                 attributes[:rows] || 10,
+                inline:               attributes[:inline],
+                line_break:           attributes[:line_break].blank? ? true : attributes[:line_break],
               )
             end
 
             def dom_id(context)
               block_name = context['block'].try(:name).try(:gsub, '/', '-')
-              ['locomotive-editable-text', block_name, @slug].compact.join('-')
+              ['locomotive-editable-text', block_name, slug].compact.join('-')
             end
 
             def markdown_service(context)

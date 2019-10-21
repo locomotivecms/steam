@@ -75,7 +75,7 @@ module Locomotive::Steam::Liquid::Tags::Concerns
             # here we go, add a liquid variable!
             new_nodelist.push(::Liquid::Variable.new(
               "section.editor_setting_data.#{matches[:id]}",
-              node.parse_context) #instance_variable_get(:@options))
+              node.parse_context)
             )
 
             # close the tag

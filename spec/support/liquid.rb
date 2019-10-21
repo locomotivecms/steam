@@ -15,7 +15,7 @@ module Liquid
       @_source = source.with_indifferent_access
     end
 
-    def before_method(meth)
+    def liquid_method_missing(meth)
       @_source[meth.to_sym]
     end
 

@@ -12,7 +12,7 @@ module Locomotive
             notify_on_parsing('_sections_dropzone_', is_dropzone: true)
           end
 
-          def render(context)
+          def render_to_output_buffer(context, output)
             sections_dropzone_content = context['page']&.sections_dropzone_content || []
 
             html = sections_dropzone_content.each_with_index.map do |content, index|
@@ -30,7 +30,8 @@ module Locomotive
               render_section(context, template, section, content)
             end.join
 
-            %(<div class="locomotive-sections">#{html}</div>)
+            output << %(<div class="locomotive-sections">#{html}</div>)
+            output
           end
 
           private
@@ -42,7 +43,7 @@ module Locomotive
 
           def build_template(section)
             # TODO: add some cache here (useful if there are sections with the same type)
-            ::Liquid::Template.parse(section.liquid_source, @options)
+            ::Liquid::Template.parse(section.liquid_source, parse_context)
           end
 
         end

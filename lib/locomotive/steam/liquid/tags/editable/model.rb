@@ -5,8 +5,9 @@ module Locomotive
         module Editable
           class Model < Base
 
-            def render(context)
-              default_render(context)
+            def render_to_output_buffer(context, output)
+              default_render_to_output_buffer(context, output)
+              output
             end
 
             def render_default_content

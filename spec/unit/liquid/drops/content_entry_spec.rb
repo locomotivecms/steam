@@ -24,10 +24,10 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
     expect(subject.updated_at).to eq 1
   end
 
-  describe '#before_method (dynamic attributes)' do
+  describe '#liquid_method_missing (dynamic attributes)' do
 
     describe 'simple ones' do
-      it { expect(subject.before_method(:title)).to eq 'Hello world' }
+      it { expect(subject.liquid_method_missing(:title)).to eq 'Hello world' }
     end
 
     describe 'relationship field' do
@@ -38,7 +38,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
 
       before { allow(authors).to receive(:dup).and_return(authors) }
 
-      it { expect(subject.before_method(:authors).first).to eq 'john' }
+      it { expect(subject.liquid_method_missing(:authors).first).to eq 'john' }
 
     end
 
@@ -93,7 +93,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntry do
     let(:entry) { instance_double('Article', content_type: type, localized_attributes: { title: true }, title: { en: 'Hello world', fr: 'Bonjour monde' }) }
     let(:drop)  { described_class.new(entry).tap { |d| d.context = context } }
 
-    subject { drop.before_method(:title) }
+    subject { drop.liquid_method_missing(:title) }
 
     it { is_expected.to eq 'Hello world' }
 

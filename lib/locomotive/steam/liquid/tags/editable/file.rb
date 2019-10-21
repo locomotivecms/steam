@@ -7,12 +7,13 @@ module Locomotive
 
             def parse(tokens)
               super.tap do
-                @path = [current_inherited_block_name, @slug].compact.join('--').gsub('/', '--')
+                @path = [current_inherited_block_name, slug].compact.join('--').gsub('/', '--')
               end
             end
 
-            def render(context)
-              apply_transformation(super, context)
+            def render_to_output_buffer(context, output)
+              output << apply_transformation(super(context, ''), context)
+              output
             end
 
             protected
@@ -20,7 +21,7 @@ module Locomotive
             def default_element_attributes
               super.merge({
                 default_source_url: render_default_content.strip,
-                resize_format:      @element_options[:resize]
+                resize_format:      attributes[:resize]
               })
             end
 
@@ -54,23 +55,23 @@ module Locomotive
 
             def apply_transformation(url, context)
               # resize image with the image_resizer service?
-              if (format = @element_options[:resize]).present?
+              if (format = attributes[:resize]).present?
                 options = []
 
-                @element_options.each do |k, v|
-                  options << case k.to_sym
+                attributes.each do |key, value|
+                  options << case key.to_sym
                   when :quality
-                    "-quality #{v}"
+                    "-quality #{value}"
                   when :optimize # Shortcut helper to set quality, progressive and strip
-                    "-quality #{v} -strip -interlace Plane"
+                    "-quality #{value} -strip -interlace Plane"
                   when :auto_orient
-                    "-auto-orient" if v.downcase == "true"
+                    "-auto-orient" if value
                   when :strip
-                    "-strip" if v.downcase == "true"
+                    "-strip" if value
                   when :progressive
-                    "-interlace Plane" if v.downcase == "true"
+                    "-interlace Plane" if value
                   when :filters
-                    v
+                    value
                   else
                     next
                   end

@@ -15,31 +15,29 @@ module Locomotive
         #
         class InheritedBlock < ::Liquid::InheritedBlock
 
+          include Concerns::Attributes
+
           def initialize(tag_name, markup, options)
             super
 
-            @attributes = { short_name: false, priority: 0, anchor: true }
-            markup.scan(::Liquid::TagAttributes) do |key, value|
-              @attributes[key.to_sym] = ::Liquid::Expression.parse(value)
-            end
+            parse_attributes(markup, short_name: false, priority: 0, anchor: true)
           end
 
           def parse(tokens)
             super.tap do
               ActiveSupport::Notifications.instrument('steam.parse.inherited_block', {
-                page: options[:page],
-                name: @name,
+                page: parse_context[:page],
+                name: name,
                 found_super: self.contains_super?(nodelist)
-              }.merge(@attributes))
+              }.merge(attributes))
             end
           end
 
-          def render(context)
-            (if live_editing?(context) && (@attributes[:anchor] || @attributes[:anchor].nil?)
-              %{<span class="locomotive-block-anchor" data-element-id="#{@name}" style="visibility: hidden"></span>}
-            else
-              ''
-            end) + super
+          def render_to_output_buffer(context, output)
+            if live_editing?(context) && (attributes[:anchor] || attributes[:anchor].nil?)
+              output << %{<span class="locomotive-block-anchor" data-element-id="#{name}" style="visibility: hidden"></span>}
+            end
+            super
           end
 
           protected

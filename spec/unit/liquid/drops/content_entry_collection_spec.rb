@@ -85,7 +85,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntryCollection do
       expect(services.repositories.content_type).to receive(:select_options).with(content_type, 'category').and_return([option_a, option_b])
     end
 
-    it { expect(drop.before_method(:category_options)).to eq ['a', 'b'] }
+    it { expect(drop.liquid_method_missing(:category_options)).to eq ['a', 'b'] }
 
   end
 
@@ -95,13 +95,13 @@ describe Locomotive::Steam::Liquid::Drops::ContentEntryCollection do
       expect(services.repositories.content_entry).to receive(:group_by_select_option).with('category').and_return([['a', [1, 2]]])
     end
 
-    it { expect(drop.before_method(:group_by_category)).to eq [['a', [1, 2]]] }
+    it { expect(drop.liquid_method_missing(:group_by_category)).to eq [['a', [1, 2]]] }
 
   end
 
   describe 'unknown method' do
 
-    it { expect(drop.before_method(:foo)).to eq nil }
+    it { expect(drop.liquid_method_missing(:foo)).to eq nil }
 
   end
 

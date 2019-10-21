@@ -19,4 +19,12 @@ module Liquid
     end
 
   end
+
+  class ParseContext
+
+    def merge(options)
+      @template_options.merge(options)
+    end
+
+  end
 end

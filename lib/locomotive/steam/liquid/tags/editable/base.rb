@@ -5,18 +5,20 @@ module Locomotive
         module Editable
           class Base < ::Liquid::Block
 
+            include Concerns::Attributes
+
             Syntax = /(#{::Liquid::QuotedFragment})(\s*,\s*#{::Liquid::Expression}+)?/o
 
-            attr_accessor :slug
+            attr_accessor :label, :slug, :page_fullpath
 
             def initialize(tag_name, markup, options)
               if markup =~ Syntax
                 @page_fullpath    = options[:page].fullpath
                 @label_or_slug    = $1.gsub(/[\"\']/, '')
-                @element_options  = { fixed: false, inline_editing: true }
-                markup.scan(::Liquid::TagAttributes) { |key, value| @element_options[key.to_sym] = value.gsub(/^[\"\']/, '').gsub(/[\"\']$/, '') }
 
-                self.set_label_and_slug
+                parse_attributes(markup, fixed: false, inline_editing: true)
+
+                set_label_and_slug
               else
                 raise ::Liquid::SyntaxError.new("Valid syntax: #{tag_name} <slug>(, <options>)")
               end
@@ -32,12 +34,14 @@ module Locomotive
               end
             end
 
-            alias :default_render :render
+            alias :default_render_to_output_buffer :render_to_output_buffer
 
-            def render(context)
+            def render_to_output_buffer(context, output)
+              evaluate_attributes(context)
+
               service   = context.registers[:services].editable_element
               page      = fetch_page(context)
-              block     = @element_options[:block] || context['block'].try(:name)
+              block     = attributes[:block] || context['block'].try(:name)
 
               # If Steam inside Wagon (test mode), we've to let the developer know
               # that editable_**** tags don't work if the site has declared at least one section
@@ -45,12 +49,14 @@ module Locomotive
                 Locomotive::Common::Logger.error "[#{page.fullpath}] You can't use editable elements whereas you declared section(s)".colorize(:red)
               end
 
-              if element = service.find(page, block, @slug)
-                render_element(context, element)
+              if element = service.find(page, block, slug)
+                output << render_element(context, element)
               else
-                Locomotive::Common::Logger.error "[#{page.fullpath}] missing #{@tag_name} \"#{@slug}\" (#{context['block'].try(:name) || 'default'})".colorize(:yellow)
+                Locomotive::Common::Logger.error "[#{page.fullpath}] missing #{@tag_name} \"#{slug}\" (#{context['block'].try(:name) || 'default'})".colorize(:yellow)
                 super
               end
+
+              output
             end
 
             def blank?
@@ -80,12 +86,12 @@ module Locomotive
             def fetch_page(context)
               page = context.registers[:page]
 
-              return page if !@element_options[:fixed] || page.fullpath == @page_fullpath
+              return page if !attributes[:fixed] || page.fullpath == page_fullpath
 
               pages   = context.registers[:pages] ||= {}
               service = context.registers[:services].page_finder
 
-              pages[@page_fullpath] ||= service.find(@page_fullpath)
+              pages[page_fullpath] ||= service.find(page_fullpath)
             end
 
             def register_default_content
@@ -99,10 +105,10 @@ module Locomotive
 
             def set_label_and_slug
               @slug   = @label_or_slug
-              @label  = @element_options[:label]
+              @label  = attributes[:label]
 
-              if @element_options[:slug].present?
-                @slug   = @element_options[:slug]
+              if attributes[:slug].present?
+                @slug   = attributes[:slug]
                 @label  ||= @label_or_slug
               end
             end
@@ -110,24 +116,24 @@ module Locomotive
             def default_element_attributes
               {
                 block:          self.current_inherited_block_name,
-                label:          @label,
-                slug:           @slug,
-                hint:           @element_options[:hint],
-                priority:       @element_options[:priority] || 0,
-                fixed:          [true, 'true'].include?(@element_options[:fixed]),
+                label:          label,
+                slug:           slug,
+                hint:           attributes[:hint],
+                priority:       attributes[:priority] || 0,
+                fixed:          [true, 'true'].include?(attributes[:fixed]),
                 disabled:       false,
-                inline_editing: [true, 'true'].include?(@element_options[:inline_editing]),
+                inline_editing: [true, 'true'].include?(attributes[:inline_editing]),
                 from_parent:    false,
                 type:           @tag_name.to_sym
               }
             end
 
             def current_inherited_block_name
-              @element_options[:block] || current_inherited_block.try(:name)
+              attributes[:block] || current_inherited_block.try(:name)
             end
 
             def current_inherited_block
-              options[:inherited_blocks].try(:[], :nested).try(:last)
+              parse_context[:inherited_blocks].try(:[], :nested).try(:last)
             end
 
             #:nocov:

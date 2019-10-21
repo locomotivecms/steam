@@ -4,7 +4,7 @@ module Locomotive
       module Drops
         class ContentTypes < ::Liquid::Drop
 
-          def before_method(meth)
+          def liquid_method_missing(meth)
             if content_type = fetch_content_type(meth.to_s)
               ContentEntryCollection.new(content_type)
             else

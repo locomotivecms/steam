@@ -9,7 +9,7 @@ module Locomotive
             @_params = params.stringify_keys
           end
 
-          def before_method(meth)
+          def liquid_method_missing(meth)
             Param.new(@_params[meth.to_s])
           end
 

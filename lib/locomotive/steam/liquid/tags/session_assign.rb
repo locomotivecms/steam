@@ -12,6 +12,7 @@ module Locomotive
         #   {{ session.foo }}
         #
         class SessionAssign < ::Liquid::Tag
+
           Syntax = /(#{::Liquid::VariableSignature}+)\s*=\s*(#{::Liquid::QuotedFragment}+)/o
 
           def initialize(tag_name, markup, options)
@@ -24,10 +25,10 @@ module Locomotive
             super
           end
 
-          def render(context)
+          def render_to_output_buffer(context, output)
             request = context.registers[:request]
             request.session[@to.to_sym] = context[@from]
-            ''
+            output
           end
 
         end
