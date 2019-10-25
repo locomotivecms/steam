@@ -11,8 +11,8 @@ GIT
 
 GIT
   remote: https://github.com/locomotivecms/liquid.git
-  revision: 6dcd85f5584422046eb5107646914c43d1798c18
-  ref: 6dcd85f
+  revision: b3789b11ed7cb23af77e0edaff823db0c6270a5a
+  ref: b3789b1
   specs:
     locomotivecms-liquid (4.0.3)
 
