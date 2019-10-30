@@ -35,7 +35,7 @@ module Locomotive::Steam
 
             elsif frontmatter
               message = 'Your file requires a valid YAML or JSON header'
-              raise Locomotive::Steam::ParsingRenderingError.new(message, path, yaml, 0, nil)
+              raise Locomotive::Steam::TemplateError.new(message, path, yaml, 0, nil)
 
             # YAML by default
             else

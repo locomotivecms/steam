@@ -33,7 +33,7 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Section do
       let(:filepath) { File.join(default_fixture_site_path, '..', 'errors', 'section_bad_json_header.liquid') }
 
       it 'should throw an error' do
-        expect { subject }.to raise_error(Locomotive::Steam::ParsingRenderingError)
+        expect { subject }.to raise_error(Locomotive::Steam::TemplateError)
       end
 
     end

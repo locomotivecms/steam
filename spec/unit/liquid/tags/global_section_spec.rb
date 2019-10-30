@@ -122,8 +122,8 @@ describe Locomotive::Steam::Liquid::Tags::GlobalSection do
         definition:     { settings: [], blocks: [] }
       )}
 
-      it 'raises ParsingRenderingError' do
-        expect { subject }.to raise_exception(Locomotive::Steam::ParsingRenderingError)
+      it 'raises an TemplateError' do
+        expect { subject }.to raise_exception(Locomotive::Steam::TemplateError)
       end
     end
 

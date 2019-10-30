@@ -17,8 +17,8 @@ module Locomotive::Steam::Liquid::Tags::Concerns
 
         begin
           _render(context, template)
-        rescue Locomotive::Steam::ParsingRenderingError => e
-          e.template_name = section.name + ' [Section]'
+        rescue Locomotive::Steam::TemplateError => e
+          e.template_name = "sections--#{section.name}"
           raise e
         end
       end
@@ -60,6 +60,8 @@ module Locomotive::Steam::Liquid::Tags::Concerns
     # - once found, get the closest tag
     # - add custom data attributes to it
     def editor_settings_lookup(root)
+      return if root.nodelist.blank?
+
       previous_node = nil
       new_nodelist  = []
 

@@ -14,7 +14,7 @@ group :development do
   # gem 'duktape', github: 'did/duktape.rb', branch: 'any-fixnum'
   # gem 'thin'
 
-  gem 'puma'
+  gem 'puma',               '~> 4.2.1'
   gem 'haml',               '~> 5.0.4'
 
   gem 'rack-mini-profiler', '~> 0.10.1'

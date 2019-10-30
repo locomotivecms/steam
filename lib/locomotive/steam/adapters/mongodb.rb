@@ -62,7 +62,7 @@ module Locomotive::Steam
     def base_url(mapper, scope, entity = nil)
       return nil if scope.site.nil?
 
-      # Note: mimic Carrierwave behaviour
+      # Note: mimic the Carrierwave behavior
       base = "/sites/#{scope.site._id.to_s}"
 
       case mapper.name

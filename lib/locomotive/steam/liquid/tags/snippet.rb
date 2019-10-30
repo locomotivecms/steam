@@ -18,8 +18,8 @@ module Locomotive
           def parse(tokens)
             ActiveSupport::Notifications.instrument('steam.parse.include', page: parse_context[:page], name: name)
 
-            # look for editable elements. In the next version of Locomotive (v5), we won't support
-            # the editable elements
+            # look for editable elements (only used by the Engine)
+            # In the next version of Locomotive (v5), we won't support the editable elements
             if parse_context[:snippet_finder] && snippet = parse_context[:snippet_finder].find(name)
               parse_context[:parser]._parse(snippet, parse_context.merge(snippet: name))
             end

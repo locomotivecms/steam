@@ -40,11 +40,7 @@ module Locomotive
             parse_context[:page] = context.registers[:page]
 
             # use the Liquid filesystem to get the template of the section
-            template = ::Liquid::PartialCache.load(
-              "sections--#{section_type}",
-              context:        context,
-              parse_context:  parse_context
-            )
+            template = parse_template(section_type, context)
 
             # fetch the section definition
             section = find_section(context)
@@ -77,6 +73,14 @@ module Locomotive
           def find_section_content(context)
             section_id = attributes[:id].presence || section_type
             context['page']&.sections_content&.fetch(section_id, nil)
+          end
+
+          def parse_template(section_type, context)
+            ::Liquid::PartialCache.load(
+              "sections--#{section_type}",
+              context:        context,
+              parse_context:  parse_context
+            )
           end
 
         end

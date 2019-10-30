@@ -250,6 +250,15 @@ describe Locomotive::Steam::Liquid::Tags::Section do
       end
     end
 
+    context 'the section has a syntax error inside its liquid template' do
+
+      let(:liquid_source) { %(built by <a>\n\t<strong>{{ section.settings.brand }}{% if %}</strong></a>) }
+
+      it 'raises a LiquidError' do
+        expect { subject }.to raise_exception(Locomotive::Steam::LiquidError)
+      end
+
+    end
 
     context 'rendering error (action) found in the section' do
 
@@ -261,8 +270,8 @@ describe Locomotive::Steam::Liquid::Tags::Section do
         definition:     { settings: [], blocks: [] }
       )}
 
-      it 'raises ParsingRenderingError' do
-        expect { subject }.to raise_exception(Locomotive::Steam::ParsingRenderingError)
+      it 'raises a TemplateError' do
+        expect { subject }.to raise_exception(Locomotive::Steam::TemplateError)
       end
     end
 

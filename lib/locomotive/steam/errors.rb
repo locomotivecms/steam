@@ -18,7 +18,7 @@ module Locomotive::Steam
   class PageNotFoundException < ::Exception
   end
 
-  class ParsingRenderingError < ::Liquid::Error
+  class TemplateError < ::Liquid::Error
 
     LINES_RANGE = 10
 
@@ -57,7 +57,7 @@ module Locomotive::Steam
 
   end
 
-  class RenderError < ParsingRenderingError
+  class LiquidError < TemplateError
 
     def initialize(error, file, source)
       message     = error.message
@@ -67,15 +67,19 @@ module Locomotive::Steam
       super(message, file, source, line_number, backtrace)
     end
 
+  end
+
+  class RenderError < LiquidError
+
     private
 
-    # def message_prefix
-    #   "Liquid rendering error - "
-    # end
+    def message_prefix
+      "Render - "
+    end
 
   end
 
-  class JsonParsingError < ParsingRenderingError
+  class JsonParsingError < TemplateError
 
     def initialize(error, file, source)
       line = if error.message =~ /at line ([0-9]+)/
@@ -95,7 +99,7 @@ module Locomotive::Steam
 
   end
 
-  class ActionError < ParsingRenderingError
+  class ActionError < TemplateError
 
     attr_accessor :action
 

@@ -133,7 +133,7 @@ GEM
     morphine (0.1.1)
     multi_json (1.13.1)
     multi_xml (0.6.0)
-    nio4r (2.4.0)
+    nio4r (2.5.2)
     nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
     nokogumbo (1.5.0)
@@ -142,7 +142,7 @@ GEM
     pony (1.13.1)
       mail (>= 2.0)
     public_suffix (4.0.1)
-    puma (4.0.1)
+    puma (4.2.1)
       nio4r (~> 2.0)
     rack (2.0.7)
     rack-cache (1.7.2)
@@ -215,7 +215,7 @@ DEPENDENCIES
   memory_profiler
   mongo (~> 2.8.0)
   origin (~> 2.3.1)
-  puma
+  puma (~> 4.2.1)
   rack-mini-profiler (~> 0.10.1)
   rack-test (~> 0.8.2)
   rake (~> 12.3.0)

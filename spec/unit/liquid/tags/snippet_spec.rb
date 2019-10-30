@@ -43,8 +43,8 @@ describe Locomotive::Steam::Liquid::Tags::Snippet do
 
       let(:snippet) { instance_double('Snippet', template: nil, :template= => nil, liquid_source: '{% action "Hello world" %}a.b(+}{% endaction %}') }
 
-      it 'raises ParsingRenderingError' do
-        expect { subject }.to raise_exception(Locomotive::Steam::ParsingRenderingError)
+      it 'raises a TemplateError' do
+        expect { subject }.to raise_exception(Locomotive::Steam::TemplateError)
       end
 
     end

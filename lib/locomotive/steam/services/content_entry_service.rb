@@ -10,7 +10,6 @@ module Locomotive
       attr_accessor_initialize :content_type_repository, :repository, :locale
 
       def all(type_slug, conditions = {}, as_json = false)
-        puts "ContentEntryService: #{conditions.inspect}"
         with_repository(type_slug) do |_repository|
           _repository.all(conditions).map do |entry|
             _decorate(entry, as_json)
