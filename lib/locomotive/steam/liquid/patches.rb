@@ -8,14 +8,21 @@ module Liquid
 
   class Expression
 
-    LITERALS = {
-      nil => nil, 'nil' => nil, 'null' => nil, '' => nil,
-      'true' => true,
-      'false' => false,
-      'blank' => MethodLiteral.new(:blank?, '').freeze,
-      'empty' => MethodLiteral.new(:empty?, '').freeze,
+    class << self
+      alias_method :parse_without_extra_literals, :parse
+    end
+
+    EXTRA_LITERALS = {
       'present' => MethodLiteral.new(:present?, '').freeze
     }.freeze
+
+    def self.parse(markup)
+      if EXTRA_LITERALS.key?(markup)
+        EXTRA_LITERALS[markup]
+      else
+        parse_without_extra_literals(markup)
+      end
+    end
 
   end
 
