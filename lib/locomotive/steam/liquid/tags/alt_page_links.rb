@@ -7,15 +7,15 @@ module Locomotive
 
           include Concerns::I18nPage
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             set_vars_from_context(context)
 
             if @site.locales.size == 1
-              output
+              ''
             else
               ending_path = context['alt_page_links_ending_path'] || ''
 
-              output << (
+              (
                 [%(<link rel="alternate" hreflang="x-default" href="#{url_for(@site.default_locale, ending_path, true)}" />)] +
                 @site.locales.map do |locale|
                   %(<link rel="alternate" hreflang="#{locale}" href="#{url_for(locale, ending_path)}" />)

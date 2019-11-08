@@ -36,20 +36,18 @@ module Locomotive
             end
           end
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             @name = context[name]
 
             evaluate_attributes(context)
 
             form_attributes = prepare_form_attributes(context, attributes)
 
-            output << html_content_tag(
+            html_content_tag(
               :form,
-              content_type_html(name) + csrf_html(context) + callbacks_html(attributes) + recaptcha_html(attributes) + super(context, ''),
+              content_type_html(name) + csrf_html(context) + callbacks_html(attributes) + recaptcha_html(attributes) + super,
               form_attributes
             )
-
-            output
           end
 
           def content_type_html(name)

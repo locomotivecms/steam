@@ -33,7 +33,7 @@ module Locomotive
             end
           end
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             evaluate_attributes(context)
 
             # attributes will become the options which will be passed to the service.
@@ -45,11 +45,10 @@ module Locomotive
 
             if url.blank?
               Locomotive::Common::Logger.error "A consume tag can't call an empty URL."
+              ''
             else
-              output << render_all_and_cache_it(context) { |_context| super(_context, '') }
+              render_all_and_cache_it(context) { |_context| super(_context) }
             end
-
-            output
           end
 
           protected

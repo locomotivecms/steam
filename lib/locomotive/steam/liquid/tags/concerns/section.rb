@@ -29,7 +29,7 @@ module Locomotive::Steam::Liquid::Tags::Concerns
         editor_settings_lookup(template.root)
       end
 
-      html = template.render_to_output_buffer(context, '')
+      html = template.render(context)
 
       # by default, Steam will wrap the section HTML to make sure it has all the
       # DOM attributes the live editing editor needs.

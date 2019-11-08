@@ -6,12 +6,9 @@ module Locomotive
 
           class Base < ::Liquid::Tag
 
-            def render_to_output_buffer(context, output)
-              output << %{
-                #{self.render_title(context)}
-                #{self.render_metadata(context)}
-              }
-              output
+            def render(context)
+              self.render_title(context) +
+              self.render_metadata(context)
             end
 
             protected
@@ -50,20 +47,16 @@ module Locomotive
 
           class Title < Base
 
-            # def render(context)
-            def render_to_output_buffer(context, output)
-              output << self.render_title(context)
-              output
+            def render(context)
+              self.render_title(context)
             end
 
           end
 
           class Metadata < Base
 
-            # def render(context)
-            def render_to_output_buffer(context, output)
-              output << self.render_metadata(context)
-              output
+            def render(context)
+              self.render_metadata(context)
             end
 
           end

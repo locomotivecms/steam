@@ -34,7 +34,7 @@ module Locomotive
             super
           end
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             evaluate_attributes(context)
 
             context.stack do
@@ -48,7 +48,7 @@ module Locomotive
                 build_parts(pagination, path)
               end
 
-              super(context, output)
+              super
             end
           end
 

@@ -19,8 +19,6 @@ module Locomotive
               @template_name_expr = @section_type.gsub!(/['"]/, '')
 
               parse_attributes(_attributes)
-            else
-              raise ::Liquid::SyntaxError.new("Syntax Error in 'section' - Valid syntax: section section_type, id: '<string>', label: '<string>', placement: 'top|bottom' (id and placement are optional)")
             end
           end
 
@@ -33,7 +31,7 @@ module Locomotive
             )
           end
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             evaluate_attributes(context)
 
             # the context (parsing) doesn't include the page key if cache is on
@@ -54,10 +52,8 @@ module Locomotive
 
             context.stack do
               set_section_dom_id(context)
-              output << render_section(context, template, section, content)
+              render_section(context, template, section, content)
             end
-
-            output
           end
 
           private

@@ -11,9 +11,8 @@ module Locomotive
               end
             end
 
-            def render_to_output_buffer(context, output)
-              output << apply_transformation(super(context, ''), context)
-              output
+            def render(context)
+              apply_transformation(super, context)
             end
 
             protected

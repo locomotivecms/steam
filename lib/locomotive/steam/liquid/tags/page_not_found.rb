@@ -5,7 +5,7 @@ module Locomotive
 
         class PageNotFound < ::Liquid::Tag
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             raise Locomotive::Steam::PageNotFoundException.new
           end
 

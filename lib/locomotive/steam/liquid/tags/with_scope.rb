@@ -43,7 +43,7 @@ module Locomotive
             end
           end
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             context.stack do
               context['with_scope'] = self.evaluate_attributes(context)
 
@@ -52,8 +52,6 @@ module Locomotive
 
               super
             end
-
-            output
           end
 
           protected

@@ -36,7 +36,7 @@ module Locomotive
 
           # map/collect on a given property (support to_f, to_i)
           def map(input, property)
-            ::Liquid::StandardFilters::InputIterator.new(input, context).map do |e|
+            ::Liquid::StandardFilters::InputIterator.new(input).map do |e|
               e = e.call if e.is_a?(Proc)
 
               if property == 'to_liquid'.freeze

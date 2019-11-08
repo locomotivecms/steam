@@ -9,7 +9,7 @@ module Locomotive
           include Concerns::I18nPage
           include Concerns::Path
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             if (path = render_path(context)).present?
               # 301 or 302 redirection
               is_permanent = attributes[:permanent].nil? ? true : attributes[:permanent]
@@ -17,7 +17,7 @@ module Locomotive
               # break the rendering process
               raise Locomotive::Steam::RedirectionException.new(path, permanent: is_permanent)
             end
-            output
+            ''
           end
 
           def wrong_syntax!

@@ -18,9 +18,8 @@ module Locomotive
             end
           end
 
-          def render_to_output_buffer(context, output)
-            output << ga_snippet(context.evaluate(account_id))
-            output
+          def render(context)
+            ga_snippet(context.evaluate(account_id))
           end
 
           private

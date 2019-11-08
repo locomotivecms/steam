@@ -23,8 +23,8 @@ module Locomotive
               next if token.empty?
               if token.start_with?(::Liquid::BlockBody::TAGSTART)
                 if token =~ ::Liquid::BlockBody::FullToken
-                  return false  if Regexp.last_match(2) == @tag_name
-                  return true   if Regexp.last_match(2) == block_delimiter
+                  return false  if Regexp.last_match(1) == @tag_name
+                  return true   if Regexp.last_match(1) == block_delimiter
                 end
               end
             end

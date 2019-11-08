@@ -8,14 +8,14 @@ module Locomotive
           include Concerns::I18nPage
           include Concerns::Path
 
-          def render_to_output_buffer(context, output)
-            output << render_path(context) do |page, path|
+          def render(context)
+            render_path(context) do |page, path|
               label = label_from_page(page)
 
               if render_as_block?
                 context.stack do
                   context.scopes.last['target'] = page
-                  label = super(context, '').html_safe
+                  label = super.html_safe
                 end
               end
 
@@ -24,8 +24,6 @@ module Locomotive
 
               %{<a #{tag_href}#{tag_class}>#{label}</a>}
             end
-
-            output
           end
 
           def wrong_syntax!

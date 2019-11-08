@@ -25,10 +25,10 @@ module Locomotive
             super
           end
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             request = context.registers[:request]
             request.session[@to.to_sym] = context[@from]
-            output
+            ''
           end
 
         end

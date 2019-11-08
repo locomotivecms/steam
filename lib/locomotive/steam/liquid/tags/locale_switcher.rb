@@ -33,13 +33,12 @@ module Locomotive
             parse_attributes(markup, label: 'iso', sep: ' | ')
           end
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             evaluate_attributes(context)
 
             set_vars_from_context(context)
 
-            output << %{<div id="locale-switcher">#{build_site_locales}</div>}
-            output
+            %{<div id="locale-switcher">#{build_site_locales}</div>}
           end
 
           private

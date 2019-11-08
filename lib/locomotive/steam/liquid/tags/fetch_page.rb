@@ -24,10 +24,10 @@ module Locomotive
             super
           end
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             page = context.registers[:repositories].page.by_handle(@handle)
             context.scopes.last[@var] = page
-            output
+            ''
           end
         end
 

@@ -35,14 +35,14 @@ module Locomotive
             super
           end
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             @context = context
 
             unless authenticated_entry = context["current_#{@content_type_slug.singularize}"]
               services.page_redirection.redirect_to(@page_handle, locale)
             end
 
-            output
+            ''
           end
 
           private

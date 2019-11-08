@@ -1,4 +1,36 @@
+# Enhance the IF condition to write the following statement:
+#
+# {% if value is present %}Value is not blank{% endif %}
+#
+Liquid::Condition.operators['is'.freeze] = lambda { |cond, left, right|  cond.send(:equal_variables, left, right) }
+
 module Liquid
+
+  class Expression
+
+    LITERALS = {
+      nil => nil, 'nil' => nil, 'null' => nil, '' => nil,
+      'true' => true,
+      'false' => false,
+      'blank' => MethodLiteral.new(:blank?, '').freeze,
+      'empty' => MethodLiteral.new(:empty?, '').freeze,
+      'present' => MethodLiteral.new(:present?, '').freeze
+    }.freeze
+
+  end
+
+  class ParseContext
+
+    def []=(option_key, value)
+      @options[option_key] = value
+    end
+
+    def merge(options)
+      @template_options.merge(options)
+    end
+
+  end
+
   module StandardFilters
 
     private
@@ -20,24 +52,22 @@ module Liquid
 
   end
 
-  class ParseContext
-
-    def merge(options)
-      @template_options.merge(options)
-    end
-
-  end
-
   class PartialCache
 
-    class << self
-      alias_method :load_without_catching_exception, :load
-    end
-
-    # FIXME: can't find a better way to handle this
     def self.load(template_name, context:, parse_context:)
       begin
-        load_without_catching_exception(template_name, context: context, parse_context: parse_context)
+        cached_partials = (context.registers[:cached_partials] ||= {})
+        cached = cached_partials[template_name]
+        return cached if cached
+
+        file_system = (context.registers[:file_system] ||= ::Liquid::Template.file_system)
+        source = file_system.read_template_file(template_name)
+        parse_context.partial = true
+
+        partial = ::Liquid::Template.parse(source, parse_context)
+        cached_partials[template_name] = partial
+
+
       rescue ::Liquid::SyntaxError => e
         # FIXME: we had to reload the template one more time. Not ideal.
         file_system = (context.registers[:file_system] ||= ::Liquid::Template.file_system)

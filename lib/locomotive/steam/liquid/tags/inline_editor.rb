@@ -10,9 +10,9 @@ module Locomotive
         #
         class InlineEditor < ::Liquid::Tag
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             Locomotive::Common::Logger.warn %(The inline_editor liquid tag is no more used.).yellow
-            output
+            ''
           end
 
         end

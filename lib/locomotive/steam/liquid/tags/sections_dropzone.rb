@@ -12,7 +12,7 @@ module Locomotive
             notify_on_parsing('_sections_dropzone_', is_dropzone: true)
           end
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             sections_dropzone_content = context['page']&.sections_dropzone_content || []
 
             html = sections_dropzone_content.each_with_index.map do |content, index|
@@ -30,8 +30,7 @@ module Locomotive
               render_section(context, template, section, content)
             end.join
 
-            output << %(<div class="locomotive-sections">#{html}</div>)
-            output
+            %(<div class="locomotive-sections">#{html}</div>)
           end
 
           private

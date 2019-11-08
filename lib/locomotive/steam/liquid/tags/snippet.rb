@@ -25,10 +25,9 @@ module Locomotive
             end
           end
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             # parse_context (previously @options) doesn't include the page key if cache is on
             parse_context[:page] = context.registers[:page]
-
             super
           end
 

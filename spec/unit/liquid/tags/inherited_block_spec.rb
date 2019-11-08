@@ -11,26 +11,38 @@ describe Locomotive::Steam::Liquid::Tags::InheritedBlock do
   let(:finder)        { instance_double('Finder', find: parent) }
   let(:options)       { { page: page, parent_finder: finder, parser: Locomotive::Steam::LiquidParserService.new(nil, nil) } }
 
-  let!(:template)     { parse_template(source, options) }
+  subject { parse_template(source, options) }
+
+  describe 'wrong syntax' do
+
+    let(:source) { '{% extends parent %}{% block %}Hello world{% endblock %}' }
+    it { expect { subject }.to raise_exception(Liquid::SyntaxError) }
+  end
 
   describe 'without a super block' do
 
+    before { subject }
+
     it { expect(listener.events.size).to eq 3 }
     it { expect(listener.events.first.last[:found_super]).to eq false }
-    it { expect(template.render).to eq 'My product: Skis' }
+    it { expect(subject.render).to eq 'My product: Skis' }
 
   end
 
   describe 'with a super block' do
 
+    before { subject }
+
     let(:source) { '{% extends parent %}{% block product %}Skis (previous: {{ block.super }}){% endblock %}' }
 
     it { expect(listener.events.first.last[:found_super]).to eq true }
-    it { expect(template.render).to eq 'My product: Skis (previous: Random)' }
+    it { expect(subject.render).to eq 'My product: Skis (previous: Random)' }
 
   end
 
   describe 'passing options' do
+
+    before { subject }
 
     let(:source) { '{% extends parent %}{% block product, short_name: true, priority: 10 %}Skis{% endblock %}' }
 
@@ -45,9 +57,11 @@ describe Locomotive::Steam::Liquid::Tags::InheritedBlock do
 
   describe 'live editing on' do
 
+    before { subject }
+
     let(:context) { ::Liquid::Context.new({}, {}, { live_editing: true }) }
 
-    it { expect(template.render(context)).to eq 'My product: <span class="locomotive-block-anchor" data-element-id="product" style="visibility: hidden"></span>Skis' }
+    it { expect(subject.render(context)).to eq 'My product: <span class="locomotive-block-anchor" data-element-id="product" style="visibility: hidden"></span>Skis' }
 
   end
 

@@ -8,9 +8,8 @@ module Locomotive
           include Concerns::I18nPage
           include Concerns::Path
 
-          def render_to_output_buffer(context, output)
-            output << render_path(context)
-            output
+          def render(context)
+            render_path(context)
           end
 
           def wrong_syntax!

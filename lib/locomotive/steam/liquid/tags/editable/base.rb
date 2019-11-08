@@ -34,9 +34,9 @@ module Locomotive
               end
             end
 
-            alias :default_render_to_output_buffer :render_to_output_buffer
+            alias :default_render :render
 
-            def render_to_output_buffer(context, output)
+            def render(context)
               evaluate_attributes(context)
 
               service   = context.registers[:services].editable_element
@@ -50,13 +50,11 @@ module Locomotive
               end
 
               if element = service.find(page, block, slug)
-                output << render_element(context, element)
+                render_element(context, element)
               else
                 Locomotive::Common::Logger.error "[#{page.fullpath}] missing #{@tag_name} \"#{slug}\" (#{context['block'].try(:name) || 'default'})".colorize(:yellow)
                 super
               end
-
-              output
             end
 
             def blank?

@@ -28,7 +28,7 @@ module Locomotive
             super
           end
 
-          def render_to_output_buffer(context, output)
+          def render(context)
             self.set_vars_from_context(context)
 
             set_template_if_asked
@@ -37,17 +37,13 @@ module Locomotive
             pages     = children_of(fetch_starting_page)
             _output   = self.build_entries_output(pages, context)
 
-            output << (
-              if self.no_wrapper?
-               _output
-              else
-                self.render_tag(:nav, id: @_options[:id], css: @_options[:class]) do
-                  self.render_tag(:ul) { _output }
-                end
+            if self.no_wrapper?
+             _output
+            else
+              self.render_tag(:nav, id: @_options[:id], css: @_options[:class]) do
+                self.render_tag(:ul) { _output }
               end
-            )
-
-            output
+            end
           end
 
           protected

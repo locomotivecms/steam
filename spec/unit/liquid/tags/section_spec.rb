@@ -103,7 +103,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
 
         let(:liquid_source) { 'go to {% link_to home %}' }
 
-        before { expect_any_instance_of(Locomotive::Steam::Liquid::Tags::LinkTo).to receive(:render_to_output_buffer) { |*args| args.last << 'HOME' } }
+        before { expect_any_instance_of(Locomotive::Steam::Liquid::Tags::LinkTo).to receive(:render) { 'HOME' } }
 
         it { is_expected.to eq 'Locomotive'\
           ' <div id="locomotive-section-page-header"'\
