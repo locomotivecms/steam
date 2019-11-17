@@ -12,7 +12,7 @@ GIT
 PATH
   remote: .
   specs:
-    locomotivecms_steam (1.5.0.rc0)
+    locomotivecms_steam (1.5.0.rc1)
       RedCloth (~> 4.3.2)
       autoprefixer-rails (~> 8.0.0)
       bcrypt (~> 3.1.11)
