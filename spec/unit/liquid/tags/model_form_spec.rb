@@ -19,6 +19,13 @@ describe Locomotive::Steam::Liquid::Tags::ModelForm do
 
   it { is_expected.to eq %(<form method="POST" enctype="multipart/form-data"><input type="hidden" name="content_type_slug" value="newsletter_addresses" /><input type="hidden" name="token" value="42" />Newsletter Form</form>) }
 
+  describe 'invalid syntax' do
+
+    let(:source) { "{% model_form %}Hello world{% endmodel_form %}" }
+    it { expect { subject }.to raise_error("Liquid syntax error (line 1): Syntax Error in 'model_form' - Valid syntax: model_form <content_type_slug>(, <attributes>)") }
+
+  end
+
   describe 'with a different dom id and css class' do
 
     let(:source) { "{% model_form 'newsletter_addresses', id: 'my-form', class: 'col-md-12' %}Newsletter Form{% endmodel_form %}" }

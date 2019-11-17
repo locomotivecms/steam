@@ -20,14 +20,24 @@ module Locomotive
         #   - " | " is the default separating code
         #
 
-        class LocaleSwitcher < Solid::Tag
+        class LocaleSwitcher < ::Liquid::Tag
 
+          include Concerns::Attributes
           include Concerns::I18nPage
 
-          tag_name :locale_switcher
+          attr_reader :attributes, :site, :page, :current_locale, :url_builder
 
-          def display(*values)
-            @options = { label: 'iso', sep: ' | ' }.merge(values.first || {})
+          def initialize(tag_name, markup, options)
+            super
+
+            parse_attributes(markup, label: 'iso', sep: ' | ')
+          end
+
+          def render(context)
+            evaluate_attributes(context)
+
+            set_vars_from_context(context)
+
             %{<div id="locale-switcher">#{build_site_locales}</div>}
           end
 
@@ -41,12 +51,12 @@ module Locomotive
 
                 %(<a href="#{path}" class="#{css}">#{link_label(locale)}</a>)
               end
-            end.join(@options[:sep])
+            end.join(attributes[:sep])
           end
 
           def link_class(locale)
             css = [locale]
-            css << 'current' if locale.to_sym == current_locale.to_sym
+            css << 'current' if locale.to_sym == current_locale
             css.join(' ')
           end
 
@@ -55,7 +65,7 @@ module Locomotive
           end
 
           def link_label(locale)
-            case @options[:label]
+            case attributes[:label]
             when 'locale' then I18n.t("locomotive.locales.#{locale}")
             when 'title' then page_title
             else
@@ -71,23 +81,17 @@ module Locomotive
             end
           end
 
-          def site
-            @site ||= current_context.registers[:site]
-          end
-
-          def page
-            @page ||= current_context['page']
-          end
-
-          def url_builder
-            current_context.registers[:services].url_builder
-          end
-
-          def current_locale
-            @current_locale ||= current_context.registers[:locale]
+          def set_vars_from_context(context)
+            @context        = context
+            @site           = context.registers[:site]
+            @page           = context['page']
+            @current_locale = context.registers[:locale].to_sym
+            @url_builder    = context.registers[:services].url_builder
           end
 
         end
+
+        ::Liquid::Template.register_tag('locale_switcher'.freeze, LocaleSwitcher)
 
       end
     end

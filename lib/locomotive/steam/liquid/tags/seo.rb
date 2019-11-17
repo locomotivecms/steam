@@ -7,10 +7,8 @@ module Locomotive
           class Base < ::Liquid::Tag
 
             def render(context)
-              %{
-                #{self.render_title(context)}
-                #{self.render_metadata(context)}
-              }
+              self.render_title(context) +
+              self.render_metadata(context)
             end
 
             protected

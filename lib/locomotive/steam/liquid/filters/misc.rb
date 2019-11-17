@@ -46,10 +46,12 @@ module Locomotive
               elsif property == 'to_i'.freeze
                 e.to_i
               elsif e.respond_to?(:[])
-                e[property]
+                r = e[property]
+                r.is_a?(Proc) ? r.call : r
               end
             end
-
+          rescue TypeError
+            raise_property_error(property)
           end
 
           def hexdigest(input, key, digest = nil)

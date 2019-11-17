@@ -34,14 +34,14 @@ module Locomotive
             set_template_if_asked
 
             # get all the children of a source: site (index page), parent or page.
-            pages   = children_of(fetch_starting_page)
-            output  = self.build_entries_output(pages, context)
+            pages     = children_of(fetch_starting_page)
+            _output   = self.build_entries_output(pages, context)
 
             if self.no_wrapper?
-              output
+             _output
             else
               self.render_tag(:nav, id: @_options[:id], css: @_options[:class]) do
-                self.render_tag(:ul) { output }
+                self.render_tag(:ul) { _output }
               end
             end
           end

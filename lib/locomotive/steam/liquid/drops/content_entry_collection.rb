@@ -38,7 +38,7 @@ module Locomotive
             { 'create' => public_submission_url }
           end
 
-          def before_method(meth)
+          def liquid_method_missing(meth)
             if (meth.to_s =~ /^group_by_(.+)$/) == 0
               repository.group_by_select_option($1)
             elsif (meth.to_s =~ /^(.+)_options$/) == 0

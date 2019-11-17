@@ -15,7 +15,7 @@ describe Locomotive::Steam::Liquid::Drops::Section do
 
     before { expect(drop.settings).to receive(:url_finder).and_return(url_finder) }
 
-    subject { drop.settings.before_method(:title) }
+    subject { drop.settings.liquid_method_missing(:title) }
 
     it 'returns the value of the text setting' do
       is_expected.to eq 'Hello world'

@@ -40,7 +40,7 @@ describe Locomotive::Steam::ActionService do
         let(:script) { 'a +/ b * var;' }
 
         it 'raises a meaningful exception' do
-          expect { subject }.to raise_error(Locomotive::Steam::ActionError, "unterminated regexp (line 2)")
+          expect { subject }.to raise_error(Locomotive::Steam::ActionError, "Action error - unterminated regexp (line 2)")
         end
 
       end
@@ -50,7 +50,7 @@ describe Locomotive::Steam::ActionService do
         let(:script) { 'a.b' }
 
         it 'raises a meaningful exception' do
-          expect { subject }.to raise_error(Locomotive::Steam::ActionError, "identifier 'a' undefined")
+          expect { subject }.to raise_error(Locomotive::Steam::ActionError, "Action error - identifier 'a' undefined")
         end
 
       end

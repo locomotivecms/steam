@@ -10,7 +10,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentTypes do
     allow(services.repositories.content_type).to receive(:by_slug).with('articles').and_return(true)
   end
 
-  it { expect(drop.before_method('articles')).not_to eq nil }
+  it { expect(drop.liquid_method_missing('articles')).not_to eq nil }
 
   context 'content type not found' do
 
@@ -18,7 +18,7 @@ describe Locomotive::Steam::Liquid::Drops::ContentTypes do
       allow(services.repositories.content_type).to receive(:by_slug).with('articles').and_return(nil)
     end
 
-    it { expect(drop.before_method('articles')).to eq nil }
+    it { expect(drop.liquid_method_missing('articles')).to eq nil }
 
   end
 

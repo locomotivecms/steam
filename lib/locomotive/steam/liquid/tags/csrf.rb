@@ -5,12 +5,12 @@ module Locomotive
         module Csrf
 
           class Base < ::Liquid::Tag
+
             def render(context)
-              service  = context.registers[:services].csrf_protection
+              service = context.registers[:services].csrf_protection
 
               if service.enabled?
                 render_csrf(service)
-
               else
                 ''
               end

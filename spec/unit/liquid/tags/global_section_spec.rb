@@ -8,9 +8,10 @@ describe Locomotive::Steam::Liquid::Tags::GlobalSection do
   let(:source)        { 'Locomotive {% global_section header %}' }
   let(:live_editing)  { true }
   let(:content)       { {} }
+  let(:file_system)   { Locomotive::Steam::Liquid::FileSystem.new(section_finder: finder) }
   let(:site)          { liquid_instance_double('Site', sections_content: content) }
   let(:assigns)       { { 'site' => site } }
-  let(:context)       { ::Liquid::Context.new(assigns, {}, { services: services, live_editing: live_editing }) }
+  let(:context)       { ::Liquid::Context.new(assigns, {}, { services: services, live_editing: live_editing, file_system: file_system }) }
 
   before do
     allow(finder).to receive(:find).and_return(section)
@@ -121,8 +122,8 @@ describe Locomotive::Steam::Liquid::Tags::GlobalSection do
         definition:     { settings: [], blocks: [] }
       )}
 
-      it 'raises ParsingRenderingError' do
-        expect { subject }.to raise_exception(Locomotive::Steam::ParsingRenderingError)
+      it 'raises an TemplateError' do
+        expect { subject }.to raise_exception(Locomotive::Steam::TemplateError)
       end
     end
 

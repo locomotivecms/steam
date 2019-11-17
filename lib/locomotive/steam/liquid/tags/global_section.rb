@@ -5,22 +5,22 @@ module Locomotive
         class GlobalSection < Locomotive::Steam::Liquid::Tags::Section
 
           def parse(tokens)
-            notify_on_parsing(evaluate_section_name,
+            notify_on_parsing(section_type,
               source:     :site,
-              id:         "site-#{evaluate_section_name}",
-              key:        evaluate_section_name,
-              placement:  @section_options[:placement]&.to_sym
+              id:         "site-#{section_type}",
+              key:        section_type,
+              placement:  attributes[:placement]&.to_sym
             )
           end
 
           private
 
           def find_section_content(context)
-            context['site']&.sections_content&.fetch(@section_type, nil)
+            context['site']&.sections_content&.fetch(section_type, nil)
           end
 
           def set_section_dom_id(context)
-            context['section_id'] = "site-#{@section_type}"
+            context['section_id'] = "site-#{section_type}"
           end
 
         end

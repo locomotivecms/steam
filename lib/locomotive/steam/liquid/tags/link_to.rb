@@ -4,6 +4,7 @@ module Locomotive
       module Tags
         class LinkTo < Hybrid
 
+          include Concerns::Attributes
           include Concerns::I18nPage
           include Concerns::Path
 
@@ -40,7 +41,7 @@ module Locomotive
           end
 
           def css
-            @path_options[:class]
+            attributes[:class]
           end
 
         end

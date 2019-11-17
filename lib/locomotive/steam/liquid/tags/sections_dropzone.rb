@@ -42,7 +42,7 @@ module Locomotive
 
           def build_template(section)
             # TODO: add some cache here (useful if there are sections with the same type)
-            ::Liquid::Template.parse(section.liquid_source, @options)
+            ::Liquid::Template.parse(section.liquid_source, parse_context)
           end
 
         end

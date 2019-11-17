@@ -2,15 +2,47 @@
 #
 # {% if value is present %}Value is not blank{% endif %}
 #
-Liquid::Expression::LITERALS['present'.freeze] = :present?
 Liquid::Condition.operators['is'.freeze] = lambda { |cond, left, right|  cond.send(:equal_variables, left, right) }
 
 module Liquid
+
+  class Expression
+
+    class << self
+      alias_method :parse_without_extra_literals, :parse
+    end
+
+    EXTRA_LITERALS = {
+      'present' => MethodLiteral.new(:present?, '').freeze
+    }.freeze
+
+    def self.parse(markup)
+      if EXTRA_LITERALS.key?(markup)
+        EXTRA_LITERALS[markup]
+      else
+        parse_without_extra_literals(markup)
+      end
+    end
+
+  end
+
+  class ParseContext
+
+    def []=(option_key, value)
+      @options[option_key] = value
+    end
+
+    def merge(options)
+      @template_options.merge(options)
+    end
+
+  end
+
   module StandardFilters
 
     private
 
-    # Fixme: Handle DateTime, Date and Time objects, convert them
+    # FIXME: Handle DateTime, Date and Time objects, convert them
     # into seconds (integer)
     def to_number(obj)
       case obj
@@ -26,32 +58,32 @@ module Liquid
     end
 
   end
-end
 
-module Liquid
-  module OptionsBuilder
+  class PartialCache
 
-    private
+    def self.load(template_name, context:, parse_context:)
+      begin
+        cached_partials = (context.registers[:cached_partials] ||= {})
+        cached = cached_partials[template_name]
+        return cached if cached
 
-    def parse_options_from_string(string)
-      string.try(:strip!)
+        file_system = (context.registers[:file_system] ||= ::Liquid::Template.file_system)
+        source = file_system.read_template_file(template_name)
+        parse_context.partial = true
 
-      return nil if string.blank?
+        partial = ::Liquid::Template.parse(source, parse_context)
+        cached_partials[template_name] = partial
 
-      string = string.gsub(/^(\s*,)/, '')
 
-      Solid::Arguments.parse(string)
-    end
-
-    def interpolate_options(options, context)
-      if options
-        options.interpolate(context).first
-      else
-        {}
+      rescue ::Liquid::SyntaxError => e
+        # FIXME: we had to reload the template one more time. Not ideal.
+        file_system = (context.registers[:file_system] ||= ::Liquid::Template.file_system)
+        source = file_system.read_template_file(template_name)
+        raise Locomotive::Steam::LiquidError.new(e, template_name, source)
       end
+    ensure
+      parse_context.partial = false
     end
 
   end
 end
-
-Liquid::Tag.send(:include, Liquid::OptionsBuilder)

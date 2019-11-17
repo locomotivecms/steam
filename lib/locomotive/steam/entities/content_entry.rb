@@ -121,7 +121,6 @@ module Locomotive::Steam
         _cast_value(field)
       rescue Exception => e
         Locomotive::Common::Logger.info "[#{content_type.slug}][#{_label}] Unable to cast the \"#{name}\" field, reason: #{e.message}".yellow
-        puts e.message
         nil
       end
     end

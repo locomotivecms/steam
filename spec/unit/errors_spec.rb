@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Locomotive::Steam::ParsingRenderingError do
+describe Locomotive::Steam::TemplateError do
 
   let(:message)   { 'Wrong syntax' }
   let(:file)      { 'template.liquid.haml' }

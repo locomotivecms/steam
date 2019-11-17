@@ -7,23 +7,23 @@ module Locomotive
 
             Syntax = /(#{::Liquid::QuotedFragment}+)(\s*,.+)?/o
 
+            attr_reader :handle
+
             def initialize(tag_name, markup, options)
+              super
+
               if markup =~ Syntax
-                @handle, _options = $1, $2
+                @handle, _attributes = $1, $2
 
-                # FIXME: the with option needs a string with quotes.
-                # this is a hack for sites which don't follow the new syntax.
-                make_options_compatible_with_previous_version(_options)
-
-                @raw_path_options = parse_options_from_string(_options)
+                parse_attributes(_attributes)
               else
                 self.wrong_syntax!
               end
-
-              super
             end
 
             def render_path(context, &block)
+              evaluate_attributes(context)
+
               set_vars_from_context(context)
 
               handle = @context[@handle] || @handle
@@ -86,32 +86,17 @@ module Locomotive
             end
 
             def locale
-              @path_options[:locale] || @raw_locale || @locale
+              attributes[:locale] || raw_attributes[:locale] || @locale
             end
 
             def template_slug
-              @path_options[:with] || @raw_with
+              attributes[:with] || raw_attributes[:with]
             end
 
             def set_vars_from_context(context)
               @context      = context
-              @path_options = evaluate_path_options(context)
               @site         = context.registers[:site]
               @locale       = context.registers[:locale]
-            end
-
-            def evaluate_path_options(context)
-              interpolate_options(@raw_path_options, context)
-            end
-
-            def make_options_compatible_with_previous_version(options)
-              if options
-                %w(with locale).each do |name|
-                  if options =~ /#{name}: ([\w-]+)/
-                    instance_variable_set(:"@raw_#{name}", $1);
-                  end
-                end
-              end
             end
 
           end

@@ -178,14 +178,14 @@ describe Locomotive::Steam::Server do
     context 'liquid parsing error' do
 
       subject { get '/about-us/john-doe'; last_response.body }
-      it { expect { subject }.to raise_error(Locomotive::Steam::RenderError, "Liquid syntax error (line 1): Syntax Error in 'for loop' - Valid syntax: for [item] in [collection]") }
+      it { expect { subject }.to raise_error(Locomotive::Steam::LiquidError, "Liquid syntax error (line 1): Syntax Error in 'for loop' - Valid syntax: for [item] in [collection]") }
 
     end
 
     context 'rendering error' do
 
       subject { get '/fr/a-notre-sujet/jean-personne'; last_response.body }
-      it { expect { subject }.to raise_error(Locomotive::Steam::ActionError, "identifier 'foo' undefined") }
+      it { expect { subject }.to raise_error(Locomotive::Steam::ActionError, "Action error - identifier 'foo' undefined") }
 
     end
 

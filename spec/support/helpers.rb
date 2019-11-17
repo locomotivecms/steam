@@ -22,6 +22,7 @@ module Spec
     def setup_common(logger_output = nil)
       Locomotive::Common.reset
       Locomotive::Common.configure do |config|
+        logger_output ||= File.join(default_fixture_site_path, 'log/steam.log')
         config.notifier = Locomotive::Common::Logger.setup(logger_output)
       end
     end

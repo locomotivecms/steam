@@ -21,11 +21,13 @@ module Locomotive
       end
 
       def _parse(object, options = {})
-        # Note: the template must not be parsed here
         begin
           Locomotive::Steam::Liquid::Template.parse(object.liquid_source, options)
+        rescue Locomotive::Steam::TemplateError => e
+          # we don't want to hide an exception occured during parsing a section or a snippet
+          raise e
         rescue ::Liquid::Error => e
-          raise Locomotive::Steam::RenderError.new(e, object.template_path, object.liquid_source)
+          raise Locomotive::Steam::LiquidError.new(e, object.template_path, object.liquid_source)
         end
       end
 

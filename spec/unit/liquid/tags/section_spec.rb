@@ -9,9 +9,10 @@ describe Locomotive::Steam::Liquid::Tags::Section do
   let(:live_editing)  { true }
   let(:content)       { {} }
   let(:alt_content)   { nil }
+  let(:file_system)   { Locomotive::Steam::Liquid::FileSystem.new(section_finder: finder) }
   let(:page)          { liquid_instance_double('Page', sections_content: content)}
   let(:assigns)       { { 'page' => page } }
-  let(:context)       { ::Liquid::Context.new(assigns, {}, { services: services, live_editing: live_editing, _section_content: alt_content }) }
+  let(:context)       { ::Liquid::Context.new(assigns, {}, { services: services, live_editing: live_editing, _section_content: alt_content, file_system: file_system }, rethrow_errors: true) }
 
   describe 'parsing' do
 
@@ -102,7 +103,7 @@ describe Locomotive::Steam::Liquid::Tags::Section do
 
         let(:liquid_source) { 'go to {% link_to home %}' }
 
-        before { expect_any_instance_of(Locomotive::Steam::Liquid::Tags::LinkTo).to receive(:render).and_return('HOME') }
+        before { expect_any_instance_of(Locomotive::Steam::Liquid::Tags::LinkTo).to receive(:render) { 'HOME' } }
 
         it { is_expected.to eq 'Locomotive'\
           ' <div id="locomotive-section-page-header"'\
@@ -249,6 +250,15 @@ describe Locomotive::Steam::Liquid::Tags::Section do
       end
     end
 
+    context 'the section has a syntax error inside its liquid template' do
+
+      let(:liquid_source) { %(built by <a>\n\t<strong>{{ section.settings.brand }}{% if %}</strong></a>) }
+
+      it 'raises a LiquidError' do
+        expect { subject }.to raise_exception(Locomotive::Steam::LiquidError)
+      end
+
+    end
 
     context 'rendering error (action) found in the section' do
 
@@ -260,8 +270,8 @@ describe Locomotive::Steam::Liquid::Tags::Section do
         definition:     { settings: [], blocks: [] }
       )}
 
-      it 'raises ParsingRenderingError' do
-        expect { subject }.to raise_exception(Locomotive::Steam::ParsingRenderingError)
+      it 'raises a TemplateError' do
+        expect { subject }.to raise_exception(Locomotive::Steam::TemplateError)
       end
     end
 

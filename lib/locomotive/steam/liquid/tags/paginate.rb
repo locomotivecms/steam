@@ -15,14 +15,18 @@ module Locomotive
         #
         class Paginate < ::Liquid::Block
 
+          include Concerns::Attributes
+
           Syntax = /(#{::Liquid::QuotedFragment}+)\s+by\s+(#{::Liquid::QuotedFragment}+)/o
+
+          attr_reader :collection_name, :per_page
 
           def initialize(tag_name, markup, options)
             if markup =~ Syntax
               @collection_name  = $1
               @per_page         = $2
-              @paginate_options = {}
-              markup.scan(::Liquid::TagAttributes) { |key, value| @paginate_options[key.to_sym] = value.gsub(/^'/, '').gsub(/'$/, '') }
+
+              parse_attributes(markup)
             else
               raise ::Liquid::SyntaxError.new('Valid syntax: paginate <collection> by <number>')
             end
@@ -31,6 +35,8 @@ module Locomotive
           end
 
           def render(context)
+            evaluate_attributes(context)
+
             context.stack do
               pagination = context['paginate'] = paginate_collection(context)
 
@@ -53,11 +59,11 @@ module Locomotive
           # collection.
           #
           def paginate_collection(context)
-            collection    = context[@collection_name]
-            per_page      = context[@per_page].to_i
+            collection    = context[collection_name]
+            per_page      = context[self.per_page].to_i
             current_page  = context['current_page'].try(:to_i)
 
-            raise ::Liquid::ArgumentError.new("Cannot paginate '#{@collection_name}'. Not found.") if collection.nil?
+            raise ::Liquid::ArgumentError.new("Cannot paginate '#{collection_name}'. Not found.") if collection.nil?
 
             pager = Locomotive::Steam::Models::Pager.new(collection, current_page, per_page)
 
@@ -117,7 +123,7 @@ module Locomotive
           end
 
           def window_size
-            @window_size ||= @paginate_options[:window_size] ? @paginate_options[:window_size].to_i : 3
+            @window_size ||= attributes[:window_size] ? attributes[:window_size].to_i : 3
           end
 
           def no_link(title)

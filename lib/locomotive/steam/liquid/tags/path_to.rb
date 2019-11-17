@@ -4,6 +4,7 @@ module Locomotive
       module Tags
         class PathTo < ::Liquid::Tag
 
+          include Concerns::Attributes
           include Concerns::I18nPage
           include Concerns::Path
 

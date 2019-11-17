@@ -17,8 +17,8 @@ module Locomotive::Steam::Liquid::Tags::Concerns
 
         begin
           _render(context, template)
-        rescue Locomotive::Steam::ParsingRenderingError => e
-          e.file = section.name + ' [Section]'
+        rescue Locomotive::Steam::TemplateError => e
+          e.template_name = "sections--#{section.name}"
           raise e
         end
       end
@@ -60,13 +60,13 @@ module Locomotive::Steam::Liquid::Tags::Concerns
     # - once found, get the closest tag
     # - add custom data attributes to it
     def editor_settings_lookup(root)
+      return if root.nodelist.blank?
+
       previous_node = nil
       new_nodelist  = []
 
-      return if root.nodelist.blank?
-
       root.nodelist.each_with_index do |node, index|
-        if node.is_a?(::Liquid::Variable) && previous_node.is_a?(::Liquid::Token)
+        if node.is_a?(::Liquid::Variable) && previous_node.is_a?(String)
           matches = node.raw.match(Locomotive::Steam::SECTIONS_SETTINGS_VARIABLE_REGEXP)
 
           # is a section setting variable?
@@ -77,11 +77,11 @@ module Locomotive::Steam::Liquid::Tags::Concerns
             # here we go, add a liquid variable!
             new_nodelist.push(::Liquid::Variable.new(
               "section.editor_setting_data.#{matches[:id]}",
-              node.instance_variable_get(:@options))
+              node.parse_context)
             )
 
             # close the tag
-            new_nodelist.push(::Liquid::Token.new('>', previous_node.line_number))
+            new_nodelist.push('>') #::Liquid::Tokenizer.new('>', previous_node.line_number))
           end
         elsif node.respond_to?(:nodelist)
           editor_settings_lookup(node)
@@ -101,7 +101,7 @@ module Locomotive::Steam::Liquid::Tags::Concerns
       previous_node = nodelist[index - 1]
       next_node     = nodelist[index + 1]
 
-      return false unless next_node.is_a?(::Liquid::Token)
+      return false unless next_node.is_a?(String)
 
       (previous_node =~ /\>\s*\z/).present? && (next_node =~ /\A\s*\</).present?
     end

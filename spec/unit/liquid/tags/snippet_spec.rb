@@ -2,11 +2,12 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Tags::Snippet do
 
-  let(:request)   { instance_double('Request', env: {}) }
-  let(:services)  { Locomotive::Steam::Services.build_instance(request) }
-  let(:finder)    { services.snippet_finder }
-  let(:snippet)   { instance_double('Snippet', template: nil, :template= => nil, liquid_source: 'built by NoCoffee') }
-  let(:source)    { 'Locomotive {% include footer %}' }
+  let(:request)     { instance_double('Request', env: {}) }
+  let(:services)    { Locomotive::Steam::Services.build_instance(request) }
+  let(:finder)      { services.snippet_finder }
+  let(:file_system) { Locomotive::Steam::Liquid::FileSystem.new(snippet_finder: finder) }
+  let(:snippet)     { instance_double('Snippet', template: nil, :template= => nil, liquid_source: 'built by NoCoffee') }
+  let(:source)      { 'Locomotive {% include footer %}' }
 
   before { allow(finder).to receive(:find).and_return(snippet) }
 
@@ -32,7 +33,7 @@ describe Locomotive::Steam::Liquid::Tags::Snippet do
 
   describe 'rendering' do
 
-    let(:context) { ::Liquid::Context.new({}, {}, { services: services }) }
+    let(:context) { ::Liquid::Context.new({}, {}, { services: services, file_system: file_system }) }
 
     subject { render_template(source, context) }
 
@@ -42,8 +43,8 @@ describe Locomotive::Steam::Liquid::Tags::Snippet do
 
       let(:snippet) { instance_double('Snippet', template: nil, :template= => nil, liquid_source: '{% action "Hello world" %}a.b(+}{% endaction %}') }
 
-      it 'raises ParsingRenderingError' do
-        expect { subject }.to raise_exception(Locomotive::Steam::ParsingRenderingError)
+      it 'raises a TemplateError' do
+        expect { subject }.to raise_exception(Locomotive::Steam::TemplateError)
       end
 
     end

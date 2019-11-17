@@ -5,45 +5,37 @@ module Locomotive
 
         class Snippet < ::Liquid::Include
 
+          attr_reader :name
+
+          def initialize(tag_name, markup, options)
+            super
+
+            # we use a convention to differentiate sections from snippets
+            @name               = evaluate_snippet_name
+            @template_name_expr = "snippets--#{@name}"
+          end
+
           def parse(tokens)
-            name = evaluate_snippet_name
+            ActiveSupport::Notifications.instrument('steam.parse.include', page: parse_context[:page], name: name)
 
-            ActiveSupport::Notifications.instrument('steam.parse.include', page: options[:page], name: name)
-
-            # look for editable elements
-            if options[:snippet_finder] && snippet = options[:snippet_finder].find(name)
-              options[:parser]._parse(snippet, options.merge(snippet: name))
+            # look for editable elements (only used by the Engine)
+            # In the next version of Locomotive (v5), we won't support the editable elements
+            if parse_context[:snippet_finder] && snippet = parse_context[:snippet_finder].find(name)
+              parse_context[:parser]._parse(snippet, parse_context.merge(snippet: name))
             end
           end
 
           def render(context)
-            @template_name = evaluate_snippet_name(context)
-            # @options doesn't include the page key if cache is on
-            @options[:page] = context.registers[:page]
-
-            begin
-              super
-            rescue Locomotive::Steam::ParsingRenderingError => e
-              e.file = @template_name + ' [Snippet]'
-              raise e
-            end
+            # parse_context (previously @options) doesn't include the page key if cache is on
+            parse_context[:page] = context.registers[:page]
+            super
           end
 
           private
 
-          def read_template_from_file_system(context)
-            service = context.registers[:services]
-            snippet = service.snippet_finder.find(@template_name)
-
-            raise SnippetNotFound.new("Snippet with slug '#{@template_name}' was not found") if snippet.nil?
-
-            snippet.liquid_source
-          end
-
-          def evaluate_snippet_name(context = nil)
-            context.try(:evaluate, @template_name) ||
-            (!@template_name.is_a?(String) && @template_name.send(:state).first) ||
-            @template_name
+          def evaluate_snippet_name
+            (!template_name_expr.is_a?(String) && template_name_expr.send(:state).first) ||
+            template_name_expr
           end
 
         end

@@ -10,7 +10,7 @@ module Locomotive
           alias :count    :size
           alias :length   :size
 
-          def before_method(meth)
+          def liquid_method_missing(meth)
             find_value(meth.to_s)
           end
 
@@ -79,7 +79,7 @@ module Locomotive
 
         class Metafields < Base
 
-          def before_method(meth)
+          def liquid_method_missing(meth)
             find_namespace(meth.to_s)
           end
 

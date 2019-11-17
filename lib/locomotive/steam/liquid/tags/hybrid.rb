@@ -18,13 +18,13 @@ module Locomotive
             end
           end
 
-          def find_block_delimiter?(tokens)
-            tokens.each do |token|
+          def find_block_delimiter?(tokenizer)
+            tokenizer.instance_variable_get(:@tokens).each do |token|
               next if token.empty?
               if token.start_with?(::Liquid::BlockBody::TAGSTART)
                 if token =~ ::Liquid::BlockBody::FullToken
-                  return false  if $1 == @tag_name
-                  return true   if $1 == block_delimiter
+                  return false  if Regexp.last_match(1) == @tag_name
+                  return true   if Regexp.last_match(1) == block_delimiter
                 end
               end
             end

@@ -10,7 +10,7 @@ describe Locomotive::Steam::Liquid::Drops::Metafields do
 
   describe 'fields' do
 
-    let(:namespace) { drop.before_method(:my_namespace).tap { |d| d.context = context } }
+    let(:namespace) { drop.liquid_method_missing(:my_namespace).tap { |d| d.context = context } }
 
     it 'gives the number of the fields' do
       expect(namespace.size).to eq 4
@@ -28,7 +28,7 @@ describe Locomotive::Steam::Liquid::Drops::Metafields do
 
     context 'unknown namespace' do
 
-      subject { drop.before_method(:unknown_namespace) }
+      subject { drop.liquid_method_missing(:unknown_namespace) }
 
       it { is_expected.to eq nil }
 
@@ -36,11 +36,11 @@ describe Locomotive::Steam::Liquid::Drops::Metafields do
 
     context 'existing namespace' do
 
-      let(:namespace) { drop.before_method(:my_namespace).tap { |d| d.context = context } }
+      let(:namespace) { drop.liquid_method_missing(:my_namespace).tap { |d| d.context = context } }
 
       context 'unknown field' do
 
-        subject { namespace.before_method(:unknown_field) }
+        subject { namespace.liquid_method_missing(:unknown_field) }
 
         it { is_expected.to eq nil }
 
@@ -51,7 +51,7 @@ describe Locomotive::Steam::Liquid::Drops::Metafields do
         let(:boolean) { true }
         let(:metafields) { { 'my_namespace' => { 'visible' => { 'default' => boolean } } } }
 
-        subject { namespace.before_method(:visible) }
+        subject { namespace.liquid_method_missing(:visible) }
 
         it { is_expected.to eq true }
 
@@ -81,7 +81,7 @@ describe Locomotive::Steam::Liquid::Drops::Metafields do
 
         context 'the value exists' do
 
-          subject { namespace.before_method(:analytics_id) }
+          subject { namespace.liquid_method_missing(:analytics_id) }
 
           it { is_expected.to eq '42' }
 
@@ -96,7 +96,7 @@ describe Locomotive::Steam::Liquid::Drops::Metafields do
 
         context "the value doesn't exist" do
 
-          subject { namespace.before_method(:country) }
+          subject { namespace.liquid_method_missing(:country) }
 
           it { is_expected.to eq nil }
 
@@ -106,7 +106,7 @@ describe Locomotive::Steam::Liquid::Drops::Metafields do
 
       context 'localized field' do
 
-        subject { namespace.before_method(:street) }
+        subject { namespace.liquid_method_missing(:street) }
 
         it { is_expected.to eq '7 Albert Camus Alley' }
 

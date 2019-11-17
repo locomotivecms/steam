@@ -8,16 +8,16 @@ module Locomotive
         #
         # @deprecated
         #
-        class InlineEditor < Solid::Tag
+        class InlineEditor < ::Liquid::Tag
 
-          tag_name :inline_editor
-
-          def display
+          def render(context)
             Locomotive::Common::Logger.warn %(The inline_editor liquid tag is no more used.).yellow
             ''
           end
 
         end
+
+        ::Liquid::Template.register_tag('inline_editor'.freeze, InlineEditor)
 
       end
     end

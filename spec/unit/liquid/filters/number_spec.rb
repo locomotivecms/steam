@@ -39,7 +39,7 @@ describe Locomotive::Steam::Liquid::Filters::Number do
     context 'with options' do
 
       let(:input) { 42.01 }
-      let(:options) { ['unit: "€"', 'format: "%n %u"', 'precision: 1'] }
+      let(:options) { { 'unit' => "€", 'format' => "%n %u", 'precision' => 1 } }
 
       it { expect(subject).to eq '42.0 €' }
 
@@ -50,7 +50,7 @@ describe Locomotive::Steam::Liquid::Filters::Number do
       let(:environments)  { { 'my_unit' => 'Franc' } }
 
       let(:input) { 42.01 }
-      let(:options) { ['unit: my_unit', 'format: "%n %u"'] }
+      let(:options) { { 'unit' => 'my_unit', 'format' => "%n %u" } }
 
       it { expect(subject).to eq '42.01 Franc' }
 
@@ -79,7 +79,7 @@ describe Locomotive::Steam::Liquid::Filters::Number do
     context 'with options' do
 
       let(:input) { '42.01' }
-      let(:options) { ['precision: 0'] }
+      let(:options) { { 'precision' => 0 } }
 
       it { expect(subject).to eq '42%' }
 
@@ -108,7 +108,7 @@ describe Locomotive::Steam::Liquid::Filters::Number do
     context 'with options' do
 
       let(:input) { '1234567' }
-      let(:options) { ['precision: 2'] }
+      let(:options) { { 'precision' => 2 } }
 
       it { expect(subject).to eq '1.2 MB' }
 

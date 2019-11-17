@@ -16,27 +16,46 @@ module Locomotive
         #
         # {% model_form 'newsletter_addresses', class: 'a-css-class', success: 'http://www.google.fr', error: '/error' %}...{% endform_form %}
         #
-        class ModelForm < Solid::Block
+        class ModelForm < ::Liquid::Block
 
-          tag_name :model_form
+          include Concerns::Attributes
 
-          def display(*options, &block)
-            name    = options.shift
-            options = options.shift || {}
+          Syntax = /(#{::Liquid::QuotedFragment})\s*,*(.*)?/o.freeze
 
-            form_attributes = prepare_form_attributes(options)
+          attr_reader :name
 
-            html_content_tag :form,
-              content_type_html(name) + csrf_html + callbacks_html(options) + recaptcha_html(options) + yield,
+          def initialize(tag_name, markup, options)
+            super
+
+            if markup =~ Syntax
+              @name, _attributes = $1, $2
+
+              parse_attributes(_attributes)
+            else
+              raise ::Liquid::SyntaxError.new("Syntax Error in 'model_form' - Valid syntax: model_form <content_type_slug>(, <attributes>)")
+            end
+          end
+
+          def render(context)
+            @name = context[name]
+
+            evaluate_attributes(context)
+
+            form_attributes = prepare_form_attributes(context, attributes)
+
+            html_content_tag(
+              :form,
+              content_type_html(name) + csrf_html(context) + callbacks_html(attributes) + recaptcha_html(attributes) + super,
               form_attributes
+            )
           end
 
           def content_type_html(name)
             html_tag :input, type: 'hidden', name: 'content_type_slug', value: name
           end
 
-          def csrf_html
-            service = current_context.registers[:services].csrf_protection
+          def csrf_html(context)
+            service = context.registers[:services].csrf_protection
 
             html_tag :input, type: 'hidden', name: service.field, value: service.token
           end
@@ -70,8 +89,8 @@ module Locomotive
             (options.stringify_keys.to_a.collect { |a, b| "#{a}=\"#{b}\"" }).join(' ')
           end
 
-          def prepare_form_attributes(options)
-            url         = action_url(options)
+          def prepare_form_attributes(context, options)
+            url         = action_url(context, options)
             attributes  = options.slice(:id, :class, :name, :novalidate)
 
             { method: 'POST', enctype: 'multipart/form-data' }.merge(attributes).tap do |_attributes|
@@ -79,27 +98,29 @@ module Locomotive
             end
           end
 
-          def action_url(options)
+          def action_url(context, options)
             url = options[:action]
 
             if url.blank?
               if options[:json]
-                url = current_context['path'].blank? ? '/' : current_context['path']
+                url = context['path'].blank? ? '/' : context['path']
                 url + (url.ends_with?('/') ? 'index.json' : '.json')
               else
                 nil
               end
             else
               url = '/' + url unless url.starts_with?('/')
-              url_builder.prefix(url)
+              url_builder(context).prefix(url)
             end
           end
 
-          def url_builder
-            current_context.registers[:services].url_builder
+          def url_builder(context)
+            context.registers[:services].url_builder
           end
 
         end
+
+        ::Liquid::Template.register_tag('model_form'.freeze, ModelForm)
 
       end
     end

@@ -10,12 +10,12 @@ module Locomotive
             def default_element_attributes
               super.merge({
                 content_from_default: self.render_default_content,
-                options: @element_options[:options]
+                options: attributes[:options]
               })
             end
 
             def render_element(context, element)
-              element.content
+              element.content.to_s
             end
 
             def render_default_content

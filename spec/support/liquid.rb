@@ -1,6 +1,9 @@
 def render_template(source, context = nil, options = {})
   context ||= ::Liquid::Context.new
-  context.exception_handler = ->(e) { true }
+  context.exception_renderer = ->(e) do
+    # puts e.message # UN-COMMENT IT FOR DEBUGGING
+    raise e
+  end
   Locomotive::Steam::Liquid::Template.parse(source, options).render(context)
 end
 
@@ -15,7 +18,7 @@ module Liquid
       @_source = source.with_indifferent_access
     end
 
-    def before_method(meth)
+    def liquid_method_missing(meth)
       @_source[meth.to_sym]
     end
 
@@ -38,6 +41,33 @@ module Liquid
     end
     def events
       @stack || []
+    end
+  end
+
+  class LayoutFileSystem
+    def read_template_file(template_path, _)
+      case template_path
+      when "base"
+        "<body>base</body>"
+
+      when "inherited"
+        "{% extends base %}"
+
+      when "page_with_title"
+        "<body><h1>{% block title %}Hello{% endblock %}</h1><p>Lorem ipsum</p></body>"
+
+      when "product"
+        "<body><h1>Our product: {{ name }}</h1>{% block info %}{% endblock %}</body>"
+
+      when "product_with_warranty"
+        "{% extends product %}{% block info %}<p>mandatory warranty</p>{% endblock %}"
+
+      when "product_with_static_price"
+        "{% extends product %}{% block info %}<h2>Some info</h2>{% block price %}<p>$42.00</p>{% endblock %}{% endblock %}"
+
+      else
+        template_path
+      end
     end
   end
 end

@@ -21,7 +21,11 @@ module Locomotive::Steam
             live_editing:   live_editing?,
             params:         params,
             session:        request.session,
-            cookies:        request.cookies
+            cookies:        request.cookies,
+            file_system:    Locomotive::Steam::Liquid::FileSystem.new(
+              section_finder: services.section_finder,
+              snippet_finder: services.snippet_finder
+            )
           }.merge(env['steam.liquid_registers'])
         end
 
