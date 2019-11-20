@@ -1,14 +1,3 @@
-GIT
-  remote: https://github.com/locomotivecms/common.git
-  revision: 4d1bd565246262ab4b1b824e21c7847846f4cc5c
-  ref: 4d1bd56
-  specs:
-    locomotivecms_common (0.3.1)
-      activesupport (>= 5.1.5, < 6.0)
-      attr_extras (~> 5.2.0)
-      colorize
-      stringex (~> 2.8.2)
-
 PATH
   remote: .
   specs:
@@ -24,7 +13,7 @@ PATH
       httparty (~> 0.16.0)
       kramdown (~> 1.16.2)
       liquid (~> 4.0.3)
-      locomotivecms_common (~> 0.3.1)
+      locomotivecms_common (~> 0.4.0)
       mime-types (~> 3.1.0)
       mimetype-fu (~> 0.1.2)
       moneta (~> 1.0.0)
@@ -55,7 +44,7 @@ GEM
     autoprefixer-rails (8.0.0)
       execjs
     bcrypt (3.1.13)
-    bson (4.5.0)
+    bson (4.6.0)
     chronic (0.10.2)
     chunky_png (1.3.11)
     codeclimate-test-reporter (0.4.8)
@@ -101,7 +90,7 @@ GEM
     httparty (0.16.4)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
-    i18n (1.6.0)
+    i18n (1.7.0)
       concurrent-ruby (~> 1.0)
     i18n-spec (0.6.0)
       iso
@@ -113,6 +102,11 @@ GEM
       rspec (>= 2.0, < 4.0)
     kramdown (1.16.2)
     liquid (4.0.3)
+    locomotivecms_common (0.4.0)
+      activesupport (>= 5.1.5, < 6.0)
+      attr_extras (~> 5.2.0)
+      colorize
+      stringex (~> 2.8.2)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     memory_profiler (0.9.14)
@@ -122,7 +116,7 @@ GEM
     mimetype-fu (0.1.2)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.11.3)
+    minitest (5.13.0)
     moneta (1.0.0)
     mongo (2.8.0)
       bson (>= 4.4.2, < 5.0.0)
@@ -150,7 +144,7 @@ GEM
       rack (>= 1.0, < 3)
     rack_csrf (2.6.0)
       rack (>= 1.1.0)
-    rake (12.3.3)
+    rake (13.0.1)
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
@@ -180,16 +174,16 @@ GEM
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
-    stackprof (0.2.12)
+    stackprof (0.2.13)
     stringex (2.8.5)
-    temple (0.8.1)
+    temple (0.8.2)
     term-ansicolor (1.7.1)
       tins (~> 1.0)
     thor (0.20.3)
     thread_safe (0.3.6)
-    tilt (2.0.9)
+    tilt (2.0.10)
     timecop (0.9.1)
-    tins (1.21.1)
+    tins (1.22.2)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uglifier (4.1.20)
@@ -205,7 +199,6 @@ DEPENDENCIES
   haml (~> 5.0.4)
   i18n-spec (~> 0.6.0)
   json_spec (~> 1.1.5)
-  locomotivecms_common!
   locomotivecms_steam!
   memory_profiler
   mongo (~> 2.8.0)
@@ -213,7 +206,7 @@ DEPENDENCIES
   puma (~> 4.3.0)
   rack-mini-profiler (~> 0.10.1)
   rack-test (~> 0.8.2)
-  rake (~> 12.3.0)
+  rake (~> 13.0.1)
   rspec (~> 3.7.0)
   stackprof
   timecop (~> 0.9.1)

@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency 'rake',       '~> 12.3.0'
+  spec.add_development_dependency 'rake',       '~> 13.0.1'
 
   spec.add_development_dependency 'mongo',      '~> 2.8.0'
   spec.add_development_dependency 'origin',     '~> 2.3.1'
@@ -49,7 +49,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'duktape',                '~> 2.0.1.1'
   spec.add_dependency 'pony',                   '~> 1.12'
 
-  spec.add_dependency 'locomotivecms_common',     '~> 0.3.1'
+  spec.add_dependency 'locomotivecms_common',   '~> 0.4.0'
 
   spec.required_ruby_version = '>= 2.0'
 end
