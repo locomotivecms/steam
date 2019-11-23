@@ -15,15 +15,15 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Page do
     subject { loader.load(scope).sort { |a, b| a[:_fullpath] <=> b[:_fullpath] } }
 
     it 'tests various stuff' do
-      expect(subject.size).to eq 35 + 1
+      expect(subject.size).to eq 36
       expect(subject.first[:title]).to eq(en: 'Page not found', fr: 'Page non trouvée')
       expect(subject[23][:is_layout]).to eq true
       expect(subject[23][:listed]).to eq false
       expect(subject[23][:published]).to eq false
       expect(subject[24][:slug]).to eq(en: 'music', fr: 'notre-musique')
       expect(subject[25][:title]).to eq(en: 'Override', fr: 'Surchargé')
-      expect(subject[25 + 1][:_fullpath]).to eq 'songs'
-      expect(subject[25 + 1][:template_path]).to eq(en: false)
+      expect(subject[26][:_fullpath]).to eq 'songs'
+      expect(subject[26][:template_path]).to eq(en: false)
     end
 
     context 'a different environment' do
@@ -31,7 +31,7 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Page do
       let(:loader)  { described_class.new(site_path, env) }
 
       it 'completes the data with the ones from the production environment' do
-        expect(subject.size).to eq 36 + 1
+        expect(subject.size).to eq 37
         expect(subject[21][:title]).to eq(en: 'Home page', fr: "Ma page d'accueil en production")
       end
 
