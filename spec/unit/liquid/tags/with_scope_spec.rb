@@ -33,6 +33,25 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
 
     end
 
+    describe 'pass directly a hash built with the Action liquid tag for example' do
+
+      let(:assigns) { { 'my_filters' => { active: true, price: 42, title: "/like this/ix", hidden: false } } }
+
+      let(:source)  { "{% with_scope my_filters %}{% assign conditions = with_scope %}{% assign content_type = with_scope_content_type %}{% endwith_scope %}" }
+
+      it { expect(context['conditions'].keys).to eq(%w(active price title hidden)) }
+      it { expect(conditions['active']).to eq true }
+      it { expect(conditions['title']).to eq(/like this/ix) }
+
+      context "the variable doesn't exist" do
+
+        let(:assigns) { { } }
+        it { expect(context['conditions']).to eq({}) }
+
+      end
+
+    end
+
     describe 'decode basic options (boolean, integer, ...)' do
 
       let(:source) { "{% with_scope active: true, price: 42, title: 'foo', hidden: false %}{% assign conditions = with_scope %}{% endwith_scope %}" }

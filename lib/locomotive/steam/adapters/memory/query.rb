@@ -97,6 +97,7 @@ module Locomotive::Steam
                 break # no to go further
               end
             end
+
             accepted
           end
         end # filtered
