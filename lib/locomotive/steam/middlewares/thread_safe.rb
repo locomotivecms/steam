@@ -58,7 +58,7 @@ module Locomotive::Steam::Middlewares
     end
 
     def params
-      @params ||= if (request.content_type && request.content_type.start_with?('application/json')) && (request.post? || request.put?)
+      @params ||= if request.content_type&.start_with?('application/json') && (request.post? || request.put?)
         request.body.rewind
         JSON.parse(request.body.read).with_indifferent_access
       else
