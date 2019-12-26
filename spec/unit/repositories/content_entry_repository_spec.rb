@@ -378,7 +378,7 @@ describe Locomotive::Steam::ContentEntryRepository do
 
     subject { repository.with(type).send(:conditions_without_order_by, conditions) }
 
-    it { is_expected.to eq([{ _visible: true, content_type_id: 1 }, nil]) }
+    it { is_expected.to eq([{ '_visible' => true, 'content_type_id' => 1 }, nil]) }
 
     context 'select fields' do
 
@@ -389,7 +389,7 @@ describe Locomotive::Steam::ContentEntryRepository do
       let(:_fields)     { instance_double('Fields', selects: [field], belongs_to: [], many_to_many: [], dates_and_date_times: []) }
       let(:conditions)  { { 'category' => value } }
 
-      it { is_expected.to eq([{ _visible: true, content_type_id: 1, 'category_id' => 42 }, nil]) }
+      it { is_expected.to eq([{ '_visible' => true, 'content_type_id' => 1, 'category_id' => 42 }, nil]) }
 
     end
 
@@ -400,7 +400,7 @@ describe Locomotive::Steam::ContentEntryRepository do
       let(:_fields)     { instance_double('Fields', selects: [], belongs_to: [], many_to_many: [], dates_and_date_times: [field]) }
       let(:conditions)  { { 'launched_at' => value } }
 
-      it { is_expected.to eq([{ _visible: true, content_type_id: 1, 'launched_at' => Date.parse('2009/09/10') }, nil]) }
+      it { is_expected.to eq([{ '_visible' => true, 'content_type_id' => 1, 'launched_at' => Date.parse('2009/09/10') }, nil]) }
 
     end
 
@@ -413,7 +413,7 @@ describe Locomotive::Steam::ContentEntryRepository do
       let(:_fields)     { instance_double('Fields', selects: [], belongs_to: [], many_to_many: [], dates_and_date_times: [field]) }
       let(:conditions)  { { 'launched_at' => value } }
 
-      it { is_expected.to eq([{ _visible: true, content_type_id: 1, 'launched_at' => Time.zone.parse('2007/06/29 21:15:00').to_datetime }, nil]) }
+      it { is_expected.to eq([{ '_visible' => true, 'content_type_id' => 1, 'launched_at' => Time.zone.parse('2007/06/29 21:15:00').to_datetime }, nil]) }
 
     end
 
@@ -424,13 +424,13 @@ describe Locomotive::Steam::ContentEntryRepository do
       let(:_fields)     { instance_double('Fields', selects: [], belongs_to: [field], many_to_many: [], dates_and_date_times: []) }
       let(:conditions)  { { 'person' => value } }
 
-      it { is_expected.to eq([{ _visible: true, content_type_id: 1, 'person_id' => 42 }, nil]) }
+      it { is_expected.to eq([{ '_visible' => true, 'content_type_id' => 1, 'person_id' => 42 }, nil]) }
 
       context 'the target value is a content entry' do
 
         let(:value) { instance_double('TargetContentEntry', _id: 1) }
 
-        it { is_expected.to eq([{ _visible: true, content_type_id: 1, 'person_id' => 1 }, nil]) }
+        it { is_expected.to eq([{ '_visible' => true, 'content_type_id' => 1, 'person_id' => 1 }, nil]) }
 
       end
 
@@ -438,7 +438,7 @@ describe Locomotive::Steam::ContentEntryRepository do
 
         let(:value) { { '_id' => 42 } }
 
-        it { is_expected.to eq([{ _visible: true, content_type_id: 1, 'person_id' => 42 }, nil]) }
+        it { is_expected.to eq([{ '_visible' => true, 'content_type_id' => 1, 'person_id' => 42 }, nil]) }
 
       end
 
@@ -447,21 +447,21 @@ describe Locomotive::Steam::ContentEntryRepository do
         let(:value) { [instance_double('TargetContentEntry', _id: 1), instance_double('TargetContentEntry', _id: 2)] }
         let(:conditions)  { { 'person.in' => value } }
 
-        it { is_expected.to eq([{ _visible: true, content_type_id: 1, 'person_id.in' => [1, 2] }, nil]) }
+        it { is_expected.to eq([{ '_visible' => true, 'content_type_id' => 1, 'person_id.in' => [1, 2] }, nil]) }
 
       end
 
       context 'testing a nil value (field => nil)' do
 
         let(:value) { nil }
-        it { is_expected.to eq([{ _visible: true, content_type_id: 1, 'person_id' => nil }, nil]) }
+        it { is_expected.to eq([{ '_visible' => true, 'content_type_id' => 1, 'person_id' => nil }, nil]) }
 
       end
 
       context 'testing a nil value (field.ne => nil)' do
 
         let(:conditions)  { { 'person.ne' => nil } }
-        it { is_expected.to eq([{ _visible: true, content_type_id: 1, 'person_id.ne' => nil }, nil]) }
+        it { is_expected.to eq([{ '_visible' => true, 'content_type_id' => 1, 'person_id.ne' => nil }, nil]) }
 
       end
 
@@ -474,13 +474,13 @@ describe Locomotive::Steam::ContentEntryRepository do
       let(:_fields)     { instance_double('Fields', selects: [], belongs_to: [], many_to_many: [field], dates_and_date_times: []) }
       let(:conditions)  { { 'tags.in' => value } }
 
-      it { is_expected.to eq([{ _visible: true, content_type_id: 1, 'tag_ids.in' => [42] }, nil]) }
+      it { is_expected.to eq([{ '_visible' => true, 'content_type_id' => 1, 'tag_ids.in' => [42] }, nil]) }
 
       context 'the target value is a content entry' do
 
         let(:value) { [instance_double('TargetContentEntry', _id: 1), 42] }
 
-        it { is_expected.to eq([{ _visible: true, content_type_id: 1, 'tag_ids.in' => [1, 42] }, nil]) }
+        it { is_expected.to eq([{ '_visible' => true, 'content_type_id' => 1, 'tag_ids.in' => [1, 42] }, nil]) }
 
       end
 

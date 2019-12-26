@@ -91,7 +91,7 @@ module Locomotive::Steam
 
         first = { order_by: _local_conditions.delete(:order_by) }.delete_if { |_, v| v.blank? }
 
-        [first, *conditions.flatten].inject({}) do |memo, hash|
+        [first, *conditions.flatten].inject(HashWithIndifferentAccess.new) do |memo, hash|
           memo.merge!(hash) unless hash.blank?
           memo
         end.merge(_local_conditions)
