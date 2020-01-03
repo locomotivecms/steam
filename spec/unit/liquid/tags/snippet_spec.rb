@@ -2,14 +2,15 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Tags::Snippet do
 
-  let(:request)     { instance_double('Request', env: {}) }
-  let(:services)    { Locomotive::Steam::Services.build_instance(request) }
-  let(:finder)      { services.snippet_finder }
-  let(:file_system) { Locomotive::Steam::Liquid::FileSystem.new(snippet_finder: finder) }
-  let(:snippet)     { instance_double('Snippet', template: nil, :template= => nil, liquid_source: 'built by NoCoffee') }
-  let(:source)      { 'Locomotive {% include footer %}' }
+  let(:request)         { instance_double('Request', env: {}) }
+  let(:services)        { Locomotive::Steam::Services.build_instance(request) }
+  let(:finder)          { services.snippet_finder }
+  let(:file_system)     { Locomotive::Steam::Liquid::FileSystem.new(snippet_finder: finder) }
+  let(:snippet_source)  { 'built by NoCoffee' }
+  let(:snippet)         { instance_double('Snippet', template: nil, :template= => nil, liquid_source: snippet_source) }
+  let(:source)          { 'Locomotive {% include footer %}' }
 
-  before { allow(finder).to receive(:find).and_return(snippet) }
+  before { allow(finder).to receive(:find).with('footer').and_return(snippet) }
 
   describe 'parsing' do
 
@@ -33,19 +34,29 @@ describe Locomotive::Steam::Liquid::Tags::Snippet do
 
   describe 'rendering' do
 
-    let(:context) { ::Liquid::Context.new({}, {}, { services: services, file_system: file_system }) }
+    let(:assigns) { {} }
+    let(:context) { ::Liquid::Context.new(assigns, {}, { services: services, file_system: file_system }) }
 
     subject { render_template(source, context) }
 
     it { is_expected.to eq 'Locomotive built by NoCoffee' }
 
-    context 'rendering error (action) found in the snippet' do
+    context 'a rendering error (action) has been found in the snippet' do
 
-      let(:snippet) { instance_double('Snippet', template: nil, :template= => nil, liquid_source: '{% action "Hello world" %}a.b(+}{% endaction %}') }
+      let(:snippet_source) { '{% action "Hello world" %}a.b(+}{% endaction %}' }
 
       it 'raises a TemplateError' do
         expect { subject }.to raise_exception(Locomotive::Steam::TemplateError)
       end
+
+    end
+
+    context 'use a variable as the name of the snippet' do
+
+      let(:assigns) { { 'my_snippet' => 'footer' } }
+      let(:source)  { 'Locomotive {% include my_snippet %}' }
+
+      it { is_expected.to eq 'Locomotive built by NoCoffee' }
 
     end
 
