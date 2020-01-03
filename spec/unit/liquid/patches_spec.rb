@@ -1,6 +1,55 @@
 require 'spec_helper'
 
-describe Liquid::StandardFilters do
+describe ::Liquid::Condition do
+
+  let(:context)   { Liquid::Context.new }
+  let(:condition) { described_class.new(left, op, right) }
+
+  subject { condition.evaluate(context) }
+
+  describe 'custom proc operator: starts_with' do
+
+    let(:op)    { 'starts_with' }
+    let(:left)  { 'Hello world' }
+    let(:right) { 'Hello' }
+
+    it { is_expected.to eq true }
+
+    context "the left variable doesn't start with the right variable" do
+      let(:right) { 'hello' }
+      it { is_expected.to eq false }
+    end
+
+    context 'the left variable is nil' do
+      let(:left) { nil }
+      it { is_expected.to eq false }
+    end
+
+    context 'the right variable is nil' do
+      let(:right) { nil }
+      it { is_expected.to eq false }
+    end
+
+  end
+
+  describe 'custom proc operator: is' do
+
+    let(:op)    { 'is' }
+    let(:left)  { 42 }
+    let(:right) { 42 }
+
+    it { is_expected.to eq true }
+
+    context "the left variable doesn't equal to the right variable" do
+      let(:right) { nil }
+      it { is_expected.to eq false }
+    end
+
+  end
+
+end
+
+describe ::Liquid::StandardFilters do
 
   describe '#to_number' do
 
