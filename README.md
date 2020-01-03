@@ -94,4 +94,4 @@ Note: you do not need to prefix with bundle exec as the docky-ruby image already
 
 ## License
 
-Copyright (c) 2019 NoCoffee. MIT Licensed, see MIT-LICENSE for details.
+Copyright (c) 2020 NoCoffee. MIT Licensed, see MIT-LICENSE for details.
