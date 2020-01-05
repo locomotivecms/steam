@@ -11,6 +11,10 @@ module Locomotive
             def load(scope)
               attributes = _load(File.join(site_path, 'config', 'site.yml'))
 
+              # NOTE: we can't use the locales and default_local methods here
+              # since the loading is not done yet.
+              locales, default_locale = attributes[:locales], attributes[:locales].first
+
               (attributes[:domains] ||= []).concat(%w(0.0.0.0 localhost))
 
               attributes[:picture] = File.expand_path(File.join(site_path, 'icon.png'))
@@ -18,6 +22,12 @@ module Locomotive
               attributes[:metafields_schema] = load_metafields_schema
 
               attributes.merge!(load_from_env)
+
+              # special treatment for the sections_content which may or may not be translated
+              sections_content = attributes[:sections_content]
+              if sections_content.present? && locales.size == 1 && sections_content[default_locale].nil?
+                attributes[:sections_content] = { default_locale => sections_content }
+              end
 
               [attributes]
             end

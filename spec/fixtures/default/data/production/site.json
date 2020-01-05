@@ -1,3 +1,10 @@
 {
-  "name": "My awesome site"
+  "name": "My awesome site",
+  "sections_content": {
+    "header": {
+      "settings": {
+        "title": "Hello world"
+      }
+    }
+  }
 }

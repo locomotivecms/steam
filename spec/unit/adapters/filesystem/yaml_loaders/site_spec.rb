@@ -32,6 +32,13 @@ describe Locomotive::Steam::Adapters::Filesystem::YAMLLoaders::Site do
         expect(subject[:name]).to eq('My awesome site')
       end
 
+      it 'localizes the sections_content from the production environment' do
+        allow(loader).to receive(:_load).with(File.join(site_path, 'config', 'site.yml')).and_return(name: 'Test', locales: ['fr'])
+        allow(loader).to receive(:_load).with(File.join(site_path, 'config', 'metafields_schema.yml')).and_return(nil)
+        expect(subject[:sections_content]).to eq('fr' => { 'header' => { 'settings' => {
+          'title' => 'Hello world' } } })
+      end
+
     end
 
   end
