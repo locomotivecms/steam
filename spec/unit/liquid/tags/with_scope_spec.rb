@@ -63,6 +63,56 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
 
     end
 
+    describe 'decode advanced options' do
+      let(:options)  { "" }
+      let(:source) { "{% with_scope key: #{options} %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+      context "Array" do
+        context "of Integer" do
+          let(:options)  { "[1, 2, 3]" }
+          it { expect(conditions['key']).to eq [1, 2, 3] }
+        end
+
+        context "of String" do
+          let(:options)  { "['a', 'b', 'c']" }
+          it { expect(conditions['key']).to eq ['a', 'b', 'c'] }
+        end
+
+        context "With variable" do
+          let(:assigns) { {'a' => 1, 'c' => 3} }
+          let(:options) { "[a, 2, c, 'd']" }
+          it { expect(conditions['key']).to eq [1, 2, 3, 'd'] }
+        end
+      end
+
+      context "Hash" do
+        context "With key value" do
+          let(:options)  { "{a: 1, b: 2, c: 3, d: 'foo'}" }
+          it { expect(conditions['key'].keys).to eq(%w(a b c d)) }
+          it { expect(conditions['key']['a']).to eq 1 }
+          it { expect(conditions['key']['b']).to eq 2 }
+          it { expect(conditions['key']['c']).to eq 3 }
+          it { expect(conditions['key']['d']).to eq 'foo' }
+        end
+
+        context "With key variable" do
+          let(:assigns) { {'a' => 1, 'c' => 3} }
+          let(:options)  { "{a: a, b: 2, c: c, d: 'foo'}" }
+          it { expect(conditions['key'].keys).to eq(%w(a b c d)) }
+          it { expect(conditions['key']['a']).to eq 1 }
+          it { expect(conditions['key']['b']).to eq 2 }
+          it { expect(conditions['key']['c']).to eq 3 }
+          it { expect(conditions['key']['d']).to eq 'foo' }
+        end
+
+        context "With params" do
+          let(:assigns) { { 'params' => Locomotive::Steam::Liquid::Drops::Params.new({ foo: 'bar' }) } }
+          let(:options)  { "{'a': params.foo}" }
+          it { expect(conditions['key'].keys).to eq(%w(a)) }
+          it { expect(conditions['key']['a']).to eq 'bar' }
+        end
+      end
+    end
+
     describe 'decode regexps' do
 
       let(:source) { "{% with_scope title: /Like this one|or this one/ %}{% assign conditions = with_scope %}{% endwith_scope %}" }
@@ -143,6 +193,15 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
       it { expect(conditions['price.lt']).to eq 50 }
       it { expect(conditions['published_at.lte']).to eq '2019-09-10 00:00:00' }
       it { expect(conditions['published_at.gte']).to eq '2019/09/09 00:00:00' }
+
+    end
+
+    describe 'In a loop context, each scope should be evaluated correctly' do
+        let(:assigns) { {'list' => ['A', 'B', 'C']} }
+
+        let(:source) { "{% for key in list %}{% with_scope foo: key %}{% assign conditions = with_scope %}{% endwith_scope %}{{ conditions }}{% endfor %}" }
+
+      it { expect(output).to eq '{"foo"=>"A"}{"foo"=>"B"}{"foo"=>"C"}' }
 
     end
 
