@@ -40,7 +40,7 @@ module Locomotive
             end
 
             def evaluate_attributes(context)
-              HashWithIndifferentAccess.new.tap do |hash|
+              @attributes = HashWithIndifferentAccess.new.tap do |hash|
                 attributes.each do |key, value|
                   # evaluate the value if possible before casting it
                   _value = value.is_a?(::Liquid::VariableLookup) ? context.evaluate(value) : value
