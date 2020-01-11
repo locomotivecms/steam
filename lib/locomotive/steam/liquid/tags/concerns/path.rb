@@ -7,13 +7,17 @@ module Locomotive
 
             Syntax = /(#{::Liquid::QuotedFragment}+)(\s*,.+)?/o
 
-            attr_reader :handle
+            attr_reader :handle, :compatible_attributes
 
             def initialize(tag_name, markup, options)
               super
 
               if markup =~ Syntax
                 @handle, _attributes = $1, $2
+
+                # this is a hack for sites which don't follow the new syntax.
+                # see commit 86a601b7cd303ea3b34fde1b04b46b4594855c9c
+                parse_compatible_attributes(_attributes)
 
                 parse_attributes(_attributes)
               else
@@ -45,6 +49,18 @@ module Locomotive
             end
 
             protected
+
+            def parse_compatible_attributes(_attributes)
+              if _attributes
+                _compatible_attribute = _attributes.dup
+                %w(with locale).each do |name|
+                  _compatible_attribute.gsub!(/#{name}: ([\w-]+)/, name + ': "\1"')
+                end
+                @compatible_attributes = parse_attributes(_compatible_attribute)
+              else
+                @compatible_attributes = {}
+              end
+            end
 
             def services
               @context.registers[:services]
@@ -86,11 +102,11 @@ module Locomotive
             end
 
             def locale
-              attributes[:locale] || raw_attributes[:locale] || @locale
+              attributes[:locale] || compatible_attributes[:locale] || @locale
             end
 
             def template_slug
-              attributes[:with] || raw_attributes[:with]
+              attributes[:with] || compatible_attributes[:with]
             end
 
             def set_vars_from_context(context)

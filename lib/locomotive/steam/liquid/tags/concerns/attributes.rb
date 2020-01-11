@@ -18,8 +18,7 @@ module Locomotive
             private
 
             def parse_attributes(markup, default = {})
-              @attributes     = default || {}
-              @raw_attributes = {}
+              @attributes = default || {}
               attribute_markup = ""
               if markup =~ /^ *([a-zA-Z0-9_.]*:.*)$/
                 attribute_markup = $1
@@ -28,8 +27,8 @@ module Locomotive
               end
               unless attribute_markup.blank?
                 @attributes.merge!(AttributeParser.parse(attribute_markup))
-                @raw_attributes = AttributeParser.parse(attribute_markup, raw_mode=true)
               end
+              @attributes
             end
 
             def context_evaluate_array(vals)
@@ -46,7 +45,7 @@ module Locomotive
                   # evaluate the value if possible before casting it
                   _value = value.is_a?(::Liquid::VariableLookup) ? context.evaluate(value) : value
 
-                  hash[key] = cast_value(context, _value)
+                  hash[cast_value(context, key)] = cast_value(context, _value)
                 end
               end
             end
@@ -67,64 +66,59 @@ module Locomotive
 
             class AttributeParser
               class << self
-                def parse(markup, raw_mode=false)
-                  handle_hash(Parser::CurrentRuby.parse("{#{markup}}"), raw_mode)
+                def parse(markup)
+                  handle_hash(Parser::CurrentRuby.parse("{#{markup}}"), )
                 end
 
-                def handle(node, raw_mode=false)
+                def handle(node)
                   handler = "handle_#{node.type}"
                   # TODO create specific error
                   # raise Errno, "unknown expression type: #{node.type.inspect}" unless respond_to?(handler)
-                  public_send handler, node, raw_mode
+                  public_send handler, node
                 end
 
-                def handle_hash(node, raw_mode=false)
+                def handle_hash(node)
                   res = {}
                   node.children.each do | n |
-                    # evaluate only cast value so the key is always in raw mode
-                    res[handle(n.children[0], true)] = handle(n.children[1], raw_mode)
+                    res[handle(n.children[0])] = handle(n.children[1])
                   end
                   res
                 end
 
-                def handle_sym(node, raw_mode=false)
+                def handle_sym(node)
                   node.children[0]
                 end
 
-                def handle_int(node, raw_mode=false)
+                def handle_int(node)
                   node.children[0]
                 end
 
-                def handle_str(node, raw_mode=false)
+                def handle_str(node)
                   node.children[0]
                 end
 
-                def handle_regexp(node, raw_mode=false)
+                def handle_regexp(node)
                   Unparser.unparse(node)
                 end
 
-                def handle_send(node, raw_mode=false)
-                  if raw_mode
-                    Unparser.unparse(node)
-                  else
-                    ::Liquid::Expression.parse(Unparser.unparse(node))
-                  end
+                def handle_send(node)
+                  ::Liquid::Expression.parse(Unparser.unparse(node))
                 end
 
-                def handle_true(node, raw_mode=false)
+                def handle_true(node)
                   true
                 end
 
-                def handle_false(node, raw_mode=false)
+                def handle_false(node)
                   false
                 end
 
-                def handle_float(node, raw_mode=false)
+                def handle_float(node)
                   node.children[0]
                 end
 
-                def handle_array(node, raw_mode=false)
-                  node.children.map{|n| handle(n, raw_mode)}
+                def handle_array(node)
+                  node.children.map{|n| handle(n)}
                 end
               end
             end
