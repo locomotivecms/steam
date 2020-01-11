@@ -27,6 +27,13 @@ EOF
 
     end
 
+    describe 'correct syntax of pagination' do
+
+      let(:source)  { '{% paginate projects by 2 %}{% endpaginate %}' }
+      let(:block)   { subject.root.nodelist.first }
+
+    end
+
     describe 'with options for the pagination' do
 
       let(:source)  { '{% paginate projects by 2, window_size: 4 %}{% endpaginate %}' }

@@ -71,11 +71,15 @@ module Locomotive
             def parse_attributes(markup, default = {})
               @attributes     = default || {}
               @raw_attributes = {}
-
-              return if markup.blank?
-              return if markup.scan(tag_attributes_regexp).size == 0
-              node = Parser::CurrentRuby.parse("{#{markup}}")
-              @attributes = handle(node)
+              attribute_markup = ""
+              if markup =~ /^ *([a-zA-Z0-9_.]*:.*)$/
+                attribute_markup = $1
+              elsif markup =~ /^[a-zA-Z0-9 _"']*, *(.*)$/
+                attribute_markup = $1
+              end
+              unless attribute_markup.blank?
+                @attributes = handle(Parser::CurrentRuby.parse("{#{attribute_markup}}"))
+              end
             end
 
             def context_evaluate_array(vals)
@@ -83,7 +87,7 @@ module Locomotive
             end
 
             def context_evaluate(vals)
-                vals.type
+              vals.type
             end
 
             def evaluate_attributes(context)
