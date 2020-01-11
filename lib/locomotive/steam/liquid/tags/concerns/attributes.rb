@@ -72,8 +72,10 @@ module Locomotive
 
                 def handle(node)
                   handler = "handle_#{node.type}"
-                  # TODO create specific error
-                  # raise Errno, "unknown expression type: #{node.type.inspect}" unless respond_to?(handler)
+                  unless respond_to?(handler)
+                    raise ::Liquid::SyntaxError.new(
+                      "Fail to parse attributes. Unknown expression type: #{node.type.inspect}")
+                  end
                   public_send handler, node
                 end
 
