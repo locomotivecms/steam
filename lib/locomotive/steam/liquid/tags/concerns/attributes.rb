@@ -27,7 +27,8 @@ module Locomotive
                 attribute_markup = $1
               end
               unless attribute_markup.blank?
-                @attributes = AttributeParser.parse(attribute_markup)
+                @attributes.merge!(AttributeParser.parse(attribute_markup))
+                @raw_attributes = AttributeParser.parse(attribute_markup, raw_mode=true)
               end
             end
 
@@ -68,59 +69,64 @@ module Locomotive
 
             class AttributeParser
               class << self
-                def parse(markup)
-                  handle(Parser::CurrentRuby.parse("{#{markup}}"))
+                def parse(markup, raw_mode=false)
+                  handle_hash(Parser::CurrentRuby.parse("{#{markup}}"), raw_mode)
                 end
 
-                def handle(node)
+                def handle(node, raw_mode=false)
                   handler = "handle_#{node.type}"
                   # TODO create specific error
                   # raise Errno, "unknown expression type: #{node.type.inspect}" unless respond_to?(handler)
-                  public_send handler, node
+                  public_send handler, node, raw_mode
                 end
 
-                def handle_hash(node)
+                def handle_hash(node, raw_mode=false)
                   res = {}
                   node.children.each do | n |
-                    res[handle(n.children[0])] = handle(n.children[1])
+                    # evaluate only cast value so the key is always in raw mode
+                    res[handle(n.children[0], true)] = handle(n.children[1], raw_mode)
                   end
                   res
                 end
 
-                def handle_sym(node)
+                def handle_sym(node, raw_mode=false)
                   node.children[0]
                 end
 
-                def handle_int(node)
+                def handle_int(node, raw_mode=false)
                   node.children[0]
                 end
 
-                def handle_str(node)
+                def handle_str(node, raw_mode=false)
                   node.children[0]
                 end
 
-                def handle_regexp(node)
+                def handle_regexp(node, raw_mode=false)
                   Unparser.unparse(node)
                 end
 
-                def handle_send(node)
-                  ::Liquid::Expression.parse(Unparser.unparse(node))
+                def handle_send(node, raw_mode=false)
+                  if raw_mode
+                    Unparser.unparse(node)
+                  else
+                    ::Liquid::Expression.parse(Unparser.unparse(node))
+                  end
                 end
 
-                def handle_true(node)
+                def handle_true(node, raw_mode=false)
                   true
                 end
 
-                def handle_false(node)
+                def handle_false(node, raw_mode=false)
                   false
                 end
 
-                def handle_float(node)
+                def handle_float(node, raw_mode=false)
                   node.children[0]
                 end
 
-                def handle_array(node)
-                  node.children.map{|n| handle(n)}
+                def handle_array(node, raw_mode=false)
+                  node.children.map{|n| handle(n, raw_mode)}
                 end
               end
             end
