@@ -15,57 +15,6 @@ module Locomotive
 
             attr_reader :attributes, :raw_attributes
 
-            def handle(node)
-              handler = "handle_#{node.type}"
-              # TODO create specific error
-              # raise Errno, "unknown expression type: #{node.type.inspect}" unless respond_to?(handler)
-              public_send handler, node
-            end
-
-            def handle_hash(node)
-              res = {}
-              node.children.each do | n |
-                res[handle(n.children[0])] = handle(n.children[1])
-              end
-              res
-            end
-
-            def handle_sym(node)
-              node.children[0]
-            end
-
-            def handle_int(node)
-              node.children[0]
-            end
-
-            def handle_str(node)
-              node.children[0]
-            end
-
-            def handle_regexp(node)
-              Unparser.unparse(node)
-            end
-
-            def handle_send(node)
-              ::Liquid::Expression.parse(Unparser.unparse(node))
-            end
-
-            def handle_true(node)
-              true
-            end
-
-            def handle_false(node)
-              false
-            end
-
-            def handle_float(node)
-              node.children[0]
-            end
-
-            def handle_array(node)
-              node.children.map{|n| handle(n)}
-            end
-
             private
 
             def parse_attributes(markup, default = {})
@@ -78,7 +27,7 @@ module Locomotive
                 attribute_markup = $1
               end
               unless attribute_markup.blank?
-                @attributes = handle(Parser::CurrentRuby.parse("{#{attribute_markup}}"))
+                @attributes = AttributeParser.parse(attribute_markup)
               end
             end
 
@@ -115,8 +64,66 @@ module Locomotive
               ::Liquid::TagAttributes
             end
 
-          end
+            class AttributeParser
+              class << self
+                def parse(markup)
+                  handle(Parser::CurrentRuby.parse("{#{markup}}"))
+                end
 
+                def handle(node)
+                  handler = "handle_#{node.type}"
+                  # TODO create specific error
+                  # raise Errno, "unknown expression type: #{node.type.inspect}" unless respond_to?(handler)
+                  public_send handler, node
+                end
+
+                def handle_hash(node)
+                  res = {}
+                  node.children.each do | n |
+                    res[handle(n.children[0])] = handle(n.children[1])
+                  end
+                  res
+                end
+
+                def handle_sym(node)
+                  node.children[0]
+                end
+
+                def handle_int(node)
+                  node.children[0]
+                end
+
+                def handle_str(node)
+                  node.children[0]
+                end
+
+                def handle_regexp(node)
+                  Unparser.unparse(node)
+                end
+
+                def handle_send(node)
+                  ::Liquid::Expression.parse(Unparser.unparse(node))
+                end
+
+                def handle_true(node)
+                  true
+                end
+
+                def handle_false(node)
+                  false
+                end
+
+                def handle_float(node)
+                  node.children[0]
+                end
+
+                def handle_array(node)
+                  node.children.map{|n| handle(n)}
+                end
+              end
+            end
+
+          end
         end
       end
     end
