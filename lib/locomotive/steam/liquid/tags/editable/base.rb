@@ -18,6 +18,9 @@ module Locomotive
 
                 parse_attributes(markup, fixed: false, inline_editing: true)
 
+                # we don't allow dynamic attributes
+                evaluate_attributes(::Liquid::Context.new, lax: true)
+
                 set_label_and_slug
               else
                 raise ::Liquid::SyntaxError.new("Valid syntax: #{tag_name} <slug>(, <options>)")

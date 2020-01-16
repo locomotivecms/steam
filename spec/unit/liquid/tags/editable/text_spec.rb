@@ -76,10 +76,11 @@ describe Locomotive::Steam::Liquid::Tags::Editable::Text do
 
         context 'with a defined label' do
 
-          let(:source) { "{% editable_text 'first_column', label: 'Column #1' %}{% endeditable_text %}" }
+          let(:source) { "{% editable_text 'first_column', label: 'Column #1', format: raw %}{% endeditable_text %}" }
 
           it { is_expected.to include(slug: 'first_column') }
           it { is_expected.to include(label: 'Column #1') }
+          it { is_expected.to include(format: 'raw') }
 
         end
 

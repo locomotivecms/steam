@@ -28,9 +28,10 @@ module Locomotive
               end
             end
 
-            def evaluate_attributes(context)
-              @attributes = @attributes.transform_values do |attribute|
-                context.evaluate(attribute)
+            def evaluate_attributes(context, lax: false)
+              @attributes = @attributes.transform_values do |value|
+                _value = context.evaluate(value)
+                lax && _value.nil? ? value&.name : _value
               end
             end
 
