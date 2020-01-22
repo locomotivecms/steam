@@ -138,10 +138,11 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
 
     describe 'decode criteria with gt and lt' do
 
-      let(:source) { "{% with_scope price.gt:42.0, price.lt:50, published_at.lte: '2019-09-10 00:00:00' %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+      let(:source) { "{% with_scope price.gt:42.0, price.lt:50, published_at.lte: '2019-09-10 00:00:00', published_at.gte: '2019/09/09 00:00:00' %}{% assign conditions = with_scope %}{% endwith_scope %}" }
       it { expect(conditions['price.gt']).to eq 42.0 }
       it { expect(conditions['price.lt']).to eq 50 }
       it { expect(conditions['published_at.lte']).to eq '2019-09-10 00:00:00' }
+      it { expect(conditions['published_at.gte']).to eq '2019/09/09 00:00:00' }
 
     end
 

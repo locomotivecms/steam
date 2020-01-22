@@ -19,8 +19,9 @@ module Locomotive
           include Concerns::Attributes
 
           # Regexps and Arrays are allowed
-          ArrayFragment   = /\[(\s*(#{::Liquid::QuotedFragment},\s*)*#{::Liquid::QuotedFragment}\s*)\]/o.freeze
-          RegexpFragment  = /\/([^\/]+)\/([imx]+)?/o.freeze
+          ArrayFragment         = /\[(\s*(#{::Liquid::QuotedFragment},\s*)*#{::Liquid::QuotedFragment}\s*)\]/o.freeze
+          RegexpFragment        = /\/([^\/]+)\/([imx]+)?/o.freeze
+          StrictRegexpFragment  = /\A#{RegexpFragment}\z/o.freeze
 
           # a slight different from the Shopify implementation because we allow stuff like `started_at.le`
           TagAttributes   = /([a-zA-Z_0-9\.]+)\s*\:\s*(#{ArrayFragment}|#{RegexpFragment}|#{::Liquid::QuotedFragment})/o.freeze
@@ -66,7 +67,7 @@ module Locomotive
 
           def parse_attribute(value)
             case value
-            when RegexpFragment
+            when StrictRegexpFragment
               # let the cast_value attribute create the Regexp (done during the rendering phase)
               value
             when ArrayFragment
@@ -94,8 +95,8 @@ module Locomotive
 
           def cast_value(context, value)
             case value
-            when Array          then value.map { |_value| cast_value(context, _value) }
-            when RegexpFragment then create_regexp($1, $2)
+            when Array                then value.map { |_value| cast_value(context, _value) }
+            when StrictRegexpFragment then create_regexp($1, $2)
             else
               _value = context.evaluate(value)
               _value.respond_to?(:_id) ? _value.send(:_source) : _value
