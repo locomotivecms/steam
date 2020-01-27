@@ -18,7 +18,7 @@ module Locomotive
             private
 
             def parse_attributes(markup, default = {})
-              @raw_attributes = default || {}
+              @raw_attributes = default.dup || {}
               attribute_markup = ""
               if markup =~ /^ *([a-zA-Z0-9_.]*:.*)$/
                 attribute_markup = $1
