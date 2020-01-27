@@ -86,7 +86,7 @@ module Locomotive
             end
           end
 
-          def cast_value(context, value)
+          def cast_value(context, value, lax: false)
             case value
             when Array                then value.map { |_value| cast_value(context, _value) }
             when StrictRegexpFragment then create_regexp($1, $2)

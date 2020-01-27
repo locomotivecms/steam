@@ -39,7 +39,6 @@ module Locomotive
               vals.type
             end
 
-              HashWithIndifferentAccess.new.tap do |hash|
             def evaluate_attributes(context, lax: false)
               @attributes = HashWithIndifferentAccess.new.tap do |hash|
                 attributes.each do |key, value|
