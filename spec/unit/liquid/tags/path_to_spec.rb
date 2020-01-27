@@ -106,6 +106,13 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
 
         it { is_expected.to eq '/fr/a-notre-sujet' }
 
+        context 'loop on several locale from variable' do
+          let(:assigns) { { 'about_us' => drop, 'langs' => ['en', 'fr'] } }
+          let(:source) { "{% for lang in langs %}{% path_to about_us, locale: lang %}|{% endfor %}" }
+
+          it { is_expected.to eq '/about-us|/fr/a-notre-sujet|' }
+       end
+
       end
 
     end

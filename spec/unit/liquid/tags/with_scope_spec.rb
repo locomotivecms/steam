@@ -190,6 +190,15 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
 
     end
 
+    describe 'In a loop context, each scope should be evaluated correctly' do
+        let(:assigns) { {'list' => ['A', 'B', 'C']} }
+
+        let(:source) { "{% for key in list %}{% with_scope foo: key %}{% assign conditions = with_scope %}{% endwith_scope %}{{ conditions }}{% endfor %}" }
+
+      it { expect(output).to eq '{"foo"=>"A"}{"foo"=>"B"}{"foo"=>"C"}' }
+
+    end
+
   end
 
 end

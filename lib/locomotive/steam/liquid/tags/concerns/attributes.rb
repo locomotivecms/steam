@@ -18,7 +18,7 @@ module Locomotive
             private
 
             def parse_attributes(markup, default = {})
-              @attributes = default || {}
+              @raw_attributes = default || {}
               attribute_markup = ""
               if markup =~ /^ *([a-zA-Z0-9_.]*:.*)$/
                 attribute_markup = $1
@@ -26,9 +26,9 @@ module Locomotive
                 attribute_markup = $1
               end
               unless attribute_markup.blank?
-                @attributes.merge!(AttributeParser.parse(attribute_markup))
+                @raw_attributes.merge!(AttributeParser.parse(attribute_markup))
               end
-              @attributes
+              @raw_attributes
             end
 
             def context_evaluate_array(vals)
@@ -41,7 +41,7 @@ module Locomotive
 
             def evaluate_attributes(context, lax: false)
               @attributes = HashWithIndifferentAccess.new.tap do |hash|
-                attributes.each do |key, value|
+                raw_attributes.each do |key, value|
                   hash[evaluate_value(context, key, lax: lax)] = evaluate_value(context, value, lax: lax)
                 end
               end
