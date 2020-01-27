@@ -42,22 +42,20 @@ module Locomotive
             def evaluate_attributes(context, lax: false)
               @attributes = HashWithIndifferentAccess.new.tap do |hash|
                 attributes.each do |key, value|
-                  # evaluate the value if possible before casting it
-                  _value = value.is_a?(::Liquid::VariableLookup) ? context.evaluate(value) : value
-
-                  hash[cast_value(context, key, lax: lax)] = cast_value(context, _value, lax: lax)
+                  hash[evaluate_value(context, key, lax: lax)] = evaluate_value(context, value, lax: lax)
                 end
               end
             end
 
-            def cast_value(context, value, lax: false)
+            def evaluate_value(context, value, lax: false)
               case value
-              when Array          then value.map { |_value| cast_value(context, _value) }
-              when Hash           then value.transform_values { |_value| cast_value(context, _value) }
-              else
+              when ::Liquid::VariableLookup
                 _value = context.evaluate(value)
                 lax && _value.nil? ? value&.name : _value
-                _value.respond_to?(:_id) ? _value.send(:_source) : _value
+              when Array          then value.map { |_value| evaluate_value(context, _value) }
+              when Hash           then value.transform_values { |_value| evaluate_value(context, _value) }
+              else
+                value
               end
             end
 

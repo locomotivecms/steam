@@ -77,7 +77,7 @@ module Locomotive
           def parse_attribute(value)
             case value
             when StrictRegexpFragment
-              # let the cast_value attribute create the Regexp (done during the rendering phase)
+              # let the evaluate_value attribute create the Regexp (done during the rendering phase)
               value
             when ArrayFragment
               $1.split(',').map { |_value| parse_attribute(_value) }
@@ -86,12 +86,12 @@ module Locomotive
             end
           end
 
-          def cast_value(context, value, lax: false)
-            case value
-            when Array                then value.map { |_value| cast_value(context, _value) }
+          def evaluate_value(context, value, lax: false)
+            _value = super
+            case _value
             when StrictRegexpFragment then create_regexp($1, $2)
             else
-              super
+              _value.respond_to?(:_id) ? _value.send(:_source) : _value
             end
           end
 
