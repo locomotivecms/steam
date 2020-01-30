@@ -16,7 +16,7 @@ module Locomotive
 
             def parse_attributes(markup, default = {})
               @attributes     = default || {}
-              @raw_attributes = {}
+              @raw_attributes = @attributes.dup
 
               return if markup.blank?
 
@@ -24,12 +24,12 @@ module Locomotive
                 _key = key.to_sym
 
                 @attributes[_key]     = block_given? ? yield(value) : ::Liquid::Expression.parse(value)
-                @raw_attributes[_key] = value
+                @raw_attributes[_key] = @attributes[_key]
               end
             end
 
             def evaluate_attributes(context, lax: false)
-              @attributes = @attributes.transform_values do |value|
+              @attributes = @raw_attributes.transform_values do |value|
                 _value = context.evaluate(value)
                 lax && _value.nil? ? value&.name : _value
               end

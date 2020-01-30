@@ -22,7 +22,7 @@ module Locomotive
             end
 
             def render_path(context, &block)
-              evaluate_attributes(context)
+              evaluate_attributes(context, lax: true)
 
               set_vars_from_context(context)
 
@@ -86,11 +86,11 @@ module Locomotive
             end
 
             def locale
-              attributes[:locale] || raw_attributes[:locale] || @locale
+              attributes[:locale] || @locale
             end
 
             def template_slug
-              attributes[:with] || raw_attributes[:with]
+              attributes[:with]
             end
 
             def set_vars_from_context(context)

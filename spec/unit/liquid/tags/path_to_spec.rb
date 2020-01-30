@@ -35,13 +35,14 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
 
   describe 'from a handle of a page' do
 
+    let(:locales)   { ['en', 'fr', 'es']}
     let(:drop)      { Locomotive::Steam::Liquid::Drops::Page.new(page) }
     let(:page)      { liquid_instance_double('Index', title: 'Index', handle: 'index', fullpath: fullpath, localized_attributes: { fullpath: true }, templatized?: false) }
-    let(:fullpath)  { { en: 'index', fr: 'index' } }
+    let(:fullpath)  { { en: 'index', fr: 'index', es: 'index' } }
     let(:source)    { '{% path_to index %}' }
 
     before do
-      expect(services.page_finder).to receive(:by_handle).with('index').and_return(page)
+      expect(services.page_finder).to receive(:by_handle).with('index').and_return(page).at_least(:once)
       allow(page).to receive(:to_liquid).and_return(drop)
     end
 
@@ -51,6 +52,14 @@ describe Locomotive::Steam::Liquid::Tags::PathTo do
 
       let(:source) { "{% path_to index, locale: 'fr' %}" }
       it { is_expected.to eq '/fr' }
+
+      context 'used as a variable' do
+
+        let(:assigns) { { 'locales' => locales } }
+        let(:source) { "{% for my_locale in locales %}{% path_to index, locale: my_locale %},{% endfor %}" }
+        it { is_expected.to eq '/,/fr,/es,' }
+
+      end
 
     end
 
