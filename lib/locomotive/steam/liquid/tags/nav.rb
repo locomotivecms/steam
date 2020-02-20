@@ -85,7 +85,9 @@ module Locomotive
           # to only return pages which will be displayed in the nav.
           def children_of(page)
             children  = (page_repository.children_of(page) || [])
-            children.select { |child| self.include_page?(child) }
+            children
+            .map { |child| decorate_page(child) }
+            .select { |child| self.include_page?(child) }
           end
 
           # Determine whether or not a page should be a part of the menu.
@@ -179,7 +181,6 @@ module Locomotive
           # @return [ String ] The HTML output
           #
           def render_entry_link(page, css, depth, context)
-            page      = decorate_page(page)
             url       = self.entry_url(page)
             label     = self.entry_label(page, context)
             css       = self.entry_css(page, css)
@@ -243,7 +244,7 @@ module Locomotive
             self.current_page       = context.registers[:page]
             self.services           = context.registers[:services]
             self.current_locale     = context.registers[:locale]
-            self.page_repository    = self.services.repositories.page
+            self.page_repository    = services.repositories.page
           end
 
           # Parse the template of the snippet give in option of the tag.
