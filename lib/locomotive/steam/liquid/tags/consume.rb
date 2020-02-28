@@ -19,13 +19,13 @@ module Locomotive
 
           Syntax = /(#{::Liquid::VariableSignature}+)\s*from\s*(#{::Liquid::QuotedFragment}+),?(.+)?/o.freeze
 
-          attr_reader :variable_name, :url, :expires_in
+          attr_reader :variable_name, :url_expr, :url, :expires_in
 
           def initialize(tag_name, markup, options)
             super
 
             if markup =~ Syntax
-              @variable_name, @url, attributes = $1.to_s, ::Liquid::Expression.parse($2), $3
+              @variable_name, @url_expr, attributes = $1.to_s, ::Liquid::Expression.parse($2), $3
 
               parse_attributes(attributes)
             else
@@ -41,7 +41,7 @@ module Locomotive
             @expires_in = attributes.delete(:expires_in)&.to_i
 
             # the URL can come from a variable
-            @url = context.evaluate(url)
+            @url = context.evaluate(url_expr)
 
             if url.blank?
               Locomotive::Common::Logger.error "A consume tag can't call an empty URL."
