@@ -2,8 +2,9 @@ require 'spec_helper'
 
 describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
 
-  let(:url_finder_service) { instance_double('UrlFinderService') }
-  let(:services)  { instance_double('Services', url_finder: url_finder_service) }
+  let(:url_finder_service)    { instance_double('UrlFinderService') }
+  let(:content_entry_service) { instance_double('ContentEntryService') }
+  let(:services)  { instance_double('Services', url_finder: url_finder_service, content_entry: content_entry_service) }
   let(:site)      { instance_double('Site', default_locale: 'en') }
   let(:context)   { ::Liquid::Context.new({}, {}, { locale: 'en', services: services, site: site }) }
   let(:drop)      { described_class.new(content, settings).tap { |d| d.context = context } }
@@ -92,6 +93,30 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
       subject { drop.liquid_method_missing(:link) }
 
       it { is_expected.to eq nil }
+
+    end
+
+  end
+
+  describe 'content entry picker' do
+
+    let(:settings)  { [{ 'id' => 'article', 'type' => 'content_entry', 'content_type' => 'articles' }] }
+    let(:value)     { nil }
+    let(:content)   { { 'article' => value } }
+
+    subject { drop.liquid_method_missing(:article) }
+
+    it { is_expected.to eq nil }
+
+    context 'an id to a content entry has been passed' do
+
+      let(:article) { instance_double('Article', title: 'Hello world!') }
+      let(:value)   { { 'id' => '42' } }
+
+      it 'calls the content_entry service to fetch the article' do
+        expect(content_entry_service).to receive(:find).with('articles', '42').and_return(article)
+        expect(subject.title).to eq('Hello world!')
+      end
 
     end
 

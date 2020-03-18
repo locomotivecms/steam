@@ -18,10 +18,11 @@ module Locomotive
             return nil if value.blank?
 
             case type_of(name)
-            when 'url'          then SectionUrlField.new(*url_finder.url_for(value))
-            when 'image_picker' then SectionImagePickerField.new(value)
-            when 'integer'      then value.to_i
-            when 'text'         then url_finder.decode_urls_for(value)
+            when 'url'            then SectionUrlField.new(*url_finder.url_for(value))
+            when 'image_picker'   then SectionImagePickerField.new(value)
+            when 'integer'        then value.to_i
+            when 'text'           then url_finder.decode_urls_for(value)
+            when 'content_entry'  then find_content_entry(name, value)
             else value
             end
           end
@@ -38,6 +39,15 @@ module Locomotive
 
           def url_finder
             @context.registers[:services].url_finder
+          end
+
+          def find_content_entry(name, value)
+            type_slug = setting_of(name).try(:[], 'content_type')
+            service   = @context.registers[:services].content_entry
+
+            return nil if type_slug.nil? || value.blank?
+
+            service.find(type_slug, value['id'])
           end
 
         end
