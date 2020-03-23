@@ -51,13 +51,42 @@ module Locomotive
           end
 
           def blocks
-            (@content['blocks'] || []).each_with_index.map do |block, index|
-              SectionBlock.new(@section, block, index)
+            build_blocks(@content['blocks'])
+          end
+
+          def blocks_as_tree
+            [].tap do |root|
+              parents = []
+
+              build_blocks(@content['blocks']) do |block, previous_block|
+                if block.depth == 0
+                  parents = [block]
+                  root
+                elsif block.depth > previous_block.depth
+                  (parents << previous_block).last.leaves
+                elsif (diff = previous_block.depth - block.depth) > 0
+                  parents[parents.size - diff - 1].tap { parents.pop(diff) }.leaves
+                else
+                  parents.last.leaves
+                end << block
+              end
             end
           end
 
           def editor_setting_data
             SectionEditorSettingData.new(@section)
+          end
+
+          private
+
+          def build_blocks(blocks)
+            previous_block = nil
+
+            (blocks || []).each_with_index.map do |block, index|
+              section_block = SectionBlock.new(@section, block, index)
+              yield(section_block, previous_block) if block_given?
+              previous_block = section_block
+            end
           end
 
         end

@@ -10,6 +10,7 @@ module Locomotive
             @section    = section
             @block      = block || { 'settings' => {} }
             @index      = index
+            @leaves     = []
             @definition = section.definition['blocks'].find do |block|
               block['type'] == type
             end || {}
@@ -21,6 +22,18 @@ module Locomotive
 
           def type
             @block['type']
+          end
+
+          def depth
+            @block['depth'].presence || 0
+          end
+
+          def leaves
+            @leaves
+          end
+
+          def has_leaves?
+            leaves.size > 0
           end
 
           def settings
