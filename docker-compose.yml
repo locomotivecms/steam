@@ -12,4 +12,8 @@ services:
       - ./bundle:/usr/local/bundle
     depends_on:
       - db
+    labels:
+      docky.main.service: True
+      docky.user: ubuntu
+
 version: '3'

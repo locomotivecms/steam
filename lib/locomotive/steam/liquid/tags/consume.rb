@@ -25,9 +25,9 @@ module Locomotive
             super
 
             if markup =~ Syntax
-              @variable_name, @url_expr, attributes = $1.to_s, ::Liquid::Expression.parse($2), $3
+              @variable_name, @url_expr, _attributes = $1.to_s, ::Liquid::Expression.parse($2), $3
 
-              parse_attributes(attributes)
+              parse_attributes(_attributes)
             else
               raise ::Liquid::SyntaxError.new("Syntax Error in 'consume' - Valid syntax: consume <var> from \"<url>\" [username: value, password: value]")
             end
