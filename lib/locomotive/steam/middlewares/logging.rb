@@ -13,7 +13,10 @@ module Locomotive::Steam
         now = Time.now
 
         log "Started #{env['REQUEST_METHOD'].upcase} \"#{env['PATH_INFO']}\" at #{now}".light_white, 0
-        log "Params: #{env.fetch('steam.request').params.inspect}"
+
+        if Locomotive::Steam.configuration.mode == :test
+          log "Params: #{env.fetch('steam.request').params.inspect}"
+        end
 
         app.call(env).tap do |response|
           done_in_ms = ((Time.now - now) * 10000).truncate / 10.0
