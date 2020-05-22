@@ -132,7 +132,7 @@ GEM
     pony (1.13.1)
       mail (>= 2.0)
     public_suffix (4.0.3)
-    puma (4.3.3)
+    puma (4.3.5)
       nio4r (~> 2.0)
     rack (2.0.8)
     rack-cache (1.7.2)
@@ -203,7 +203,7 @@ DEPENDENCIES
   memory_profiler
   mongo (~> 2.8.0)
   origin (~> 2.3.1)
-  puma (~> 4.3.3)
+  puma (~> 4.3.5)
   rack-mini-profiler (~> 0.10.1)
   rack-test (~> 0.8.2)
   rake (~> 13.0.1)
