@@ -88,7 +88,7 @@ module Locomotive
                 # evaluate the value if possible before casting it
                 _value = value.is_a?(::Liquid::VariableLookup) ? context.evaluate(value) : value
 
-                hash[_key] = cast_value(context, _value)
+                hash[_key] = cast_value(context, _value) unless _value.nil?
               end
             end
           end
