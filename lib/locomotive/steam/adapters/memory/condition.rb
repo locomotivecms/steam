@@ -6,7 +6,7 @@ module Locomotive::Steam
 
         class UnsupportedOperator < StandardError; end
 
-        OPERATORS = %i(== eq ne neq matches gt gte lt lte size all in nin).freeze
+        OPERATORS = %i(== eq ne neq matches gt gte lt lte size all in nin and).freeze
 
         attr_reader :field, :operator, :value
 
@@ -36,6 +36,7 @@ module Locomotive::Steam
           when :size      then entry_value.size == @value
           when :all       then array_contains?([*@value], entry_value)
           when :in, :nin  then value_is_in_entry_value?(entry_value)
+          when :and       then array_contains_all?([*@value], entry_value)
           else
             raise UnknownConditionInScope.new("#{@operator} is unknown or not implemented.")
           end
@@ -87,6 +88,13 @@ module Locomotive::Steam
 
         def check_operator!
           raise UnsupportedOperator.new unless OPERATORS.include?(@operator)
+        end
+
+        def array_contains_all?(source, target)
+          overlap = (source & target).size
+          return false if (overlap == 0 || (source.size > overlap))
+
+          (source.size <= overlap)
         end
 
         def array_contains?(source, target)

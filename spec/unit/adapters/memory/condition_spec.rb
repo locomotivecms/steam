@@ -105,6 +105,42 @@ describe Locomotive::Steam::Adapters::Memory::Condition do
     end
   end
 
+  describe '#array_contains_all?' do
+    let(:source) { [1] }
+    let(:target) { [1, 2, 3] }
+
+    specify('is true for a single match') do
+      expect(subject.send(:array_contains_all?, source, target)).to eq true
+    end
+
+    context 'for a single not matching value' do
+      let(:source) { [4] }
+      let(:target) { [1, 2, 3] }
+
+      specify('should be false') do
+        expect(subject.send(:array_contains_all?, source, target)).to eq false
+      end
+    end
+
+    context 'for only one matching value, while even more supplied' do
+      let(:source) { [1, 2, 3] }
+      let(:target) { [1] }
+
+      specify('should be false') do
+        expect(subject.send(:array_contains_all?, source, target)).to eq false
+      end
+    end
+
+    context 'for all matching values' do
+      let(:source) { [1, 2] }
+      let(:target) { [2, 1] }
+
+      specify('should be true') do
+        expect(subject.send(:array_contains_all?, source, target)).to eq true
+      end
+    end
+  end
+
   describe '#value_in_right_operand?' do
     context 'value contains in right operand' do
       let(:value) { [1, 2, 3, 4] }
