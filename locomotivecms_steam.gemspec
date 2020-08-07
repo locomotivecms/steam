@@ -42,7 +42,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'compass',                '~> 1.0.3'
   spec.add_dependency 'autoprefixer-rails',     '~> 8.0.0'
 
-  spec.add_dependency 'kramdown',               '~> 1.16.2'
+  spec.add_dependency 'kramdown',               '>= 1.16.2', '< 2.4.0'
   spec.add_dependency 'RedCloth',               '~> 4.3.2'
   spec.add_dependency 'mimetype-fu',            '~> 0.1.2'
   spec.add_dependency 'mime-types',             '~> 3.1.0'
