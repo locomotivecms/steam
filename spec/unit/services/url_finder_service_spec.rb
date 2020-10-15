@@ -73,19 +73,33 @@ describe Locomotive::Steam::UrlFinderService do
 
       let(:entry) { instance_double('Product') }
       let(:page)  { instance_double('Page', :content_entry= => true, not_found?: false) }
-      let(:value) { {
-        'type' => 'content_entry',
-        'value' => { 'page_id' => 42, 'content_type_slug' => 'products', 'id' => 1 },
-        'new_window' => true
-      } }
 
-      before do
-        expect(page_finder).to receive(:find_by_id).with(42).and_return(page)
-        expect(content_entry_finder).to receive(:find).with('products', 1).and_return(entry)
-        expect(url_builder).to receive(:url_for).with(page).and_return('/my-product')
+      context 'the value is valid content entry' do
+        let(:value) { {
+          'type' => 'content_entry',
+          'value' => { 'page_id' => 42, 'content_type_slug' => 'products', 'id' => 1 },
+          'new_window' => true
+        } }
+
+        before do
+          expect(page_finder).to receive(:find_by_id).with(42).and_return(page)
+          expect(content_entry_finder).to receive(:find).with('products', 1).and_return(entry)
+          expect(url_builder).to receive(:url_for).with(page).and_return('/my-product')
+        end
+
+        it { is_expected.to eq(['/my-product', true]) }
       end
 
-      it { is_expected.to eq(['/my-product', true]) }
+      context 'the value is nil' do
+        let(:value) { nil }
+
+        before do
+          expect(page_finder).to receive(:find).with('404').and_return(page)
+          expect(url_builder).to receive(:url_for).with(page).and_return('/404')
+        end
+        
+        it { is_expected.to eq(['/404', false]) }
+      end
 
     end
 

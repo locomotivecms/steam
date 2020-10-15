@@ -74,6 +74,8 @@ module Locomotive
         when 'page'
           page_finder.find_by_id(value)
         when 'content_entry'
+          return nil if value.blank?
+
           # find the page template
           page_finder.find_by_id(value['page_id']).tap do |_page|
             entry = content_entry_finder.find(value['content_type_slug'], value['id'])
