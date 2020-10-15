@@ -42,7 +42,7 @@ module Locomotive::Steam
       end
 
       def redirect_if_required(site)
-        return if env['steam.is_default_host']
+        return if env['steam.is_default_host'] || env['steam.live_editing']
 
         if redirect_to_first_domain?(site) || redirect_to_https?(site)
           klass = request.scheme == 'https' || redirect_to_https?(site) ? URI::HTTPS : URI::HTTP

@@ -14,12 +14,14 @@ describe Locomotive::Steam::Middlewares::Site do
   let(:app)             { ->(env) { [200, env, 'app'] } }
   let(:middleware)      { Locomotive::Steam::Middlewares::Site.new(app) }
   let(:is_default_host) { nil }
+  let(:live_editing)    { false }
 
   subject do
     env = env_for(url, 'steam.services' => services)
     env['steam.request']          = Rack::Request.new(env)
     env['steam.site']             = engine_site
     env['steam.is_default_host']  = is_default_host
+    env['steam.live_editing']     = live_editing
     code, env = middleware.call(env)
     [code, env['Location']]
   end
@@ -58,7 +60,7 @@ describe Locomotive::Steam::Middlewares::Site do
   describe 'redirection' do
 
     let(:redirect_to_first_domain)  { false }
-    let(:redirect_to_https)         { false }
+    let(:redirect_to_https)         { false }    
     let(:url)  { 'http://acme.com' }
     let(:site) { instance_double('SiteWithDomains', name: 'Acme', domains: ['www.acme.com', 'acme.com'], redirect_to_first_domain: redirect_to_first_domain, redirect_to_https: redirect_to_https) }
 
@@ -112,6 +114,14 @@ describe Locomotive::Steam::Middlewares::Site do
         context 'requesting the default host' do
 
           let(:is_default_host) { true }
+          it { is_expected.to eq [200, nil] }
+
+        end
+
+        context 'when editing the page in the editor' do
+
+          let(:url) { 'https://locomotive.local/editor/foo' }
+          let(:live_editing) { true }
           it { is_expected.to eq [200, nil] }
 
         end
