@@ -21,12 +21,12 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'origin',     '~> 2.3.1'
 
   spec.add_dependency 'nokogiri',               '~> 1.10.8'
-  spec.add_dependency 'sanitize',               '~> 4.6.4'
+  spec.add_dependency 'sanitize',               '~> 5.2.1'
   spec.add_dependency 'morphine',               '~> 0.1.1'
   spec.add_dependency 'httparty',               '~> 0.16.0'
   spec.add_dependency 'chronic',                '~> 0.10.2'
   spec.add_dependency 'bcrypt',                 '~> 3.1.11'
-  spec.add_dependency 'multi_json',             '~> 1.13.1'
+  spec.add_dependency 'multi_json',             '~> 1.15.0'
   spec.add_dependency 'liquid',                 '~> 4.0.3'
 
   spec.add_dependency 'rack-rewrite',           '~> 1.5.1'
@@ -42,7 +42,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'compass',                '~> 1.0.3'
   spec.add_dependency 'autoprefixer-rails',     '~> 8.0.0'
 
-  spec.add_dependency 'kramdown',               '~> 1.16.2'
+  spec.add_dependency 'kramdown',               '~> 2.3.0'
   spec.add_dependency 'RedCloth',               '~> 4.3.2'
   spec.add_dependency 'mimetype-fu',            '~> 0.1.2'
   spec.add_dependency 'mime-types',             '~> 3.1.0'
