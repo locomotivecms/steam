@@ -14,7 +14,7 @@ module Locomotive
 
         timestamp ||= (site.try(:template_version) || site.try(:updated_at)).to_i
 
-        return add_timestamp_suffix(source, timestamp) if source =~ Steam::IsHTTP
+        return add_timestamp_suffix(source, timestamp) if source.to_s =~ Steam::IsHTTP
 
         url = self.host ? build_url(host, source) : source
 

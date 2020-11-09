@@ -29,7 +29,7 @@ module Locomotive
               handle = @context[@handle] || @handle
 
               # is external url?
-              if handle =~ Locomotive::Steam::IsHTTP
+              if handle.to_s =~ Locomotive::Steam::IsHTTP
                 handle
               elsif page = self.retrieve_page_drop_from_handle(handle) # return a drop or model?
                 # make sure we've got the page/content entry (if templatized)
