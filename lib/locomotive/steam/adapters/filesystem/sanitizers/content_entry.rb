@@ -53,7 +53,7 @@ module Locomotive::Steam
 
           def set_id(entity)
             # don't override the id if it was set from a MongoDB dump
-            return if entity._id =~ /[a-z0-9]{12,}/
+            return if entity._id.to_s =~ /[a-z0-9]{12,}/
 
             if (slug = entity[:_slug]).respond_to?(:translations)
               entity[:_id] = slug[locale]
