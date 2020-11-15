@@ -68,6 +68,8 @@ end.parse!
 require_relative '../lib/locomotive/steam'
 require_relative '../lib/locomotive/steam/server'
 
+puts options.inspect
+
 Locomotive::Steam.configure do |config|
   config.mode           = :test
   config.adapter        = options[:adapter]
@@ -84,21 +86,9 @@ end
 
 app = Locomotive::Steam.to_app
 
-# Thin rack handler
-# Note: alt thin settings (Threaded)
-# require 'thin'
-# server = Thin::Server.new(server_options[:address], server_options[:port], app)
-# server.threaded = true
-# server.start
-# Locomotive::Common::Logger.info 'Server started...'
-# FIXME: Rack::Handler::Thin.run app (not threaded)
-
-# WEBRick rack handler
-# Rack::Handler::WEBrick.run app
-# Locomotive::Common::Logger.info 'Server started...'
-
 # Puma rack handler
 require 'puma'
+
 server   = ::Puma::Server.new(app)
 server.add_tcp_listener server_options[:address], server_options[:port]
 server.min_threads = 4

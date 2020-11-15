@@ -11,7 +11,6 @@ module Locomotive::Steam
       }.merge(attributes))
     end
 
-
   end
 
 end

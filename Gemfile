@@ -9,7 +9,7 @@ group :development do
   # gem 'duktape', github: 'judofyr/duktape.rb', ref: '20ef6a5'
   # gem 'duktape', github: 'did/duktape.rb', branch: 'any-fixnum'
 
-  gem 'puma',               '~> 5.0.2'
+  gem 'puma',               '~> 5.0.4'
   gem 'haml',               '~> 5.2.0'
 
   gem 'rack-mini-profiler', '~> 0.10.1'
@@ -29,6 +29,5 @@ group :test do
 
   gem 'rack-test',          '~> 0.8.2'
 
-  gem 'codeclimate-test-reporter',  '~> 0.4.7',   require: false
   gem 'coveralls',                  '~> 0.8.1',   require: false
 end

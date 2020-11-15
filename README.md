@@ -2,7 +2,7 @@
 
 [![Code Climate](https://codeclimate.com/github/locomotivecms/steam/badges/gpa.svg)](https://codeclimate.com/github/locomotivecms/steam) [![Build Status](https://travis-ci.com/locomotivecms/steam.svg?branch=master)](https://travis-ci.com/locomotivecms/steam) [![Coverage Status](https://coveralls.io/repos/locomotivecms/steam/badge.svg?branch=master)](https://coveralls.io/r/locomotivecms/steam?branch=master) [![Gitter](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/locomotivecms/steam)
 
-The rendering stack used by both Wagon and Engine (WIP). It includes:
+The rendering stack used by both Wagon and Engine. It includes:
 
 - the rack stack to serve assets (SCSS, Coffeescript, ...etc) and pages.
 - the liquid drops/filters/tags libs to parse and render liquid templates.
@@ -13,8 +13,10 @@ The rendering stack used by both Wagon and Engine (WIP). It includes:
 
 ## Installation [WIP]
 
-    gem install thin
-    gem install locomotivecms_steam
+```bash
+gem install puma
+gem install locomotivecms_steam
+```
 
 ## Usage
 
@@ -24,25 +26,32 @@ The rendering stack used by both Wagon and Engine (WIP). It includes:
 
 Display all the options:
 
-    steam --help
+```bash
+steam --help
+```
 
 Render a local Wagon site:
 
-    steam --path=<PATH to a Wagon site>
+```bash
+steam --path=<PATH to a Wagon site>
+```
 
 Render a Engine site:
 
-    steam --database=<NAME of the MongoDB database used by the Engine> --assets-path=<PATH to the public folder of the Locomotive>
+```bash
+steam --database=<NAME of the MongoDB database used by the Engine> --assets-path=<PATH to the public folder of the Locomotive>
+```
 
 Once launched, open your browser
 
-    open localhost:8080
+```bash
+open localhost:8080
+```
 
 ### Inside Engine / Wagon:
 
 [https://github.com/locomotivecms/engine/blob/master/lib/locomotive/steam_adaptor.rb](https://github.com/locomotivecms/engine/blob/master/lib/locomotive/steam_adaptor.rb)
 [https://github.com/locomotivecms/engine/blob/master/spec/dummy/config/routes.rb](https://github.com/locomotivecms/engine/blob/master/spec/dummy/config/routes.rb#L12)
-
 
 [https://github.com/locomotivecms/wagon/blob/master/lib/locomotive/wagon/commands/serve_command.rb](https://github.com/locomotivecms/wagon/blob/master/lib/locomotive/wagon/commands/serve_command.rb#L65)
 [https://github.com/locomotivecms/wagon/blob/master/lib/locomotive/wagon/commands/serve_command.rb](https://github.com/locomotivecms/wagon/blob/master/lib/locomotive/wagon/commands/serve_command.rb#L138)

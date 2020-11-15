@@ -47,8 +47,6 @@ GEM
     bson (4.11.1)
     chronic (0.10.2)
     chunky_png (1.3.14)
-    codeclimate-test-reporter (0.4.8)
-      simplecov (>= 0.7.1, < 1.0.0)
     coffee-script (2.4.1)
       coffee-script-source
       execjs
@@ -197,7 +195,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  codeclimate-test-reporter (~> 0.4.7)
   coveralls (~> 0.8.1)
   flamegraph
   haml (~> 5.2.0)
@@ -207,7 +204,7 @@ DEPENDENCIES
   memory_profiler
   mongo (~> 2.13.1)
   origin (~> 2.3.1)
-  puma (~> 5.0.2)
+  puma (~> 5.0.4)
   rack-mini-profiler (~> 0.10.1)
   rack-test (~> 0.8.2)
   rake (~> 13.0.1)
