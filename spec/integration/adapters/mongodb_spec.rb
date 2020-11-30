@@ -32,12 +32,12 @@ describe Locomotive::Steam::MongoDBAdapter do
 
     subject { described_class.disconnect_session }
 
-    it { is_expected.to eq nil }
-
     it 'closes clients' do
-      10.times { connection['locomotive_sites'].find.count }
-      subject
-      expect(current_connections).to eq @before_connections
+      10.times { connection['locomotive_sites'].find.count }      
+      @before_connections = current_connections
+      is_expected.to eq true
+      sleep(2) # NOTE: wait for the connections to be completely closed
+      expect(current_connections).to be < @before_connections
     end
 
   end

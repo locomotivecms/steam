@@ -81,8 +81,9 @@ module Locomotive::Steam
       end
 
       def disconnect_session
-        @session.try(:close)
-        @session = nil
+        @session.try(:close).tap do
+          @session = nil
+        end
       end
 
     end
