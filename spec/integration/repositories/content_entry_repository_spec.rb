@@ -70,6 +70,11 @@ describe Locomotive::Steam::ContentEntryRepository do
     describe 'filter by a select field' do
       subject { repository.all(kind: 'grunge') }
       it { expect(subject.map { |entry| entry[:name] }).to eq(['Alice in Chains', 'Pearl Jam']) }
+
+      context 'switching to a different locale' do
+        let(:locale) { 'fr' }
+        it { expect(subject.map { |entry| entry[:name] }).to eq(['Alice in Chains', 'Pearl Jam']) }        
+      end
     end
 
     describe 'filter by a belongs_to field' do
