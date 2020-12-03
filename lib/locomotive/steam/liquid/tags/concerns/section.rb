@@ -13,7 +13,7 @@ module Locomotive::Steam::Liquid::Tags::Concerns
         )
 
         # assign an id if specified in the context
-        context['section'].id ||= context['section_id'] if context['section_id'].present?
+        context['section'].id = context['section_id'] if context['section_id'].present?
 
         begin
           _render(context, template)

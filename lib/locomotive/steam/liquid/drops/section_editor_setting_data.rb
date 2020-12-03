@@ -40,7 +40,7 @@ module Locomotive
             return false if settings.blank?
 
             text_inputs(settings).include?(id)
-          end
+          end          
 
           def text_inputs(settings)
             settings.map do |input|

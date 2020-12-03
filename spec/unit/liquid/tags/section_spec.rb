@@ -224,24 +224,23 @@ describe Locomotive::Steam::Liquid::Tags::Section do
             '</div>' }
         end
 
-        context 'with an id within the content' do
-          let(:source)      { 'Locomotive {% section header %}'}
+        context 'with an id within the content (section rendered by the section middleware)' do
+          let(:source)      { '{% section header %}'}
           let(:alt_content) {
             {
-              id: 'site-header',
-              settings: { brand: 'Locomotive' },
+              id: 'dropzone-42',
+              settings: { brand: 'NoCoffee' },
               blocks:   []
             }.deep_stringify_keys
           }
 
-          it { is_expected.to eq 'Locomotive '\
-            '<div id="locomotive-section-site-header" '\
+          it { is_expected.to eq '<div id="locomotive-section-dropzone-42" '\
             'class="locomotive-section my-awesome-header" '\
             'data-locomotive-section-type="header">'\
-              '<span id="site-header-section"></span>'\
+              '<span id="dropzone-42-section"></span>'\
               'built by '\
-              '<strong data-locomotive-editor-setting="section-site-header.brand">'\
-                'Locomotive'\
+              '<strong data-locomotive-editor-setting="section-dropzone-42.brand">'\
+                'NoCoffee'\
               '</strong>'\
             '</div>' }
 

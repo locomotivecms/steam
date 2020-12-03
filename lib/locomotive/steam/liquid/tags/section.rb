@@ -59,7 +59,12 @@ module Locomotive
           private
 
           def set_section_dom_id(context)
-            context['section_id'] = "page-#{attributes[:id] || section_type}"
+            # is the section being rendered from the section middleware?
+            if content = context.registers[:_section_content]
+              context['section_id'] = content['id'] || section_type
+            else       
+              context['section_id'] = "page-#{attributes[:id] || section_type}"
+            end
           end
 
           def find_section(context)
