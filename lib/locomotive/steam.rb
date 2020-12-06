@@ -22,8 +22,8 @@ module Locomotive
 
     CONTENT_ENTRY_ENGINE_CLASS_NAME   = /^Locomotive::ContentEntry(.*)$/o.freeze
 
-    SECTIONS_SETTINGS_VARIABLE_REGEXP = /^\s*([a-z]+\.)?settings\.(?<id>.*)\s*$/o.freeze
-    SECTIONS_BLOCK_FORLOOP_REGEXP     = /(?<name>.+)-section\.blocks$/o.freeze
+    SECTIONS_SETTINGS_VARIABLE_REGEXP = /^\s*([a-z\_]+\.)?settings\.(?<id>.*)\s*$/o.freeze
+    SECTIONS_BLOCK_FORLOOP_REGEXP     = /(?<name>.+)-(section|block)\.(blocks|blocks_as_tree|leaves)$/o.freeze
     SECTIONS_LINK_TARGET_REGEXP       = /[^\"]+\/_locomotive-link\/(?<link>[^\"]+)/mo.freeze
 
     ASSET_URL_REGEXP                  = /("|')(https:\/\/[^\/]+)?\/(sites|steam)\/(\S+)("|')/.freeze
