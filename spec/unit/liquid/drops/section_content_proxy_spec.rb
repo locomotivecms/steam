@@ -181,15 +181,16 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
     it { is_expected.to eq '' }
 
     context 'the asset is a string' do
-      let(:value) { 'specs.pdf' }
-      it { is_expected.to eq('specs.pdf') }
+      let(:value) { '/foo/bar/specs.pdf' }
+      it { is_expected.to eq('/foo/bar/specs.pdf') }
     end
 
     context 'the asset is a hash' do
-      let(:value) { { url: 'specs.pdf', size: 30 } }
-      it { is_expected.to eq('specs.pdf') }
-      it 'has access to size of the asset' do
-        expect(asset_drop.url).to eq('specs.pdf')
+      let(:value) { { url: '/foo/specs.pdf', size: 30 } }
+      it { is_expected.to eq('/foo/specs.pdf') }
+      it 'has access to size and name of the asset' do
+        expect(asset_drop.url).to eq('/foo/specs.pdf')
+        expect(asset_drop.name).to eq('specs.pdf')
         expect(asset_drop.size).to eq(30)
       end
     end

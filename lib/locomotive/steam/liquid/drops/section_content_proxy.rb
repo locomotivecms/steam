@@ -72,6 +72,10 @@ module Locomotive
             @attributes[:size]
           end
 
+          def name
+            self.url.present? ? File.basename(self.url) : nil
+          end
+          
           def to_s
             self.url || ''
           end
