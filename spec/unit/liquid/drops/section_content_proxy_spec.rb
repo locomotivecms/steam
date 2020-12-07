@@ -169,4 +169,37 @@ describe Locomotive::Steam::Liquid::Drops::SectionContentProxy do
 
   end
 
+  describe 'asset picker type setting' do
+
+    let(:settings)    { [{ 'id' => 'file', 'type' => 'asset_picker' }] }
+    let(:value)       { nil }
+    let(:content)     { { 'file' => value } }
+    let(:page)        { instance_double('Page') }
+    let(:asset_drop)  { drop.liquid_method_missing(:file) }
+
+    subject { asset_drop.to_s }
+    it { is_expected.to eq '' }
+
+    context 'the asset is a string' do
+      let(:value) { 'specs.pdf' }
+      it { is_expected.to eq('specs.pdf') }
+    end
+
+    context 'the asset is a hash' do
+      let(:value) { { url: 'specs.pdf', size: 30 } }
+      it { is_expected.to eq('specs.pdf') }
+      it 'has access to size of the asset' do
+        expect(asset_drop.url).to eq('specs.pdf')
+        expect(asset_drop.size).to eq(30)
+      end
+    end
+
+    context 'the asset is nil' do
+      let(:value) { nil }
+      subject { asset_drop }
+      it { is_expected.to eq nil }
+    end
+
+  end
+
 end

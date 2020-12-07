@@ -20,6 +20,7 @@ module Locomotive
             case type_of(name)
             when 'url'            then SectionUrlField.new(*url_finder.url_for(value))
             when 'image_picker'   then SectionImagePickerField.new(value)
+            when 'asset_picker'   then SectionAssetPickerField.new(value)
             when 'integer'        then value.to_i
             when 'text'           then url_finder.decode_urls_for(value)
             when 'content_entry'  then find_content_entry(name, value)
@@ -52,7 +53,31 @@ module Locomotive
 
         end
 
-        # Drop representing the valud of an image picker.
+
+        class SectionAssetPickerField < ::Liquid::Drop
+
+          def initialize(url_or_attributes)
+            if url_or_attributes.is_a?(String) || url_or_attributes.blank?
+              @attributes = { url: url_or_attributes }
+            else
+              @attributes = url_or_attributes.symbolize_keys || {}
+            end
+          end
+
+          def url
+            @attributes[:url]
+          end
+
+          def size
+            @attributes[:size]
+          end
+
+          def to_s
+            self.url || ''
+          end
+        end
+
+        # Drop representing the value of an image picker.
         # It holds extra attributes like:
         # the width, height, format and cropped of the image
         class SectionImagePickerField < ::Liquid::Drop
