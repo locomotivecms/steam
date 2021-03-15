@@ -63,6 +63,13 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
 
     end
 
+    describe 'omits a condition when its value is nil' do
+
+      let(:source) { "{% with_scope title: 'foo', active: nil %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+
+      it { expect(conditions.keys).to eq ['title'] }
+    end
+
     describe 'decode regexps' do
 
       let(:source) { "{% with_scope title: /Like this one|or this one/ %}{% assign conditions = with_scope %}{% endwith_scope %}" }
