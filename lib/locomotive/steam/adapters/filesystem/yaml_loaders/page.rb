@@ -130,9 +130,9 @@ module Locomotive
             def update(leaf, filepath, fullpath, locale)
               slug            = fullpath.split('/').last
               attributes      = get_attributes(filepath, fullpath)
-
-              leaf[:title][locale]              ||= attributes.delete(:title) || slug.humanize
-              leaf[:slug][locale]               ||= attributes.delete(:slug) || slug.dasherize
+              
+              transfert_to_leaf leaf, attributes, :title, locale, slug.humanize
+              transfert_to_leaf leaf, attributes, :slug, locale, slug.dasherize
               leaf[:template_path][locale]      = template_path(filepath, attributes, locale)
 
               update_editable_elements(leaf, attributes.delete(:editable_elements), locale)
@@ -145,6 +145,13 @@ module Locomotive
               end
 
               leaf.merge!(attributes)
+            end
+
+            # unsure value is always deleted from the attribute
+            # to avoid buggy scenarios
+            def transfert_to_leaf(leaf, attributes, key, locale, default = nil)
+              value = attributes.delete(key)
+              leaf[key][locale] ||= value || default
             end
 
             def get_attributes(filepath, fullpath)
