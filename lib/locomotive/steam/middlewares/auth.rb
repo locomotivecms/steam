@@ -195,7 +195,8 @@ module Locomotive::Steam
               user_name:            smtp_config['user_name'],
               password:             smtp_config['password'],
               authentication:       smtp_config['authentication'] || 'plain',
-              enable_starttls_auto: (smtp_config['enable_starttls_auto'] || "0").to_bool,
+              enable_starttls_auto: (smtp_config['enable_starttls_auto'] || '0').to_bool,
+              ssl:                  (smtp_config['ssl'] || '0').to_bool,
             }
           end
         end
