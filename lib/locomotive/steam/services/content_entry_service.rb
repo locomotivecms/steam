@@ -73,12 +73,19 @@ module Locomotive
         end
       end
 
+      # Warning: do not work with localized and file fields
       def update_decorated_entry(decorated_entry, attributes)
         with_repository(decorated_entry.content_type) do |_repository|
           entry       = decorated_entry.__getobj__
           _attributes = prepare_attributes(_repository.content_type, attributes)
 
           entry.change(_attributes)
+
+          # remove the proxy select fields because we don't need them at this point
+          # and MongoDB is going to complain when persisting it.
+          _repository.content_type.select_fields.each do |field|
+            entry.attributes.delete(field.name)
+          end
 
           _repository.update(entry)
 
