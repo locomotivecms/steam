@@ -65,8 +65,8 @@ module Locomotive::Steam
 
       alias :to_hash :translations
 
-      def serialize(attributes)
-        attributes[@name] = @translations
+      def serialize(attributes, custom_name = nil)
+        attributes[custom_name || @name] = @translations
       end
 
       def to_json
