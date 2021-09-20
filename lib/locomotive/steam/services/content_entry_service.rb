@@ -87,6 +87,11 @@ module Locomotive
             entry.attributes.delete(field.name)
           end
 
+          # remove any association field
+          _repository.content_type.association_fields.each do |field|
+            entry.attributes.delete(field.name)
+          end
+
           _repository.update(entry)
 
           logEntryOperation(decorated_entry.content_type.slug, decorated_entry)
