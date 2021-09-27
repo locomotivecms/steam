@@ -158,7 +158,7 @@ module Locomotive::Steam
         end
 
         def from
-          smtp_config['sender'] || 'support@locomotivecms.com'
+          smtp_config['sender'] || smtp_config['from'] || 'support@locomotivecms.com'
         end
 
         def subject
@@ -212,7 +212,6 @@ module Locomotive::Steam
             config
           end
         end
-
 
       end
 
