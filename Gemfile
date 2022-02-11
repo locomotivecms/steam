@@ -9,7 +9,7 @@ group :development do
   # gem 'duktape', github: 'judofyr/duktape.rb', ref: '20ef6a5'
   # gem 'duktape', github: 'did/duktape.rb', branch: 'any-fixnum'
 
-  gem 'puma',               '~> 5.3.1'
+  gem 'puma',               '~> 5.6.2'
   gem 'haml',               '~> 5.2.0'
 
   gem 'rack-mini-profiler', '~> 0.10.1'
