@@ -25,6 +25,7 @@ module Locomotive::Steam
         sections:                 nil,
         sections_content:         nil,
         asset_host:               nil,
+        allow_dots_in_slugs:      false,
         routes:                   []
       }.merge(attributes))
     end

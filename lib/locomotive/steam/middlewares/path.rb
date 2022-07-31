@@ -16,9 +16,15 @@ module Locomotive::Steam
       protected
 
       def set_path!(env)
+        site = env['steam.site']
         path = env['steam.path'].dup
 
-        path.gsub!(/\.[a-zA-Z][a-zA-Z0-9]{2,}$/, '')
+        if site.allow_dots_in_slugs
+          path.gsub!(/\.(html|htm)$/, '')
+        else
+          path.gsub!(/\.[a-zA-Z][a-zA-Z0-9]{2,}$/, '')
+        end
+
         path.gsub!(/^\//, '')
         path.gsub!(/^[A-Z]:\//, '')
 
