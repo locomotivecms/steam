@@ -68,8 +68,6 @@ end.parse!
 require_relative '../lib/locomotive/steam'
 require_relative '../lib/locomotive/steam/server'
 
-puts options.inspect
-
 Locomotive::Steam.configure do |config|
   config.mode           = :test
   config.adapter        = options[:adapter]
@@ -77,11 +75,7 @@ Locomotive::Steam.configure do |config|
   config.asset_path     = options[:asset_path]
   config.asset_host     = options[:asset_host]
   config.minify_assets  = false
-end
-
-Locomotive::Common.reset
-Locomotive::Common.configure do |config|
-  config.notifier = Locomotive::Common::Logger.setup(options[:log_file])
+  config.log_file       = options[:log_file]
 end
 
 app = Locomotive::Steam.to_app

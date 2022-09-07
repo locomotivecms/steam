@@ -19,7 +19,7 @@ module Spec
       FileUtils.rm_rf(File.expand_path('../../fixtures/default/log', __FILE__))
     end
 
-    def setup_common(logger_output = nil)
+    def reset_logger(logger_output = nil)
       Locomotive::Common.reset
       Locomotive::Common.configure do |config|
         logger_output ||= File.join(default_fixture_site_path, 'log/steam.log')
@@ -30,9 +30,6 @@ module Spec
     def run_server
       require 'haml'
 
-      output = ENV['STEAM_VERBOSE'] ? nil : File.join(default_fixture_site_path, 'log/steam.log')
-      setup_common(output)
-
       Locomotive::Steam.configure do |config|
         config.mode           = :test
         config.adapter        = { name: :filesystem, path: default_fixture_site_path }
@@ -40,6 +37,7 @@ module Spec
         config.asset_path     = File.expand_path(File.join(default_fixture_site_path, 'public'))
         config.serve_assets   = true
         config.minify_assets  = true
+        config.log_file       = ENV['STEAM_VERBOSE'] ? nil : File.join(default_fixture_site_path, 'log/steam.log')
       end
 
       Locomotive::Common::Logger.info 'Server started...'

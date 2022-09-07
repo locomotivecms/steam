@@ -14,7 +14,7 @@ module Locomotive::Steam
         return if env['steam.private_access_disabled']
 
         if site.private_access
-          log "Site with private access"
+          debug_log "Site with private access"
 
           if access_granted?
             store_password
@@ -28,7 +28,7 @@ module Locomotive::Steam
 
       def render_lock_screen
         if page = services.page_finder.by_handle('lock_screen', false)
-          log "Found custom lock screen: #{page.title}"
+          debug_log "Found custom lock screen: #{page.title}"
           env['steam.page'] = page
         else
           render_response(lock_screen_html, 403)

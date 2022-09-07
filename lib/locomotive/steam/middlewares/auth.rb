@@ -101,7 +101,7 @@ module Locomotive::Steam
       end
 
       def append_message(message)
-        log "[Auth] status message = #{message.inspect}"
+        debug_log "[Auth] status message = #{message.inspect}"
 
         message ||= 'error'
         liquid_assigns["auth_#{message}"] = "auth_#{message}"

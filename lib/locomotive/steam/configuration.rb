@@ -102,6 +102,19 @@ module Locomotive
       attr_accessor :render_404_if_no_site
       def render_404_if_no_site; @render_404_if_no_site.nil? ? true : @render_404_if_no_site; end
 
+      # Log file
+      #
+      # default: nil (ENV['LOCOMOTIVE_STEAM_LOG'] || STDOUT)
+      #
+      attr_accessor :log_file
+
+      # Log level 
+      #
+      # default: ::Logger::DEBUG
+      #
+      attr_accessor :log_level
+      def log_level; @log_level || ::Logger::DEBUG; end
+
       # Lambda called once a Services instance has been built.
       # It is used when we want to change one of the services
       #

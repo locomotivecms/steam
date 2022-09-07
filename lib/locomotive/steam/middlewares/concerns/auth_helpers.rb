@@ -19,7 +19,7 @@ module Locomotive::Steam
 
           env['steam.authenticated_entry'] = nil if entry.nil?
 
-          log "[Auth] authenticated #{type.to_s.singularize} ##{entry&._id.to_s}"
+          debug_log "[Auth] authenticated #{type.to_s.singularize} ##{entry&._id.to_s}"
 
           liquid_assigns["current_#{type.singularize}"] = entry
         end

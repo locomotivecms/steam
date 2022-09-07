@@ -26,7 +26,7 @@ module Locomotive::Steam
           env['steam.content_entry'] = page.content_entry = entry
 
           # log it
-          log "Found content entry: #{entry._label}"
+          debug_log "Found content entry: #{entry._label}"
         else
           url = services.url_builder.url_for(page_not_found, locale)
           redirect_to url, 302

@@ -45,7 +45,7 @@ RSpec.configure do |config|
   config.filter_run focused: true
   config.run_all_when_everything_filtered = true
 
-  config.before(:all) { remove_logs; setup_common }
+  config.before(:all) { remove_logs; reset_logger }
   config.before { reset! }
   config.after  { reset! }
   config.order = :random

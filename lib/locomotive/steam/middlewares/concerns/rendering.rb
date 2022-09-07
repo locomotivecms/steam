@@ -28,7 +28,7 @@ module Locomotive::Steam
             "Your 404 page is missing."
           end) + " Please create it."
 
-          log "[Warning] #{message}".red
+          debug_log "[Warning] #{message}".red
 
           render_response(message, 404)
         end
