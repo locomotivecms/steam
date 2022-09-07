@@ -11,6 +11,16 @@ module Locomotive
             # NOTE: it doesn't support dynamically choosen template
             template_name = template_name_expr.respond_to?(:name) ? template_name_expr.name : template_name_expr
 
+            # make sure we keep track of the parsed snippets
+            parse_context[:parsed_snippets] ||= []
+
+            # already parsed? (it happens when doing recursivity with snippets)
+            if parse_context[:parsed_snippets].include?(template_name)
+              return
+            else
+              parse_context[:parsed_snippets] << template_name
+            end
+
             ActiveSupport::Notifications.instrument('steam.parse.include', page: parse_context[:page], name: template_name)
 
             if parse_context[:snippet_finder] && snippet = parse_context[:snippet_finder].find(template_name)
