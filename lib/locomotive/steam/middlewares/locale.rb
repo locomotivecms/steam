@@ -23,7 +23,7 @@ module Locomotive::Steam
 
         set_locale_cookie
 
-        log "Locale used: #{locale.upcase}"
+        debug_log "Locale used: #{locale.upcase}"
 
         I18n.with_locale(locale) do
           self.next
@@ -48,7 +48,7 @@ module Locomotive::Steam
 
       def locale_from_params
         params[:locale]&.to_sym.tap do |locale|
-          log 'Locale extracted from the params' unless locale.blank?
+          debug_log 'Locale extracted from the params' unless locale.blank?
         end
       end
 
@@ -62,7 +62,7 @@ module Locomotive::Steam
           env['steam.path'] = path.gsub(/^\/#{$1 + $2}/, '/')
           env['steam.locale_in_path'] = true
 
-          log 'Locale extracted from the path'
+          debug_log'Locale extracted from the path'
 
           locale.to_sym
         end
@@ -73,14 +73,14 @@ module Locomotive::Steam
         .sort { |a, b| b[1] <=> a[1] }
         .map  { |lang, _| lang[0..1].to_sym }
         .find { |lang| locales.include?(lang) }.tap do |locale|
-          log 'Locale extracted from the header' unless locale.blank?
+          debug_log 'Locale extracted from the header' unless locale.blank?
         end
       end
 
       def locale_from_cookie
         if locale = services.cookie.get(cookie_key_name)
 
-          log 'Locale extracted from the cookie'
+          debug_log 'Locale extracted from the cookie'
 
           locale.to_sym
         end

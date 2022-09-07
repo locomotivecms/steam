@@ -10,7 +10,7 @@ module Locomotive::Steam
       def _call
         timezone = site.try(:timezone)
 
-        log "Timezone: #{timezone.name}"
+        debug_log "Timezone: #{timezone.name}"
 
         Time.use_zone(timezone) do
           self.next

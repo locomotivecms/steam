@@ -13,10 +13,10 @@ module Locomotive::Steam
 
         if page = fetch_page
           if !page.not_found?
-            log "Found page \"#{page.title}\" [#{page.fullpath}]"
+            debug_log "Found page \"#{page.title}\" [#{page.fullpath}]"
           else
             ActiveSupport::Notifications.instrument('steam.render.page_not_found', path: path, locale: locale, default_locale: default_locale)
-            log "Page not found (#{path.inspect}), rendering the 404 page.".magenta
+            debug_log "Page not found (#{path.inspect}), rendering the 404 page.".magenta
           end
         end
 
@@ -47,7 +47,7 @@ module Locomotive::Steam
           regexp = Regexp.new(/^#{_route}$/i)
 
           if (matches = path.match(regexp))
-            log "Route found! #{route} (#{handle})"
+            debug_log "Route found! #{route} (#{handle})"
 
             # we want the named route parameters in the request params object
             # because they will be needed in the liquid template.
@@ -63,7 +63,7 @@ module Locomotive::Steam
       def fetch_page_from_paths
         page_finder.match(path).tap do |pages|
           if pages.size > 1
-            self.log "Found multiple pages: #{pages.map(&:title).join(', ')}"
+            self.debug_log "Found multiple pages: #{pages.map(&:title).join(', ')}"
           end
         end.first
       end

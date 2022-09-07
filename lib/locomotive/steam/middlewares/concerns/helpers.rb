@@ -40,7 +40,7 @@ module Locomotive::Steam
         def redirect_to(location, type = 301)
           _location = mounted_on && !location.starts_with?(mounted_on) && (location =~ Locomotive::Steam::IsHTTP).nil? ? "#{mounted_on}#{location}" : location
 
-          self.log "Redirected to #{_location}".blue
+          self.debug_log "Redirected to #{_location}".blue
 
           headers = { 'Content-Type' => HTML_CONTENT_TYPE, 'Location' => _location }
           inject_cookies(headers)
@@ -81,6 +81,10 @@ module Locomotive::Steam
 
         def log(msg, offset = 2)
           Locomotive::Common::Logger.info (' ' * offset) + msg
+        end
+
+        def debug_log(msg, offset = 2)
+          Locomotive::Common::Logger.debug (' ' * offset) + msg
         end
 
       end

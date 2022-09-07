@@ -48,6 +48,13 @@ module Locomotive
     def self.configure
       yield(configuration)
 
+      # configure the logger
+      Locomotive::Common.reset
+      Locomotive::Common.configure do |config|
+        config.notifier = Locomotive::Common::Logger.setup(configuration.log_file)
+        config.notifier.level = configuration.log_level
+      end
+
       require_relative 'steam/initializers'
     end
 
