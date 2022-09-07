@@ -48,6 +48,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mime-types',             '~> 3.3.0'
   spec.add_dependency 'duktape',                '~> 2.0.1.1'
   spec.add_dependency 'pony',                   '~> 1.12'
+  spec.add_dependency 'parser',                 '~> 2.7'
+  spec.add_dependency 'unparser',               '~> 0.4'
 
   spec.add_dependency 'locomotivecms_common',   '~> 0.4.0'
 
