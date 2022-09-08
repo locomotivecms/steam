@@ -119,11 +119,11 @@ module Locomotive
                 block:          self.current_inherited_block_name,
                 label:          label,
                 slug:           slug,
-                hint:           attributes[:hint],
-                priority:       attributes[:priority] || 0,
-                fixed:          [true, 'true'].include?(attributes[:fixed]),
+                hint:           raw_attributes[:hint],
+                priority:       raw_attributes[:priority] || 0,
+                fixed:          [true, 'true'].include?(raw_attributes[:fixed]),
                 disabled:       false,
-                inline_editing: [true, 'true'].include?(attributes[:inline_editing]),
+                inline_editing: [true, 'true'].include?(raw_attributes[:inline_editing]),
                 from_parent:    false,
                 type:           @tag_name.to_sym
               }

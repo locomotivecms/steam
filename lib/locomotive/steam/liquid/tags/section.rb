@@ -24,10 +24,10 @@ module Locomotive
 
           def parse(tokens)
             notify_on_parsing(section_type,
-              id:         "page-#{attributes[:id] || section_type}",
-              key:        (attributes[:id] || section_type).to_s,
-              label:      attributes[:label],
-              placement:  attributes[:placement]&.to_sym
+              id:         "page-#{raw_attributes[:id] || section_type}",
+              key:        (raw_attributes[:id] || section_type).to_s,
+              label:      raw_attributes[:label],
+              placement:  raw_attributes[:placement]&.to_sym
             )
           end
 

@@ -9,7 +9,7 @@ module Locomotive
               source:     :site,
               id:         "site-#{section_type}",
               key:        section_type,
-              placement:  attributes[:placement]&.to_sym
+              placement:  raw_attributes[:placement]&.to_sym
             )
           end
 

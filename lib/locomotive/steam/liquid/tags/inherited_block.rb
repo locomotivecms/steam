@@ -72,7 +72,7 @@ module Locomotive
                 page: parse_context[:page],
                 name: name,
                 found_super: self.contains_super?(nodelist)
-              }.merge(@raw_attributes))
+              }.merge(raw_attributes))
             end
           end
 
