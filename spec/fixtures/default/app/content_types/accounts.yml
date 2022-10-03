@@ -22,6 +22,9 @@ order_by: manually
 # Activate public 'create' API (e.g for a contact form)
 # public_submission_enabled: false
 
+# Enable Google Recaptcha to create new public entries
+# recaptcha_required: true
+
 # Array of emails to be notified of new entries made with the public API
 # public_submission_accounts: ['john@example.com']
 
