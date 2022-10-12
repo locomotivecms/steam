@@ -55,11 +55,11 @@ describe Locomotive::Steam::Middlewares::Cache do
 
       let(:response) { nil }
 
-      before { expect(cache).to receive(:read).with('c34181a7a079edc9de373067bffc28f0').and_return(response) }
+      before { expect(cache).to receive(:read).with('4fb84e6d3037dcd54979c3461c5a5ffd').and_return(response) }
 
       context 'the cache is empty' do
 
-        before { expect(cache).to receive(:write).with('c34181a7a079edc9de373067bffc28f0', Marshal.dump([200, {}, ["Hello world!"]])) }
+        before { expect(cache).to receive(:write).with('4fb84e6d3037dcd54979c3461c5a5ffd', Marshal.dump([200, {}, ["Hello world!"]])) }
 
         it 'tells the CDN to cache the page and also cache it internally' do
           is_expected.to eq ['max-age=0, s-maxage=3600, public, must-revalidate', 'Accept-Language']
@@ -69,7 +69,7 @@ describe Locomotive::Steam::Middlewares::Cache do
 
           subject { send_request[:env]['steam.cache_etag'] }
 
-          it { is_expected.to eq 'c34181a7a079edc9de373067bffc28f0' }
+          it { is_expected.to eq '4fb84e6d3037dcd54979c3461c5a5ffd' }
 
         end
 
@@ -104,7 +104,7 @@ describe Locomotive::Steam::Middlewares::Cache do
 
       context 'based on the ETag' do
 
-        let(:etag) { 'c34181a7a079edc9de373067bffc28f0' }
+        let(:etag) { '4fb84e6d3037dcd54979c3461c5a5ffd' }
 
         it 'returns a 304 (Not modified) without no cache headers' do
           expect(subject.first).to eq 304
