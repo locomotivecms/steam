@@ -72,7 +72,7 @@ module Locomotive
                 page: parse_context[:page],
                 name: name,
                 found_super: self.contains_super?(nodelist)
-              }.merge(raw_attributes))
+              }.merge(attributes))
             end
           end
 
@@ -85,7 +85,8 @@ module Locomotive
 
               # the block drop is in charge of rendering "{{ block.super }}"
               context['block'] = Drops::InheritedBlock.new(block)
-              anchor_html = if live_editing?(context) && (raw_attributes[:anchor] || raw_attributes[:anchor].nil?)
+
+              anchor_html = if live_editing?(context) && (attributes[:anchor] || attributes[:anchor].nil?)
                 %{<span class="locomotive-block-anchor" data-element-id="#{name}" style="visibility: hidden"></span>}
               else
                 ''

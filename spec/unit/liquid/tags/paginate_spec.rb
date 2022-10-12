@@ -31,7 +31,7 @@ EOF
 
       let(:source)  { '{% paginate projects by 2, window_size: 4 %}{% endpaginate %}' }
       let(:block)   { subject.root.nodelist.first }
-      it { expect(block.send(:raw_attributes)[:window_size]).to eq 4 }
+      it { expect(block.send(:window_size)).to eq 4 }
 
     end
 

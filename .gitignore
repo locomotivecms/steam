@@ -28,3 +28,4 @@ spec/fixtures/default/log/*
 log
 dragonfly.log
 .byebug_history
+TODO.md

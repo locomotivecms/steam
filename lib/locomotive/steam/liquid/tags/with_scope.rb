@@ -33,37 +33,28 @@ module Locomotive
             'x' => Regexp::EXTENDED
           }.freeze
 
-          OPERATORS = %w(all exists gt gte in lt lte ne nin size near within)
-
-          SYMBOL_OPERATORS_REGEXP = /(\w+\.(#{OPERATORS.join('|')})){1}\s*\:/o
-
           attr_reader :attributes, :attributes_var_name
 
           def initialize(tag_name, markup, options)
             super
 
-            # convert symbol operators into valid ruby code
-            markup.gsub!(SYMBOL_OPERATORS_REGEXP, ':"\1" =>')
-
             # simple hash?
             parse_attributes(markup) { |value| parse_attribute(value) }
 
-            if raw_attributes.empty? && markup =~ SingleVariable
+            if attributes.empty? && markup =~ SingleVariable
               # alright, maybe we'vot got a single variable built
               # with the Action liquid tag instead?
               @attributes_var_name = Regexp.last_match(1)
             end
 
-            if raw_attributes.empty? && attributes_var_name.blank?
+            if attributes.empty? && attributes_var_name.blank?
               raise ::Liquid::SyntaxError.new("Syntax Error in 'with_scope' - Valid syntax: with_scope <name_1>: <value_1>, ..., <name_n>: <value_n>")
             end
           end
 
           def render(context)
             context.stack do
-              @raw_attributes = context[attributes_var_name] || {} if attributes_var_name.present?
-              @raw_attributes.transform_keys! { |key| key.to_s == '_permalink' ? '_slug' : key.to_s }
-              context['with_scope'] = evaluate_attributes(context)
+              context['with_scope'] = self.evaluate_attributes(context)
 
               # for now, no content type is assigned to this with_scope
               context['with_scope_content_type'] = false
@@ -77,7 +68,7 @@ module Locomotive
           def parse_attribute(value)
             case value
             when StrictRegexpFragment
-              # let the evaluate_value attribute create the Regexp (done during the rendering phase)
+              # let the cast_value attribute create the Regexp (done during the rendering phase)
               value
             when ArrayFragment
               $1.split(',').map { |_value| parse_attribute(_value) }
@@ -86,11 +77,28 @@ module Locomotive
             end
           end
 
-          def evaluate_value(context, value, lax: false)
-            _value = super
-            case _value
+          def evaluate_attributes(context)
+            @attributes = context[attributes_var_name] || {} if attributes_var_name.present?
+
+            HashWithIndifferentAccess.new.tap do |hash|
+              attributes.each do |key, value|
+                # _slug instead of _permalink
+                _key = key.to_s == '_permalink' ? '_slug' : key.to_s
+
+                # evaluate the value if possible before casting it
+                _value = value.is_a?(::Liquid::VariableLookup) ? context.evaluate(value) : value
+
+                hash[_key] = cast_value(context, _value)
+              end
+            end
+          end
+
+          def cast_value(context, value)
+            case value
+            when Array                then value.map { |_value| cast_value(context, _value) }
             when StrictRegexpFragment then create_regexp($1, $2)
             else
+              _value = context.evaluate(value)
               _value.respond_to?(:_id) ? _value.send(:_source) : _value
             end
           end

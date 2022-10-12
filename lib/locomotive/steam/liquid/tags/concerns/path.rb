@@ -7,20 +7,13 @@ module Locomotive
 
             Syntax = /(#{::Liquid::QuotedFragment}+)(\s*,.+)?/o
 
-            attr_reader :handle, :compatible_attributes
+            attr_reader :handle
 
             def initialize(tag_name, markup, options)
               super
 
               if markup =~ Syntax
                 @handle, _attributes = $1, $2
-
-                # this is a hack for sites which don't follow the new syntax.
-                # We need this hack because the value pass by with can contain "-"
-                # for example : "link_to another_song, with: a-song-template"
-                # This will be evaluated as multiple variable by the ruby AST parser
-                # So we need to convert it to "link_to another_song, with: 'a-song-template'"
-                parse_compatible_attributes(_attributes)
 
                 parse_attributes(_attributes)
               else
@@ -29,14 +22,14 @@ module Locomotive
             end
 
             def render_path(context, &block)
-              evaluate_attributes(context)
+              evaluate_attributes(context, lax: true)
 
               set_vars_from_context(context)
 
               handle = @context[@handle] || @handle
 
               # is external url?
-              if handle.to_s =~ Locomotive::Steam::IsHTTP
+              if handle =~ Locomotive::Steam::IsHTTP
                 handle
               elsif page = self.retrieve_page_drop_from_handle(handle) # return a drop or model?
                 # make sure we've got the page/content entry (if templatized)
@@ -52,18 +45,6 @@ module Locomotive
             end
 
             protected
-
-            def parse_compatible_attributes(_attributes)
-              if _attributes
-                _compatible_attributes = _attributes.dup
-                %w(with locale).each do |name|
-                  _compatible_attributes.gsub!(/#{name}: ([\w-]+)/, name + ': "\1"')
-                end
-                @compatible_attributes = parse_attributes(_compatible_attributes)
-              else
-                @compatible_attributes = {}
-              end
-            end
 
             def services
               @context.registers[:services]
@@ -105,11 +86,11 @@ module Locomotive
             end
 
             def locale
-              attributes[:locale] || compatible_attributes[:locale] || @locale
+              attributes[:locale] || @locale
             end
 
             def template_slug
-              attributes[:with] || compatible_attributes[:with]
+              attributes[:with]
             end
 
             def set_vars_from_context(context)
