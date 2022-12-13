@@ -11,6 +11,7 @@ title: Home page
 
     %meta{ content: "{{ site.meta_description }}", name: "description" }
     %meta{ content: "{{ site.meta_keywords }}", name: "keywords" }
+    %meta{ content: "{{ site.meta_robots }}", name: "robots" }
 
     {{ '/foo/bar' | auto_discovery_link_tag: 'rel:alternate', 'type:application/atom+xml', 'title:A title' }}
 

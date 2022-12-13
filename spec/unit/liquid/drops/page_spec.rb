@@ -6,7 +6,7 @@ describe Locomotive::Steam::Liquid::Drops::Page do
   let(:services)  { Locomotive::Steam::Services.build_instance }
   let(:site)      { instance_double('Site', default_locale: 'en') }
   let(:context)   { ::Liquid::Context.new(assigns, {}, { locale: 'en', services: services, site: site }) }
-  let(:page)      { instance_double('Page', id: 42, localized_attributes: [], title: 'Index', slug: 'index', fullpath: 'index', content_type: nil, depth: 1, templatized?: false, listed?: true, published?: true, is_layout?: true, redirect?: false, seo_title: 'seo title', redirect_url: '/', handle: 'index', meta_keywords: 'keywords', meta_description: 'description') }
+  let(:page)      { instance_double('Page', id: 42, localized_attributes: [], title: 'Index', slug: 'index', fullpath: 'index', content_type: nil, depth: 1, templatized?: false, listed?: true, published?: true, is_layout?: true, redirect?: false, seo_title: 'seo title', redirect_url: '/', handle: 'index', meta_keywords: 'keywords', meta_description: 'description', meta_robots: 'noindex') }
   let(:drop)      { described_class.new(page).tap { |d| d.context = context } }
 
   subject { drop }
@@ -25,6 +25,7 @@ describe Locomotive::Steam::Liquid::Drops::Page do
     expect(subject.seo_title).to eq 'seo title'
     expect(subject.meta_keywords).to eq 'keywords'
     expect(subject.meta_description).to eq 'description'
+    expect(subject.meta_robots).to eq 'robots'
     expect(subject.listed?).to eq true
     expect(subject.redirect?).to eq false
     expect(subject.is_layout?).to eq true

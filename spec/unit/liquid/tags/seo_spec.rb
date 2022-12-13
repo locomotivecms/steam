@@ -5,7 +5,7 @@ describe Locomotive::Steam::Liquid::Tags::SEO do
   let(:page)          { nil }
   let(:content_entry) { nil }
 
-  let(:site)      { liquid_instance_double('Site', name: 'Acme', seo_title: 'Acme (SEO)', meta_description: 'A short site description', meta_keywords: 'test only cat dog') }
+  let(:site)      { liquid_instance_double('Site', name: 'Acme', seo_title: 'Acme (SEO)', meta_description: 'A short site description', meta_keywords: 'test only cat dog', meta_robots: 'noindex,nofollow') }
   let(:assigns)   { { 'site' => site, 'page' => page, 'content_entry' => content_entry } }
   let(:context)   { ::Liquid::Context.new(assigns, {}, {}) }
 
@@ -30,7 +30,7 @@ describe Locomotive::Steam::Liquid::Tags::SEO do
 
       describe 'no seo_title site property' do
 
-        let(:site) { liquid_instance_double('Site', name: 'Acme', seo_title: nil, meta_description: 'A short site description', meta_keywords: 'test only cat dog') }
+        let(:site) { liquid_instance_double('Site', name: 'Acme', seo_title: nil, meta_description: 'A short site description', meta_keywords: 'test only cat dog', meta_robots: 'noindex,nofollow') }
         it { is_expected.to eq '<title>Acme</title>' }
 
       end
@@ -66,7 +66,7 @@ describe Locomotive::Steam::Liquid::Tags::SEO do
 
     describe 'with a page' do
 
-      let(:page) { liquid_instance_double('Page', meta_description: "It's snowing", meta_keywords: 'snow') }
+      let(:page) { liquid_instance_double('Page', meta_description: "It's snowing", meta_keywords: 'snow', meta_robots: 'nofollow') }
       it { is_expected.to include %Q[<meta name="description" content="It's snowing">] }
       it { is_expected.to include %Q[<meta name="keywords" content="snow">] }
 
@@ -74,7 +74,7 @@ describe Locomotive::Steam::Liquid::Tags::SEO do
 
     describe 'with a content entry' do
 
-      let(:content_entry) { liquid_instance_double('Entry', meta_description: "It's snowing", meta_keywords: 'snow') }
+      let(:content_entry) { liquid_instance_double('Entry', meta_description: "It's snowing", meta_keywords: 'snow', meta_robots: 'nofollow') }
       it { is_expected.to include %Q[<meta name="description" content="It's snowing">] }
       it { is_expected.to include %Q[<meta name="keywords" content="snow">] }
 
