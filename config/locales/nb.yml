@@ -139,7 +139,7 @@ nb:
       minute: "Minutt"
       second: "Sekund"
   number:
-    format: &number_format
+    format:
       precision: 2
       separator: ","
       delimiter: " "
@@ -149,7 +149,11 @@ nb:
       format:
         unit: "kr"
         format: "%n %u"
-        <<: *number_format
+        precision: 2
+        separator: ","
+        delimiter: " "
+        significant: false
+        strip_insignificant_zeros: true
     precision:
       format:
         delimiter: ""
