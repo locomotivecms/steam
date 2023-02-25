@@ -1,11 +1,4 @@
-# require 'simplecov'
-# require 'codeclimate-test-reporter'
-# require 'coveralls'
-# require 'simplecov'
-# require 'coveralls'
-
 require 'simplecov'
-require 'coveralls'
 
 
 SimpleCov.start do

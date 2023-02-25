@@ -28,12 +28,10 @@ group :test do
   gem 'rspec',              '~> 3.12.0'
   gem 'json_spec',          '~> 1.1.5'
   gem 'i18n-spec',          '~> 0.6.0'
-
-  gem 'timecop',            '~> 0.9.6'
-
-  gem 'pry-byebug', '~> 3.10.1'
-
   gem 'rack-test',          '~> 2.0.2'
-
-  gem 'coveralls',                  '~> 0.8.23',   require: false
+  
+  gem 'timecop',            '~> 0.9.6'
+  gem 'pry-byebug', '~> 3.10.1'
+  gem 'simplecov', require: false
+  
 end

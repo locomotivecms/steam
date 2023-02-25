@@ -3,6 +3,7 @@ require 'spec_helper'
 require_relative '../../../lib/locomotive/steam/middlewares/thread_safe'
 require_relative '../../../lib/locomotive/steam/middlewares/concerns/helpers'
 require_relative '../../../lib/locomotive/steam/middlewares/concerns/recaptcha'
+require_relative '../../../lib/locomotive/steam/middlewares/concerns/auth_helpers'
 require_relative '../../../lib/locomotive/steam/middlewares/auth'
 
 describe Locomotive::Steam::Middlewares::Auth::AuthOptions do
