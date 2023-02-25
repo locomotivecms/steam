@@ -4,7 +4,6 @@ require 'mime/types'
 
 require 'rack/rewrite'
 require 'rack/csrf'
-require 'rack/session'
 require 'rack/session/moneta'
 require 'rack/builder'
 require 'rack/lint'

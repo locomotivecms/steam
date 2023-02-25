@@ -30,7 +30,6 @@ PATH
       pony (~> 1.13)
       rack-cache (~> 1.13.0)
       rack-rewrite (~> 1.5.1)
-      rack-session (~> 2.0.0)
       rack_csrf (~> 2.7.0)
       sanitize (~> 6.0.1)
 
@@ -132,14 +131,12 @@ GEM
     puma (6.1.0)
       nio4r (~> 2.0)
     racc (1.6.2)
-    rack (3.0.4.1)
+    rack (2.2.6.2)
     rack-cache (1.13.0)
       rack (>= 0.4)
     rack-mini-profiler (3.0.0)
       rack (>= 1.2.0)
     rack-rewrite (1.5.1)
-    rack-session (2.0.0)
-      rack (>= 3.0.0)
     rack-test (2.0.2)
       rack (>= 1.3)
     rack_csrf (2.7.0)
@@ -209,7 +206,7 @@ DEPENDENCIES
   origin (~> 2.3.1)
   pry-byebug (~> 3.10.1)
   puma (~> 6.1.0)
-  rack (~> 3.0.4.1)
+  rack (~> 2, < 3)
   rack-mini-profiler (~> 3.0.0)
   rack-test (~> 2.0.2)
   rake (~> 13.0.6)
@@ -218,9 +215,6 @@ DEPENDENCIES
   simplecov
   stackprof
   timecop (~> 0.9.6)
-
-RUBY VERSION
-   ruby 3.1.2p20
 
 BUNDLED WITH
    2.3.25
