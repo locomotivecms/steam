@@ -2,10 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-platform :ruby do
-  ruby File.read('.ruby-version').strip
-end
-
 group :development do
   # gem 'locomotivecms_common', github: 'locomotivecms/common', ref: '4d1bd56'
   gem 'locomotivecms_common', path: '../common'
