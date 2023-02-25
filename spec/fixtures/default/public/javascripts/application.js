@@ -1,0 +1,1 @@
+window.on('load', () => { alert('hello world') })

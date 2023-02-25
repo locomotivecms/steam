@@ -46,7 +46,7 @@ describe Locomotive::Steam::Middlewares::Section do
   it 'renders the HTML code related to the section' do
     is_expected.to eq [
       200,
-      { "Content-Type" => "text/html" },
+      { "content-type" => "text/html" },
       [%(<div id="locomotive-section-header" class="locomotive-section" data-locomotive-section-type="header"><span id="header-section"></span>Here some </div>)]
     ]
   end
@@ -62,7 +62,7 @@ describe Locomotive::Steam::Middlewares::Section do
     it 'renders the HTML code related to the section' do
       is_expected.to eq [
         200,
-        { "Content-Type" => "text/html" },
+        { "content-type" => "text/html" },
         [%(<div id="locomotive-section-dropzone-42" class="locomotive-section" data-locomotive-section-type="header"><span id="dropzone-42-section"></span>Here some modified HTML</div>)]
       ]
     end

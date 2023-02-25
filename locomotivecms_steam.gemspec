@@ -30,22 +30,18 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'liquid',                 '~> 4.0.4'
 
   spec.add_dependency 'rack-rewrite',           '~> 1.5.1'
+  spec.add_dependency 'rack-session',           '~> 2.0.0'
   spec.add_dependency 'rack-cache',             '~> 1.13.0'
   spec.add_dependency 'rack_csrf',              '~> 2.7.0'
   spec.add_dependency 'dragonfly',              '~> 1.4.0'
   spec.add_dependency 'moneta',                 '~> 1.5.2'
-
-  spec.add_dependency 'sprockets',              '~> 4.2.0'
-  spec.add_dependency 'sass',                   '~> 3.7.4'
-  spec.add_dependency 'uglifier',               '~> 4.2.0'
-  spec.add_dependency 'coffee-script',          '~> 2.4.1'
-  spec.add_dependency 'autoprefixer-rails',     '~> 10.4.7.0'
 
   spec.add_dependency 'kramdown',               '~> 2.4.0'
   spec.add_dependency 'RedCloth',               '~> 4.3.2'
   spec.add_dependency 'mimetype-fu',            '~> 0.1.2'
   spec.add_dependency 'mime-types',             '~> 3.4.1'
   spec.add_dependency 'duktape',                '~> 2.7.0.0'
+  spec.add_dependency 'execjs',                 '~> 2.8.1'
   spec.add_dependency 'pony',                   '~> 1.13'
   
   spec.add_dependency 'locomotivecms_common',   '>= 1'

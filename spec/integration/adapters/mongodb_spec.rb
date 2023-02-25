@@ -43,7 +43,7 @@ describe Locomotive::Steam::MongoDBAdapter do
   end
 
   def current_connections
-    `mongo --eval "db.serverStatus().connections.current"`.split("\n").last.to_i
+    `mongosh --eval "db.serverStatus().connections.current"`.split("\n").last.to_i
   end
 
 end

@@ -108,7 +108,7 @@ describe Locomotive::Steam::Middlewares::Cache do
 
         it 'returns a 304 (Not modified) without no cache headers' do
           expect(subject.first).to eq 304
-          expect(subject.last['Cache-Control']).to eq nil
+          expect(subject.last['cache-control']).to eq nil
         end
 
       end
@@ -119,7 +119,7 @@ describe Locomotive::Steam::Middlewares::Cache do
 
         it 'returns a 304 (Not modified) without no cache headers' do
           expect(subject.first).to eq 304
-          expect(subject.last['Cache-Control']).to eq nil
+          expect(subject.last['cache-control']).to eq nil
         end
 
       end
