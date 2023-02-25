@@ -37,8 +37,6 @@ module Locomotive::Steam
       %w(fonts stylesheets javascripts).each do |name|
         append_path File.join(@steam_path, name)
       end
-
-      Compass::Frameworks::ALL.each { |f| append_path(f.stylesheets_directory) }
     end
 
     def install_minifiers

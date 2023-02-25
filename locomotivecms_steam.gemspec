@@ -15,41 +15,40 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency 'rake',       '~> 13.0.1'
+  spec.add_development_dependency 'rake',       '~> 13.0.6'
 
-  spec.add_development_dependency 'mongo',      '~> 2.13.1'
+  spec.add_development_dependency 'mongo',      '~> 2.18.2'
   spec.add_development_dependency 'origin',     '~> 2.3.1'
 
-  spec.add_dependency 'nokogiri',               '>= 1.11', '< 1.14'
-  spec.add_dependency 'sanitize',               '~> 5.2.1'
+  spec.add_dependency 'nokogiri',               '~> 1.14.2'
+  spec.add_dependency 'sanitize',               '~> 6.0.1'
   spec.add_dependency 'morphine',               '~> 0.1.1'
-  spec.add_dependency 'httparty',               '~> 0.16.0'
+  spec.add_dependency 'httparty',               '~> 0.21.0'
   spec.add_dependency 'chronic',                '~> 0.10.2'
-  spec.add_dependency 'bcrypt',                 '~> 3.1.11'
+  spec.add_dependency 'bcrypt',                 '~> 3.1.18'
   spec.add_dependency 'multi_json',             '~> 1.15.0'
   spec.add_dependency 'liquid',                 '~> 4.0.4'
 
   spec.add_dependency 'rack-rewrite',           '~> 1.5.1'
-  spec.add_dependency 'rack-cache',             '~> 1.7.0'
-  spec.add_dependency 'rack_csrf',              '~> 2.6.0'
-  spec.add_dependency 'dragonfly',              '>= 1.2', '< 1.5'
-  spec.add_dependency 'moneta',                 '~> 1.0.0'
+  spec.add_dependency 'rack-cache',             '~> 1.13.0'
+  spec.add_dependency 'rack_csrf',              '~> 2.7.0'
+  spec.add_dependency 'dragonfly',              '~> 1.4.0'
+  spec.add_dependency 'moneta',                 '~> 1.5.2'
 
-  spec.add_dependency 'sprockets',              '~> 3.7.1'
-  spec.add_dependency 'sass',                   '~> 3.4.25'
-  spec.add_dependency 'uglifier',               '~> 4.1.3'
+  spec.add_dependency 'sprockets',              '~> 4.2.0'
+  spec.add_dependency 'sass',                   '~> 3.7.4'
+  spec.add_dependency 'uglifier',               '~> 4.2.0'
   spec.add_dependency 'coffee-script',          '~> 2.4.1'
-  spec.add_dependency 'compass',                '~> 1.0.3'
-  spec.add_dependency 'autoprefixer-rails',     '~> 8.0.0'
+  spec.add_dependency 'autoprefixer-rails',     '~> 10.4.7.0'
 
-  spec.add_dependency 'kramdown',               '~> 2.3.0'
+  spec.add_dependency 'kramdown',               '~> 2.4.0'
   spec.add_dependency 'RedCloth',               '~> 4.3.2'
   spec.add_dependency 'mimetype-fu',            '~> 0.1.2'
-  spec.add_dependency 'mime-types',             '~> 3.3.0'
-  spec.add_dependency 'duktape',                '~> 2.0.1.1'
-  spec.add_dependency 'pony',                   '~> 1.12'
+  spec.add_dependency 'mime-types',             '~> 3.4.1'
+  spec.add_dependency 'duktape',                '~> 2.7.0.0'
+  spec.add_dependency 'pony',                   '~> 1.13'
   
-  spec.add_dependency 'locomotivecms_common',   '~> 0.4.0'
+  spec.add_dependency 'locomotivecms_common',   '>= 1'
 
-  spec.required_ruby_version = ['>= 2.5', '< 3']
+  spec.required_ruby_version = ['>= 3']
 end
