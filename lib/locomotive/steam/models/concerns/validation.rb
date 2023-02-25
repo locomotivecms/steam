@@ -41,7 +41,7 @@ module Locomotive
             end
 
             def generate_message(message, options = {})
-              I18n.t(message, {
+              I18n.t(message, **{
                 scope:    'errors.messages',
                 default:  message
               }.merge(options))

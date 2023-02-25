@@ -54,7 +54,7 @@ describe Locomotive::Steam::Middlewares::ImpersonatedEntry do
 
       subject do
         code, env, body = call
-        [code, env['steam.impersonating_authenticated_entry'], env['Location']]
+        [code, env['steam.impersonating_authenticated_entry'], env['location']]
       end
 
       before do

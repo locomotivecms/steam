@@ -39,8 +39,8 @@ module Locomotive::Steam
           code, headers, _ = response = fetch_cached_response(key)
 
           unless CACHEABLE_RESPONSE_CODES.include?(code.to_i)
-            env['steam.cache_control'] = headers['Cache-Control'] = NO_CACHE_CONTROL
-            env['steam.cache_vary'] = headers['Vary'] = nil
+            env['steam.cache_control'] = headers['cache-control'] = NO_CACHE_CONTROL
+            env['steam.cache_vary'] = headers['vary'] = nil
           end
 
           # we don't want to render twice the page

@@ -18,7 +18,7 @@ describe Locomotive::Steam::Middlewares::UrlRedirection do
     env['steam.request']    = Rack::Request.new(env)
     env['locomotive.path']  = locomotive_path
     code, env = middleware.call(env)
-    [code, env['Location']]
+    [code, env['location']]
   end
 
   describe 'no redirections' do

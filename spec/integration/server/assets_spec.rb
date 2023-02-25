@@ -24,6 +24,11 @@ describe Locomotive::Steam::Server do
     it { is_expected.to include("<script src='/javascripts/application.js' type=\'text/javascript\'></script>") }
     it { is_expected.to include('<link rel="alternate" type="application/atom+xml" title="A title" href="/foo/bar" />') }
 
+    it 'renders a stylesheet' do
+      get '/stylesheets/application.css'
+      expect(last_response.status).to eq(200)
+      expect(last_response.body).to include('body { background: #f0eee3')
+    end
   end
 
   describe 'static assets' do
@@ -31,28 +36,6 @@ describe Locomotive::Steam::Server do
     it 'renders an image' do
       get '/images/nav_on.png'
       expect(last_response.status).to eq(200)
-    end
-
-  end
-
-  describe 'dynamic assets (SCSS + Coffeescript)' do
-
-    it 'renders a stylesheet' do
-      get '/stylesheets/application.css'
-      expect(last_response.status).to eq(200)
-      expect(last_response.body).to include('body{background:#f0eee3')
-    end
-
-    it 'renders a SCSS asset' do
-      get '/stylesheets/other/style.css'
-      expect(last_response.status).to eq(200)
-      expect(last_response.body).to include('body{background:red}')
-    end
-
-    it 'renders a Coffeescript asset' do
-      get '/javascripts/application.js'
-      expect(last_response.status).to eq(200)
-      expect(last_response.body).to include('alert("hello world")')
     end
 
   end

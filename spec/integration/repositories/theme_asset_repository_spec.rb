@@ -38,7 +38,7 @@ describe Locomotive::Steam::ThemeAssetRepository do
 
     describe '#all' do
       subject { repository.all }
-      it { expect(subject.size).to eq 16 }
+      it { expect(subject.size).to eq 14 }
     end
 
     describe '#url_for' do

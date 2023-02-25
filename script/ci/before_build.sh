@@ -2,4 +2,4 @@
 echo 'America/Chicago' | sudo tee /etc/timezone
 sudo dpkg-reconfigure --frontend noninteractive tzdata
 date
-mongo --version
+mongosh --version

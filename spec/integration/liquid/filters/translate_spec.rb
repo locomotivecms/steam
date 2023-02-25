@@ -37,21 +37,21 @@ describe Locomotive::Steam::Liquid::Filters::Translate do
     describe 'legacy syntax' do
 
       let(:source) { "{{ 'welcome_message' | translate: 'fr', 'locomotive.default' }}" }
-      it { expect(translator).to receive(:translate).with('welcome_message', 'locale' => 'fr', 'scope' => 'locomotive.default'); subject }
+      it { expect(translator).to receive(:translate).with('welcome_message', { 'locale' => 'fr', 'scope' => 'locomotive.default' }); subject }
 
     end
 
     describe 'new syntax' do
 
       let(:source) { "{{ 'welcome_message' | translate: locale: 'fr', scope: 'locomotive.default' }}" }
-      it { expect(translator).to receive(:translate).with('welcome_message', 'locale' => 'fr', 'scope' => 'locomotive.default'); subject }
+      it { expect(translator).to receive(:translate).with('welcome_message', { 'locale' => 'fr', 'scope' => 'locomotive.default' }); subject }
 
     end
 
     describe 'shortcut alias' do
 
       let(:source) { "{{ 'welcome_message' | t: 'fr', 'locomotive.default' }}" }
-      it { expect(translator).to receive(:translate).with('welcome_message', 'locale' => 'fr', 'scope' => 'locomotive.default'); subject }
+      it { expect(translator).to receive(:translate).with('welcome_message', { 'locale' => 'fr', 'scope' => 'locomotive.default' }); subject }
 
     end
 

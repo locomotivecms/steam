@@ -38,7 +38,7 @@ describe Locomotive::Steam::Middlewares::Concerns::Helpers do
 
   describe '#redirect_to' do
 
-    subject { instance.redirect_to(location)[1]['Location'] }
+    subject { instance.redirect_to(location)[1]['location'] }
 
     context 'mounted_on is not blank' do
 

@@ -26,7 +26,7 @@ describe Locomotive::Steam::Middlewares::Sitemap do
     describe 'no pages' do
 
       it 'renders a blank sitemap' do
-        is_expected.to eq [200, { "Content-Type"=>"application/xml" }, ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">\n\n</urlset>\n"]]
+        is_expected.to eq [200, { "content-type"=>"application/xml" }, ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">\n\n</urlset>\n"]]
       end
 
     end
@@ -36,7 +36,7 @@ describe Locomotive::Steam::Middlewares::Sitemap do
       let(:pages) { [instance_double('Page', index?: false, not_found?: false, layout?: true)] }
 
       it 'renders a blank sitemap' do
-        is_expected.to eq [200, { "Content-Type"=>"application/xml" }, ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">\n\n</urlset>\n"]]
+        is_expected.to eq [200, { "content-type"=>"application/xml" }, ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">\n\n</urlset>\n"]]
       end
 
     end

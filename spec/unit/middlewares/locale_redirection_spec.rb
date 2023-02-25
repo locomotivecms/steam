@@ -20,7 +20,7 @@ describe Locomotive::Steam::Middlewares::LocaleRedirection do
     env['steam.request']    = Rack::Request.new(env)
     env['steam.path']       = env['steam.request'].path_info.gsub(/\A#{mounted_on}/, '').gsub(/\A\/#{locale}/, '')
     code, env = middleware.call(env)
-    [code, env['Location']]
+    [code, env['location']]
   end
 
   describe 'prefix_default_locale is false' do
