@@ -36,13 +36,13 @@ describe Locomotive::Steam::Server do
     it 'renders a stylesheet' do
       get '/stylesheets/application.css'
       expect(last_response.status).to eq(200)
-      expect(last_response.body).to include('body{ background: #f0eee3')
+      expect(last_response.body).to include('body { background: #f0eee3')
     end
 
     it 'renders a javascript' do
       get '/javascripts/application.js'
       expect(last_response.status).to eq(200)
-      expect(last_response.body).to include('alert("hello world")')
+      expect(last_response.body).to include("alert('hello world')")
     end
 
   end
