@@ -33,23 +33,13 @@ describe Locomotive::Steam::Server do
       expect(last_response.status).to eq(200)
     end
 
-  end
-
-  describe 'dynamic assets (SCSS + Coffeescript)' do
-
     it 'renders a stylesheet' do
       get '/stylesheets/application.css'
       expect(last_response.status).to eq(200)
-      expect(last_response.body).to include('body{background:#f0eee3')
+      expect(last_response.body).to include('body{ background: #f0eee3')
     end
 
-    it 'renders a SCSS asset' do
-      get '/stylesheets/other/style.css'
-      expect(last_response.status).to eq(200)
-      expect(last_response.body).to include('body{background:red}')
-    end
-
-    it 'renders a Coffeescript asset' do
+    it 'renders a javascript' do
       get '/javascripts/application.js'
       expect(last_response.status).to eq(200)
       expect(last_response.body).to include('alert("hello world")')

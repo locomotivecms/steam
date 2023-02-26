@@ -1,2 +1,1 @@
-$(document).ready ->
-  alert 'hello world'
+window.on('load', () => { alert('hello world') })

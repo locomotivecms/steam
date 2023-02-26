@@ -31,11 +31,7 @@ module Locomotive::Steam
           if configuration.serve_assets
             use ::Rack::Static, {
               root: configuration.asset_path,
-              urls: ['/images', '/fonts', '/samples', '/sites', '/misc', '/others', '/pdfs', '/media']
-            }
-            use Middlewares::DynamicAssets, {
-              root:   configuration.asset_path,
-              minify: configuration.minify_assets
+              urls: ['/stylesheets', '/javascripts', '/images', '/fonts', '/samples', '/sites', '/misc', '/others', '/pdfs', '/media']
             }
           end
 

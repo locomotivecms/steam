@@ -2,8 +2,7 @@ language: ruby
 services: mongodb
 before_script: ./script/ci/before_build.sh
 rvm:
-  - 2.6.5
-  - 2.7.2
+  - 2.7.4
 addons:
   code_climate:
     repo_token: 3fa74f2ade25037fccd7261090acbdeae232639c3a83aafb80ee428ec16b8cf9

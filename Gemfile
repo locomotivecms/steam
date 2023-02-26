@@ -9,7 +9,7 @@ group :development do
   # gem 'duktape', github: 'judofyr/duktape.rb', ref: '20ef6a5'
   # gem 'duktape', github: 'did/duktape.rb', branch: 'any-fixnum'
 
-  gem 'puma',               '~> 5.6.4'
+  gem 'puma',               '~> 6.1.0'
   gem 'haml',               '~> 5.2.0'
 
   gem 'rack', '~> 2.2.3.1'
@@ -30,5 +30,5 @@ group :test do
 
   gem 'rack-test',          '~> 0.8.2'
 
-  gem 'coveralls',                  '~> 0.8.1',   require: false
+  gem 'coveralls',                  '~> 0.8.23',   require: false
 end
