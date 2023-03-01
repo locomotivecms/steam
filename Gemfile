@@ -9,6 +9,8 @@ group :development do
   # gem 'duktape', github: 'judofyr/duktape.rb', ref: '20ef6a5'
   # gem 'duktape', github: 'did/duktape.rb', branch: 'any-fixnum'
 
+  gem 'rake'
+
   gem 'puma',               '~> 6.1.0'
   gem 'haml',               '~> 5.2.0'
 
