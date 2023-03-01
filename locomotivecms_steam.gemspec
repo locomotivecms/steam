@@ -42,7 +42,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'duktape',                '~> 2.0.1.1'
   spec.add_dependency 'pony',                   '~> 1.12'
   
-  spec.add_dependency 'locomotivecms_common',   '~> 0.4.0'
+  spec.add_dependency 'locomotivecms_common',   '~> 0.5.0'
 
-  spec.required_ruby_version = ['>= 2.7', '< 3']
+  spec.required_ruby_version = ['>= 2.7', '< 3.1']
 end

@@ -1,4 +1,13 @@
 PATH
+  remote: ../common
+  specs:
+    locomotivecms_common (0.5.0)
+      activesupport (>= 5)
+      attr_extras (~> 7.1.0)
+      colorize
+      stringex (~> 2.8.5)
+
+PATH
   remote: .
   specs:
     locomotivecms_steam (1.7.0)
@@ -11,7 +20,7 @@ PATH
       httparty (~> 0.16.0)
       kramdown (~> 2.3.0)
       liquid (~> 4.0.4)
-      locomotivecms_common (~> 0.4.0)
+      locomotivecms_common (~> 0.5.0)
       mime-types (~> 3.3.0)
       mimetype-fu (~> 0.1.2)
       moneta (~> 1.0.0)
@@ -28,14 +37,14 @@ GEM
   remote: https://rubygems.org/
   specs:
     RedCloth (4.3.2)
-    activesupport (5.2.8.1)
+    activesupport (7.0.4.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (>= 0.7, < 2)
-      minitest (~> 5.1)
-      tzinfo (~> 1.1)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
-    attr_extras (5.2.0)
+    attr_extras (7.1.0)
     bcrypt (3.1.18)
     bson (4.15.0)
     chronic (0.10.2)
@@ -77,11 +86,6 @@ GEM
     kramdown (2.3.2)
       rexml
     liquid (4.0.4)
-    locomotivecms_common (0.4.0)
-      activesupport (>= 5.1.5, < 6.0)
-      attr_extras (~> 5.2.0)
-      colorize
-      stringex (~> 2.8.2)
     mail (2.8.1)
       mini_mime (>= 0.1.1)
       net-imap
@@ -160,14 +164,13 @@ GEM
     term-ansicolor (1.7.1)
       tins (~> 1.0)
     thor (1.2.1)
-    thread_safe (0.3.6)
     tilt (2.1.0)
     timecop (0.9.6)
     timeout (0.3.2)
     tins (1.32.1)
       sync
-    tzinfo (1.2.11)
-      thread_safe (~> 0.1)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
 
 PLATFORMS
   ruby
@@ -179,6 +182,7 @@ DEPENDENCIES
   haml (~> 5.2.0)
   i18n-spec (~> 0.6.0)
   json_spec (~> 1.1.5)
+  locomotivecms_common!
   locomotivecms_steam!
   memory_profiler
   mongo (~> 2.18.2)
@@ -192,4 +196,4 @@ DEPENDENCIES
   timecop (~> 0.9.1)
 
 BUNDLED WITH
-   2.1.4
+   2.3.10
