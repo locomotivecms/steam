@@ -23,7 +23,7 @@ module Locomotive::Steam
         def update(entity)
           entity.tap do
             serialized_entity = @mapper.serialize(entity)
-            @collection.find(_id: entity._id).update_one(serialized_entity)
+            @collection.find(_id: entity._id).update_one('$set' => serialized_entity)
           end
         end
 

@@ -4,7 +4,7 @@ gemspec
 
 group :development do
   # gem 'locomotivecms_common', github: 'locomotivecms/common', ref: '4d1bd56'
-  gem 'locomotivecms_common', path: '../common'
+  # gem 'locomotivecms_common', path: '../common'
   # gem 'duktape', path: '../tmp/duktape.rb'
   # gem 'duktape', github: 'judofyr/duktape.rb', ref: '20ef6a5'
   # gem 'duktape', github: 'did/duktape.rb', branch: 'any-fixnum'

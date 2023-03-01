@@ -1,13 +1,4 @@
 PATH
-  remote: ../common
-  specs:
-    locomotivecms_common (0.5.0)
-      activesupport (>= 5)
-      attr_extras (~> 7.1.0)
-      colorize
-      stringex (~> 2.8.5)
-
-PATH
   remote: .
   specs:
     locomotivecms_steam (1.7.0)
@@ -86,6 +77,11 @@ GEM
     kramdown (2.3.2)
       rexml
     liquid (4.0.4)
+    locomotivecms_common (0.5.0)
+      activesupport (>= 5)
+      attr_extras (~> 7.1.0)
+      colorize
+      stringex (~> 2.8.5)
     mail (2.8.1)
       mini_mime (>= 0.1.1)
       net-imap
@@ -182,7 +178,6 @@ DEPENDENCIES
   haml (~> 5.2.0)
   i18n-spec (~> 0.6.0)
   json_spec (~> 1.1.5)
-  locomotivecms_common!
   locomotivecms_steam!
   memory_profiler
   mongo (~> 2.18.2)
