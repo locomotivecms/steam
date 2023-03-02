@@ -44,5 +44,5 @@ Gem::Specification.new do |spec|
   
   spec.add_dependency 'locomotivecms_common',   '~> 0.5.0'
 
-  spec.required_ruby_version = ['>= 2.7', '< 3.1']
+  spec.required_ruby_version = ['>= 2.7', '< 3.2']
 end
