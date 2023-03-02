@@ -4,7 +4,7 @@
 
 The rendering stack used by both Wagon and Engine. It includes:
 
-- the rack stack to serve assets (SCSS, Coffeescript, ...etc) and pages.
+- the rack stack to pages and already precompiled assets (through webpack, vite or other).
 - the liquid drops/filters/tags libs to parse and render liquid templates.
 - a Filesystem adapter which reads the source of a site written for Wagon.
 - a MongoDB adapter which reads an existing site hosted by the Locomotive Engine.
@@ -103,4 +103,4 @@ Note: you do not need to prefix with bundle exec as the docky-ruby image already
 
 ## License
 
-Copyright (c) 2020 NoCoffee. MIT Licensed, see MIT-LICENSE for details.
+Copyright (c) 2023 NoCoffee. MIT Licensed, see MIT-LICENSE for details.
