@@ -19,7 +19,7 @@ PATH
       multi_json (~> 1.15.0)
       nokogiri (~> 1.14.2)
       pony (~> 1.12)
-      rack-cache (~> 1.7.0)
+      rack-cache (>= 1.7, < 2)
       rack-rewrite (~> 1.5.1)
       rack_csrf (~> 2.6.0)
       sanitize (~> 6.0.1)

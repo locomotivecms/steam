@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'liquid',                 '~> 4.0.4'
 
   spec.add_dependency 'rack-rewrite',           '~> 1.5.1'
-  spec.add_dependency 'rack-cache',             '~> 1.7.0'
+  spec.add_dependency 'rack-cache',             '>= 1.7', '< 2'
   spec.add_dependency 'rack_csrf',              '~> 2.6.0'
   spec.add_dependency 'dragonfly',              '>= 1.2', '< 1.5'
   spec.add_dependency 'moneta',                 '~> 1.0.0'
