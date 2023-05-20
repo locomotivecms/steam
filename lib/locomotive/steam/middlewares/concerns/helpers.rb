@@ -34,7 +34,7 @@ module Locomotive::Steam
           _headers = env['steam.headers'] || {}
           inject_cookies(_headers)
 
-          @next_response = [code, base_headers.merge(_headers), [content]]
+          @next_response = [code, base_headers.merge(_headers), [content].compact]
         end
 
         def redirect_to(location, type = 301)
