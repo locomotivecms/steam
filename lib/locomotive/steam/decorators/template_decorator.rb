@@ -36,7 +36,7 @@ module Locomotive
 
         def render_haml(source, template_path)
           begin
-            Haml::Engine.new(source, escape_attrs: false).render
+            Haml::Template.new(escape_attrs: false) { source }.render
           rescue Haml::SyntaxError => e
             raise Steam::RenderError.new(e, template_path, source)
           end

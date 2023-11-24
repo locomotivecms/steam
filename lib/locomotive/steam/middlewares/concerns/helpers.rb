@@ -8,7 +8,7 @@ module Locomotive::Steam
         HTML_MIME_TYPES   = [nil, 'text/html', 'application/x-www-form-urlencoded', 'multipart/form-data'].freeze
 
         CACHE_HEADERS     = {
-          'steam.cache_control'       => 'Cache-Control',
+          'steam.cache_control'       => 'cache-control',
           'steam.cache_vary'          => 'Vary',
           'steam.cache_etag'          => 'ETag',
           'steam.cache_last_modified' => 'Last-Modified'
@@ -25,7 +25,7 @@ module Locomotive::Steam
         end
 
         def render_response(content, code = 200, type = nil)
-          base_headers = { 'Content-Type' => type || HTML_CONTENT_TYPE }
+          base_headers = { 'content-type' => type || HTML_CONTENT_TYPE }
 
           CACHE_HEADERS.each do |key, http_name|
             base_headers[http_name] = env[key] if env[key]
@@ -42,7 +42,7 @@ module Locomotive::Steam
 
           self.debug_log "Redirected to #{_location}".blue
 
-          headers = { 'Content-Type' => HTML_CONTENT_TYPE, 'Location' => _location }
+          headers = { 'content-type' => HTML_CONTENT_TYPE, 'location' => _location }
           inject_cookies(headers)
 
           @next_response = [type, headers, []]

@@ -29,20 +29,21 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'rack-rewrite',           '~> 1.5.1'
   spec.add_dependency 'rack-cache',             '>= 1.7', '< 2'
+  spec.add_dependency 'rack-session',           '~> 2.0.0'
   spec.add_dependency 'rack_csrf',              '~> 2.6.0'
   spec.add_dependency 'dragonfly',              '>= 1.2', '< 1.5'
-  spec.add_dependency 'moneta',                 '~> 1.0.0'
+  spec.add_dependency 'moneta',                 '~> 1.6.0'
 
   spec.add_dependency 'execjs',              '~> 2.8.1'
 
   spec.add_dependency 'kramdown',               '~> 2.3.0'
   spec.add_dependency 'RedCloth',               '~> 4.3.2'
   spec.add_dependency 'mimetype-fu',            '~> 0.1.2'
-  spec.add_dependency 'mime-types',             '~> 3.3.0'
+  spec.add_dependency 'mime-types',             '~> 3.5.0'
   spec.add_dependency 'duktape',                '~> 2.0.1.1'
   spec.add_dependency 'pony',                   '~> 1.12'
   
   spec.add_dependency 'locomotivecms_common',   '~> 0.5.0'
 
-  spec.required_ruby_version = ['>= 2.7', '< 3.2']
+  spec.required_ruby_version = ['>= 3.0']
 end

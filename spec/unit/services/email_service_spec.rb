@@ -21,7 +21,7 @@ describe Locomotive::Steam::EmailService do
     subject { service.send_email(options, context) }
 
     it 'sends the email over Pony' do
-      expect(Pony).to receive(:mail).with(
+      expect(Pony).to receive(:mail).with({
         to:           'john@doe.net',
         from:         'me@locomotivecms.com',
         subject:      'Hello world',
@@ -32,7 +32,7 @@ describe Locomotive::Steam::EmailService do
           user_name:  'user',
           password:   'password'
         }
-      )
+      })
       subject
     end
 
@@ -61,7 +61,7 @@ describe Locomotive::Steam::EmailService do
       let(:options) { { to: 'john@doe.net', from: 'me@locomotivecms.com', subject: 'Hello world', page_handle: 'notification-email', smtp: smtp_options, html: true } }
 
       it 'sends the email over Pony' do
-        expect(Pony).to receive(:mail).with(
+        expect(Pony).to receive(:mail).with({
           to:           'john@doe.net',
           from:         'me@locomotivecms.com',
           subject:      'Hello world',
@@ -72,7 +72,7 @@ describe Locomotive::Steam::EmailService do
             user_name:  'user',
             password:   'password'
           }
-        )
+        })
         subject
       end
 
@@ -100,7 +100,7 @@ describe Locomotive::Steam::EmailService do
         end
 
         it 'sends the email over Pony' do
-          expect(Pony).to receive(:mail).with(
+          expect(Pony).to receive(:mail).with({
             to:           'john@doe.net',
             from:         'me@locomotivecms.com',
             subject:      'Hello world',
@@ -112,7 +112,7 @@ describe Locomotive::Steam::EmailService do
               user_name:  'user',
               password:   'password'
             }
-          )
+          })
           subject
         end
 
@@ -124,7 +124,7 @@ describe Locomotive::Steam::EmailService do
 
         it 'sends the email over Pony' do
           expect(Net::HTTP).to receive(:get).with(URI('http://acme.org/bar.txt')).and_return('Bar')
-          expect(Pony).to receive(:mail).with(
+          expect(Pony).to receive(:mail).with({
             to:           'john@doe.net',
             from:         'me@locomotivecms.com',
             subject:      'Hello world',
@@ -136,7 +136,7 @@ describe Locomotive::Steam::EmailService do
               user_name:  'user',
               password:   'password'
             }
-          )
+          })
           subject
         end
 
@@ -144,7 +144,7 @@ describe Locomotive::Steam::EmailService do
 
           it "doesn't send the email" do
             expect(Net::HTTP).to receive(:get).with(URI('http://acme.org/bar.txt')).and_raise('URL not responding')
-            expect(Pony).to receive(:mail).with(
+            expect(Pony).to receive(:mail).with({
               to:           'john@doe.net',
               from:         'me@locomotivecms.com',
               subject:      'Hello world',
@@ -156,7 +156,7 @@ describe Locomotive::Steam::EmailService do
                 user_name:  'user',
                 password:   'password'
               }
-            )
+            })
             subject
           end
 
@@ -169,7 +169,7 @@ describe Locomotive::Steam::EmailService do
         let(:attachments) { { 'bar.txt' => 'Bar' } }
 
         it 'sends the email over Pony' do
-          expect(Pony).to receive(:mail).with(
+          expect(Pony).to receive(:mail).with({
             to:           'john@doe.net',
             from:         'me@locomotivecms.com',
             subject:      'Hello world',
@@ -181,7 +181,7 @@ describe Locomotive::Steam::EmailService do
               user_name:  'user',
               password:   'password'
             }
-          )
+          })
           subject
         end
 

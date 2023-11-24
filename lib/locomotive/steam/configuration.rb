@@ -63,15 +63,7 @@ module Locomotive
       # default: nil
       #
       attr_accessor :asset_path
-
-      # If java is installed and if this option is enabled,
-      # then Uglifier and Sass are used to minify the javascript and the css.
-      #
-      # default: false
-      #
-      attr_accessor :minify_assets
-      def minify_assets; @minify_assets.nil? ? false : @minify_assets; end
-
+      
       # Dragonfly needs it to generate the protective SHA.
       #
       # default: 'please change it'

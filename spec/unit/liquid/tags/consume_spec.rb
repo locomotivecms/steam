@@ -111,7 +111,7 @@ describe Locomotive::Steam::Liquid::Tags::Consume do
     let(:source)    { %{{% consume blog from "#{url}" timeout: 5.0 %}{{ blog.title }}{% endconsume %}} }
 
     it 'should pass the timeout option to httparty' do
-      expect(services.external_api).to receive(:consume).with(url, timeout: 5.0).and_return(response)
+      expect(services.external_api).to receive(:consume).with(url, { timeout: 5.0 }).and_return(response)
       subject
     end
 

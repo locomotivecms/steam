@@ -23,7 +23,7 @@ describe Locomotive::Steam::Middlewares::Site do
     env['steam.is_default_host']  = is_default_host
     env['steam.live_editing']     = live_editing
     code, env = middleware.call(env)
-    [code, env['Location']]
+    [code, env['location']]
   end
 
   describe 'no site' do

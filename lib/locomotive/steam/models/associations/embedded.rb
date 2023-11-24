@@ -37,8 +37,8 @@ module Locomotive::Steam
         # TODO: not implemented yet
       end
 
-      def method_missing(name, *args, &block)
-        @repository.send(name, *args, &block)
+      def method_missing(name, *args, **kwargs, &block)
+        @repository.send(name, *args, **kwargs, &block)
       end
 
       def respond_to_missing?(name, include_private = false)

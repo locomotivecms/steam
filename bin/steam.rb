@@ -74,7 +74,6 @@ Locomotive::Steam.configure do |config|
   config.serve_assets   = options[:asset_path].present?
   config.asset_path     = options[:asset_path]
   config.asset_host     = options[:asset_host]
-  config.minify_assets  = false
   config.log_file       = options[:log_file]
 end
 
