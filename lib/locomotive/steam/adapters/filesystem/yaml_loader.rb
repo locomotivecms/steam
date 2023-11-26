@@ -1,3 +1,5 @@
+require 'erb'
+
 module Locomotive::Steam
   module Adapters
     module Filesystem
@@ -47,11 +49,39 @@ module Locomotive::Steam
           end
         end
 
+        def parse_erb(data)
+          def inject(file_path)
+            File.open(File.join(path, file_path)).read
+          end
+          ERB.new(data).result(binding)
+        end
+
+        def parse_erb_struct(vals)
+          if vals.is_a? Array
+            vals.each do | val |
+              parse_erb_struct(val)
+            end
+          else
+            vals.each do | key, val |
+              if val.is_a? String
+                vals[key] = parse_erb(val)
+              else
+                parse_erb_struct(val)
+              end
+            end
+          end
+        end
+
         def safe_yaml_load(yaml, template, path, &block)
           return {} if yaml.blank?
 
+          erb_activated = parse_erb(yaml) != yaml
+
           begin
             HashConverter.to_sym(YAML.load(yaml)).tap do |attributes|
+              if erb_activated
+                parse_erb_struct(attributes)
+              end
               block.call(attributes, template) if block_given?
             end
           rescue Exception => e
@@ -74,7 +104,7 @@ module Locomotive::Steam
         def safe_json_file_load(path)
           return {} unless File.exists?(path)
 
-          json = File.read(path)
+          json = parse_erb(File.read(path))
 
           safe_json_load(json, nil, path)
         end
