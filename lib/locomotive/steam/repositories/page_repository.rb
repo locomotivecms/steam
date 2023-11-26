@@ -10,7 +10,7 @@ module Locomotive
         localized_attributes :title, :slug, :permalink,
           :source, :raw_template, :template_path, :data_path, :redirect_url, :fullpath,
           :sections_content, :sections_dropzone_content,
-          :seo_title, :meta_description, :meta_keywords
+          :seo_title, :meta_description, :meta_keywords, :meta_robots
 
         embedded_association :editable_elements, EditableElementRepository
       end

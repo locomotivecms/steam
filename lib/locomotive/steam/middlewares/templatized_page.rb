@@ -28,8 +28,9 @@ module Locomotive::Steam
           # log it
           debug_log "Found content entry: #{entry._label}"
         else
+          log "C"*25
           url = services.url_builder.url_for(page_not_found, locale)
-          redirect_to url, 302
+          redirect_to url, 404
         end
       end
 

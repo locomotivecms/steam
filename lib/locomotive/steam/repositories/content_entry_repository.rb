@@ -17,7 +17,7 @@ module Locomotive
 
       # Entity mapping
       mapping :content_entries, entity: ContentEntry do
-        localized_attributes :_slug, :seo_title, :meta_description, :meta_keywords
+        localized_attributes :_slug, :seo_title, :meta_description, :meta_keywords, :meta_robots
 
         default_attribute :content_type, -> (repository) { repository.content_type }
       end
