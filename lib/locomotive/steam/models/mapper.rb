@@ -64,9 +64,10 @@ module Locomotive::Steam
       end
 
       def deserialize(attributes)
-        build_localized_attributes(attributes)
-        build_associations(attributes)
-        attributes
+        enhanced_attributes = attributes.with_indifferent_access
+        build_localized_attributes(enhanced_attributes)
+        build_associations(enhanced_attributes)
+        enhanced_attributes
       end
 
       def serialize(entity)
