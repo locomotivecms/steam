@@ -17,8 +17,6 @@ jobs:
         ports:
           - 27017:27017
         env:
-          # MONGO_INITDB_ROOT_USERNAME: test
-          # MONGO_INITDB_ROOT_PASSWORD: password
           MONGO_INITDB_DATABASE: steam_test_1_8_x
         options: >-
           --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"

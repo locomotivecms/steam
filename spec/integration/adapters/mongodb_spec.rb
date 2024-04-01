@@ -43,7 +43,8 @@ describe Locomotive::Steam::MongoDBAdapter do
   end
 
   def current_connections
-    `mongosh --eval "db.serverStatus().connections.current"`.split("\n").last.to_i
+    stats = JSON.parse(`mongostat --noheaders -n 1 --json`)
+    stats.dig('localhost', 'conn')&.to_i
   end
 
 end
