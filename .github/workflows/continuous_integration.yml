@@ -1,9 +1,4 @@
-name: Validate Project
-
-# on:
-#   push:
-#     branches-ignore:
-#       - main
+name: Continuous integration
 
 on: [push]
 
