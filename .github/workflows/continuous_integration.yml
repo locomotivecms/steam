@@ -1,0 +1,43 @@
+name: Continuous integration
+
+on: [push]
+
+jobs:
+  ci_validation:
+    runs-on: ubuntu-latest
+    
+    services:
+      mongo:
+        image: mongo:6.0.14
+        ports:
+          - 27017:27017
+        env:
+          MONGO_INITDB_DATABASE: steam_test_1_8_x
+        options: >-
+          --health-cmd "echo 'db.runCommand("ping").ok' | mongosh --quiet"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          --name mongo_container
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install MongoDB tools
+        run: |
+          wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2204-x86_64-100.9.4.deb
+          sudo apt install ./mongodb-database-tools-ubuntu2204-x86_64-100.9.4.deb
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.4
+          bundler-cache: true
+          cache-version: 1
+
+      - name: Prepare the DB
+        run: bundle exec rake mongodb:test:seed
+
+      - name: Test
+        run: bundle exec rspec

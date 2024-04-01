@@ -4,7 +4,7 @@ module Spec
   module Helpers
 
     def mongodb_database
-      'steam_test_1_7_x'
+      'steam_test_1_8_x'
     end
 
     def mongodb_site_id

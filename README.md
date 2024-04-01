@@ -1,7 +1,5 @@
 # Steam
 
-[![Code Climate](https://codeclimate.com/github/locomotivecms/steam/badges/gpa.svg)](https://codeclimate.com/github/locomotivecms/steam) [![Build Status](https://travis-ci.com/locomotivecms/steam.svg?branch=master)](https://travis-ci.com/locomotivecms/steam) [![Coverage Status](https://coveralls.io/repos/locomotivecms/steam/badge.svg?branch=master)](https://coveralls.io/r/locomotivecms/steam?branch=master) [![Gitter](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/locomotivecms/steam)
-
 The rendering stack used by both Wagon and Engine. It includes:
 
 - the rack stack to pages and already precompiled assets (through webpack, vite or other).
@@ -103,4 +101,4 @@ Note: you do not need to prefix with bundle exec as the docky-ruby image already
 
 ## License
 
-Copyright (c) 2023 NoCoffee. MIT Licensed, see MIT-LICENSE for details.
+Copyright (c) 2010-2024 NoCoffee. MIT Licensed, see MIT-LICENSE for details.

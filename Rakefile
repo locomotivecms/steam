@@ -27,8 +27,10 @@ namespace :mongodb do
         `mv #{dump_path} #{db_path}`
       end
 
-      `mongo steam_test_1_7_x --eval "db.dropDatabase()" #{host}`
-      `mongorestore -d steam_test_1_7_x #{db_path} #{host}`
+      # NOTE: command to drop the database
+      # `mongo steam_test_1_8_x --eval "db.dropDatabase()" #{host}`
+
+      `mongorestore --drop -d steam_test_1_8_x #{db_path} #{host}`
 
       puts "Done! Update now the spec/support/helpers.rb file by setting the new id of the site returned by the mongodb_site_id method"
     end
