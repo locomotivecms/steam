@@ -70,7 +70,7 @@ module Locomotive
 
               _path = File.join(site_path, 'public', path)
 
-              File.exists?(_path) ? File.size(_path) : nil
+              File.exist?(_path) ? File.size(_path) : nil
             end
 
             def modify_for_associations(attributes)
@@ -114,7 +114,7 @@ module Locomotive
 
               path = File.join(site_path, 'data', env.to_s, 'content_entries')
 
-              @path = File.exists?(path) ? path : File.join(site_path, 'data') # allow the legacy folder
+              @path = File.exist?(path) ? path : File.join(site_path, 'data') # allow the legacy folder
             end
 
             def content_type

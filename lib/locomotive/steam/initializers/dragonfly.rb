@@ -33,7 +33,7 @@ module Locomotive
           convert   = ENV['IMAGE_MAGICK_CONVERT'] || `which convert`.strip.presence || '/usr/local/bin/convert'
           identify  = ENV['IMAGE_MAGICK_IDENTIFY'] || `which identify`.strip.presence || '/usr/local/bin/identify'
 
-          if File.exists?(convert)
+          if File.exist?(convert)
             { convert_command: convert, identify_command: identify }
           else
             missing_image_magick
