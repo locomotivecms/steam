@@ -17,7 +17,7 @@ describe Locomotive::Steam::Initializers::Dragonfly do
 
     before do
       ::Dragonfly::App.destroy_apps
-      expect(File).to receive(:exists?).and_return(false)
+      expect(File).to receive(:exist?).and_return(false)
       initializer.run
     end
     it { is_expected.to eq nil }

@@ -19,7 +19,7 @@ module Locomotive::Steam
         end
 
         def _load(path, frontmatter = false, strict = false, &block)
-          if File.exists?(path)
+          if File.exist?(path)
             yaml      = File.open(path).read.force_encoding('utf-8')
             template  = nil
 
@@ -72,7 +72,7 @@ module Locomotive::Steam
         end
 
         def safe_json_file_load(path)
-          return {} unless File.exists?(path)
+          return {} unless File.exist?(path)
 
           json = File.read(path)
 
