@@ -1,3 +1,5 @@
+require 'dragonfly'
+
 module Locomotive
   module Steam
     module Initializers
@@ -5,14 +7,16 @@ module Locomotive
       class Dragonfly
 
         def run
-          require 'dragonfly'
-
           # need to be called outside of the configure method
           imagemagick_commands = find_imagemagick_commands
 
           ::Dragonfly.app(:steam).configure do
             if imagemagick_commands
               plugin :imagemagick, imagemagick_commands
+            end
+
+            processor :convert do |content, args|
+              ::Dragonfly::ImageMagick::Commands.convert(content, args)
             end
 
             verify_urls true

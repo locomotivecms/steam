@@ -5,7 +5,7 @@ PATH
       RedCloth (~> 4.3.2)
       bcrypt (~> 3.1.11)
       chronic (~> 0.10.2)
-      dragonfly (>= 1.2, < 1.5)
+      dragonfly (~> 1.4.0)
       duktape (~> 2.0.1.1)
       execjs (~> 2.9.1)
       httparty (~> 0.21.0)
