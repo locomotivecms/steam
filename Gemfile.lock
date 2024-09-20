@@ -18,6 +18,7 @@ PATH
       morphine (~> 0.1.1)
       multi_json (~> 1.15.0)
       nokogiri (~> 1.15.6)
+      parser (~> 3.3)
       pony (~> 1.12)
       rack-cache (>= 1.7, < 2)
       rack-rewrite (~> 1.5.1)
@@ -121,8 +122,6 @@ GEM
     nokogiri (1.15.6)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.15.6-x86_64-darwin)
-      racc (~> 1.4)
     origin (2.3.1)
     parser (3.3.5.0)
       ast (~> 2.4.1)
@@ -194,7 +193,6 @@ DEPENDENCIES
   memory_profiler
   mongo (~> 2.18.2)
   origin (~> 2.3.1)
-  parser
   puma (~> 6.4.0)
   rack (~> 3.0)
   rack-mini-profiler (~> 0.10.1)

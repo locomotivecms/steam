@@ -42,8 +42,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mime-types',             '~> 3.5.0'
   spec.add_dependency 'duktape',                '~> 2.0.1.1'
   spec.add_dependency 'pony',                   '~> 1.12'
+  spec.add_dependency 'parser',                 '~> 3.3'
   
   spec.add_dependency 'locomotivecms_common',   '~> 0.6.0.alpha1'
 
-  spec.required_ruby_version = ['>= 3.0']
+  spec.required_ruby_version = ['>= 3.2']
 end

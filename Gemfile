@@ -2,8 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'parser'
-
 group :development do
   # gem 'locomotivecms_common', github: 'locomotivecms/common', ref: '4d1bd56'
   # gem 'locomotivecms_common', path: '../common'
@@ -34,5 +32,5 @@ group :test do
 
   gem 'rack-test',          '~> 2.1.0'
 
-  gem 'simplecov',                  '~> 0.22.0', require: false
+  gem 'simplecov',          '~> 0.22.0', require: false
 end
