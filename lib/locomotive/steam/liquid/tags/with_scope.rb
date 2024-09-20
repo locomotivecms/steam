@@ -86,8 +86,8 @@ module Locomotive
             end
 
             def on_send(node)
-              pp node.location
-              pp node.location.expression.source
+              # pp node.location
+              # pp node.location.expression.source
 
               ::Liquid::Expression.parse(node.location.expression.source)
 
@@ -136,7 +136,7 @@ module Locomotive
           # a slight different from the Shopify implementation because we allow stuff like `started_at.le`
           TagAttributes   = /([a-zA-Z_0-9\.]+)\s*\:\s*(#{ArrayFragment}|#{RegexpFragment}|#{::Liquid::QuotedFragment})/o.freeze
           # SingleVariable  = /(#{::Liquid::VariableSignature}+)/om.freeze
-          SingleVariable = /\A\w*([a-zA-Z_0-9]+)\w*\z/om.freeze
+          SingleVariable = /\A\s*([a-zA-Z_0-9]+)\s*\z/om.freeze
 
           REGEX_OPTIONS = {
             'i' => Regexp::IGNORECASE,
@@ -151,24 +151,26 @@ module Locomotive
           attr_reader :attributes, :attributes_var_name, :ast
 
           def initialize(tag_name, markup, options)
+
             super
 
             # convert symbol operators into valid ruby code
             markup.gsub!(SYMBOL_OPERATORS_REGEXP, ':"\1" =>')
 
-            pp markup
+            # pp markup
 
             if markup =~ SingleVariable
-              puts "HERE?"
+              # puts "HERE?"
               # alright, maybe we'vot got a single variable built
               # with the Action liquid tag instead?
               @attributes_var_name = Regexp.last_match(1)
             elsif markup.present?
-              ast = Parser::CurrentRuby.parse("{%s}" % markup)
-              pp ast
-              @attributes = HashProcessor.new.process(ast)
-              puts "-----"
-              pp @attributes
+              # ast = Parser::CurrentRuby.parse("{%s}" % markup)
+              # pp ast
+              # @attributes = HashProcessor.new.process(ast)
+              # puts "-----"
+              # pp @attributes
+              @attributes = parse_markup(markup)
             end
 
             if attributes.blank? && attributes_var_name.blank?
@@ -192,6 +194,7 @@ module Locomotive
           end
 
           def render(context)
+            pp attributes if ENV['WITH_SCOPE_DEBUG']
             context.stack do
               context['with_scope'] = self.evaluate_attributes(context)
 
@@ -203,6 +206,38 @@ module Locomotive
           end
 
           protected
+
+          def parse_markup(markup)
+            # begin
+            parser = nil
+            ast = nil
+            source_buffer = nil
+
+              puts "init:" 
+              puts Benchmark.measure { parser = Parser::CurrentRuby.new }
+              # Silent the error instead of logging them to STDERR (default behavior of the parser)
+
+              puts "consumer:"
+              puts Benchmark.measure { parser.diagnostics.consumer = ->(message) { true } }
+              
+              # 'with_scope.rb' is purely arbitrary
+              puts "source_buffer:"
+              puts Benchmark.measure { source_buffer = Parser::Source::Buffer.new('with_scope.rb') }
+              
+              source_buffer.source = "{%s}" % markup
+              
+              puts "ast: "
+              puts Benchmark.measure { ast = parser.parse(source_buffer) }
+
+              foo = nil
+              puts "visit ast: "
+              puts Benchmark.measure { foo = HashProcessor.new.process(ast) }
+              foo
+            # rescue StandardError => e
+              # TODO: log something???
+              # {}
+            # end
+          end
 
           # def parse_attribute(value)
           #   case value
@@ -230,7 +265,7 @@ module Locomotive
           end
 
           def evaluate_attribute(context, value)
-            pp "evaluate_attribute = #{value}"
+            # pp "evaluate_attribute = #{value}"
             case value
             when Array 
               value.map { |v| evaluate_attribute(context, v) }
@@ -282,7 +317,6 @@ module Locomotive
           def tag_attributes_regexp
             TagAttributes
           end
-
         end
 
         ::Liquid::Template.register_tag('with_scope'.freeze, WithScope)
