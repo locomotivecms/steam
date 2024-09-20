@@ -5,7 +5,7 @@ module Locomotive
         module Editable
           class Base < ::Liquid::Block
 
-            include Concerns::Attributes
+            include Concerns::SimpleAttributesParser
 
             Syntax = /(#{::Liquid::QuotedFragment})(\s*,\s*#{::Liquid::Expression}+)?/o
 

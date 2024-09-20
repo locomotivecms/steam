@@ -15,7 +15,7 @@ module Locomotive
         #
         class Consume < ::Liquid::Block
 
-          include Concerns::Attributes
+          include Concerns::SimpleAttributesParser
 
           Syntax = /(#{::Liquid::VariableSignature}+)\s*from\s*(#{::Liquid::QuotedFragment}+),?(.+)?/o.freeze
 

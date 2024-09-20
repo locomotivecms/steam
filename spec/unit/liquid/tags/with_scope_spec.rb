@@ -52,9 +52,20 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
 
     end
 
+    describe 'don\'t decode numeric operations' do
+      let(:source) { "{% with_scope price: 41 + 1 %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+      it { expect(conditions['price']).to eq 41 }
+
+      context 'the operation calls a variable' do
+        let(:assigns) { { 'prices' => { 'low' => 41 } } }
+        let(:source) { "{% with_scope price: prices.low + 1 %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+        it { expect(conditions['price']).to eq 41 }
+      end
+    end
+
     describe 'decode basic options (boolean, integer, ...)' do
 
-      let(:source) { "{% with_scope active: true, price: 41 + 1, title: 'foo', hidden: false %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+      let(:source) { "{% with_scope active: true, price: 42, title: 'foo', hidden: false %}{% assign conditions = with_scope %}{% endwith_scope %}" }
 
       it { expect(conditions['active']).to eq true }
       it { expect(conditions['price']).to eq 42 }
@@ -138,7 +149,7 @@ describe Locomotive::Steam::Liquid::Tags::WithScope do
 
     describe 'decode criteria with gt and lt' do
 
-      let(:source) { "{% with_scope price.gt:42.0, price.lt:50, published_at.lte: '2019-09-10 00:00:00', published_at.gte: '2019/09/09 00:00:00' %}{% assign conditions = with_scope %}{% endwith_scope %}" }
+      let(:source) { "{% with_scope price.gt: 42.0, price.lt:50, published_at.lte: '2019-09-10 00:00:00', published_at.gte: '2019/09/09 00:00:00' %}{% assign conditions = with_scope %}{% endwith_scope %}" }
       it { expect(conditions['price.gt']).to eq 42.0 }
       it { expect(conditions['price.lt']).to eq 50 }
       it { expect(conditions['published_at.lte']).to eq '2019-09-10 00:00:00' }

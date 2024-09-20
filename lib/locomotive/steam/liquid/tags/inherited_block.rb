@@ -15,7 +15,7 @@ module Locomotive
         #
         class InheritedBlock < ::Liquid::Block
 
-          include Concerns::Attributes
+          include Concerns::SimpleAttributesParser
 
           SYNTAX = /(#{::Liquid::QuotedFragment}+)/o
 

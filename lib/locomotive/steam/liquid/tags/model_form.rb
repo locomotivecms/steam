@@ -18,7 +18,7 @@ module Locomotive
         #
         class ModelForm < ::Liquid::Block
 
-          include Concerns::Attributes
+          include Concerns::SimpleAttributesParser
 
           Syntax = /(#{::Liquid::QuotedFragment})\s*,*(.*)?/o.freeze
 

@@ -7,8 +7,7 @@ module Locomotive
           # Many of Liquid tags have attributes (like options)
           # This module makes sure we use the same reliable way to
           # extract and evaluate them.
-
-          module Attributes
+          module SimpleAttributesParser
 
             attr_reader :attributes, :raw_attributes
 
