@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'nokogiri',               '~> 1.16.7'
   spec.add_dependency 'sanitize',               '~> 6.0.1'
   spec.add_dependency 'morphine',               '~> 0.1.1'
-  spec.add_dependency 'httparty',               '~> 0.21.0'
+  spec.add_dependency 'httparty',               '~> 0.22.0'
   spec.add_dependency 'chronic',                '~> 0.10.2'
   spec.add_dependency 'bcrypt',                 '~> 3.1.11'
   spec.add_dependency 'multi_json',             '~> 1.15.0'
