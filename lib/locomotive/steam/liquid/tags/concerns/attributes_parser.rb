@@ -9,16 +9,30 @@ module Locomotive
           # approach (see the SimpleAttributesParser for instance)
           module AttributesParser
             extend ActiveSupport::Concern
+
+            included do
+              # Mongoid operators available on symbols
+              OPERATORS = %w(all exists gt gte in lt lte ne nin size near within)
+
+              SYMBOL_OPERATORS_REGEXP = /(\w+\.(#{OPERATORS.join('|')})){1}\s*\:/o
+            end
             
             def parse_markup(markup)
               parser = self.class.current_parser
 
               # 'liquid_code.rb' is purely arbitrary
               source_buffer = ::Parser::Source::Buffer.new('liquid_code.rb')
-              source_buffer.source = "{%s}" % markup
+              source_buffer.source = "{%s}" % clean_markup(markup)
 
               ast = parser.parse(source_buffer)
               AstProcessor.new.process(ast)
+            end
+
+            private
+
+            def clean_markup(markup)
+              # convert symbol operators into valid ruby code
+              markup.gsub(SYMBOL_OPERATORS_REGEXP, ':"\1" =>')
             end
 
             class_methods do
