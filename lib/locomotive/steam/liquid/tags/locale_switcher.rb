@@ -19,10 +19,9 @@ module Locomotive
         #   - "iso" is the default choice for label
         #   - " | " is the default separating code
         #
-
         class LocaleSwitcher < ::Liquid::Tag
 
-          include Concerns::Attributes
+          include Concerns::SimpleAttributesParser
           include Concerns::I18nPage
 
           attr_reader :attributes, :site, :page, :current_locale, :url_builder

@@ -32,5 +32,5 @@ group :test do
 
   gem 'rack-test',          '~> 2.1.0'
 
-  gem 'simplecov',                  '~> 0.22.0', require: false
+  gem 'simplecov',          '~> 0.22.0', require: false
 end

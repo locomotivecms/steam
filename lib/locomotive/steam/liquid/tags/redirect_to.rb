@@ -5,7 +5,7 @@ module Locomotive
 
         class RedirectTo < ::Liquid::Tag
 
-          include Concerns::Attributes
+          include Concerns::SimpleAttributesParser
           include Concerns::I18nPage
           include Concerns::Path
 

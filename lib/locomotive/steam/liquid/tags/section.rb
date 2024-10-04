@@ -5,7 +5,7 @@ module Locomotive
         class Section < ::Liquid::Include
 
           include Concerns::Section
-          include Concerns::Attributes
+          include Concerns::SimpleAttributesParser
 
           Syntax = /(#{::Liquid::QuotedString}|#{::Liquid::VariableSignature}+)\s*,*(.*)?/o.freeze
 

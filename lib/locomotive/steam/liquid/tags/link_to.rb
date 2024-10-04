@@ -4,7 +4,7 @@ module Locomotive
       module Tags
         class LinkTo < Hybrid
 
-          include Concerns::Attributes
+          include Concerns::SimpleAttributesParser
           include Concerns::I18nPage
           include Concerns::Path
 

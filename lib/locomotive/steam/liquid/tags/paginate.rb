@@ -15,7 +15,7 @@ module Locomotive
         #
         class Paginate < ::Liquid::Block
 
-          include Concerns::Attributes
+          include Concerns::SimpleAttributesParser
 
           Syntax = /(#{::Liquid::QuotedFragment}+)\s+by\s+(#{::Liquid::QuotedFragment}+)/o
 
