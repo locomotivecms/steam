@@ -204,7 +204,8 @@ describe 'ContactForm' do
   def post_contact_form(url, params, json = false, follow_redirect = false, env = {})
     if json
       url += '.json'
-      params = params.symbolize_keys
+      params = JSON.generate(params.symbolize_keys)
+      env['CONTENT_TYPE'] = 'application/json'
     end
 
     post url, params, env

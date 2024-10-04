@@ -24,7 +24,7 @@ module Locomotive::Steam
       def default_middlewares
         server, configuration = self, self.configuration
 
-        -> (stack) {
+        -> (stack) {          
           use(Rack::Rewrite) { r301 %r{^/(.*)/$}, '/$1' }
           use Middlewares::Favicon
 
@@ -38,6 +38,7 @@ module Locomotive::Steam
           use Dragonfly::Middleware, :steam
 
           use Rack::Lint
+          use Rack::RewindableInput::Middleware
           use Rack::Session::Moneta, configuration.moneta
 
           use Rack::MiniProfiler if ENV['PROFILER']

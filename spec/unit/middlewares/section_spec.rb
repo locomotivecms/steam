@@ -27,7 +27,10 @@ describe Locomotive::Steam::Middlewares::Section do
                           locale: 'en')
                         }
 
+  let(:body) { '' }
+
   before do
+    env['rack.input']             = StringIO.new(body)
     env['steam.page']             = page
     env['steam.services']         = services
     env['steam.locale']           = :en
@@ -52,11 +55,8 @@ describe Locomotive::Steam::Middlewares::Section do
   end
 
   context "the content of the section is in the request body" do
-
-    before do
-      allow(env['steam.request']).to receive(:body).and_return(StringIO.new(
-        %({ "section_content": { "id": "dropzone-42", "settings": { "name": "modified HTML" } } })
-      ))
+    let(:body) do
+      %({ "section_content": { "id": "dropzone-42", "settings": { "name": "modified HTML" } } })
     end
 
     it 'renders the HTML code related to the section' do

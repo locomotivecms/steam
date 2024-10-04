@@ -29,3 +29,4 @@ log
 dragonfly.log
 .byebug_history
 TODO.md
+bin/generate_non_regression_with_scope_spec.rb
