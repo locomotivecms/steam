@@ -38,7 +38,7 @@ module Locomotive::Steam
           use Dragonfly::Middleware, :steam
 
           use Rack::Lint
-          use Rack::RewindableInput::Middleware
+          use Rack::RewindableInput::Middleware unless ENV['RAILS_ENV']
           use Rack::Session::Moneta, configuration.moneta
 
           use Rack::MiniProfiler if ENV['PROFILER']
