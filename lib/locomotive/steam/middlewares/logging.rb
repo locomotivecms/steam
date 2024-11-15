@@ -19,6 +19,14 @@ module Locomotive::Steam
         app.call(env).tap do |response|
           done_in_ms = ((Time.now - now) * 10000).truncate / 10.0
           log "Completed #{code_to_human(response.first)} in #{done_in_ms}ms\n\n".green
+
+          ActiveSupport::Notifications.instrument('steam.http.render', {
+            site_id: env['steam.site']&._id,
+            domain: env['SERVER_NAME'],
+            path: env['PATH_INFO'],
+            status: response.first,
+            time_in_ms: done_in_ms
+          })
         end
       end
 
