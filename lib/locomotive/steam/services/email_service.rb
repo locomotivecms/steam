@@ -32,6 +32,10 @@ module Locomotive
 
         options[:via] ||= :smtp
         options[:via_options] ||= options.delete(:smtp).try(:symbolize_keys)
+
+        if (enable_starttls_auto = options[:via_options][:enable_starttls_auto]).present?
+          options[:via_options][:enable_starttls_auto] = Locomotive::Steam::TRUTHY_VALUES.include?(enable_starttls_auto)
+        end
       end
 
       def build_body(options, context, html = true)

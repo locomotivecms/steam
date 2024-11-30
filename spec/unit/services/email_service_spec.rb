@@ -14,7 +14,8 @@ describe Locomotive::Steam::EmailService do
 
   describe '#send' do
 
-    let(:smtp_options)  { { address: 'smtp.example.com', user_name: 'user', password: 'password' } }
+    let(:enable_starttls_auto) { '0' }
+    let(:smtp_options)  { { address: 'smtp.example.com', user_name: 'user', password: 'password', enable_starttls_auto: enable_starttls_auto } }
     let(:options)       { { to: 'john@doe.net', from: 'me@locomotivecms.com', subject: 'Hello world', body: 'Hello {{ to }}', smtp: smtp_options, html: false } }
     let(:context)       { ::Liquid::Context.new({ 'name' => 'John', 'to' => 'john@doe.net' }, {}, {}) }
 
@@ -30,10 +31,32 @@ describe Locomotive::Steam::EmailService do
         via_options:  {
           address:    'smtp.example.com',
           user_name:  'user',
-          password:   'password'
+          password:   'password',
+          enable_starttls_auto: false
         }
       })
       subject
+    end
+
+    context "enable_starttls_auto is to '1'" do
+      let(:enable_starttls_auto) { '1' }
+
+      it 'sends the email over Pony' do
+        expect(Pony).to receive(:mail).with({
+          to:           'john@doe.net',
+          from:         'me@locomotivecms.com',
+          subject:      'Hello world',
+          body:         'Hello john@doe.net',
+          via:          :smtp,
+          via_options:  {
+            address:    'smtp.example.com',
+            user_name:  'user',
+            password:   'password',
+            enable_starttls_auto: true
+          }
+        })
+        subject
+      end
     end
 
     context 'simulation mode' do
@@ -70,7 +93,8 @@ describe Locomotive::Steam::EmailService do
           via_options:  {
             address:    'smtp.example.com',
             user_name:  'user',
-            password:   'password'
+            password:   'password',
+            enable_starttls_auto: false
           }
         })
         subject
@@ -110,7 +134,8 @@ describe Locomotive::Steam::EmailService do
             via_options:  {
               address:    'smtp.example.com',
               user_name:  'user',
-              password:   'password'
+              password:   'password',
+              enable_starttls_auto: false
             }
           })
           subject
@@ -134,7 +159,8 @@ describe Locomotive::Steam::EmailService do
             via_options:  {
               address:    'smtp.example.com',
               user_name:  'user',
-              password:   'password'
+              password:   'password',
+              enable_starttls_auto: false
             }
           })
           subject
@@ -154,7 +180,8 @@ describe Locomotive::Steam::EmailService do
               via_options:  {
                 address:    'smtp.example.com',
                 user_name:  'user',
-                password:   'password'
+                password:   'password',
+                enable_starttls_auto: false
               }
             })
             subject
@@ -179,7 +206,8 @@ describe Locomotive::Steam::EmailService do
             via_options:  {
               address:    'smtp.example.com',
               user_name:  'user',
-              password:   'password'
+              password:   'password',
+              enable_starttls_auto: false
             }
           })
           subject
@@ -190,9 +218,4 @@ describe Locomotive::Steam::EmailService do
     end
 
   end
-
-  def default_options
-
-  end
-
 end

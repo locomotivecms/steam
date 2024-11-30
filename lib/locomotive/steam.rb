@@ -32,6 +32,8 @@ module Locomotive
 
     IsLAYOUT  = /\Alayouts(\/|\z)/o.freeze
 
+    TRUTHY_VALUES = [1, '1', 'true', true]
+
     class << self
       attr_writer   :configuration
       attr_accessor :extension_configurations
