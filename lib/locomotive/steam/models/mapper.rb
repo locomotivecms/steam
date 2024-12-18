@@ -78,7 +78,8 @@ module Locomotive::Steam
           # localized fields
           @localized_attributes.each do |name|
             # hack: force the name for select type fields (content entries only)
-            entity.send(name).serialize(attributes, name) 
+            value = entity.send(name)
+            value.serialize(attributes, name) if value.respond_to?(:serialize)
           end
 
           # association name -> id (belongs_to) or ids (many_to_many)

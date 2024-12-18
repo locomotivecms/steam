@@ -79,6 +79,11 @@ describe Locomotive::Steam::Models::Mapper do
 
     end
 
+    describe 'localized attributes' do
+      let(:block) { ->(_) { localized_attributes(:title) } }
+      let(:attributes) { { title: { fr: 'Bonjour' }, body: 'Lorem ipsum', published_at: DateTime.parse('2007/06/29 00:00:00') } }
+      it { expect(subject).to eq('title' => { 'fr' => 'Bonjour' }, 'body' => 'Lorem ipsum', 'published_at' => DateTime.parse('2007/06/29 00:00:00')) }
+    end
   end
 
   describe '#to_entity' do
