@@ -29,6 +29,11 @@ jobs:
           wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2204-x86_64-100.9.4.deb
           sudo apt install ./mongodb-database-tools-ubuntu2204-x86_64-100.9.4.deb
 
+      - name: Install imagemagick (convert)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
