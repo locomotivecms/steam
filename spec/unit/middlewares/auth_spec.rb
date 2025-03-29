@@ -25,6 +25,7 @@ describe Locomotive::Steam::Middlewares::Auth::AuthOptions do
         port: 25,
         authentication: 'plain',
         enable_starttls_auto: false,
+        ssl: false,
     ) }
 
     context 'no smtp metafields' do
