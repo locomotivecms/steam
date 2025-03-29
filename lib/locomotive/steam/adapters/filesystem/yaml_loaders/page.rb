@@ -88,7 +88,7 @@ module Locomotive
 
               # set the attributes
               %i(
-                title slug redirect_url seo_title meta_description meta_keywords
+                title slug redirect_url seo_title meta_description meta_keywords meta_robots
                 listed published position
                 sections_content sections_dropzone_content editable_elements raw_template
               ).each do |name|
@@ -118,7 +118,7 @@ module Locomotive
               }
 
               %i(
-                redirect_url seo_title meta_description meta_keywords
+                redirect_url seo_title meta_description meta_keywords meta_robots
                 sections_content sections_dropzone_content
               ).each do |name|
                 _attributes[name] = { locale => attributes.delete(name) }
@@ -138,7 +138,7 @@ module Locomotive
               update_editable_elements(leaf, attributes.delete(:editable_elements), locale)
 
               %i(
-                redirect_url seo_title meta_description meta_keywords
+                redirect_url seo_title meta_description meta_keywords meta_robots
                 sections_content sections_dropzone_content
               ).each do |name|
                 leaf[name][locale] ||= attributes.delete(name)

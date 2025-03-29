@@ -97,7 +97,7 @@ module Locomotive::Steam
               %i(
                 title slug fullpath template_path redirect_url
                 sections_content sections_dropzone_content
-                seo_title meta_description meta_keywords
+                seo_title meta_description meta_keywords meta_robots
               ).each do |name|
                 page[name][locale] ||= page[name][default_locale]
               end

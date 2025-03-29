@@ -4,7 +4,7 @@ module Locomotive
       module Drops
         class ContentEntry < I18nBase
 
-          delegate :_slug, :_translated, :seo_title, :meta_keywords, :meta_description, :created_at, :updated_at, to: :@_source
+          delegate :_slug, :_translated, :seo_title, :meta_keywords, :meta_description, :meta_robots, :created_at, :updated_at, to: :@_source
 
           alias :_permalink :_slug
 
