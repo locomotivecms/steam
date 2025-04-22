@@ -11,10 +11,10 @@ group :development do
 
   gem 'rake'
 
-  gem 'puma',               '~> 6.4.0'
+  gem 'puma',               '~> 6.4.3'
   gem 'haml',               '~> 6.2.3'
 
-  gem 'rack', '~> 3.0'
+  gem 'rack', '~> 3.1.11'
   gem 'rack-mini-profiler', '~> 0.10.1'
   gem 'flamegraph'
   gem 'stackprof' # ruby 2.1+ only
