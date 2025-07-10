@@ -60,7 +60,7 @@ module Locomotive::Steam
             settings = content['settings'] ||= {}
 
             definition['settings'].each do |setting|
-              settings[setting['id']] ||= setting['default']
+              settings[setting['id']] = setting['default'] if settings[setting['id']].nil?
             end
 
             # no definition of blocks, no need to continue
